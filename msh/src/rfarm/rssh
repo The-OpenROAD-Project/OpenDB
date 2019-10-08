@@ -1,0 +1,4 @@
+#!/bin/sh
+# -- eat up the hostname argument
+shift
+exec ssh -o PasswordAuthentication=false -xq ${RFARM_GATE-n13} -- "ssh -xq ${RFARM_TARGET-siart05} '$@' "

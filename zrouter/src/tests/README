@@ -1,0 +1,5 @@
+This directory contains tests cases for all zroute components
+
+zsession: tests for the session TM object
+     zdb: tests for the database TM object
+     msh: tests for msh

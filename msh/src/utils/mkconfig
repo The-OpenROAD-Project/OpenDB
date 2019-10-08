@@ -1,0 +1,178 @@
+#!/bin/ksh
+#
+#
+
+function die {
+	echo "$*" >&2
+	exit 1
+}
+
+function solaris_setup {
+        case "$arch" in
+                i86pc) solaris_setup_32 ;;
+                *) die "$arch" is not supported ;;
+        esac
+}
+
+function linux_setup {
+        case "$arch" in
+                i[3456]86) linux_setup_32 ;;
+                x86_64) linux_setup_64 ;;
+                *) die "$arch" is not supported ;;
+        esac
+}
+
+function linux_setup_32 {
+	target=i386-linux
+	tcl_find
+ 	MKSHLIB="gcc -pipe -shared"
+ 	CFLAGS_SH=-fPIC
+	SOSUFFIX=so
+	SOPREFIX=lib
+        if [ $do_purify == 1 ]
+        then
+            LDLIB="ar crs"
+            CC="purify gcc"
+            CXX="purify c++"
+        else
+            LDLIB="ld -r -o"
+            CC=gcc
+            CXX=c++
+        fi
+        MACHINEOPTS=
+        TCLSH=tclsh
+}
+
+# 64-bit linux is compiled in 32-bit mode
+function linux_setup_64 {
+	target=i386-linux
+	tcl_find
+ 	MKSHLIB="gcc -pipe -shared"
+ 	CFLAGS_SH=-fPIC
+	SOSUFFIX=so
+	SOPREFIX=lib
+        if [ $do_purify == 1 ]
+        then
+            LDLIB="ar crs"
+            CC="purify gcc"
+            CXX="purify c++"
+        else
+            LDLIB="ld -r -m elf_i386 -o"
+            CC=gcc
+            CXX=c++
+        fi
+        MACHINEOPTS=-m32
+        TCLSH=tclsh
+}
+
+
+function solaris_setup_32 {
+    target=i86pc-sol10
+    tcl_find
+    MKSHLIB="gcc -pipe -shared"
+    CFLAGS_SH=-fPIC
+    SOSUFFIX=so
+    SOPREFIX=lib
+        if [ $do_static_link == 1 ]
+        then
+            LDLIB="ar crs"
+            CC="gcc"
+            CXX="c++"
+        else
+            LDLIB="ld -r -o"
+            CC=gcc
+            CXX=c++
+        fi
+        MACHINEOPTS=
+        TCLSH=tclsh
+}
+
+function cygwin_setup {
+
+        case "$arch" in
+                i[3456]86) ;;
+                *) die "$arch" is not supported ;;
+        esac
+
+	target=i386-cygwin
+	tcl_find
+ 	MKSHLIB="gcc -pipe -shared"
+ 	CFLAGS_SH=
+	SOSUFFIX=dll
+	SOPREFIX=lib
+        LDLIB="ld -r -o"
+        MACHINEOPTS=
+        CC="gcc -DCYGWIN"
+        CXX="c++ -DCYGWIN"
+        TCLSH=C:/tcl/bin/tclsh.exe
+}
+
+function tcl_find {
+	tcl=$(whence tclsh)
+	test "$tcl" || die "tclsh: not found"
+	TCLTOP=$(dirname "$tcl")
+	export TCLTOP=$(dirname "$TCLTOP")
+}
+
+do_purify=0
+
+if [ "$1" == "1" ]
+then
+    do_purify=1
+fi
+
+os="`uname -s`"
+arch="`uname -m`"
+
+case "$os" in
+	SunOS) solaris_setup;;
+        Linux) linux_setup;;
+        CYGWIN_NT*) cygwin_setup;;
+        *) die "$os" is not supported ;;
+esac
+
+top=$(pwd)
+dtop=$(dirname "$top")
+
+DEBUG=-g
+CFLAGS="-I$top/include -I$TCLTOP/include -Wformat"
+CXXFLAGS="-I$top/include -I$TCLTOP/include -Wformat"
+
+cat <<EOF
+#
+# TOP LEVEL CONFIGURATION FILE, GENERATED FOR:
+# $(uname -a)
+#
+# NORMALLY YOU SHOULD NOT EDIT IT.
+# If local modifications are needed, just create 
+# Makefile.local at the same level as your Makefile.defs
+#
+TARGET=$target
+EOF
+echo "$top"  | sed -e 's/ /\\ /g' -e 's/^/TOP=/'
+echo "$dtop" | sed -e 's/ /\\ /g' -e 's/^/DTOP=/'
+cat <<EOF
+TI=\$(TOP)/ti/ti
+DEBUG=$DEBUG
+DIST=\$(DTOP)/dist/$target
+PBINDIR=\$(TOP)/dist/bin
+BINDIR=\$(DIST)/bin
+LIBDIR=\$(DIST)/lib
+MANDIR=\$(DIST)/man
+
+TCLLIB=$TCLTOP/lib
+TCLINC=$TCLTOP/include
+
+MKSHLIB=$MKSHLIB
+CFLAGS_SH=$CFLAGS_SH
+SOSUFFIX=$SOSUFFIX
+SOPREFIX=$SOPREFIX
+CC=$CC
+CXX=$CXX
+CFLAGS=$CFLAGS \$(DEBUG) $MACHINEOPTS \$(DEFINES)
+CXXFLAGS=$CXXFLAGS \$(DEBUG) $MACHINEOPTS \$(DEFINES)
+LDLIB=$LDLIB
+TCLSH=$TCLSH
+
+-include \$(TOP)/Makefile.local
+EOF

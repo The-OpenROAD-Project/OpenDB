@@ -1,0 +1,395 @@
+TT - Testing Tool Documentation
+===============================
+
+Introduction
+============
+
+    The Testing Tool (tt) was designed to be a flexible front-end tool to
+run regression or other ade tests in an easy manner. It has several
+options, a flexible command-syntax and a concise summary of results. It
+includes support for platform-dependent and ade-dependent options.
+
+
+Concepts
+========
+
+    tt has several distinct modes of operation: 
+        -test execution: clean, run, diff
+        -clean/run/diff: perform individual stages of a test
+        -dry-run mode: show what would be done - similar to make -n
+        -show mode: show available tests
+        -create new test(s)
+        
+
+    tt introduces two concepts of test organization:
+        -packages: physical directories under the main "test" directory
+        -groups: virtual collections of tests, joined by a common attribute
+        -PACKAGES take precedence over GROUPS
+
+    tt can be invoked in several ways:
+        -run it directly from the tt subdirectory
+        -make <tt command> from the src directory
+        -run_test shortcut script
+
+Requirements
+============
+
+    In order to actually execute a test, a copy of ade must be found in
+the current PATH. Non-execution operations can still be performed (show,
+dry-run) without a copy of ade. NOTE: if ade is NOT in the current
+PATH, run_test does not work!
+
+
+Packages vs. Groups
+=====================
+
+A package is a specific physical subdirectory that contains one or more
+tests in the tt-defined format. The tt-defined format is any directory that
+contains the file test.exe and optionally the file test.attr. For example, in
+the following directory structure: 
+tests/sta/test1
+tests/sta/test2
+tests/sta/test3
+tests/sta/newtests/test1
+
+the package is sta. The tests within package sta are test1, test2, test3
+and newtests/test1.
+
+The intention is that every subdirectory within src that contains ade code
+will have a corresponding "package" subdirectory within the tests directory
+tree.
+
+A group is a virtual construct that creates an association between one or more
+tests. Tests in the same group do NOT have to belong to the same package.
+Each test can belong to one or more groups via entries in the test.attr file.
+For example, sta/test1 and db/test2 could belong to the "sanity" virtual
+group, while sta/test3 and db/test1 could belong to the "extended" group.
+There is no restriction on group creation - a new group can be created at any
+time by adding that name to the test.attr file for that test (or entering it
+during test creation).
+
+
+General Commands
+================
+
+    The general form of a tt command is:
+        tt test[_cmd]_<package_list>_[test_range]    OR
+        tt test[_cmd]_<group_list>
+
+By default, if no [_cmd] is specified, it is assumed to be "exec".  Valid
+commands are: clean, diff, run, show, new, upcvs, upgold 
+Note: exec CANNOT be specified explicitly. 
+
+MULTIPLE commands can be specified on the same command-line!
+    
+A list is a series of names separated by commas. 
+
+A range is a start and end pair of values separated by -, OR a list. Note: for
+numeric ranges to work, tests must be in subdirectories named N or testN. If
+you have both 2/ and test2/, only 2/ will be used.
+
+For instance:
+
+test_sta                - execute ALL tests of package sta
+test_sta_1-3            - execute all tests of package sta between 1 and 3 
+test_sta,db             - execute ALL sta AND ALL db tests
+test_sta test_db        - execute ALL sta AND ALL db tests
+test_sta,db_1,4         - execute tests 1 and 4 of BOTH sta AND db
+
+Adding the command "show" will give a quick summary of which tests will be
+selected:
+
+test_show_sta           - show all tests of package sta
+test_show_sta_1-3       - show all tests of package sta between 1 and 3
+test_sta,db             - show ALL sta AND ALL db tests
+test_sta,db_1,4         - show tests 1 and 4 of BOTH sta AND db
+
+
+Note: tests not found will be ignored
+
+
+Using Groups
+============
+
+A group can be defined to have any number of tests in it from multiple
+packages. This is useful for having a set of tests that belong together,
+such as "sanity", "build", "sta-db-gui", etc.
+
+tt can execute tests within a given group or list of groups:
+
+test_build,sanity   - execute ALL tests within groups build and sanity
+test_build,sta      - execute ALL tests within group sanity and package sta
+
+test_build,sta_1-3  - execute tests 1-3 of sta, ALL test of group build
+
+Note: test_show_build,sta_1-3 will show tests in build 3 times, but will only
+execute them ONCE.
+
+
+Using the _all range
+====================
+
+The _all suffix is assumed in cases where a range or list is not specified.
+
+test_sta,build and test_sta,build_all are equivalent.
+test_show and test_show_all are equivalent.
+
+The only case where _all is required is: test_all which runs EVERY test in the
+system.
+
+
+Using individual commands
+=========================
+
+Instead of re-executing a test (which may take a long time), if only some of
+the stages of execution need to be performed, the individual commands can be
+used.
+
+test_diff_sta       - perform the "diff" portion for all sta tests
+test_clean_build    - perform the "clean" portion for all build tests
+test_run_db_1-2     - perform the "run" portion for db tests 1 and 2
+
+
+Logging of output
+=================
+
+All output from tt is sent both to stdout, AND to a log file. By default, this
+is tt.log in the directory where tt resides. The -l option to tt specifies a
+different log file location/name.
+
+
+tt command-line options
+=======================
+
+tt has several command-line options which affect the behavior of tt. 
+-h              This help message and then exit
+-l <file>       copy output to <file> instead of tt.log
+-n              Show Only mode - show what would be done without doing it
+-t <dir>        Redefine the "top" level directory where tests are located
+-u <path>       Use this ade instead of the one in PATH
+-v              Verbose mode - show more information
+-z <args>       Specify ade startup arguments
+
+The most useful is the -n "dry-run" mode, which is just like make -n. It shows
+each test that would be processed, without actually doing anything. This is
+useful for checking that the correct command sequence was issued. 
+
+The -l option is useful for saving the output log to a different location.
+
+The -v option will show more details than the default.
+
+Example for -z:
+test_sta_1-3 -z "-P 12"
+
+You can use the ~/.ttrc file to store "frequently used" options. If you call
+tt with: tt -t dir, and ~/.ttrc contains "-t otherdir", then tt will act as if
+you had called it with: tt -t otherdir -t dir. That is, .ttrc arguments are
+parsed FIRST, and THEN command-line arguments.
+
+Creating a new test
+===================
+
+The new command will create one or more tests within the given package. It
+automatically numbers the test, and asks for information about that test.
+
+test_new            - create a new test
+test_new_sta        - create a new test within the sta package
+test_new_sta_3      - create 3 new tests within the sta package
+
+The following information is required for a new test and will be asked for:
+-package (if not provided in original command)
+-test group(s) (a list of existing test groups is shown, and can be selected
+by number)
+-ade commands (defaults to: source test.tcl)
+-platform (defaults to: current platform)
+-runtime (no default)
+-ade compiled-in options (defaults to: none)
+
+All but the first two have sensible defaults that should work in many cases.
+Runtime can be omitted just be entering a blank.
+
+At minimum, the user must still create/provide two more files:
+test.log.GOLD
+test.tcl
+
+test.log.GOLD is the default "GOLD" file, which represents the expected output
+from running the test.
+
+test.tcl is the series of ade commands that produce the test output.
+
+
+Step-by-Step Procedure for creating a new (non-custom) test
+===========================================================
+
+Assumptions:
+-existing test is contained in file sta_test.tcl
+-existing test is part of sta package
+-existing test requires data files db1.lef db1.lib
+-output of test can be diffed and compared with known good file log.GOLD
+
+Steps to convert test to tt format:
+-call tt with test_new_sta (or test_new and specify sta as the package)
+    (also see next section run_test)
+    -select groups to which test should belong
+    -enter "source sta_test.tcl" instead of default "source test.tcl"
+    -enter description, runtime (if known)
+    -enter sta for required compiled-in options (or "none" if none)
+    -enter blank for required ade startup options, unless required
+    -enter "y" to create the test(s)
+-cd to test directory
+-following files should exist: test.exe test.attr Makefile
+-copy sta_test.tcl to current directory
+-copy db1.lef and db1.lib to current directory
+-copy log.GOLD to current directory and rename it to test.log.GOLD
+-run "make test.diff" to see if test is working
+-run "run_test show_sta -v" to see if your new test shows up in the system
+
+
+
+run_test shortcut
+=================
+
+<li> automatically installed into "DIST" directory along with ade
+<li> requires ade DIST directory to be in PATH
+<li> runs tests from the test directory that belongs to THAT DIST directory
+
+run_test is a shortcut that is automatically installed into the "DIST"
+directory along with ade. run_test can be used to execute tests from within
+ANY directory.  However, run_test ONLY works with the test directory of the
+first ade DIST in PATH, and assumes the tests are in the "test" directory.
+run_test also prepends test_ to the input, so that to run all sta tests only
+requires: run_test sta
+
+All commands remain the same as before, except that test_ should be omitted.
+
+For instance, if package sta is being worked on, after recompilation and
+installation:
+
+run_test sta
+
+will run all sta tests from the current directory.
+
+
+run_test has two special features: 
+1) it puts the tt.log file into the current directory rather than the tt
+directory.
+2) running the command "run_test template" will create a template test in the
+current directory. Be careful - it will create (and overwrite if they exist)
+the following files in the current directory: Makefile, test.exe, test.attr
+and tt.log. 
+
+At minimum, the user must still create/provide two more files:
+test.log.GOLD
+test.tcl
+
+
+Customizing tests
+=================
+
+tt has been designed to give great flexibility for customizing the sequence of
+test execution. It runs "make testclean" and then "make test.diff" in the test
+directory. 
+
+The default rules for creating test.diff are as follows:
+
+%.diff: %.log
+    diff -b -B $< $*.log.GOLD > $*.tempdiff
+    mv $*.tempdiff $*.diff
+
+%.log: %.exe
+    ./$< > $*.templog
+    mv $*.templog $*.log
+
+
+This assumes that test.log.GOLD exists in the current directory, and that all
+files needed by the ade commands inside test.exe are present.
+
+The sequence of commands is then:
+run test.exe and redirect the output to test.templog
+if successful, rename test.templog to test.log
+
+run diff -b -B test.log test.log.GOLD > test.tempdiff
+if successful, rename test.tempdiff to test.diff
+
+The intermediate steps (templog, tempdiff) are needed to avoid skipping a
+test execution if the first execution fails. If the rule was simply:
+run test.exe and redirect the output to test.log, test.log would ALWAYS be
+created, and the test would be assumed to have successfully completed.
+
+The default Makefile for a test only includes the default rules from the
+appropriate Makefile.rules at the top level. The user is able to override any
+and all targets such that test.diff can still be created.
+
+A sample customized Makefile:
+
+DIFFLOGS += test.slack
+
+test.diff: test.slack
+    diff test.slack test.log.GOLD > test.diff
+
+test.slack: test.log
+    grep slack test.log > test.slack
+
+In this example, test.diff depends on an intermediate step: grepping for the
+word "slack" inside test.log. The output of the grep is stored in
+test.slack, and then test.slack and test.log.GOLD are diffed to produce
+test.diff. The DIFFLOGS variable adds the file test.slack to indicate that
+it is a part of the "DIFF" process, and should be cleaned up whenever "make
+cleandiff" is executed.
+
+
+
+Common Usage
+============
+
+It is expected that the most common usage of the testing tool will be the
+"run_test" shortcut, used to execute a simple series of tests, especially
+when modifying a given package.
+
+run_test examples:
+
+run_test sta_1-3 -l /tmp/tt.log  - run sta tests 1-3 and put log in /tmp/tt.log
+run_test sta,db -z "-P 12"       - run all sta and db tests with ade arguments "-P 12"
+run_test sanity,db  -t /..../tests - run all sanity and db tests from some other test directory
+run_test template   - create a test template in the current directory
+
+
+CVS comments
+============
+
+It is currently up to the user to ensure all test-related files are added to
+CVS. This may include (but is not limited to): test.exe test.attr Makefile
+test.log.GOLD test.tcl and any other data or command files related to the
+test.
+
+This will require at least:
+make cleantest
+cvs add .
+cvs add *
+cvs commit
+or some other series of cvs commands to accomplish the same, once the test
+has been created. Note: the make cleantest is to get rid of intermediate log
+files and such, which should NOT be checked into CVS - test.log.GOLD is the log
+file that will be checked into CVS
+
+
+upcvs, upgold
+=============
+
+Commands upgold and upcvs, while currently defined have not been tested
+extensively. 
+
+The current action of upcvs is to call "cvs update" in the test directories.
+
+The current action of upgold is:
+cp test.log test.log.GOLD
+cvs commit test.log.GOLD
+
+Please be sure this is what you intend when using these commands.
+
+
+Future Enhancements
+===================
+
+Feel free to request new features.
+

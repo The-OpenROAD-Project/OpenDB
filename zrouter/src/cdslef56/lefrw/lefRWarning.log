@@ -1,0 +1,388 @@
+Warnings from file: /vobs/lefdef_dev/TEST/lefdef/lef5.6/complete.5.6.lef
+
+***WARNING*** <NAMESCASESENSITIVE is obsolete in 5.6. It will be ignored.> at line 2
+Last token was <;>
+***WARNING*** <NOWIREEXTENSIONATPIN is obsolete in 5.6. It will be ignored.> at line 3
+Last token was <;>
+***WARNING*** <USEMINSPACING PIN is obsolete in 5.6. It will be ignored.> at line 7
+Last token was <;>
+***WARNING*** <It is illegal to mix both SPACING rules & SPACINGTABLE rules for the same lef file in ROUTING layer> at line 228
+Last token was <SPACINGTABLE>
+***WARNING*** <It is illegal to mix both SPACING rules & SPACINGTABLE rules for the same lef file in ROUTING layer> at line 235
+Last token was <SPACINGTABLE>
+***WARNING*** <It is illegal to mix both SPACING rules & SPACINGTABLE rules for the same lef file in ROUTING layer> at line 254
+Last token was <0.9>
+***WARNING*** <It is illegal to mix both SPACING rules & SPACINGTABLE rules for the same lef file in ROUTING layer> at line 255
+Last token was <0.28>
+***WARNING*** <It is illegal to mix both SPACING rules & SPACINGTABLE rules for the same lef file in ROUTING layer> at line 256
+Last token was <0.24>
+***WARNING*** <It is illegal to mix both SPACING rules & SPACINGTABLE rules for the same lef file in ROUTING layer> at line 257
+Last token was <0.32>
+***WARNING*** <It is illegal to mix both SPACING rules & SPACINGTABLE rules for the same lef file in ROUTING layer> at line 258
+Last token was <0.5>
+***WARNING*** <It is illegal to mix both SPACING rules & SPACINGTABLE rules for the same lef file in ROUTING layer> at line 259
+Last token was <0.5>
+***WARNING*** <It is illegal to mix both SPACING rules & SPACINGTABLE rules for the same lef file in ROUTING layer> at line 260
+Last token was <0.5>
+***WARNING*** <It is illegal to mix both SPACING rules & SPACINGTABLE rules for the same lef file in ROUTING layer> at line 261
+Last token was <0.5>
+***WARNING*** <It is illegal to mix both SPACING rules & SPACINGTABLE rules for the same lef file in ROUTING layer> at line 262
+Last token was <0.4>
+***WARNING*** <It is illegal to mix both SPACING rules & SPACINGTABLE rules for the same lef file in ROUTING layer> at line 277
+Last token was <0.9>
+***WARNING*** <It is illegal to mix both SPACING rules & SPACINGTABLE rules for the same lef file in ROUTING layer> at line 348
+Last token was <0.9>
+***WARNING*** <TOPOFSTACKONLY is obsolete in 5.6. It will be ignored.> at line 417
+Last token was <TOPOFSTACKONLY>
+***WARNING*** <FOREIGN in VIA is obsolete. It will be ignored.> at line 418
+Last token was <;>
+***WARNING*** <DIRECTION in VIARULE is obsolete in 5.6. It will be ignored.> at line 562
+Last token was <;>
+***WARNING*** <OVERHANG translated into similar ENCLOSURE rule> at line 564
+Last token was <;>
+***WARNING*** <METALOVERHANG is obsolete in 5.6. It will be ignored.> at line 565
+Last token was <;>
+***WARNING*** <DIRECTION in VIARULE is obsolete in 5.6. It will be ignored.> at line 567
+Last token was <;>
+***WARNING*** <OVERHANG translated into similar ENCLOSURE rule> at line 568
+Last token was <;>
+***WARNING*** <METALOVERHANG is obsolete in 5.6. It will be ignored.> at line 569
+Last token was <;>
+***WARNING*** <DIRECTION in VIARULE is obsolete in 5.6. It will be ignored.> at line 580
+Last token was <;>
+***WARNING*** <OVERHANG translated into similar ENCLOSURE rule> at line 581
+Last token was <;>
+***WARNING*** <METALOVERHANG is obsolete in 5.6. It will be ignored.> at line 582
+Last token was <;>
+***WARNING*** <DIRECTION in VIARULE is obsolete in 5.6. It will be ignored.> at line 585
+Last token was <;>
+***WARNING*** <OVERHANG translated into similar ENCLOSURE rule> at line 586
+Last token was <;>
+***WARNING*** <METALOVERHANG is obsolete in 5.6. It will be ignored.> at line 587
+Last token was <;>
+***WARNING*** <turn-via is obsolete in 5.6. It will be ignored.> at line 593
+Last token was <VIAGEN1>
+***WARNING*** <DIRECTION in VIARULE is obsolete in 5.6. It will be ignored.> at line 597
+Last token was <;>
+***WARNING*** <OVERHANG translated into similar ENCLOSURE rule> at line 598
+Last token was <;>
+***WARNING*** <DIRECTION in VIARULE is obsolete in 5.6. It will be ignored.> at line 601
+Last token was <;>
+***WARNING*** <OVERHANG translated into similar ENCLOSURE rule> at line 602
+Last token was <;>
+***WARNING*** <DIRECTION in VIARULE is obsolete in 5.6. It will be ignored.> at line 612
+Last token was <;>
+***WARNING*** <DIRECTION in VIARULE is obsolete in 5.6. It will be ignored.> at line 615
+Last token was <;>
+***WARNING*** <DIRECTION in VIARULE is obsolete in 5.6. It will be ignored.> at line 661
+Last token was <;>
+***WARNING*** <DIRECTION in VIARULE is obsolete in 5.6. It will be ignored.> at line 663
+Last token was <;>
+***WARNING*** <turn-via is obsolete in 5.6. It will be ignored.> at line 664
+Last token was <TURNM3>
+***WARNING*** <DIRECTION in VIARULE is obsolete in 5.6. It will be ignored.> at line 668
+Last token was <;>
+***WARNING*** <OVERHANG translated into similar ENCLOSURE rule> at line 669
+Last token was <;>
+***WARNING*** <METALOVERHANG is obsolete in 5.6. It will be ignored.> at line 670
+Last token was <;>
+***WARNING*** <DIRECTION in VIARULE is obsolete in 5.6. It will be ignored.> at line 675
+Last token was <;>
+***WARNING*** <OVERHANG translated into similar ENCLOSURE rule> at line 676
+Last token was <;>
+***WARNING*** <METALOVERHANG is obsolete in 5.6. It will be ignored.> at line 677
+Last token was <;>
+***WARNING*** <RESISTANCE RPERSQ is obsolete in 5.6. It will be ignored.> at line 685
+Last token was <;>
+***WARNING*** <CAPACITANCE CPERSQDIST is obsolete in 5.6. It will be ignored.> at line 686
+Last token was <;>
+***WARNING*** <EDGECAPACITANCE is obsolete in 5.6. It will be ignored.> at line 687
+Last token was <;>
+***WARNING*** <CAPACITANCE CPERSQDIST is obsolete in 5.6. It will be ignored.> at line 692
+Last token was <;>
+***WARNING*** <RESISTANCE RPERSQ is obsolete in 5.6. It will be ignored.> at line 698
+Last token was <;>
+***WARNING*** <TOPOFSTACKONLY is obsolete in 5.6. It will be ignored.> at line 708
+Last token was <TOPOFSTACKONLY>
+***WARNING*** <FOREIGN in VIA is obsolete. It will be ignored.> at line 709
+Last token was <;>
+***WARNING*** <FOREIGN in VIA is obsolete. It will be ignored.> at line 721
+Last token was <;>
+***WARNING*** <SAMENET in NONDEFAULTRULE is obsolete in 5.6. It willbe ignored> at line 742
+Last token was <SPACING>
+***WARNING*** <UNIVERSALNOISEMARGIN is obsolete in 5.4. It will be ignored.> at line 832
+Last token was <;>
+***WARNING*** <EDGERATETHRESHOLD1 is obsolete in 5.4. It will be ignored.> at line 833
+Last token was <;>
+***WARNING*** <EDGERATETHRESHOLD2 is obsolete in 5.4. It will be ignored.> at line 834
+Last token was <;>
+***WARNING*** <EDGERATESCALEFACTOR is obsolete in 5.4. It will be ignored.> at line 835
+Last token was <;>
+***WARNING*** <NOISETABLE is obsolete in 5.4. It will be ignored.> at line 844
+Last token was <NOISETABLE>
+***WARNING*** <MINFEATURE is obsolete in 5.4. It will be ignored.> at line 863
+Last token was <;>
+***WARNING*** <DIELECTRIC is obsolete in 5.4. It will be ignored.> at line 865
+Last token was <;>
+***WARNING*** <IRDROP is obsolete in 5.4. It will be ignored.> at line 867
+Last token was <IRDROP>
+***WARNING*** <SOURCE is obsolete in 5.6. It will be ignored.> at line 961
+Last token was <;>
+***WARNING*** <LEQ in MACRO is obsolete in 5.6. It will be ignored.> at line 965
+Last token was <;>
+***WARNING*** <MACRO POWER is obsolete in 5.4. It will be ignored.> at line 971
+Last token was <;>
+***WARNING*** <FOREIGN in MACRO PIN is obsolete in 5.6. It will be ignored.> at line 976
+Last token was <;>
+***WARNING*** <FOREIGN in MACRO PIN is obsolete in 5.6. It will be ignored.> at line 977
+Last token was <;>
+***WARNING*** <FOREIGN in MACRO PIN is obsolete in 5.6. It will be ignored.> at line 978
+Last token was <;>
+***WARNING*** <FOREIGN in MACRO PIN is obsolete in 5.6. It will be ignored.> at line 979
+Last token was <;>
+***WARNING*** <LEQ in MACRO PIN is obsolete in 5.6. It will be ignored.> at line 980
+Last token was <;>
+***WARNING*** <MACRO INPUTNOISEMARGIN is obsolete in 5.4. It will be ignored.> at line 984
+Last token was <;>
+***WARNING*** <MACRO OUTPUTNOISEMARGIN is obsolete in 5.4. It will be ignored.> at line 985
+Last token was <;>
+***WARNING*** <MACRO OUTPUTRESISTANCE is obsolete in 5.4. It will be ignored.> at line 986
+Last token was <;>
+***WARNING*** <MACRO POWER is obsolete in 5.4. It will be ignored.> at line 987
+Last token was <;>
+***WARNING*** <MACRO LEAKAGE is obsolete in 5.4. It will be ignored.> at line 988
+Last token was <;>
+***WARNING*** <MACRO CAPACITANCE is obsolete in 5.4. It will be ignored.> at line 989
+Last token was <;>
+***WARNING*** <MACRO RESISTANCE is obsolete in 5.4. It will be ignored.> at line 990
+Last token was <;>
+***WARNING*** <MACRO PULLDOWNRES is obsolete in 5.4. It will be ignored.> at line 991
+Last token was <;>
+***WARNING*** <MACRO TIEOFFR is obsolete in 5.4. It will be ignored.> at line 992
+Last token was <;>
+***WARNING*** <MACRO VHI is obsolete in 5.4. It will be ignored.> at line 993
+Last token was <;>
+***WARNING*** <MACRO VLO is obsolete in 5.4. It will be ignored.> at line 994
+Last token was <;>
+***WARNING*** <MACRO RISEVOLTAGETHRESHOLD is obsolete in 5.4. It will be ignored.> at line 995
+Last token was <;>
+***WARNING*** <MACRO FALLVOLTAGETHRESHOLD is obsolete in 5.4. It will be ignored.> at line 996
+Last token was <;>
+***WARNING*** <MACRO RISETHRESH is obsolete in 5.4. It will be ignored.> at line 997
+Last token was <;>
+***WARNING*** <MACRO FALLTHRESH is obsolete in 5.4. It will be ignored.> at line 998
+Last token was <;>
+***WARNING*** <MACRO RISESATCUR is obsolete in 5.4. It will be ignored.> at line 999
+Last token was <;>
+***WARNING*** <MACRO FALLSATCUR is obsolete in 5.4. It will be ignored.> at line 1000
+Last token was <;>
+***WARNING*** <MACRO CURRENTSOURCE is obsolete in 5.4. It will be ignored.> at line 1001
+Last token was <;>
+***WARNING*** <MACRO IV_TABLES is obsolete in 5.4. It will be ignored.> at line 1012
+Last token was <;>
+***WARNING*** <FOREIGN in MACRO PIN is obsolete in 5.6. It will be ignored.> at line 1024
+Last token was <;>
+***WARNING*** <MACRO LEAKAGE is obsolete in 5.4. It will be ignored.> at line 1043
+Last token was <;>
+***WARNING*** <MACRO FALLVOLTAGETHRESHOLD is obsolete in 5.4. It will be ignored.> at line 1044
+Last token was <;>
+***WARNING*** <MACRO RISEVOLTAGETHRESHOLD is obsolete in 5.4. It will be ignored.> at line 1045
+Last token was <;>
+***WARNING*** <MACRO CURRENTSOURCE is obsolete in 5.4. It will be ignored.> at line 1046
+Last token was <;>
+***WARNING*** <MACRO TIMING is obsolete in 5.4. It will be ignored.> at line 1195
+Last token was <TIMING>
+***WARNING*** <SOURCE is obsolete in 5.6. It will be ignored.> at line 1201
+Last token was <;>
+***WARNING*** <MACRO POWER is obsolete in 5.4. It will be ignored.> at line 1203
+Last token was <;>
+***WARNING*** <MACRO RISETHRESH is obsolete in 5.4. It will be ignored.> at line 1210
+Last token was <;>
+***WARNING*** <MACRO FALLTHRESH is obsolete in 5.4. It will be ignored.> at line 1211
+Last token was <;>
+***WARNING*** <MACRO RISESATCUR is obsolete in 5.4. It will be ignored.> at line 1212
+Last token was <;>
+***WARNING*** <MACRO FALLSATCUR is obsolete in 5.4. It will be ignored.> at line 1213
+Last token was <;>
+***WARNING*** <MACRO VLO is obsolete in 5.4. It will be ignored.> at line 1214
+Last token was <;>
+***WARNING*** <MACRO VHI is obsolete in 5.4. It will be ignored.> at line 1215
+Last token was <;>
+***WARNING*** <MACRO CAPACITANCE is obsolete in 5.4. It will be ignored.> at line 1216
+Last token was <;>
+***WARNING*** <MACRO POWER is obsolete in 5.4. It will be ignored.> at line 1218
+Last token was <;>
+***WARNING*** <MACRO RISETHRESH is obsolete in 5.4. It will be ignored.> at line 1227
+Last token was <;>
+***WARNING*** <MACRO FALLTHRESH is obsolete in 5.4. It will be ignored.> at line 1228
+Last token was <;>
+***WARNING*** <MACRO RISESATCUR is obsolete in 5.4. It will be ignored.> at line 1229
+Last token was <;>
+***WARNING*** <MACRO FALLSATCUR is obsolete in 5.4. It will be ignored.> at line 1230
+Last token was <;>
+***WARNING*** <MACRO VLO is obsolete in 5.4. It will be ignored.> at line 1231
+Last token was <;>
+***WARNING*** <MACRO VHI is obsolete in 5.4. It will be ignored.> at line 1232
+Last token was <;>
+***WARNING*** <MACRO CAPACITANCE is obsolete in 5.4. It will be ignored.> at line 1233
+Last token was <;>
+***WARNING*** <MACRO POWER is obsolete in 5.4. It will be ignored.> at line 1243
+Last token was <;>
+***WARNING*** <MACRO POWER is obsolete in 5.4. It will be ignored.> at line 1253
+Last token was <;>
+***WARNING*** <MACRO TIMING is obsolete in 5.4. It will be ignored.> at line 1277
+Last token was <TIMING>
+***WARNING*** <MACRO POWER is obsolete in 5.4. It will be ignored.> at line 1320
+Last token was <;>
+***WARNING*** <MACRO RISETHRESH is obsolete in 5.4. It will be ignored.> at line 1326
+Last token was <;>
+***WARNING*** <MACRO FALLTHRESH is obsolete in 5.4. It will be ignored.> at line 1327
+Last token was <;>
+***WARNING*** <MACRO RISESATCUR is obsolete in 5.4. It will be ignored.> at line 1328
+Last token was <;>
+***WARNING*** <MACRO FALLSATCUR is obsolete in 5.4. It will be ignored.> at line 1329
+Last token was <;>
+***WARNING*** <MACRO VLO is obsolete in 5.4. It will be ignored.> at line 1330
+Last token was <;>
+***WARNING*** <MACRO VHI is obsolete in 5.4. It will be ignored.> at line 1331
+Last token was <;>
+***WARNING*** <MACRO CAPACITANCE is obsolete in 5.4. It will be ignored.> at line 1332
+Last token was <;>
+***WARNING*** <MACRO POWER is obsolete in 5.4. It will be ignored.> at line 1334
+Last token was <;>
+***WARNING*** <MACRO RISETHRESH is obsolete in 5.4. It will be ignored.> at line 1353
+Last token was <;>
+***WARNING*** <MACRO FALLTHRESH is obsolete in 5.4. It will be ignored.> at line 1354
+Last token was <;>
+***WARNING*** <MACRO RISESATCUR is obsolete in 5.4. It will be ignored.> at line 1355
+Last token was <;>
+***WARNING*** <MACRO FALLSATCUR is obsolete in 5.4. It will be ignored.> at line 1356
+Last token was <;>
+***WARNING*** <MACRO VLO is obsolete in 5.4. It will be ignored.> at line 1357
+Last token was <;>
+***WARNING*** <MACRO VHI is obsolete in 5.4. It will be ignored.> at line 1358
+Last token was <;>
+***WARNING*** <MACRO CAPACITANCE is obsolete in 5.4. It will be ignored.> at line 1359
+Last token was <;>
+***WARNING*** <MACRO POWER is obsolete in 5.4. It will be ignored.> at line 1369
+Last token was <;>
+***WARNING*** <MACRO POWER is obsolete in 5.4. It will be ignored.> at line 1379
+Last token was <;>
+***WARNING*** <MACRO TIMING is obsolete in 5.4. It will be ignored.> at line 1403
+Last token was <TIMING>
+***WARNING*** <MACRO POWER is obsolete in 5.4. It will be ignored.> at line 1416
+Last token was <;>
+***WARNING*** <MACRO RISETHRESH is obsolete in 5.4. It will be ignored.> at line 1424
+Last token was <;>
+***WARNING*** <MACRO FALLTHRESH is obsolete in 5.4. It will be ignored.> at line 1425
+Last token was <;>
+***WARNING*** <MACRO RISESATCUR is obsolete in 5.4. It will be ignored.> at line 1426
+Last token was <;>
+***WARNING*** <MACRO FALLSATCUR is obsolete in 5.4. It will be ignored.> at line 1427
+Last token was <;>
+***WARNING*** <MACRO VLO is obsolete in 5.4. It will be ignored.> at line 1428
+Last token was <;>
+***WARNING*** <MACRO VHI is obsolete in 5.4. It will be ignored.> at line 1429
+Last token was <;>
+***WARNING*** <MACRO CAPACITANCE is obsolete in 5.4. It will be ignored.> at line 1430
+Last token was <;>
+***WARNING*** <MACRO POWER is obsolete in 5.4. It will be ignored.> at line 1432
+Last token was <;>
+***WARNING*** <MACRO RISETHRESH is obsolete in 5.4. It will be ignored.> at line 1441
+Last token was <;>
+***WARNING*** <MACRO FALLTHRESH is obsolete in 5.4. It will be ignored.> at line 1442
+Last token was <;>
+***WARNING*** <MACRO RISESATCUR is obsolete in 5.4. It will be ignored.> at line 1443
+Last token was <;>
+***WARNING*** <MACRO FALLSATCUR is obsolete in 5.4. It will be ignored.> at line 1444
+Last token was <;>
+***WARNING*** <MACRO VLO is obsolete in 5.4. It will be ignored.> at line 1445
+Last token was <;>
+***WARNING*** <MACRO VHI is obsolete in 5.4. It will be ignored.> at line 1446
+Last token was <;>
+***WARNING*** <MACRO CAPACITANCE is obsolete in 5.4. It will be ignored.> at line 1447
+Last token was <;>
+***WARNING*** <MACRO POWER is obsolete in 5.4. It will be ignored.> at line 1449
+Last token was <;>
+***WARNING*** <MACRO RISETHRESH is obsolete in 5.4. It will be ignored.> at line 1458
+Last token was <;>
+***WARNING*** <MACRO FALLTHRESH is obsolete in 5.4. It will be ignored.> at line 1459
+Last token was <;>
+***WARNING*** <MACRO RISESATCUR is obsolete in 5.4. It will be ignored.> at line 1460
+Last token was <;>
+***WARNING*** <MACRO FALLSATCUR is obsolete in 5.4. It will be ignored.> at line 1461
+Last token was <;>
+***WARNING*** <MACRO VLO is obsolete in 5.4. It will be ignored.> at line 1462
+Last token was <;>
+***WARNING*** <MACRO VHI is obsolete in 5.4. It will be ignored.> at line 1463
+Last token was <;>
+***WARNING*** <MACRO CAPACITANCE is obsolete in 5.4. It will be ignored.> at line 1464
+Last token was <;>
+***WARNING*** <MACRO POWER is obsolete in 5.4. It will be ignored.> at line 1466
+Last token was <;>
+***WARNING*** <MACRO RISETHRESH is obsolete in 5.4. It will be ignored.> at line 1475
+Last token was <;>
+***WARNING*** <MACRO FALLTHRESH is obsolete in 5.4. It will be ignored.> at line 1476
+Last token was <;>
+***WARNING*** <MACRO RISESATCUR is obsolete in 5.4. It will be ignored.> at line 1477
+Last token was <;>
+***WARNING*** <MACRO FALLSATCUR is obsolete in 5.4. It will be ignored.> at line 1478
+Last token was <;>
+***WARNING*** <MACRO VLO is obsolete in 5.4. It will be ignored.> at line 1479
+Last token was <;>
+***WARNING*** <MACRO VHI is obsolete in 5.4. It will be ignored.> at line 1480
+Last token was <;>
+***WARNING*** <MACRO CAPACITANCE is obsolete in 5.4. It will be ignored.> at line 1481
+Last token was <;>
+***WARNING*** <MACRO POWER is obsolete in 5.4. It will be ignored.> at line 1483
+Last token was <;>
+***WARNING*** <MACRO RISETHRESH is obsolete in 5.4. It will be ignored.> at line 1492
+Last token was <;>
+***WARNING*** <MACRO FALLTHRESH is obsolete in 5.4. It will be ignored.> at line 1493
+Last token was <;>
+***WARNING*** <MACRO RISESATCUR is obsolete in 5.4. It will be ignored.> at line 1494
+Last token was <;>
+***WARNING*** <MACRO FALLSATCUR is obsolete in 5.4. It will be ignored.> at line 1495
+Last token was <;>
+***WARNING*** <MACRO VLO is obsolete in 5.4. It will be ignored.> at line 1496
+Last token was <;>
+***WARNING*** <MACRO VHI is obsolete in 5.4. It will be ignored.> at line 1497
+Last token was <;>
+***WARNING*** <MACRO CAPACITANCE is obsolete in 5.4. It will be ignored.> at line 1498
+Last token was <;>
+***WARNING*** <MACRO POWER is obsolete in 5.4. It will be ignored.> at line 1500
+Last token was <;>
+***WARNING*** <MACRO POWER is obsolete in 5.4. It will be ignored.> at line 1509
+Last token was <;>
+***WARNING*** <MACRO POWER is obsolete in 5.4. It will be ignored.> at line 1519
+Last token was <;>
+***WARNING*** <MACRO TIMING is obsolete in 5.4. It will be ignored.> at line 1543
+Last token was <TIMING>
+***WARNING*** <MACRO POWER is obsolete in 5.4. It will be ignored.> at line 1595
+Last token was <;>
+***WARNING*** <MACRO CAPACITANCE is obsolete in 5.4. It will be ignored.> at line 1621
+Last token was <;>
+***WARNING*** <MACRO CAPACITANCE is obsolete in 5.4. It will be ignored.> at line 1640
+Last token was <;>
+***WARNING*** <Either PATH, RECT or POLYGON is a required in MACRO/PIN/PORT.> at line 1649
+Last token was <END>
+***WARNING*** <MACRO CAPACITANCE is obsolete in 5.4. It will be ignored.> at line 1652
+Last token was <;>
+***WARNING*** <Either PATH, RECT or POLYGON is a required in MACRO/PIN/PORT.> at line 1665
+Last token was <END>
+***WARNING*** <MACRO CAPACITANCE is obsolete in 5.4. It will be ignored.> at line 1668
+Last token was <;>
+***WARNING*** <Either PATH, RECT or POLYGON is a required in MACRO/PIN/PORT.> at line 1673
+Last token was <a1sig>
+***WARNING*** <MACRO CAPACITANCE is obsolete in 5.4. It will be ignored.> at line 1734
+Last token was <;>
+***WARNING*** <MACRO CAPACITANCE is obsolete in 5.4. It will be ignored.> at line 1739
+Last token was <;>
+***WARNING*** <MACRO POWER is obsolete in 5.4. It will be ignored.> at line 1743
+Last token was <;>
+***WARNING*** <MACRO POWER is obsolete in 5.4. It will be ignored.> at line 1750
+Last token was <;>
+***WARNING*** <MACRO POWER is obsolete in 5.4. It will be ignored.> at line 1757
+Last token was <;>
+***WARNING*** <MACRO POWER is obsolete in 5.4. It will be ignored.> at line 1762
+Last token was <;>

@@ -1,0 +1,71 @@
+<head>
+<title>TT Testing Tool</title>
+</head>
+<body>
+
+<h2>TT - Testing Tool Documentation</h2>
+
+
+<h3>Customizing tests</h3>
+
+Default targets run by tt:
+<ul>
+<li>for clean: cleantest
+<li>for run: test.log
+<li>for diff: cleandiff test.diff
+<li>for exec: all 3 above
+</ul>
+
+The default rules for creating test.diff are as follows:
+
+<pre>
+%.diff: %.log
+    diff -b -B $< $*.log.GOLD > $*.tempdiff
+    mv $*.tempdiff $*.diff
+
+%.log: %.exe
+    ./$< > $*.templog
+    mv $*.templog $*.log
+
+</pre>
+The sequence of commands is then:<br>
+run test.exe and redirect the output to test.templog<br>
+if successful, rename test.templog to test.log<br><br>
+
+run diff -b -B test.log test.log.GOLD &gt; test.tempdiff<br>
+if successful, rename test.tempdiff to test.diff<br><br>
+
+The intermediate steps (templog, tempdiff) are needed to avoid skipping a
+test execution if the first execution fails. <br><br>
+
+The default Makefile is just one line:<br>
+<pre>
+include ../../Makefile.rules
+</pre>
+
+A sample customized Makefile:<br>
+
+<pre>
+include ../../Makefile.rules
+
+DIFFLOGS += test.slack
+
+test.diff: test.slack
+    diff test.slack test.GOLD > test.diff
+
+test.slack: test.log
+    grep slack test.log > test.slack
+</pre>
+
+In this example, test.diff depends on an intermediate step: grepping for the
+word "slack" inside test.log. The output of the grep is stored in
+test.slack, and then test.slack and test.GOLD are diffed to produce
+test.diff. The DIFFLOGS variable adds the file test.slack to indicate that
+it is a part of the "DIFF" process, and should be cleaned up whenever "make
+cleandiff" is executed.<br><br>
+
+<a href="tt8.html">prev</a>
+<a href="tt10.html">next</a>
+<br><a href="ttidx.html">Index</a>
+</body>
+</html>

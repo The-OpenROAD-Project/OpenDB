@@ -1,0 +1,169 @@
+SUMMARY for pdb.tcl: 
+OPTIONS for pdb.tcl: 
+         readdb 0
+         leffiles ""
+         lefs ""
+         def ""
+         datadir tmp
+         outfile ""
+         lef_out ""
+         def_out ""
+         verilog_file ""
+         sdc_file ""
+         timing_lib_max_file ""
+         timing_lib_max_base ""
+         timing_lib_min_file ""
+         timing_lib_min_base ""
+         delay_calculator "zroute"
+COMMANDS for pdb.tcl: 
+    protected method constructor { parent } { 
+        set_state db_loaded 0
+        set_state db_saved 0
+        set_state db_modified 0
+    public method new_inst { } {
+    public method select_inst {idx} {
+    public method load_timing { args } {
+        if { [state db_loaded] == 0 } {
+            sdc_file
+            timing_lib_max_file
+            timing_lib_min_file
+            timing_lib_max_base
+            timing_lib_min_base
+            delay_calculator
+            verilog_file
+    public method load_design { args } {
+            lefs
+            leffiles
+            def
+            outfile
+            readdb
+    public method e2 {script } {
+    public method save_design { args } {
+        if { [state db_loaded] != 1 } { 
+            def
+            def_out
+            lef_out
+    public method save_db { args } {
+        if { [state db_loaded] != 1 } { 
+            outfile
+            def
+    public method write_spef { args } {
+        if { [state db_loaded] != 1 } { 
+            outfile
+            def
+    public method rlog { args } {
+SUMMARY for tmg.tcl: 
+OPTIONS for tmg.tcl: 
+         upper_pct 61;
+         lower_pct 39;
+         derate    0.22;
+         setup_max_derate 1.0;
+         setup_ocvmin_derate 0.82;
+         hold_min_derate 1.0;
+         hold_ocvmax_derate 1.22;
+         ext_rules "";
+         hold_buf_list {};
+         snapshot_file "snapshot.rpt"
+COMMANDS for tmg.tcl: 
+    protected method constructor { parent } { 
+        set_state tmg init
+    public method reset_threshold { } {
+            upper_pct
+            lower_pct
+            derate
+    public method select_setup { } {
+    public method set_hold_bufs { } {
+            hold_buf_list
+    public method select_hold { } {
+    public method define_setup { args } {
+            derate
+            setup_max_derate
+            setup_ocvmin_derate
+    public method define_hold { args } {
+            derate
+            hold_min_derate
+            hold_ocvmax_derate
+    public method slack_snapshot { args } {
+            snapshot_file
+    public method analyze { args } {
+        if { [state tmg_rcmodels] == 1 } {
+            if { [state db_loaded] != 1 } {
+            if { [state tmg_libs_loaded] != 1 } {
+            ext_rules
+    public method all_registers { args } {
+        if { [state tmg_rcmodels] != 1 } {
+SUMMARY for rpt.tcl: 
+OPTIONS for rpt.tcl: 
+         rpt_file "rpt.out"
+         rpt_cap_file "rpt.cap.out"
+         from ""
+         to ""
+         sort_by "slack"
+         max_paths 100
+         nworst 2
+         path_type full
+         capacitance 1
+         sig_digits 4
+         delay "max"
+COMMANDS for rpt.tcl: 
+    protected method constructor { parent } { 
+        set_state rpt init
+    public method report_total_cap { args } {
+        if { [state tmg_rcmodels] != 1 } {
+            rpt_cap_file
+            capacitance
+    public method get_power { } {
+    public method report_timing { args } {
+        if { [state tmg_rcmodels] != 1 } {
+            capacitance
+            from
+            to
+            rpt_file
+            sort_by
+            max_paths
+            nworst
+            path_type
+            sig_digits
+            delay
+    public method get_total_slack { args } {
+        if { [state rpt_timing] != 1 } {
+            delay
+    public method get_worst_slack { args } {
+        if { [state rpt_timing] != 1 } {
+            delay
+SUMMARY for rte.tcl: 
+OPTIONS for rte.tcl: 
+         tilenum 16
+         debug_skip_routing 0
+         debug_db ""
+COMMANDS for rte.tcl: 
+    protected method constructor { parent } { 
+        set_state rte init
+        set_state rte_routed 0
+    public method tile_and_route { args } {
+        if { [state db_loaded] != 1 } {
+            debug_db
+            debug_skip_routing
+SUMMARY for opt.tcl: 
+OPTIONS for opt.tcl: 
+         slew_limit 0.8
+         area_limit_pct 0.5
+         change_limit 10
+         setup_incr 0
+         strategy "rebuffer"
+COMMANDS for opt.tcl: 
+    protected method constructor { parent } { 
+        set_state opt init
+    public method example { args } {
+    public method size { args } {
+            setup_incr
+            slew_limit
+            area_limit_pct
+            change_limit
+    public method make_legal { } {
+    public method hold { } {
+    public method buffer { } {
+    public method design { args } {
+            strategy
+            slew_limit
+            area_limit_pct

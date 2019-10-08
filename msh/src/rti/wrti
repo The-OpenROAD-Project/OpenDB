@@ -1,0 +1,171 @@
+#!/bin/ksh -p
+# \
+    cmd=$(whence ${1-tclsh}) ; shift ; exec zroutesh $0 $cmd "$@"
+
+#
+# RTI will create a slave interpreter, to house the inspector code
+# That interpeter will intercept the commands from the main one
+#
+namespace eval _RTI {
+variable slave ""
+
+#      Author: Manolis M. Tsangaris
+#
+proc Init {nargv} {
+    global auto_path argv0 argv env
+    variable slave
+    array set S "exit 1 error 1 source 0"
+
+
+    set slave [mk_slave $auto_path $argv0 env]
+
+    set argv0 [lindex $nargv 0]
+    set argv  [lrange $nargv 1 end]
+
+    info script $argv0
+
+    # install event handler
+    interp alias "" [namespace current]::rti_event $slave rti_event
+    interp alias "" ::rti_source    "" [namespace current]::do_source
+
+    if { $S(source) } {
+        trap source 0
+    }
+
+    if { $S(error) } {
+        trap error 1000
+    }
+
+    if { $S(exit) } {
+        trap exit 1000
+    }
+
+    uplevel #0 [namespace inscope [namespace current] do_source $argv0]
+}
+
+#
+# Create the slave intepreter and install there the RTI environment,
+# so that the main interpreter has no interference with it.
+#
+
+proc mk_slave {ap av0 ee} {
+    variable slave
+    upvar $ee env
+
+    # build the auto path
+    if [file exists server.tcl] {
+        set lib ..
+    } else {
+        set lib [file join [file dirname [file dirname $av0]] lib]
+    }
+    set ap [concat $lib [file join $lib mtlib] $ap]
+
+    set slave [interp create]
+
+    interp eval $slave [list set auto_path $ap]
+    interp eval $slave [list set argv0 $av0]
+    interp eval $slave [list set argv  ""]
+
+    interp eval $slave [list package require mtlib]
+    interp eval $slave [list package require RTI]
+
+    if ![info exists env(RTI)] {
+        set addr 7840
+        puts stderr "wrti: warning: assumming RTI=$addr"
+        puts stderr "wrti: use: export RTI=port@host to set the rti server"
+    } else {
+        set addr $env(RTI)
+    }
+    interp eval $slave [list set OPT(address) $addr]
+
+    # allow slave interpeter to eval
+    interp alias $slave do_uplevel "" uplevel
+
+    interp eval $slave {
+    set rti [RTI #auto -opts [array get OPT]]
+
+    # send an RTI event
+    proc rti_event {event args} {
+        global rti
+        $rti Post $event $args
+    }
+    }
+    set slave
+}
+
+proc trap {proc {level 0}} {
+    trace add execution $proc enter     "[namespace code eEnter] $level"
+    trace add execution $proc leave     "[namespace code eLeave] $level"
+}
+proc trapall {proc {level 0}} {
+    trace add execution $proc enter     "[namespace code eEnter] $level"
+    trace add execution $proc leave     "[namespace code eLeave] $level"
+    trace add execution $proc enterstep "[namespace code eEnterStep] $level"
+    trace add execution $proc leavestep "[namespace code eLeaveStep] $level"
+}
+
+# we enter a command being traced
+proc eEnter {LEVEL cmdstring _} {
+    set level [expr [info level] -2]
+    if { $LEVEL < $level } {  return }
+    switch [lindex $cmdstring 0] {
+        error {
+            rti_event <<tool-error>> [lindex $cmdstring 1]
+        }
+        source {
+        }
+        default {
+            puts ">>> enter: $cmdstring"
+        }
+    }
+}
+
+# we leave a command being traced
+proc eLeave {LEVEL cmdstring code result _} {
+    set level [expr [info level] -2]
+    if { $LEVEL < $level } {  return }
+    if { $code == 0 } {
+        set code ""
+    } else {
+        set code "(ERROR)"
+    }
+    puts ">>> leaving $cmdstring $code $level"
+}
+
+proc eEnterStep {LEVEL cmdstring _} {
+    set level [expr [info level] -2]
+    if { $LEVEL < $level } {  return }
+    rti_event <<tool-stepin>> $cmdstring
+}
+
+proc eLeaveStep {LEVEL cmdstring code result _} {
+    set level [expr [info level] -2]
+    if { $LEVEL < $level } {  return }
+    rti_event <<tool-stepout>> $cmdstring $code
+}
+
+proc do_source {file} {
+    set fp [open $file r]
+
+    set cmd ""
+    while { [gets $fp line] != -1 } {
+        if ![string match $line *\\] { 
+            append cmd $line \n
+        } else {
+            append cmd $line
+            continue
+        }
+        if [info complete $cmd] {
+            if [catch {uplevel 1 $cmd} rc] {
+                error $rc
+            }
+            rti_event <<tool-cmd>> $cmd $rc
+            set cmd ""
+        }
+    }
+    close $fp
+}
+
+}
+
+_RTI::Init $argv

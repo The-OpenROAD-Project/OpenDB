@@ -1,0 +1,45 @@
+SMPX: simple point tool multiplexer
+
+SMPX allows multiple clients to reach a limited pool of servers, 
+in order to submit commands.
+
+SMPX allows multiple clients to use a limited pool of servers,
+in order to submit commands. SMPX simply manages the round robin
+use of the server; the clients still need to connect to the server,
+and to setup/restore any state.
+
+The following example illustrates the operation of smpx:
+
+Each server needs to register with smpx:
+
+ # -- create an instance of smpx client
+ LSMPXClient smpx -address port@host
+ # -- register a server named 'pt' (listening to: myport@myhost)
+ smpx Register pt myport@myhost
+
+Each client may request a server:
+
+ # -- create an instance of smpx client
+ LSMPXClient smpx -address port@host
+
+ # -- reserve a pt server and wait until you get it
+ smpx Reserve pt
+ smpx Wait STATUS
+ # -- STATUS array contains interesting information
+
+ # -- at this point the client may connect to $STATUS(address)
+ to be serviced by the server just reserved
+
+ ...
+when done, the client should release the server:
+
+ smpx Release pt $STATUS(address)
+
+
+When the point tool exits, smpx UnRegister should be called
+
+SMPX runs as a server, and expect connections from its clients
+and registrations from its servers
+
+
+

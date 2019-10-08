@@ -1,0 +1,136 @@
+#!/usr/bin/env tclsh
+##
+
+set ade "ade"
+set tthome "tt"
+set make   "./tt"
+
+
+set cmdsep ":"
+
+set cmdstart {run exec diff show upcvs upgold clean}
+set cmdend {all}
+
+if { [info exists ::env(RT_SEP)] } {
+    set cmdsep $::env(RT_SEP)
+}
+
+set ttsep ":"
+set ::env(TT_SEP) $ttsep
+
+set rc [catch { set zr_path [exec /usr/bin/which $ade] } msg]
+if { $rc != 0 } {
+    puts "$ade not found - please have $ade in your current path!"
+    exit
+}
+
+set zl [file split $zr_path]
+set len [expr [llength $zl] - 3]
+if { $len <= 0 } {
+    puts "Don't know how to deal with $ade path: $zr_path"
+} else {
+    set zsl [lrange $zl 0 $len]
+    if { [info exists ::env(TT_HOME)] } {
+        set zp $::env(TT_HOME)
+    } else {
+        set zp [eval "file join $zsl src $tthome"]
+    }
+    set curd [pwd]
+    set a1 [concat $argv]
+    if { [string compare -nocase $a1 "template"] == 0 } {
+        set cl [file split $curd]
+        set cn [lrange $cl end end]
+        set cl [lrange $cl 0 end-1]
+        set p1 [eval "file join $cl"]
+        set argl "test${ttsep}new${ttsep}$cn -t $p1 -autocreate"
+        
+    } else {
+        ## see if ZT_HOME is set
+        if { [info exists ::env(ZT_HOME)] } {
+            set p1 $::env(ZT_HOME)
+            if { $p1 == "." } {
+                set p1 [pwd]
+            } elseif { $p1 == ".." } {
+                set p1 "[pwd]/.."
+            }
+        } else {
+            set p1 [pwd]
+        }
+        set argl ""
+        set skip 0
+        set start 0
+        set optt 0
+        set argvl [split $argv "$cmdsep "]
+        foreach arg $argvl {
+            if { $skip == 1 } {
+                set skip 0
+                append argl "[concat $arg] "
+                continue
+            }
+            if { ($arg == "-l") || ($arg == "-z") || ($arg == "-u") || ($arg == "-t") } {
+                if { $arg == "-t" } {
+                    set optt 1
+                }
+                set skip 1
+            }
+            if { [lsearch $cmdstart $arg] >= 0} {
+                set start 1
+                append argl " test${ttsep}[concat $arg]"
+            } elseif { $arg == "all" } {
+                if {  $start == 1 } {
+                    append argl "${ttsep}[concat $arg] "
+                } else {
+                    append argl "test${ttsep}[concat $arg] "
+                }
+                set start 0
+            } elseif { [string index $arg 0] != "-" } {
+                if { $start == 1 } {
+                    append argl "${ttsep}[concat $arg]"
+                } else {
+                    append argl "test${ttsep}[concat $arg]"
+                    set start 1
+                }
+            } else {
+                append argl " [concat $arg] "
+            }
+        }
+        if { $optt == 0 } {
+            append argl " -t $p1"
+        }
+        #set argl "test${ttsep}[concat $argv] -t $p1"
+    }
+    set log 0
+    set rcline ""
+    if { [file exists ~/.ttrc] } {
+        set fp [open ~/.ttrc r]
+        set rcline [read $fp]
+        close $fp
+    }
+    foreach arg [split $rcline " "] {
+        lappend argv $arg
+    }
+    foreach arg $argv {
+        #puts "testing arg: $arg"
+        if { $arg == "-l" } {
+            #puts "found log!"
+            set log 1
+            break
+        }
+    }
+    if { $log == 0 } {
+            
+        append argl " -l [file join $curd tt.log]"
+    }
+    cd $zp
+    #puts "Command: $make $argl"
+    set ofd [open "|$make $argl"]
+    fconfigure $ofd -buffering line
+    while { ![eof $ofd]} {
+        gets $ofd line
+        puts $line
+    }
+    fconfigure $ofd -blocking 1
+    catch {close $ofd} err
+    puts "$err"
+    cd $curd
+}

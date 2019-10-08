@@ -1,0 +1,57 @@
+<head>
+<title>TT Testing Tool</title>
+</head>
+<body>
+
+<h2>TT - Testing Tool Documentation</h2>
+
+
+<h3>Requirements:</h3>
+
+<h3> A copy of ade must be found in the current PATH.</h3>
+
+Non-execution operations can still be performed (show, dry-run) without a
+copy of ade. 
+
+tt will run against the ade in the current path - easy to switch testing
+directories!
+
+
+<h3>Packages vs. Groups</h3>
+
+Packages
+<ul>
+    <li> a specific physical subdirectory
+    <li> contains one or more tests in the tt-defined format. 
+    <li> tt-defined format: any directory containing test.exe and optionally test.attr. 
+    <li> For example, in the following directory structure: 
+         tests/sta/test1<br>
+         tests/sta/test2<br>
+         tests/sta/test3<br>
+         tests/sta/newtests/test1<br> 
+         the package is sta. The tests within package sta are test1,
+         test2, test3 and newtests/test1.
+    <li> package names CANNOT include underscores
+</ul>
+
+<h3>Goal: Every subdirectory within "src" that contains ade code
+will have a corresponding "package" subdirectory within the tests
+directory tree.</h3>
+
+Groups
+
+<ul>
+    <li> a virtual construct 
+    <li> relates tests from various packages
+    <li> group tests have a common function
+    <li> each test can belong to any number of groups (via test.attr)
+    <li> e.g., sta/test1 and db/test2 belong to "sanity" group<br>
+         sta/test3 and db/test3 belong to "extended" group.
+    <li> a new group can be created at any time by anyone
+</ul>
+
+<a href="tt1.html">prev</a>
+<a href="tt3.html">next</a>
+<br><a href="ttidx.html">Index</a>
+</body>
+</html>

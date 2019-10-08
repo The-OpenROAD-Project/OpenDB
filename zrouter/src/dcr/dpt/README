@@ -1,0 +1,59 @@
+DPT 
+
+DPT is a picture taking facility, which renders shapes to
+slices. Later it can map slices to an image, based on colorization
+attributes.
+
+
+All crawler calls should support an additional optional argument:
+-channel channel
+	to send the result to an open channel, instead of returning the value
+
+-grid
+	to generate a picture of the given format
+
+the grid should use DPT
+
+The crawler needs to support a few new configuration arguments
+and pass them to dpt class
+
+crawler configure -grid grid-size
+specify the grid sizes
+
+crawler config -colors colormap-list
+should set the colormap to colorize the picture
+
+
+Typical USE:
+
+DCR dcr
+
+# -- configure the grid size
+dcr configure -grid "1024 1024" -slices 32
+
+# -- clear the picture
+dcr clear
+
+# -- send all objects to dpt
+dcr chip_get .... -bbox "0 0 100 100" -grid
+
+# -- specify which layers to show and which colors to use
+dcr configure -colors "0/signal/wire ffffaa 1/inst/bbox 00aa00"
+
+# -- convert slices to an image
+dcr paint
+
+# -- send out the image (as a result value, ppm binary)
+dcr image -image= image
+dcr image -encoding base64 -image= image
+
+# package require Tk
+# label .f -image [image create photo -data $image]
+# pack .f
+
+dcr image -format ppm -encoding base64
+dcr image -format ppm -encoding base64 -channel file12
+
+PERFORMANCE:
+
+dtest: rendered 151768 objects @ 75884.00 o/sec (on 1.8 mobile pentium)

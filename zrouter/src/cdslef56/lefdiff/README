@@ -1,0 +1,2 @@
+Make sure to copy datestamp.cpp from /vobs/lefdef_dev/lefdefapi/lefdefdiff
+before doing make.  It will set the VERSION variable for VersionIdent

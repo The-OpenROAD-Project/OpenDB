@@ -1,0 +1,5 @@
+Remaining MSH issues
+
+MDSC integration and testing
+Slave load control (release and acquire)
+Master needs a reliable way to get its (slave recognized) IP address

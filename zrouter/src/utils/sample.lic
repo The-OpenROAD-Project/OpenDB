@@ -1,0 +1,9 @@
+expires {
+    2010-01-01
+}
+
+features {
+	msh "multiprocessing control"
+	mds "multiprocessing data"
+	zroute "basic zroute functionality"
+}

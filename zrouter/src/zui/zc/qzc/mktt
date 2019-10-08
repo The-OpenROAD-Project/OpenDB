@@ -1,0 +1,2 @@
+##Tests Tag Manager
+purify g++ -g tt.cpp -o tt

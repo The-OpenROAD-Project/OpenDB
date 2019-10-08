@@ -1,0 +1,45 @@
+<html>
+<head>
+<title>TT Testing Tool</title>
+</head>
+<body>
+
+<h1>TT - Testing Tool Documentation</h1>
+
+<h2>Introduction</h2>
+
+ <h3>Testing Tool (tt): designed to run regression or other ade tests
+with a flexible command-syntax and a concise summary of results. It
+includes support for platform-dependent and ade-dependent options.</h3>
+
+
+<h2>Concepts</h2>
+
+tt has several distinct modes of operation: 
+<ul>
+    <li>test execution: clean, run, and diff
+    <li>clean/run/diff: perform individual stages of a test
+    <li>dry-run mode: show what would be done - similar to make -n
+    <li>show mode: show available tests
+    <li>create new test(s)
+</ul>
+        
+
+tt introduces two concepts of test organization:
+<ul>
+    <li>packages: physical directories under the main "tests" directory<br>
+        e.g.: db, tmg, sta, etc
+    <li>groups: virtual collections of tests, joined by a common attribute
+    <li>PACKAGES take precedence over GROUPS
+</ul>
+
+tt can be invoked in several ways:
+<ul>
+    <li>run it directly from the tt subdirectory
+    <li>make &lt;tt command&gt; from the src directory
+    <li>run_test shortcut script
+</ul>
+<a href="tt2.html">next</a>
+<br><a href="ttidx.html">Index</a>
+</body>
+</html>

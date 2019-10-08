@@ -1,0 +1,31 @@
+ext_h
+
+Multiprocessing extraction using zroute as a
+third-party extractor, on block e, with halo nets.
+
+flat.tcl
+  Runs flat extraction
+
+texm.tcl
+  Complete multiprocessing run
+  Note: in texm.tcl, there is a call to zroute
+  as a third-party tool,
+  exec zroute < $b.tcl > $b.log
+  If the zroute being tested is not in the PATH
+  from .profile, then you may need to use a full path here,
+  for example change to
+  exec /home/wfs/work/latest/zrouter/dist/i386-linux/bin/zroute < $b.tcl > $b.log
+
+def_nomsh.tcl
+spef.sh
+read_nomsh.tcl
+  These 3 scripts mimic texm.tcl without
+using multiprocessing.  Used for debugging.
+
+
+------------------------------------------------
+Result
+Worst ctot difference
+Net 27616  delta = 4 ff
+Worst elmore difference
+Net 24693  delta = -0.002 ns

@@ -1,0 +1,87 @@
+#!/bin/ksh -p
+# Multiple Architecture Wrapper
+# (c) Manolis Tsangaris, mtlib open source library (mtlib@karpathos.net)
+#
+# mproxy should reside on the bin directory and be symlinked to any
+# program. Upon execution, mproxy will exec the same binary as it is called
+# but residing in the appropriate architecture directory.
+# for example, if foo is -> mproxy, then running bin/foo will actually run
+# ../bin.$ARCH/program (where ARCH is set based on the switch statement below 
+#
+
+function dirname {
+	echo ${1%/*}
+}
+
+function basename {
+	echo ${1##*/}
+}
+
+function die {
+	echo "$me: $*" 1>&2
+	exit 1
+}
+
+dir=$(dirname $(dirname $0))
+if [[ $dir = . ]]
+then
+	bdir=$(pwd | awk -F\/ '{print $NF}')
+	dir=$(pwd | awk -F/$bdir '{print $1}')
+fi
+
+if [[ $dir = $0 ]]
+then
+	bdir=$(pwd | awk -F\/ '{print $NF}')
+	dir=$(pwd | awk -F/$bdir '{print $1}')
+fi
+
+pdir=$(dirname $dir)"/pubtools"
+# echo $pdir
+me=`basename $0`
+base=$dir
+
+# --------------------------------------------------------------------------
+# determine here the path where everything should be based on $ARCH
+# set the appropriate LD_LIBRARY_PATH
+# MPT_ARCH is an environment variable = to 32, 64 or blank.
+# 	blank or not setting $MPT_ARCH will default to native platform binary
+#	32 will execute 32 bit binary request of platform
+#	64 will execture 64 bit binary request on 64 bit platform only.
+# --------------------------------------------------------------------------
+ARCH=`uname -s`.`uname -m`
+echo "ARCH = $ARCH"
+case "$ARCH" in
+	Linux.i686)
+		p=i386-linux
+		PATH=$pdir/$p/bin:$PATH
+		LD_LIBRARY_PATH=$pdir/$p/lib:$LD_LIBRARY_PATH
+		TCL_LIBRARY=$pdir/$p/lib/tcl8.4
+		TK_LIBRARY=$pdir/$p/lib/tk8.4
+		;;
+	Linux.x86_64)
+		p=i386-linux
+		PATH=$pdir/$p/bin:$PATH
+                LD_LIBRARY_PATH=$pdir/$p/lib:$LD_LIBRARY_PATH
+		TCL_LIBRARY=$pdir/$p/lib/tcl8.4
+		TK_LIBRARY=$pdir/$p/lib/tk8.4
+                ;;
+  	   SunOS.*)
+		p=sun7
+		LD_LIBRARY_PATH=$base/$p/lib:$LD_LIBRARY_PATH
+		;;
+       *) die "unsupported OS/platform: $os";;
+esac
+
+
+# echo " dir: $dir"
+# echo "base: $base"
+# echo "prog: $me"
+# echo "MPT_ARCH: $MPT_ARCH"
+
+f=$pdir/$p/bin/$me
+test -f $f || die "cannot locate program '$me' (in $pdir/$p/bin)"
+
+# echo $LD_LIBRARY_PATH
+export PATH LD_LIBRARY_PATH TCL_LIBRARY TK_LIBRARY
+set -x
+exec $f "$@"

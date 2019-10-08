@@ -1,0 +1,44 @@
+<head>
+<title>TT Testing Tool</title>
+</head>
+<body>
+
+<h2>TT - Testing Tool Documentation</h2>
+
+
+<h3>Step-by-Step Procedure for creating a new (non-custom) test</h3>
+
+Assumptions:
+<ul>
+    <li>existing test is contained in file sta_test.tcl
+    <li>existing test is part of sta package
+    <li>existing test requires data files db1.lef db1.lib
+    <li>output of test can be diffed and compared with known good file log.GOLD
+</ul>
+
+Steps to convert test to tt format:
+<ul>
+    <li>call tt with test_new_sta (or test_new and specify sta as the package)<br>
+        (also see next section run_test)
+    <ul>
+        <li>select groups to which test should belong
+        <li>enter "source sta_test.tcl" instead of default "source test.tcl"
+        <li>enter description, runtime (if known)
+        <li>enter sta for required compiled-in options (or "none" if none)
+        <li>enter blank for required ade startup options, unless required
+        <li>enter "y" to create the test(s)
+    </ul>
+    <li>cd to test directory
+    <li>following files should exist: test.exe test.attr Makefile
+    <li>copy sta_test.tcl to current directory
+    <li>copy db1.lef and db1.lib to current directory
+    <li>copy log.GOLD to current directory and rename it to test.log.GOLD
+    <li>run "make test.diff" to see if test is working
+    <li>run "run_test show_sta -v" to see if your new test shows up in the system
+</ul>
+
+<a href="tt6.html">prev</a>
+<a href="tt8.html">next</a>
+<br><a href="ttidx.html">Index</a>
+</body>
+</html>

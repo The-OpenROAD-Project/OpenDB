@@ -1,0 +1,2 @@
+## Tests datasets, and layers to some extent
+purify g++ -g -I/u/mattias/QT3/include -I/opt/tcl8/include tc.cpp -o tc -L/u/mattias/QT3/lib -L/usr/X11R6/lib -lqt-mt -lXext -lX11 -lm -L/opt/tcl8/lib -ltcl8.4 -ltk8.4

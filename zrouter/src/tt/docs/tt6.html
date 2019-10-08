@@ -1,0 +1,49 @@
+<head>
+<title>TT Testing Tool</title>
+</head>
+<body>
+
+<h2>TT - Testing Tool Documentation</h2>
+
+
+<h3>Creating a new test</h3>
+
+<ul>
+<li>test_new            - create a new test
+<li>test_new_sta        - create a new test within the sta package
+<li>test_new_sta_3      - create 3 new tests within the sta package
+</ul>
+
+The following information is required for a new test and will be asked for:
+<ul>
+<li>package (if not provided in original command)
+<li>test group(s) (existing test groups shown, can be selected by number)
+<li>ade commands (defaults to: source test.tcl)
+<li>platform (defaults to: current platform)
+<li>runtime (no default)
+<li>ade compiled-in options (defaults to: none)
+<li>ade startup options (defaults to: none)
+</ul>
+
+Runtime can be omitted just by entering a blank.
+
+At minimum, the user must still create/provide two more files:<br>
+<ul>
+<li>test.tcl - ade commands that produce the test output
+<li>test.log.GOLD - default "GOLD" file, expected output from running the
+test<br>
+can be initially created by: make test.log; mv test.log test.log.GOLD
+</ul>
+
+<p>
+A test requires test.exe (automatically created) which calls (by default)
+test.tcl. test.tcl should be a series of tcl ade commands which performs
+the required test. Usually, the success or failure of the test will then be
+determined by doing a diff of the output vs. test.log.GOLD. 
+</p>
+
+<a href="tt5.html">prev</a>
+<a href="tt7.html">next</a>
+<br><a href="ttidx.html">Index</a>
+</body>
+</html>

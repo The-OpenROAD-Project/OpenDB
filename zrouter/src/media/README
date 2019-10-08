@@ -1,0 +1,5 @@
+
+media files needed by the GUI
+will be installed in LIBDIR/media
+
+accessed as [ade_media name]

@@ -1,0 +1,129 @@
+#!/bin/sh
+# -- ignore terminal interrupts
+# -- set the maximum file descriptors
+# \
+    ulimit -n 1024; trap '' 2 ; exec tclsh $0 "$@"
+package require Itcl
+
+set top [file dirname [file norm $argv0]]
+if [file exists [file join $top Makefile]] {
+    set lib [file dirname $top]
+} else {
+    set lib [file join [file dirname $top] lib]
+}
+lappend auto_path $lib
+
+package require mtlib 1.0
+package require mds 1.0
+package require mshlic 1.0
+
+#
+#       Class: MDSD
+# Description: MDSD programmatic front end
+#      Author: Manolis M. Tsangaris
+#
+itcl::class MDSD {
+    inherit LProgram
+    # -------------------------------------------------- Public Variables --
+    # -------------------------------------------------- Public Methods ----
+    # -------------------------------------------------- Virtual Methods ---
+    # -------------------------------------------------- Protected Variables
+    protected variable mds ""
+    protected variable lic ""
+    # -------------------------------------------------- Common Variables --
+    # -------------------------------------------------- Configuration -----
+    constructor {args} {
+        eval configure $args
+        option help     -h         "help"
+        option address  -s address "Address"                           "6370-@"
+        option wait     -w         "wait for EOF in stdin to shutdown"
+        option info     -i         "print server contact info"
+        option logfile  -l logfile "log output file"                   - 
+        option logging  -d level   "enable debugging levels"  "notice"
+        option cache    -c path    "where to store MDS cache" "/tmp:."
+        option lic      -L license  "license file" ""
+        option mdsc    -e "use the enhanced mdsc engine"
+    }
+    destructor {
+        LLog mdsd notice "shuting down [pid] on [info hostname]"
+        if { $mds != "" } { 
+            $mds delete
+        }
+	if { $lic != "" } { $lic delete }
+        exit
+    }
+    # -------------------------------------------------- Private Methods ---
+    # -- initialize the license manager
+    protected method lic_check {opt} {
+        upvar $opt OPT
+        if { $lic == "" } {
+            set lic [ADELicense $this.lic]
+        }
+        if { [$lic Init R] != 0 } {
+            puts stderr "$R(msg)"
+            return 1
+        }
+        set facility ade.mds
+        set r [$lic Checkout $facility R]
+        if { $r != 0 } {
+            # -- checkout failed
+            puts $R(msg)
+            return $r
+        }
+        set r
+    }
+    # ----------------------------------------------- Interface Implementation
+    protected method vRun {opt} {
+        upvar $opt OPT
+        if $OPT(help) { Usage; Exit 0 ; return }
+
+        if { [lic_check OPT] != 0 } {
+            Signal 1
+            return
+        }
+
+        if { $OPT(logfile) != "-" } {
+            exec mkdir -p [file dirname $OPT(logfile)]
+        }
+
+        LLogger::Auto -logfile $OPT(logfile)
+
+        foreach f $OPT(logging) {
+            LLogEnable $f
+        }
+
+        LLog mdsd notice "logging levels: $OPT(logging)"
+
+        set mds [MDS $this.mds -address $OPT(address) -cachepath $OPT(cache)\
+	    -mdsc $OPT(mdsc) ]
+
+        if {$OPT(info)} {
+            puts "address [$mds Address]"
+            flush stdout
+        }
+        if {$OPT(wait)} {
+            fileevent stdin r "$this eChannelCheck stdin"
+        }
+    }
+    # ----------------------------------------------- CallBacks
+    # check for end of file status and exit on EOF
+    public method eChannelCheck {fp} {
+        if { [gets $fp line] == -1 } {
+            LLog mdsd info "stdin peer exited. Quiting"
+            catch {close $fp}
+            Signal 0
+        }
+    }
+    # -------------------------------------------------- Common Initialization
+}
+proc bgerror {err} {
+    if [catch {LLog mdsd warning bgerror:$err} rc] {
+	puts stderr "bgerror: ($err) $rc"
+	flush stderr
+    }
+}
+MDSD mdsd
+mdsd Run
+mdsd Wait
+mdsd delete
+exit

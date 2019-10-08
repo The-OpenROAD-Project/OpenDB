@@ -1,0 +1,48 @@
+#RMT MIN_MAX
+P 1 FF_0/Q 
+P 2 FF_0/DATA 
+P 3 FF_0/CLK 
+P 4 FF_1/Q 
+P 5 FF_1/DATA 
+P 6 FF_1/CLK 
+P 7 FF_2/DATA 
+P 8 FF_2/CLK 
+P 9 FF_3/Q 
+P 10 FF_3/DATA 
+P 11 FF_3/CLK 
+P 12 FF_4/Q 
+P 13 FF_4/DATA 
+P 14 FF_4/CLK 
+P 15 FF_5/Q 
+P 16 FF_5/DATA 
+P 17 FF_5/CLK 
+P 18 FF_6/Q 
+P 19 FF_6/DATA 
+P 20 bufn1/Y 
+P 21 bufn1/A 
+P 22 bufn2/Y 
+P 23 bufn2/A 
+P -24 clk 
+P -25 in 
+P -26 out 
+P -27 out4 
+P -28 out5 
+P -29 out6 
+_Clk: clk Period: 1.00000000 SourceType: net SourceName: clk 
+C 3 
+C 6 
+C 8 
+C 11 
+C 14 
+C 17 
+D 2 
+D 5 
+D 7 
+D 10 
+D 13 
+D 16 
+O 1 
+O 4 
+O 9 
+O 12 
+O 15 

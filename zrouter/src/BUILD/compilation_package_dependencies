@@ -1,0 +1,42 @@
+Instruction on installing all the packages to build and run ade, strting with only standard CentOS 7 installation
+
+
+Install wget and git
+	sudo yum install wget git-core
+
+Install epel repo
+	wget https://dl.fedoraproject.org/pub/epel/epel-release-latest-7.noarch.rpm
+	sudo yum install epel-release-latest-7.noarch.rpm
+
+Install c++, bison, flex
+	sudo yum group install "Development Tools"
+
+Install Tcl and qt3
+	sudo yum install tcl-devel qt3-devel ksh itcl-devel
+
+Install all Run-time dependent packages : required to run ade
+	sudo yum install tcl tk ksh libstdc++ qt3 itcl iwidgets blt tcllib bwidget
+
+
+Clone the repo
+	git clone https://github.com/nefelus/Athena-OpenROAD.git
+
+Compile and Build
+	Athena-OpenROAD/zrouter/src/
+	make clean
+	make 
+	make install
+
+Set Binary and Lib Paths to run ade
+	vi set_ade_env.bash 
+		set prefix_path in RELEASE
+			RELEASE=<prefix_path>/Athena-OpenROAD/zrouter
+		set tcl 5 or 6 
+			TCL_LIBRARY=/usr/lib64/tcl8.5
+			TK_LIBRARY=/usr/lib64/tk8.5
+			BLT_LIBRARY=/usr/share/tcl8.5/blt2.4
+
+	source set_ade_env.bash 
+	test location of ade with
+		which ade
+

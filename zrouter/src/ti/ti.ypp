@@ -1,0 +1,693 @@
+/*
+ BSD 3-Clause License
+
+ Copyright (c) 2019, The Regents of the University of California
+ All rights reserved.
+
+ Redistribution and use in source and binary forms, with or without
+ modification, are permitted provided that the following conditions are met:
+
+ * Redistributions of source code must retain the above copyright notice, this
+   list of conditions and the following disclaimer.
+
+ * Redistributions in binary form must reproduce the above copyright notice,
+   this list of conditions and the following disclaimer in the documentation
+   and/or other materials provided with the distribution.
+
+ * Neither the name of the copyright holder nor the names of its
+   contributors may be used to endorse or promote products derived from
+   this software without specific prior written permission.
+
+ THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+ AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+ IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+ DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE
+ FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
+ DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR
+ SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
+ CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
+ OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
+ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+*/
+
+%{
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#include <assert.h>
+#include "ti.h"
+#include "ti_parser.hpp"
+
+void Tierror( const char * msg );
+int Tilex();
+int Tierrors = 0;
+int ignore_error = false;
+const char * Tiinfile;
+extern char * Titext;
+extern char Ticcode[8192];
+extern int Tilex_lineno;
+
+Module * cur_module = NULL;
+Member * cur_member = NULL;
+Method * cur_method = NULL;
+Arg * cur_arg = NULL;
+Var * cur_var = NULL;
+
+Var * findVar( std::list<Var *> & vars, const char * var_name );
+Arg * findArg( std::list<Arg *> & args, const char * arg_name );
+Method * findMethod( std::list<Method *> & methods, const char * name );
+
+void module( const char * name, const char * zname )
+{
+    cur_module = new Module(name, zname); 
+    modules.push_back(cur_module);
+}
+
+void method( const char * name, const char * zcmd )
+{
+    if ( strcmp(zcmd, "delete") == 0 )
+        Tierror("reserved method name, cannot export a \"delete\" method");
+
+    if ( strcmp(zcmd, "notify") == 0 )
+        Tierror("reserved method name, cannot export a \"notify\" method");
+
+    if ( strcmp(zcmd, "configure") == 0 )
+        Tierror("reserved method name, cannot export a \"configure\" method");
+
+    if ( strcmp(zcmd, "cget") == 0 )
+        Tierror("reserved method name, cannot export a \"cget\" method");
+
+    if ( strcmp(name, cur_module->name) == 0 )
+        Tierror("cannot export a constructor method, use the \"constructor\" statement");
+
+    if ( findMethod( cur_module->methods, name ) )
+        Tierror("method previously defined");
+
+    if ( findVar( cur_module->vars, name ) )
+        Tierror("multiply declared member");
+
+    cur_method = new Method(name, zcmd); 
+    cur_member = cur_method;
+    cur_module->methods.push_back(cur_method);
+}
+
+void constructor()
+{
+    cur_method = new Method( cur_module->name, "constructor");
+    cur_member = cur_method;
+    cur_module->methods.push_back(cur_method);
+    cur_module->constructor = cur_method;
+}
+
+void arg( bool input, bool list, ArgType type, const char * name, ArgValue * value )
+{
+    cur_var = NULL;
+
+    if ( (strcmp( cur_method->zcmd, "constructor" ) == 0) && input )
+    {
+        if ( strcmp(name, "session") == 0 )
+            Tierror("reserved input constructor argument name, cannot use \"session\" argument");
+
+        if ( strcmp(name, "db") == 0 )
+            Tierror("reserved input constructor argument name, cannot use \"db\" argument");
+    }
+
+    if ( findArg( cur_method->args, name ) )
+        Tierror("multiply declared argument");
+
+    if ( (type == BOOL_ARG) && (list == true) )
+        Tierror("bool type cannot be a list");
+
+    cur_arg = new Arg(input, list, type, name); 
+    cur_method->args.push_back(cur_arg);
+
+    switch( type )
+    {
+        case INT_ARG:
+        {
+            if ( value == NULL )
+            {
+                cur_arg->value = strdup("0");
+                break;
+            }
+
+            switch( value->type )
+            {
+                case NUM_INT:
+                    cur_arg->value = value->value;
+                    break;
+
+                case NUM_DOUBLE:
+                    Tierror("int cannot be assigned a float value");
+                    cur_arg->value = value->value;
+                    break;
+
+                case QSTRING:
+                    Tierror("int cannot be assigned a string value");
+                    cur_arg->value = value->value;
+                    break;
+
+                case FALSE_K:
+                    free( (void *) value->value );
+                    cur_arg->value = strdup("0");
+                    break;
+
+                case TRUE_K:
+                    free( (void *) value->value );
+                    cur_arg->value = strdup("1");
+                    break;
+
+                case RECT_K:
+                    Tierror("int cannot be assigned a rect value");
+                    cur_arg->value = value->value;
+                    break;
+
+                case POINT_K:
+                    Tierror("int cannot be assigned a point value");
+                    cur_arg->value = value->value;
+                    break;
+            }
+            break;
+        }
+        case FLOAT_ARG:
+        {
+            if ( value == NULL )
+            {
+                cur_arg->value = strdup("0.0");
+                break;
+            }
+
+            switch( value->type )
+            {
+                case NUM_INT:
+                    cur_arg->value = value->value;
+                    break;
+
+                case NUM_DOUBLE:
+                    cur_arg->value = value->value;
+                    break;
+
+                case QSTRING:
+                    Tierror("float cannot be assigned a string value");
+                    cur_arg->value = value->value;
+                    break;
+
+                case FALSE_K:
+                    Tierror("float cannot be assigned a bool value");
+                    cur_arg->value = value->value;
+                    break;
+
+                case TRUE_K:
+                    Tierror("float cannot be assigned a bool value");
+                    cur_arg->value = value->value;
+                    break;
+
+                case RECT_K:
+                    Tierror("float cannot be assigned a rect value");
+                    cur_arg->value = value->value;
+                    break;
+
+                case POINT_K:
+                    Tierror("float cannot be assigned a point value");
+                    cur_arg->value = value->value;
+                    break;
+            }
+            break;
+        }
+        case STRING_ARG:
+        {
+            if ( value == NULL )
+            {
+                cur_arg->value = strdup("");
+                break;
+            }
+
+            switch( value->type )
+            {
+                case NUM_INT:
+                    Tierror("string cannot be assigned a int value");
+                    cur_arg->value = value->value;
+                    break;
+
+                case NUM_DOUBLE:
+                    Tierror("string cannot be assigned a float value");
+                    cur_arg->value = value->value;
+                    break;
+
+                case QSTRING:
+                    cur_arg->value = value->value;
+                    break;
+
+                case FALSE_K:
+                    Tierror("string cannot be assigned a bool value");
+                    cur_arg->value = value->value;
+                    break;
+
+                case TRUE_K:
+                    Tierror("string cannot be assigned a bool value");
+                    cur_arg->value = value->value;
+                    break;
+
+                case RECT_K:
+                    Tierror("string cannot be assigned a rect value");
+                    cur_arg->value = value->value;
+                    break;
+
+                case POINT_K:
+                    Tierror("string cannot be assigned a point value");
+                    cur_arg->value = value->value;
+                    break;
+            }
+            break;
+        }
+        case BOOL_ARG:
+        {
+            if ( value == NULL )
+            {
+                cur_arg->value = strdup("false");
+                break;
+            }
+
+            switch( value->type )
+            {
+                case NUM_INT:
+                    Tierror("bool cannot be assigned a int value");
+                    cur_arg->value = value->value;
+                    break;
+
+                case NUM_DOUBLE:
+                    Tierror("bool cannot be assigned a float value");
+                    cur_arg->value = value->value;
+                    break;
+
+                case QSTRING:
+                    Tierror("bool cannot be assigned a string value");
+                    cur_arg->value = value->value;
+                    break;
+
+                case FALSE_K:
+                    cur_arg->value = value->value;
+                    break;
+
+                case TRUE_K:
+                    Tierror("bool can only be assigned a false value");
+                    cur_arg->value = value->value;
+                    break;
+
+                case RECT_K:
+                    Tierror("bool cannot be assigned a rect value");
+                    cur_arg->value = value->value;
+                    break;
+
+                case POINT_K:
+                    Tierror("bool cannot be assigned a point value");
+                    cur_arg->value = value->value;
+                    break;
+            }
+            break;
+        }
+        case DBOBJECT_ARG:
+        {
+            if ( value  )
+            {
+                Tierror("dbobject cannot be initialized to a default value");
+                cur_arg->value = value->value;
+            }
+            else
+                cur_arg->value = strdup("");
+
+            break;
+        }
+        case ZOBJECT_ARG:
+        {
+            if ( value  )
+            {
+                Tierror("zobject cannot be initialized to a default value");
+                cur_arg->value = value->value;
+            }
+            else
+                cur_arg->value = strdup("");
+
+            break;
+        }
+        case ICHANNEL_ARG:
+        {
+            if ( ! cur_arg->input  )
+                Tierror("ichannel cannot be an out parameter");
+
+            if ( value  )
+            {
+                Tierror("ichannel cannot be initialized to a default value");
+                cur_arg->value = value->value;
+            }
+            else
+                cur_arg->value = strdup("");
+
+            break;
+        }
+
+        case OCHANNEL_ARG:
+        {
+            if ( ! cur_arg->input  )
+                Tierror("ochannel cannot be an out parameter");
+
+            if ( value  )
+            {
+                Tierror("ochannel cannot be initialized to a default value");
+                cur_arg->value = value->value;
+            }
+            else
+                cur_arg->value = strdup("");
+
+            break;
+        }
+
+        case RECT_ARG:
+        {
+            if ( value  )
+            {
+                Tierror("rect cannot be initialized to a default value");
+                cur_arg->value = value->value;
+            }
+            else
+                cur_arg->value = strdup("");
+
+            break;
+        }
+
+        case POINT_ARG:
+        {
+            if ( value  )
+            {
+                Tierror("rect cannot be initialized to a default value");
+                cur_arg->value = value->value;
+            }
+            else
+                cur_arg->value = strdup("");
+
+            break;
+        }
+    }
+}
+
+void var( bool list, ArgType type, const char * name )
+{
+    cur_arg = NULL;
+
+    if ( findVar( cur_module->vars, name ) )
+        Tierror("multiply declared variable");
+
+    if ( findMethod( cur_module->methods, name ) )
+        Tierror("multiply declared member");
+
+    if ( (type == BOOL_ARG) && (list == true) )
+        Tierror("bool type cannot be a list");
+
+    if( (type == ICHANNEL_ARG) || (type == OCHANNEL_ARG) )
+        Tierror("Cannot export a channel variable");
+
+    cur_var = new Var(list, type, name); 
+    cur_member = cur_var;
+    cur_module->vars.push_back(cur_var);
+}
+
+Arg * findArg( std::list<Arg *> & args, const char * arg_name )
+{
+    std::list<Arg *>::iterator itr;
+    for( itr = args.begin(); itr != args.end(); ++itr )
+    {
+        Arg * a = *itr;
+
+        if ( strcmp( a->name, arg_name ) == 0 )
+            return a;
+    }
+    return NULL;
+}
+
+Var * findVar( std::list<Var *> & vars, const char * var_name )
+{
+    std::list<Var *>::iterator itr;
+    for( itr = vars.begin(); itr != vars.end(); ++itr )
+    {
+        Var * a = *itr;
+
+        if ( strcmp( a->name, var_name ) == 0 )
+            return a;
+    }
+    return NULL;
+}
+
+bool duplicateNotify( const char * n )
+{
+    std::list<Var *>::iterator itr;
+
+    for( itr = cur_module->vars.begin(); itr != cur_module->vars.end(); ++itr )
+    {
+        Var * a = *itr;
+
+        if ( a->notify && strcmp( a->notify, n ) == 0 )
+            return true;
+    }
+    return false;
+}
+
+Method * findMethod( std::list<Method *> & methods, const char * name )
+{
+    std::list<Method *>::iterator itr;
+    for( itr = methods.begin(); itr != methods.end(); ++itr )
+    {
+        Method * m = *itr;
+
+        if ( strcmp( m->name, name ) == 0 )
+            return m;
+    }
+    return NULL;
+}
+
+void addValue( int ktype, const char * value )
+{
+
+}
+
+inline int is_keyword( int type )
+{
+    return (type > KEYWORD_BASE);
+}
+
+%}
+
+%union 
+{
+    const char * id;
+    ArgType type;
+    bool b;
+    ArgValue value;
+}
+
+%token ID NUM_INT NUM_DOUBLE QSTRING
+%token CCODE_BEGIN CCODE_LINE CCODE_END
+
+%token KEYWORD_BASE
+%token <type> INT_K
+%token <type> FLOAT_K
+%token <type> STRING_K
+%token <type> BOOL_K
+%token MODULE_K
+%token IN_K
+%token OUT_K
+%token TRUE_K
+%token FALSE_K
+%token USAGE_K
+%token EXPORT_K
+%token CONSTRUCTOR_K
+%token DBOBJECT_K
+%token ZOBJECT_K
+%token ICHANNEL_K
+%token OCHANNEL_K
+%token LIST_K
+%token NOTIFY_K
+%token RECT_K
+%token POINT_K
+%token DOC_K
+
+%type <id> identifier
+%type <id> qstring
+%type <type> type
+%type <b> argDir
+%type <value> expression
+
+%%
+
+file
+    :  /* nothing */
+    |   modules
+    |   ccode modules
+    ;
+
+ccode
+    :   CCODE_BEGIN clines CCODE_END
+    ;
+
+clines
+    :    /* nothing */
+    |   clines CCODE_LINE { char * p = strdup(Ticcode); ccode.push_back(p); }
+    ;
+
+modules
+    :   module
+    |   DOC_K module { cur_module->doc.swap(doc); }
+    |   modules module
+    |   modules DOC_K module { cur_module->doc.swap(doc); }
+    ;
+
+module
+    :    MODULE_K identifier { module($2,$2); } '{' members '}'
+    |    MODULE_K identifier qstring { module($2,$3); } '{' members '}'
+    ;
+
+members
+    :    /* nothing */
+    |    members member
+    |    members DOC_K member { cur_member->doc.swap(doc); }
+    ;
+
+member
+    :    methodDef '(' args ')' ';'
+    |    methodDef '(' ')' ';'
+    |    methodDef '(' args ')' { ignore_error = true; } error { Tierror("missing ';'"); }
+    |    methodDef '(' ')' { ignore_error = true; } error { Tierror("missing ';'"); }
+    |    constructor '(' args ')' ';'
+    |    constructor '(' ')' ';'
+    |    varDef ';'
+    ;
+
+varDef
+    :    EXPORT_K type identifier { var( false, $2, $3 ); } argOptions
+    |    EXPORT_K LIST_K type identifier { var( true, $3, $4 ); } argOptions
+    ;
+
+constructor
+    :    CONSTRUCTOR_K { constructor(); }
+    ;
+
+methodDef
+    :    EXPORT_K identifier { method($2,$2); }
+    |    EXPORT_K identifier qstring { method($2,$3); } 
+    ;
+
+args
+    :    arg
+    |    args ',' arg
+    |    args { ignore_error = true; } error { Tierror("missing ','"); } arg
+    ;
+
+arg
+    :    argDir decl argOptions {}
+    ;
+
+argDir
+    : IN_K   { $$ = true; }
+    | OUT_K  { $$ = false; }
+    ;
+
+decl
+    : type identifier { arg( $<b>0, false, $1, $2, NULL); } 
+    | LIST_K type identifier { arg( $<b>0, true, $2, $3, NULL); } 
+    | type identifier '=' expression { arg( $<b>0, false, $1, $2, &$4 ); }
+    | LIST_K type identifier '=' expression { Tierror("list type cannot be initialized"); }
+    ; 
+
+argOptions
+    :    /* nothing */
+    |    '[' options ']'
+    ;
+
+options
+    :    /* nothing */
+    |    options option ';'
+    |    options option { ignore_error = true; } error { Tierror("missing ';'"); }
+    ;
+
+option
+    :   USAGE_K '=' qstring  
+        { 
+            if ( cur_arg ) 
+                cur_arg->usage = $3; 
+
+            if ( cur_var ) 
+                cur_var->usage = $3; 
+        }
+    |   NOTIFY_K '=' identifier  
+        { 
+            if ( cur_arg ) 
+                Tierror("notify is not applicable to an method argument");
+
+            if ( cur_var ) 
+            {
+                if ( duplicateNotify( $3 ) )
+                    Tierror( "duplicate notify callback" );
+                else
+                    cur_var->notify = $3; 
+            }
+        }
+    ;
+
+type
+    :    INT_K { $$ = INT_ARG; }
+    |    FLOAT_K { $$ = FLOAT_ARG; }
+    |    STRING_K { $$ = STRING_ARG; }
+    |    BOOL_K { $$ = BOOL_ARG; }
+    |    ZOBJECT_K { $$ = ZOBJECT_ARG; }
+    |    DBOBJECT_K { $$ = DBOBJECT_ARG; }
+    |    ICHANNEL_K { $$ = ICHANNEL_ARG; }
+    |    OCHANNEL_K { $$ = OCHANNEL_ARG; }
+    |    RECT_K { $$ = RECT_ARG; }
+    |    POINT_K { $$ = POINT_ARG; }
+    ;
+
+expression
+    :    NUM_INT    { $$.type = NUM_INT, $$.value = strdup(Titext); }
+    |    NUM_DOUBLE { $$.type = NUM_DOUBLE, $$.value = strdup(Titext); }
+    |    QSTRING    { $$.type = QSTRING; char * q = strdup(Titext+1); q[strlen(q)-1] = 0; $$.value = q; }
+    |    FALSE_K    { $$.type = FALSE_K, $$.value = strdup(Titext); }
+    |    TRUE_K     { $$.type = TRUE_K, $$.value = strdup(Titext); }
+    ;
+
+identifier
+    :    ID { $$ = strdup(Titext); }
+    |    { ignore_error = true; } error 
+         {
+             if ( is_keyword(Tichar) )
+             {
+#if YYDEBUG
+                printf("KID (%s)\n", Titext );
+#endif
+                 yyerrok; 
+                 yyclearin; 
+                 $$ = strdup(Titext);
+             }
+             else
+             {
+                 ignore_error = false;
+                 Tierror("parse error");
+             }
+         }
+    ;
+
+qstring
+    :    QSTRING    { char * q = strdup(Titext+1); q[strlen(q)-1] = 0; $$ = q; }
+    ;
+
+%%
+
+void Tierror( const char * msg )
+{
+    if ( ignore_error )
+    {
+        ignore_error = false;
+        return;
+    }
+
+    fprintf( stderr, "%s:%d: %s, reading %s\n", Tiinfile, Tilex_lineno, msg, Titext);
+    Tierrors++;
+}

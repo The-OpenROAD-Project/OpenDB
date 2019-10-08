@@ -1,0 +1,361 @@
+#!/usr/bin/env tclsh
+#
+# vim: syntax=tcl
+## Zrouter Stats Analysis Tool
+## (c) Athena Design Systems, 2005
+## Author: Mattias Hembruch
+##
+
+#Customization
+set fmt_string "%-25s%10.3f%13.3f%13.3f%13.3f" 
+set fmt_vars "\$key \$avg(\$key) \$min(\$key) \$max(\$key) \$dev(\$key)"
+set fmt_ivars "\$k2 \$avg(\$key) \$min(\$key) \$max(\$key) \$dev(\$key)"
+set hdr_string "STATE                           AVG          MIN          MAX      STD DEV"
+set start_string "State              Time(sec)"
+
+## Gnuplot related customization
+set ghdr_string_dev    "\$ghdr_label, AVG, STD-MIN, STD-MAX"
+set ghdr_string_minmax "\$ghdr_label, AVG, MIN, MAX"
+set ghdr_string_inv "\$ghdr_label, FLAT/(AVG RT), FLAT/(MIN RT), FLAT/(MAX RT)"
+set gfmt_string "%s %10.3f, %10.3f, %10.3f" 
+set gfmt_vars_dev "\$glabel \$avg(\$key) \[expr \$avg(\$key) - (\$dev(\$key) / 2) ] \[expr \$avg(\$key) + ( \$dev(\$key) / 2) ]"
+set gfmt_vars_minmax "\$glabel \$avg(\$key) \$min(\$key) \$max(\$key)"
+set gfmt_vars_inv "\$glabel \[expr \$flattime / \$avg(\$key)] \[expr \$flattime / \$min(\$key)] \[expr \$flattime / \$max(\$key) ]"
+
+#Command Line options
+set nosum 0
+set verbose 1
+set gfname "gnuplot.dat"
+set gnuplot 0
+set glabel "1,"
+set gvars "dev"
+set ghdr_label "#LABEL"
+set only_keys {}
+
+#initialization
+set states(0) "" 
+set count(0) "" 
+set max(0) ""
+set min(0) ""
+set track(0) ""
+set dev(0) ""
+set avg(0) ""
+set keys {}
+set ikeys {}
+set inconsistent 0
+set runcount 0
+set flattime 0
+set fnames {}
+
+proc usage { } {
+    puts "mkzstats \[OPTION|FILE] ..."
+    puts "Options and filenames can be mixed - all options are applied at the end"
+    puts "Options:"
+    puts "-gf FILE		gnuplot data file \[default: gnuplot.dat]"
+    puts "-gh			gnuplot data file header label \[default LABEL]"
+    puts "-gl LABEL		gnuplot X co-ordinate label (value) \[default: 1]"
+    puts "-gm			use Min/Max in gnuplot data file instead of Std. Dev."
+    puts "-gp			enable gnuplot output"
+    puts "-h, -usage		this help message"
+    puts "-iv			generate inverse graph data"
+    puts "-nosum			do not print a summary - used with gnuplot options"
+    puts "-ok LIST		only show the results for the listed states"
+    puts "-sr number		sequential case runtime (in seconds)"
+    puts ""
+}
+
+proc arg_empty {option} {
+    if { [string length $arg] == 0 } {
+        puts "Error: argument to $option should not be empty!"
+        return 0
+    } else {
+        return 1
+    }
+}
+proc parse { list } {
+
+    global gnuplot gfname glabel nosum gminmax gvars only_keys ghdr_label
+    global flattime verbose
+
+    set option [string range [lindex $list 0] 1 end]
+    set arg [lindex $list 1]
+
+    ## Now check 0-arg options
+    if { $option ==  "gm" } {
+        set gvars "minmax"
+        return 0
+    }
+    if { $option ==  "gp" } {
+        set gnuplot 1
+        return 0
+    }
+    if { ( $option ==  "h" ) 
+        || ( $option ==  "usage" ) } {
+        usage
+        return 0
+    }
+    if { $option ==  "iv" } {
+        set gvars "inv"
+        return 0
+    }
+    if { $option ==  "nosum" } {
+        set nosum 1
+        return 0
+    }
+    if { $option ==  "noverbose" } {
+        set verbose 0
+        return 0
+    }
+
+    if { [string index $arg 0] != "-" } {
+        ## check all 1-arg options
+        if { $option ==  "gf" } {
+            set gfname $arg
+            return 1
+        }
+        if { $option ==  "gh" } {
+            set ghdr_label "#$arg"
+            return 1
+        }
+        if { $option ==  "gl" } {
+            set glabel "$arg,"
+            return 1
+        }
+        if { $option ==  "ok" } {
+            set only_keys $arg
+            return 1
+        }
+        if { $option ==  "sr" } {
+            if { [string is double $arg] == 1 } {
+                set flattime $arg
+                return 1
+            } else {
+                puts "Could not interpret $arg as number for option -sr"
+                return 0
+            }
+        }
+    }
+
+
+    puts "No option matched $option - did you specify the correct number of arguments?"
+
+    return 0;
+}
+
+
+
+## get_times - does the main work of processing one complete file
+##             reads file, looks for timer start string, grabs state time
+##             values and records them
+
+proc get_times { fname } {
+    #global arrays
+    global states count max min track
+    #global variables
+    global start_string firstloop loop inconsistent keys ikeys runcount
+
+    if { [file isdirectory $fname] } {
+        return
+    }
+
+    set fd [open $fname "r"]
+    set process 0
+    set local_loop 0
+    set one 0
+
+    while { [gets $fd line] >= 0 } {
+        if { $start_string == [string trim $line]} {
+            ## Start processing
+            set process 1
+            set one 0
+            incr local_loop 
+            continue
+        }
+
+        if { $process == 1 } { 
+            if { $one == 0 } {
+                set one 1
+                incr runcount
+            }
+            set ll [lreplace $line 0 -1]
+            set idx [lindex $ll 0]
+
+            set val [lindex $ll 1]
+
+            if { [info exists states($idx)] } {
+                set states($idx) [expr $val + $states($idx)]
+                incr count($idx) 
+                if { $val > $max($idx) } {
+                    set max($idx) $val
+                }
+                if { $val < $min($idx) } {
+                    set min($idx) $val
+                }
+                    
+            } else {
+                set states($idx) $val
+                set count($idx) 1
+                set max($idx) $val
+                set min($idx) $val
+                if { ($loop > $firstloop) || ($local_loop > 1) } {
+                    set inconsistent 1
+                    lappend ikeys $idx
+                } else {
+                    lappend keys $idx
+                }
+                
+            }
+            set track($idx,$count($idx)) $val
+
+
+            if { $idx == "total" } { 
+                set process 0
+            }
+        }
+    }
+}
+
+## calc_nums - calculates averages and std deviation for collected runtimes
+##           - parameters: keys - states to calculate
+proc calc_nums { keys } {
+    global states count max min track avg dev
+
+    for { set i 0 } { $i < [llength $keys] } { incr i } {
+        set key [lindex $keys $i]
+        set dev($key) 0
+        set sum 0
+
+        if { !([info exists states($key)]) } {
+            return
+        }
+        set avg($key) [expr $states($key) / $count($key)]
+
+        for { set j 1 } { $j <= $count($key) } { incr j } {
+            set val $track($key,$j)
+            set diff [expr abs($val - $avg($key))]
+            set sq [expr $diff * $diff]
+            set sum [expr $sum + $sq]
+        }
+        set dev($key) [expr sqrt($sum / $count($key) ) ]
+    }
+}
+
+## summary - drives the reporting process
+proc summary { } { 
+    global states count ikeys keys max min track avg dev
+    global inconsistent hdr_string runcount only_keys verbose
+
+    global fnames fmt_string fmt_vars fmt_ivars glabel
+
+    if { $verbose > 0 } {
+        puts "Mkzstats Analysis ([exec date])"
+        puts "cwd: [pwd]"
+        puts "logs scanned: $fnames\n"
+
+        if { $runcount == 1 } {
+            puts "Run Summary (1 timer report found)"
+        } else { 
+            puts "Run Summary ($runcount timer reports found)"
+        }
+
+        if { $inconsistent == 1 } {
+            puts "!!WARNING!! Inconsistent state definitions - MIXED LOGS??"
+            puts ""
+        }
+    }
+
+    puts $hdr_string
+    set tmp ""
+    set lkeys $keys
+
+    if { $only_keys != {} } {
+        set lkeys $only_keys
+    }
+
+    foreach key $lkeys {
+        set cmd "puts \[format \$fmt_string $fmt_vars\]"
+        eval $cmd
+    }
+
+    if { $inconsistent == 1 } {
+        puts "\nInconsistent states: "
+        puts $hdr_string
+        foreach key $ikeys {
+            set k2 "$key ($count($key) runs)"
+            set cmd "puts \[format \$fmt_string $fmt_ivars\]"
+            eval $cmd
+        }
+    }
+}
+
+proc gnuwrite { } {
+    global gfname glabel gfmt_vars_dev gfmt_vars_minmax gvars gfmt_vars_inv
+    global gfmt_string ghdr_string_dev ghdr_string_minmax ghdr_string_inv
+    global keys ghdr_label only_keys avg min max dev count
+    global flattime
+
+    set fd [open $gfname "w"]
+
+    set lab ""
+    set cmd "set lab \"\$ghdr_string_$gvars\" "
+    eval $cmd
+    set cmd "set lab \"$lab\""
+    eval $cmd
+    set cmd "puts \$fd \$lab"
+    eval $cmd
+
+    set tmp ""
+    set lkeys $keys
+
+    if { $only_keys != {} } {
+        set lkeys $only_keys
+    }
+
+    foreach key $lkeys {
+        set vars "\$gfmt_vars_$gvars"
+        set v2 [subst $vars]
+        set cmd "puts $fd \[format \$gfmt_string $v2]"
+        eval $cmd
+    }
+
+
+    close $fd
+}
+
+set firstloop -1
+
+if { $argc == 0 } {
+    usage
+    exit
+} 
+
+
+for { set loop 0 } { $loop < $argc } { incr loop } {
+    set fname [lindex $argv $loop]
+    if { [string index $fname 0] == "-" } {
+        # option, NOT command
+        # incr loop is return value in case option has an argument
+        incr loop [parse [lrange $argv $loop end] ]
+        continue
+    } else {
+        if { [file exists $fname] == 0 } {
+            puts "Warning - file $fname not accessible - skipping"
+        } else {
+            if { $firstloop == -1 } {
+                set firstloop $loop 
+            }
+            lappend fnames [file tail $fname]
+            get_times $fname
+        }
+    }
+}
+
+calc_nums $keys
+calc_nums $ikeys
+if { $nosum == 0 } {
+    summary
+}
+
+if { $gnuplot == 1 } {
+    gnuwrite
+}

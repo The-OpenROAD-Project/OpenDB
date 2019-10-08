@@ -1,0 +1,24 @@
+#!/bin/sh
+#
+# -- ignore interrupts
+# \
+	exec tclsh $0 "$@"
+package require Itcl
+
+set top [file dirname [file normalize $argv0]]
+if [file exists $top/Makefile] {
+    set lib [file dirname $top]
+} else {
+    set lib [file join [file dirname $top] lib]
+}
+lappend auto_path $lib
+
+package require mtlib 1.0
+
+package require smpx 1.0
+
+SMPX smpx
+smpx Run
+smpx delete
+exit
+

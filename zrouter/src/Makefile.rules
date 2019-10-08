@@ -1,0 +1,309 @@
+#---------------------------------------------------------------------------
+# This file contains makefile "target-rules".
+#---------------------------------------------------------------------------
+# Makefile Variables
+#
+#    DEFINES - Additional "#define XXXX" passed to compiler.
+#    LIBNAME - Name of this library
+#    TCLIF - Name of Tcl interface file of the form $(TCLIF).ti
+#    SRCS - List of source files in this library
+#    YACC_SRC - Yacc grammer file, only one ".y" file supported per makefile
+#    YACC_SRCXX - Yacc grammer file, only one ".ypp" file supported per makefile
+#    YACC_OUTPUT - Output prefix of generated files.
+#    YACC_PREFIX - Yacc prefix overide.
+#    LEX_SRC - Lex grammer file, only one ".y" file supported per makefile
+#    LEX_OUTPUT - Output prefix of generated files.
+#    LEX_PREFIX - Lex prefix overide
+#
+# This file uses the "SRCS" variables to calculate the following
+# variables:
+#	CSRCS   : all C source files (the ones with extension ".c")
+#	CXXSRCS : all C++ source files (the ones with extension ".cpp")
+#	COBJS   : the object files to be generated from the C files,
+#		  i.e. the ones in variable $(CSRCS)
+#	CXXOBJS : the object files to be generated from the C++ files,
+#		  i.e. the ones in variable $(CXXSRCS)
+#	OBJS    : All the object files, i.e. the union of $(COBJS) and
+#		  $(CXXOBJS)
+#	DEPFILES: the dependency files, one for each C or C++ source
+#		  file.
+#       SUBDIRS:
+#
+# On top of that it automatically create dependcy files for each C or C++
+# file. Each such source file "foo.c" will have its own dependency
+# file is stored in ".deps/foo.d".
+# These files are automatically generated if they do not exist, or
+# the source (or included files) are modified.
+# These files are included by this makefile.
+#---------------------------------------------------------------------------
+
+#---------------------------------------------------------------------------
+# Calculate the C++/C sources and object files
+#
+# NOTE #1: I also add "/dev/null" to "DEPFILES" variable so that
+# when you do "include $(DEPFILES)" make does not complain if
+# if $(DEPFILES) is empty.
+#---------------------------------------------------------------------------
+#
+
+CCSRCS = $(filter %.cc, $(SRCS))
+CXXSRCS = $(filter %.cpp, $(SRCS))
+CSRCS = $(filter %.c,$(SRCS))
+CXXOBJS = $(patsubst %.cpp,%.o, $(CXXSRCS))
+CCOBJS = $(patsubst %.cc,%.o, $(CCSRCS))
+COBJS = $(patsubst %.c,%.o, $(CSRCS))
+OBJS = $(COBJS) $(CXXOBJS) $(CCOBJS)
+DEPFILES = $(patsubst %.cpp,.deps/%.d, $(CXXSRCS)) \
+	 $(patsubst %.c,.deps/%.d, $(CSRCS)) \
+	 $(patsubst %.cc,.deps/%.d, $(CCSRCS)) \
+	 /dev/null
+
+WTOP=..
+ifneq ($(LIBNAME),)
+STATIC_LIBRARY=lib$(LIBNAME).a
+endif
+
+#---------------------------------------------------------------------------
+# default rule
+#---------------------------------------------------------------------------
+all:: $(STATIC_LIBRARY) $(SUBDIRS)
+
+#---------------------------------------------------------------------------
+# Rules to create the static library from the library name
+#---------------------------------------------------------------------------
+ifneq ($(STATIC_LIBRARY),)
+LIB_CLEAN=$(OBJS) $(STATIC_LIBRARY)
+
+$(STATIC_LIBRARY): $(OBJS)
+	$(LDLIB) $@ $(OBJS)
+endif
+
+#---------------------------------------------------------------------------
+# Rules to create the Tcl interface files 
+#---------------------------------------------------------------------------
+ifneq ($(TCLIF),)
+TCLIF_NAME=$(patsubst %.ti,%, $(TCLIF))
+TCL_CLEAN=$(TCLIF_NAME)_Tcl.cpp $(TCLIF_NAME)_Tcl.h 
+$(TCLIF_NAME)_Tcl.cpp $(TCLIF_NAME)_Tcl.h: $(TCLIF)
+	$(TI) -p $(TCLIF_NAME)_Tcl $(TCLIF)
+endif
+
+#---------------------------------------------------------------------------
+# Rules to create the yacc files 
+#---------------------------------------------------------------------------
+ifneq ($(YACC_SRC),)
+YACC_SRC_NAME=$(patsubst %.y,%, $(YACC_SRC))
+
+YACC_PREFIX_ARG=
+ifneq ($(YACC_PREFIX),)
+YACC_PREFIX_ARG=-p$(YACC_PREFIX)
+endif
+
+ifeq ($(YACC_OUTPUT),)
+YACC_OUTPUT_CODE=$(YACC_SRC_NAME).cpp
+YACC_OUTPUT_HDR=$(YACC_SRC_NAME).h
+else
+YACC_OUTPUT_CODE=$(YACC_OUTPUT).cpp
+YACC_OUTPUT_HDR=$(YACC_OUTPUT).h
+endif
+
+YACC_CLEAN= $(YACC_SRC_NAME).tab.c $(YACC_SRC_NAME).tab.h \
+            $(YACC_OUTPUT_CODE) $(YACC_OUTPUT_HDR) \
+            $(YACC_SRC_NAME).output
+
+$(YACC_OUTPUT_CODE) $(YACC_OUTPUT_HDR): $(YACC_SRC)
+	bison -v $(YACC_PREFIX_ARG) -d $(YACC_SRC)
+	mv $(YACC_SRC_NAME).tab.c $(YACC_OUTPUT_CODE)
+	mv $(YACC_SRC_NAME).tab.h $(YACC_OUTPUT_HDR)
+
+endif
+
+#---------------------------------------------------------------------------
+# Rules to create the yacc files 
+#---------------------------------------------------------------------------
+ifneq ($(YACC_SRCXX),)
+YACC_SRCXX_NAME=$(patsubst %.ypp,%, $(YACC_SRCXX))
+
+YACC_PREFIX_ARG=
+ifneq ($(YACC_PREFIX),)
+YACC_PREFIX_ARG=-p$(YACC_PREFIX)
+endif
+
+ifeq ($(YACC_OUTPUT),)
+YACC_OUTPUT_CODE=$(YACC_SRCXX_NAME).cpp
+YACC_OUTPUT_HDR=$(YACC_SRCXX_NAME).hpp
+else
+YACC_OUTPUT_CODE=$(YACC_OUTPUT).cpp
+YACC_OUTPUT_HDR=$(YACC_OUTPUT).hpp
+endif
+
+YACC_CLEAN= $(YACC_SRCXX_NAME).tab.cpp $(YACC_SRCXX_NAME).tab.hpp \
+            $(YACC_OUTPUT_CODE) $(YACC_OUTPUT_HDR) \
+            $(YACC_SRCXX_NAME).output
+
+$(YACC_OUTPUT_CODE) $(YACC_OUTPUT_HDR): $(YACC_SRCXX)
+	bison -v $(YACC_PREFIX_ARG) -d $(YACC_SRCXX)
+	mv $(YACC_SRCXX_NAME).tab.cpp $(YACC_OUTPUT_CODE)
+	mv $(YACC_SRCXX_NAME).tab.hpp $(YACC_OUTPUT_HDR)
+
+endif
+
+#---------------------------------------------------------------------------
+# Rules to create the lex files 
+#---------------------------------------------------------------------------
+ifneq ($(LEX_SRC),)
+LEX_SRC_NAME=$(patsubst %.l,%, $(LEX_SRC))
+
+ifeq ($(LEX_OUTPUT),)
+LEX_OUTPUT_CODE=$(LEX_SRC_NAME).cpp
+else
+LEX_OUTPUT_CODE=$(LEX_OUTPUT).cpp
+endif
+
+LEX_CLEAN= $(LEX_OUTPUT_CODE) lex.yy.c
+
+ifneq ($(LEX_PREFIX),)
+LEX_CLEAN+= lex.$(LEF_PREFIX).c
+$(LEX_OUTPUT_CODE): $(LEX_SRC)
+	flex -B -P$(LEX_PREFIX) -F $(LEX_SRC)
+	mv lex.$(LEX_PREFIX).c $(LEX_OUTPUT_CODE)
+else
+LEX_CLEAN+= lex.yy.c
+$(LEX_OUTPUT_CODE): $(LEX_SRC)
+	flex -B -F $(LEX_SRC)
+	mv lex.yy.c $(LEX_OUTPUT_CODE)
+endif
+endif
+
+#---------------------------------------------------------------------------
+# Rules to create the ".*.d" dependency files from the C and C++
+# source files.
+#
+# NOTE: I added to code to make the ".deps" directory if it does not
+# already exist.
+#
+# NOTE: "$(@D)" is the directory part of the target (i.e. ".deps")
+# and "$(@F)" is the file part of the target (i.e. "%.d")
+#---------------------------------------------------------------------------
+#
+.deps/%.d: %.cpp
+	@echo "	generating deps of : '`basename $@ .d`.cpp'"
+	@-mkdir -p $(@D)
+	@$(SHELL) -ec '$(CXX) -MM $(CXXFLAGS) $< \
+		  | sed '\''s/\($*\)\.o[ :]*/\1.o $(@D)\/$(@F) : /g'\'' > $@; \
+		  [ -s $@ ] || rm -f $@'
+
+.deps/%.d: %.c
+	@echo "	generating deps of : '`basename $@ .d`.c'"
+	@-mkdir -p $(@D)
+	@$(SHELL) -ec '$(CC) -MM $(CFLAGS) $< \
+		  | sed '\''s/\($*\)\.o[ :]*/\1.o $(@D)\/$(@F) : /g'\'' | sed '\''/gcc version/d'\'' > $@; \
+		  [ -s $@ ] || rm -f $@'
+
+.deps/%.d: %.cc
+	@echo " generating deps of : '`basename $@ .d`.cc'"
+	@-mkdir -p $(@D)
+	@$(SHELL) -ec '$(CXX) -MM $(CXXFLAGS) $< \
+		| sed '\''s/\($*\)\.o[ :]*/\1.o $(@D)\/$(@F) : /g'\'' > $@; \
+		[ -s $@ ] || rm -f $@'
+
+#---------------------------------------------------------------------------
+#
+# Rules to make Visual Studio 6 project files
+#
+#---------------------------------------------------------------------------
+
+.PHONY: win32_lib_cmake
+win32_lib_cmake:
+	@rm -rf CMakeLists.txt
+	@echo "ADD_DEFINITIONS($(DEFINES) -DWIN32 -D_CRT_SECURE_NO_WARNINGS)" >> CMakeLists.txt
+	@echo "SET(CMAKE_CXX_FLAGS ${CMAKE_CXX_FLAGS} /wd4996)" >> CMakeLists.txt
+	@echo "INCLUDE_DIRECTORIES(C:/Tcl/include $(WTOP)/include $(CMAKE_INCLUDES))" >> CMakeLists.txt
+	@echo "ADD_LIBRARY($(LIBNAME) STATIC $(SRCS))" >> CMakeLists.txt
+	@echo "SET(CMAKE_USE_RELATIVE_PATHS TRUE)" >> CMakeLists.txt
+ifneq ($(SUBDIRS),)
+	@echo "SUBDIRS($(SUBDIRS))" >> CMakeLists.txt
+endif
+
+ifeq ($(BINNAME), zroutesh)
+LIBLIST=$(patsubst %.a,%,$(LIBS) )
+TARGET_LIBS=$(patsubst lib%,%,$(notdir $(LIBLIST) ) )
+else
+LIBLIST=$(patsubst %.a,%,$(LIBS) )
+TARGET_LIBS=$(patsubst lib%,%,$(notdir $(LIBLIST) ) )
+endif
+
+.PHONY: win32_bin_cmake
+win32_bin_cmake:
+	@echo "ADD_EXECUTABLE($(BINNAME) $(SRCS))" >> CMakeLists.txt
+	@echo "ADD_DEFINITIONS($(DEFINES) -DWIN32 -D_CRT_SECURE_NO_WARNINGS)" >> CMakeLists.txt
+	@echo "SET(CMAKE_CXX_FLAGS ${CMAKE_CXX_FLAGS} /wd4996)" >> CMakeLists.txt
+	@echo "INCLUDE_DIRECTORIES(C:/Tcl/include $(WTOP)/include $(CMAKE_INCLUDES))" >> CMakeLists.txt
+	@echo "SET(CMAKE_USE_RELATIVE_PATHS TRUE)" >> CMakeLists.txt
+	@echo "TARGET_LINK_LIBRARIES($(BINNAME) C:/tcl/lib/tcl84.lib $(TARGET_LIBS) $(CMAKE_LIBS))" >> CMakeLists.txt
+
+.PHONY: win32_subdir_cmake
+win32_subdir_cmake:
+	@rm -rf CMakeLists.txt
+	@echo "SUBDIRS($(SUBDIRS))" >> CMakeLists.txt
+
+.PHONY: win32_dsp win32_sln
+
+ifneq ($(LIBNAME),)
+win32_dsp: win32_lib_cmake $(SUBDIRS)
+
+win32_sln: win32_lib_cmake $(SUBDIRS)
+endif
+
+ifeq ($(LIBNAME),)
+ifneq ($(SUBDIRS),)
+win32_dsp: win32_subdir_cmake $(SUBDIRS)
+
+win32_sln: win32_subdir_cmake $(SUBDIRS)
+endif
+endif
+
+ifneq ($(BINNAME),)
+win32_dsp:: win32_bin_cmake $(SUBDIRS)
+
+win32_sln:: win32_bin_cmake $(SUBDIRS)
+endif
+
+#---------------------------------------------------------------------------
+#
+# Other rules
+#
+#---------------------------------------------------------------------------
+#> .PHONY: win32_subdir_cmake
+#> win32_subdir_cmake:
+#>       @rm -rf CMakeLists.txt
+#>       @echo "SUBDIRS($(SUBDIRS))" >> CMakeLists.txt
+#>
+
+.PHONY: clean
+clean:: $(SUBDIRS)
+	rm -rf .deps $(LIB_CLEAN) $(TCL_CLEAN) $(YACC_CLEAN) $(YACCXX_CLEAN) $(LEX_CLEAN)
+	rm -rf CMake* cmake.* *.cmake
+
+clean_cmake: $(SUBDIRS)
+	rm -rf CMake* cmake.* *.cmake
+
+install:: $(STATIC_LIBRARY) $(SUBDIRS)
+
+ifneq ($(MAKECMDGOALS),clean)
+include $(DEPFILES)
+endif
+
+STADIR=../sta
+
+STAINC= -I$(STADIR)/util -I$(STADIR)/liberty -I$(STADIR)/network -I$(STADIR)/graph -I$(STADIR)/constraints -I$(STADIR)/sdf  -I$(STADIR)/parasitics  -I$(STADIR)/dcalc  -I$(STADIR)/search -I$(STADIR)/sta_z
+
+ifneq ($(SUBDIRS),)
+.PHONY: $(SUBDIRS)
+$(SUBDIRS):
+	cd $@ && make $(MFLAGS) $(MAKECMDGOALS) WTOP=$(WTOP)/..
+endif
+
+# -- empty goal for non tcl packages
+# -- redefine if necessary
+tclcompile::

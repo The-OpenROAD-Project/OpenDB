@@ -1,0 +1,75 @@
+#---------------------------------------------------------------------------
+# This file contains some makefile "utilities".
+#---------------------------------------------------------------------------
+# In order for this file to work, you must:
+# a) make sure that you have set the "SRCS" variable to contain
+#    all your C/C++ source files (it might contain other files too)
+# b) include this file (you can include it even before setting the "SRCS"
+#    variable, no problem!)
+# b) at the end of your makefile you must add the following line:
+#	include $(DEPFILES)
+#
+# This file uses the "SRCS" variables to calculate the following
+# variables:
+#	CSRCS   : all C source files (the ones with extension ".c")
+#	CXXSRCS : all C++ source files (the ones with extension ".cpp")
+#	COBJS   : the object files to be generated from the C files,
+#		  i.e. the ones in variable $(CSRCS)
+#	CXXOBJS : the object files to be generated from the C++ files,
+#		  i.e. the ones in variable $(CXXSRCS)
+#	OBJS    : All the object files, i.e. the union of $(COBJS) and
+#		  $(CXXOBJS)
+#	DEPFILES: the dependency files, one for each C or C++ source
+#		  file.
+#
+# On top of that it automatically create dependcy files for each C or C++
+# file. Each such source file "foo.c" will have its own dependency
+# file is stored in ".deps/foo.d".
+# These files are automatically generated if they do not exist, or
+# the source (or included files) are modified.
+# These files are included by this makefile.
+#---------------------------------------------------------------------------
+
+#---------------------------------------------------------------------------
+# Calculate the C++/C sources and object files
+#
+# NOTE #1: I also add "/dev/null" to "DEPFILES" variable so that
+# when you do "include $(DEPFILES)" make does not complain if
+# if $(DEPFILES) is empty.
+#---------------------------------------------------------------------------
+#
+CXXSRCS = $(filter %.cpp, $(SRCS))
+CSRCS = $(filter %.c,$(SRCS))
+CXXOBJS = $(patsubst %.cpp,%.o, $(CXXSRCS))
+COBJS = $(patsubst %.c,%.o, $(CSRCS))
+OBJS = $(COBJS) $(CXXOBJS)
+DEPFILES = $(patsubst %.cpp,.deps/%.d, $(CXXSRCS)) \
+	 $(patsubst %.c,.deps/%.d, $(CSRCS)) \
+	 /dev/null
+
+
+#---------------------------------------------------------------------------
+# Rules to create the ".*.d" dependency files from the C and C++
+# source files.
+#
+# NOTE: I added to code to make the ".deps" directory if it does not
+# already exist.
+#
+# NOTE: "$(@D)" is the directory part of the target (i.e. ".deps")
+# and "$(@F)" is the file part of the target (i.e. "%.d")
+#---------------------------------------------------------------------------
+#
+.deps/%.d: %.cpp
+	-mkdir -p $(@D)
+	$(SHELL) -ec '$(CXX) -MM $(CXXFLAGS) $< \
+		  | sed '\''s/\($*\)\.o[ :]*/\1.o $(@D)\/$(@F) : /g'\'' > $@; \
+		  [ -s $@ ] || rm -f $@'
+
+.deps/%.d: %.c
+	-mkdir -p .deps
+	$(SHELL) -ec '$(CC) -MM $(CFLAGS) $< \
+		  | sed '\''s/\($*\)\.o[ :]*/\1.o $(@D)\/$(@F) : /g'\'' > $@; \
+		  [ -s $@ ] || rm -f $@'
+
+
+

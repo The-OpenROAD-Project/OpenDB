@@ -1,0 +1,31 @@
+SYNOPSIS
+	mproxy -- multi architecture script proxy
+
+DESCRIPTION
+	mproxy allows programs written for different architecture to
+	run using a common path. In addition, mproxy allows the environment
+	to be correctly set up for an architecture.
+
+	The following directory layout is assumed:
+
+	$TOP/bin
+		mproxy
+		testit -> mproxy
+	$TOP/i386-linux
+		bin
+			testit
+
+	The use simply puts $TOP/bin in his path. When testit is executed on
+	a linux 386 system (see mproxy for details), mproxy will be executed
+	instead, due to the symlink of $TOP/bin/testit to $TOP/bin/mproxy
+
+	when running on a linux 386 system,
+	mproxy will then attempt to exec $TOP/i386-linux/bin/testit
+
+CUSTOMIZATION
+	mproxy should be modified to accommodate other architectures
+	than sun7 or linux/386 (32 bit)
+
+BUGS
+	no way to force a different compatible architecture like
+	when running 32-bit applications on a 64 bit AMD.

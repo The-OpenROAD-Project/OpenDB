@@ -1,0 +1,5 @@
+the tests under this directory depend on the test dir of the repo:
+https://github.com/The-OpenROAD-Project/Resizer/
+
+edit the file test.tcl under each dir and set the tcl variable data_dir
+

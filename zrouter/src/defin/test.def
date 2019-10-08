@@ -1,0 +1,466 @@
+
+################################################################################
+#                                                                              #
+#       Version         :       5.5                                            #
+#       Last updated    :       08/15/02                                       #
+#                                                                              #
+################################################################################
+
+VERSION 5.5 ;
+NAMESCASESENSITIVE OFF ;
+DIVIDERCHAR ":" ;
+BUSBITCHARS "[]" ;
+design muk ;
+TECHNOLOGY muk ;
+UNITS DISTANCE MICRONS 100 ;
+HISTORY 04/05/99 Created from small.lef/def 5.2.all ;
+HISTORY 04/05/99 Added ACCURRENTDENSITY and DCCURRENTDENSITY statements (lef) ;
+HISTORY 04/05/99 Added FREQUENCY MEGAHERTZ keywords in the UNITS statement (lef) ;
+HISTORY 04/05/99 Removed CURRENTDEN from LAYER statement (lef) ;
+HISTORY 04/05/99 Added M2_TURN via (lef) ;
+HISTORY 04/05/99 Added + SHIELD in the SPECIALNETS section (def) ;
+HISTORY 04/05/99 Removed + SPACING from the SPECIALNETS section (def) ;
+HISTORY 04/05/99 Added a regular net ("my_net") with + SHIELDNET and + NOSHIELD (def) ;
+HISTORY 04/05/99 Added "VDD" special net (def) ;
+HISTORY 04/05/99 Added 2 components I1 and BUF (def) ;
+
+PROPERTYDEFINITIONS
+  REGION scum STRING ;
+  REGION center INTEGER ;
+  REGION area REAL ;
+  GROUP ggrp STRING ;
+  GROUP side INTEGER RANGE 0 25 ;
+  GROUP maxarea REAL ;
+  COMPONENT cc STRING ;
+  COMPONENT index INTEGER ;
+  COMPONENT size REAL ;
+  NET alt INTEGER ;
+  NET lastName STRING ;
+  NET length REAL ;
+  SPECIALNET contype STRING ;
+  SPECIALNET ind INTEGER ;
+  SPECIALNET maxlength REAL ;
+  DESIGN title STRING "Buffer" ;
+  DESIGN priority INTEGER 14 ;
+  DESIGN howbig REAL 15.16 ;
+  ROW minlength REAL RANGE 1.0 100.0 ;
+  ROW firstName STRING ;
+  ROW idx INTEGER ;
+  COMPONENTPIN dpIgnoreTerm INTEGER ;
+  COMPONENTPIN dpBit STRING ;
+  COMPONENTPIN realProperty REAL ;
+END PROPERTYDEFINITIONS
+
+DIEAREA ( -190000 -120000 ) ( 190000 70000 ) ;
+
+ROW ROW_9 CORE -177320 -111250 FS DO 911 BY 1 STEP 360 0 
+  + PROPERTY minlength 50.5 firstName "Only" idx 1 ;
+ROW ROW_10 CORE1 -19000 -11000 FN DO 1 BY 100 STEP 0 600 ;
+
+TRACKS
+  X 3000 DO 40 STEP 120 LAYER M1 ;
+TRACKS
+  Y 5000 DO 10 STEP 20 LAYER M2 ;
+
+GCELLGRID X 0 DO 100 STEP 600 ;
+GCELLGRID Y 10 DO 120 STEP 400 ;
+
+VIAS 1 ;
+- VIA_ARRAY + PATTERNNAME P1-435-543-IJ1FS + RECT M1 ( -40 -40 ) ( 40 40 )
+            + RECT V1 ( -40 -40 ) ( 40 40 )
+            + RECT M2 ( -50 -50 ) ( 50 50 ) ;
+END VIAS
+
+REGIONS 3 ;
+- region1 ( -500 -500 ) ( 300 100 ) ( 500 500 ) ( 1000 1000 )
+  + TYPE FENCE
+  + PROPERTY scum "on top" center 250 area 730000
+  ;
+- region2 ( 4000 0 ) ( 5000 1000 )
+  + TYPE GUIDE
+  + PROPERTY scum "on bottom"
+  ;
+- region3 ( 4000 0 ) ( 5000 1000 )
+  + PROPERTY scum "on bottom"
+  ;
+END REGIONS
+
+COMPONENTS 17 ;
+- I1 INV ;
+- BUF INV ;
+- Z38A01 DFF3 + PLACED ( 18592 5400 ) FS ;
+- Z38A03 DFF3 + FIXED ( 16576 42600 ) FN ;
+- Z38A05 DFF3 + COVER ( 51520 9600 ) FE ;
+- |i0 INV_B
+  + REGION region1 
+  + EEQMASTER INV ;
+- |i1 INV_B 
+  + EEQMASTER INV
+  + UNPLACED ( 1000 1000 ) S ;
+- I2 INV
+  + PLACED ( 0 0 ) E ;
+- cell1 CHM6A + FIXED ( 0 10 ) N
+  + WEIGHT 100
+  + SOURCE USER
+  ;
+- cell2 CHM6A + COVER ( 120 10 ) FW 
+  + WEIGHT 2
+  + SOURCE NETLIST
+  ;
+- cell3 CHM6A + PLACED ( 240 10 ) W
+  + SOURCE TIMING
+  + FOREIGN gds2name ( -500 -500 ) E
+  + REGION region1
+  ;
+- cell4 CHK3A + PLACED ( 360 10 ) W
+  + SOURCE DIST
+  + PROPERTY cc "This is the copy list" index 9 size 7.8
+  + EEQMASTER CHM6A
+  ;
+- scancell1 CHK3A + PLACED ( 500 10 ) FW
+  ;
+- scancell2 CHK3A + PLACED ( 700 10 ) FS
+  ;
+- driver1 drivercell + PLACED ( 100 100 ) N ; #IO driver
+  # BUMP cells are typically placed with + COVER placement status
+  # so they cannot be moved manually by mistake
+  - bumpa1 bumpcell + COVER ( 100 100 ) N ;
+  - bumpa2 bumpcell + COVER ( 200 100 ) N ;
+  
+END COMPONENTS
+
+SLOTS 2 ;
+   - LAYER MET1
+     RECT ( 1000 2000 ) ( 1500 4000 )
+     RECT ( 2000 2000 ) ( 2500 4000 )
+     RECT ( 3000 2000 ) ( 3500 4000 ) ;
+   - LAYER MET2
+     RECT ( 1000 2000 ) ( 1500 4000 ) ;
+END SLOTS
+
+FILLS 2 ;
+   - LAYER MET1
+     RECT ( 1000 2000 ) ( 1500 4000 )
+     RECT ( 2000 2000 ) ( 2500 4000 )
+     RECT ( 3000 2000 ) ( 3500 4000 ) ;
+   - LAYER MET2
+     RECT ( 1000 2000 ) ( 1500 4000 )
+     RECT ( 1000 4500 ) ( 1500 6700 )
+     RECT ( 1000 7000 ) ( 1500 9000 )
+     RECT ( 1000 9500 ) ( 1500 11500 ) ;
+END FILLS
+
+PINS 12 ;
+- scanpin + NET SCAN 
+  + DIRECTION INPUT ;
+- pin1 + NET net1
+  + SPECIAL
+  + USE SCAN
+  + LAYER M1 ( -5000 -100 ) ( -4950 -90 )
+  + ANTENNAPINPARTIALMETALAREA 4580 LAYER M1
+  + ANTENNAPINPARTIALMETALAREA 4580
+  + ANTENNAPINPARTIALMETALAREA 4580 LAYER M12
+  + ANTENNAPINPARTIALMETALSIDEAREA 4580 LAYER M1
+  + ANTENNAPINPARTIALMETALSIDEAREA 4580 LAYER M11
+  + ANTENNAPINGATEAREA 4580 LAYER M2
+  + ANTENNAPINGATEAREA 4580 LAYER M21
+  + ANTENNAPINGATEAREA 4580
+  + ANTENNAPINDIFFAREA 4580 LAYER M3
+  + ANTENNAPINDIFFAREA 4580 LAYER M31
+  + ANTENNAPINMAXAREACAR 5000 LAYER L2
+  + ANTENNAPINMAXAREACAR 5000 LAYER L1
+  + ANTENNAPINMAXAREACAR 5500 LAYER L3
+  + ANTENNAPINMAXSIDEAREACAR 5000 LAYER L3
+  + ANTENNAPINMAXSIDEAREACAR 5200 LAYER L1
+  + ANTENNAPINMAXSIDEAREACAR 5300 LAYER L2
+  + ANTENNAPINPARTIALCUTAREA 4580 LAYER M4
+  + ANTENNAPINPARTIALCUTAREA 4580 LAYER M41
+  + ANTENNAPINMAXCUTCAR 5000 LAYER L1
+  ;
+- pin2 + NET net2
+  + DIRECTION INPUT
+  + USE SIGNAL
+  + LAYER M1 ( -5000 0 ) ( -4950 10 )
+  + ANTENNAPINPARTIALMETALAREA 5000
+  + ANTENNAPINPARTIALMETALSIDEAREA 4580 LAYER M2
+  + ANTENNAPINGATEAREA 5000
+  + ANTENNAPINDIFFAREA 5600
+  + ANTENNAPINMAXAREACAR 7500 LAYER L2
+  + ANTENNAPINMAXAREACAR 7500 LAYER L1
+  + ANTENNAPINMAXSIDEAREACAR 5400 LAYER L1
+  + ANTENNAPINMAXCUTCAR 4540 LAYER L1
+  + ANTENNAPINMAXCUTCAR 4540 LAYER L2
+  + ANTENNAPINPARTIALCUTAREA 5000
+  ;
+- INBUS[1] + NET |INBUS[1]
+  + DIRECTION INPUT
+  + USE TIEOFF
+  + LAYER M2 ( 0 0 ) ( 30 135 )
+  + FIXED ( 45 -2160 ) N ;
+- INBUS<0> + NET |INBUS<0> 
+  + DIRECTION INPUT
+  + USE POWER
+# should be error, COVER can't be before LAYER
+  + COVER ( 30 54 ) S
+  + LAYER M2 ( 0 0 ) ( 30 135 )
+  + PLACED ( -45 2160 ) S ;
+- OUTBUS<1> + NET |OUTBUS<1> 
+  + DIRECTION OUTPUT 
+  + USE RESET
+  + LAYER M1 ( 0 0 ) ( 30 135 ) 
+  + COVER ( 2160 645 ) W ;
+- VDD + NET VDD
+  + DIRECTION INOUT
+  + USE POWER
+  + SPECIAL
+    ;
+- A[0] + NET A[0]
+  + DIRECTION INPUT
+  + USE SIGNAL
+  + LAYER met2 ( -30 0 ) ( 30 180 ) ;
+- A[1] + NET A[1]
+  + DIRECTION INPUT
+  + USE SIGNAL ;
+- A[2] + NET A[2]
+  + DIRECTION INPUT
+  + USE SIGNAL
+  + LAYER met3 ( -30 0 ) ( 30 180 ) + PLACED ( 14700 130 ) W ;
+- n1 + NET n1 + DIRECTION INPUT ;
+- n2 + NET n2 + DIRECTION INPUT ;
+
+END PINS
+
+PINPROPERTIES 2 ;
+- cell1 PB1 + PROPERTY dpBit "1" + PROPERTY realProperty 3.4 ; 
+- PIN pin1 + PROPERTY dpIgnoreTerm 2 ; 
+END PINPROPERTIES
+
+SPECIALNETS 7 ;
+- net1 ( cell1 VDD ) ( cell2 VDD ) ( cell3 VDD ) ( cell4 VDD )
+  + VOLTAGE 3.2
+  + SOURCE TIMING
+  + ORIGINAL VDD
+  + USE POWER
+  + WEIGHT 30
+  + PROPERTY contype "star" ind 1 maxlength 12.13
+  + FIXED  M1 250 + SHAPE BLOCKRING ( 140 150 ) ( * 160 )
+  ;
+- VSS ( cell1 GND ) ( cell2 GND ) ( cell3 GND ) ( cell4 GND + SYNTHESIZED )  
+  + ROUTED M1 250 + SHAPE IOWIRE ( 5 15 ) VIACENTER12 ( 125 * ) ( 245 * )
+  + SHIELD my_net M2 90
+    ( 14100 342440 ) ( 13920 * ) M2_TURN ( * 263200 ) M1_M2 ( 2400 * )
+  + PATTERN STEINER
+  + USE SCAN
+  + ESTCAP 100 ;
+- VDD
+  + FIXED M2 200 + SHAPE PADRING ( 305 15 ) VIACENTER12 ( 425 * ) ( 545 * )
+    NEW metal1 0 ( 200 100 ) VIAGEN21_2 DO 10 BY 20 STEP 10000 20000
+    NEW metal2 0 ( -900 -30 ) VIAGEN21_2 DO 1000 BY 1 STEP 5000 0
+  + USE CLOCK
+  + SHIELD my_net M2 90
+    ( 14100 340440 ) ( 8160 * ) M2_TURN ( * 301600 ) M1_M2 ( 2400 * ) ;
+- CLOCK
+  + COVER M2 200 + SHAPE STRIPE ( 305 15 ) VIACENTER12 FW ( 425 * ) ( 545 * )
+    NEW M1 345 + SHAPE BLOCKAGEWIRE ( 345 543 )
+    ( 543 * ) VIAWIRE1 ( * 453 ) ( 343 633 ) VIAWIRE2 ( 453 809 )
+  + USE RESET
+  + SHIELD my_net M2 90
+    ( 14100 340440 ) ( 8160 * ) M2_TURN ( * 301600 ) M1_M2 FE ( 2400 * ) ;
+- NET2
+  + COVER M2 200 + SHAPE FILLWIRE ( 305 15 ) VIACENTER12 FW ( 425 * ) ( 545 * )
+    NEW M1 345 + SHAPE FILLWIRE ( 345 543 )
+    ( 543 * ) VIAWIRE1 ( * 453 ) ( 343 633 ) VIAWIRE2 ( 453 809 )
+  + USE RESET
+  + SHIELD my_net M2 90
+    ( 14100 340440 ) ( 8160 * ) M2_TURN ( * 301600 ) M1_M2 FE ( 2400 * ) ;
+# Net and pin n1 are assigned to bumpa1 and cannot be re-assigned
+- n1 ( PIN n1 ) ( driver1 in ) ( bumpa1 bumppin ) + FIXEDBUMP ;
+# Net and pin n2 are assigned to bumpa2 but IO optimization commands
+# are allowed to re-assign bumpa2 to a different net.
+- n2 ( PIN n2 ) ( driver2 in ) ( bumpa2 bumppin ) ;
+END SPECIALNETS
+
+NETS 13 ;
+- net1 ( Z38A01 Q ) ( Z38A03 Q ) ( Z38A05 Q ) + USE SCAN ;
+- net2 ( cell1 PB1 ) ( cell2 PB1 ) ( cell3 PB1 )
+  + ESTCAP 200
+  + WEIGHT 2
+  + USE GROUND
+  ;
+- net3  ( cell4 PA3 ) ( PIN P10  + SYNTHESIZED )
+  + XTALK 30
+  + ORIGINAL extra_crispy
+  + SOURCE USER
+  + USE SIGNAL
+  + FREQUENCY 100
+  + PROPERTY alt 37 lastName "Unknown" length 10.11
+  + PATTERN BALANCED
+  ;
+- my_net ( I1 A ) ( BUF Z )
+  + NONDEFAULTRULE RULE1
+  + SHIELDNET VSS
+  + SHIELDNET VDD
+  + USE RESET
+  + ROUTED
+    M2 ( 14000 341440 ) ( 9600 * ) ( * 282400 ) nd1VIA12 ( 2400 * )
+    NEW M1 TAPER ( 2400 282400 ) ( 240 * )
+  + NOSHIELD M2 ( 14100 341440 ) ( 14000 * )
+    NEW M1 TAPER ( 2400 282400 ) ( 240 * )
+  + NOSHIELD M3 ( 14100 341440 ) ( 14000 * )
+    TAPER M1 ( 2400 282400 ) ( 240 * )
+  ;
+- |INBUS[1] ( |i1 A ) ;
+- |INBUS<0> ( |i0 A ) ;
+- |OUTBUS<1> ( |i0 Z ) ;
+- MUSTJOIN ( cell4 PA1 )
+  + SUBNET SUB2_XX100 ( Z38A03 G ) ( VPIN V_SUB2_XX100 ) ( PIN P )
+    NONDEFAULTRULE R1
+    NOSHIELD M1 ( 168280 63300 700 ) ( * 64500 ) M1_M2 FN ( 169400 * 800 ) M2_M3 W
+  ;
+- XX100 ( Z38A05 G ) ( Z38A03 G ) ( Z38A01 G ) 
+  + USE ANALOG
+  + VPIN V_SUB3_XX100 LAYER M1 ( -333 -333 ) ( 333 333 ) PLACED
+    ( 189560 27300 ) N
+  + VPIN V_SUB2_XX100 ( -333 -333 ) ( 333 333 ) FIXED ( 169400 64500 ) S
+  + VPIN V_SUB1_XX100 ( -333 -333 ) ( 333 333 ) COVER ( 55160 31500 ) E
+  + SUBNET SUB1_XX100 ( Z38A05 G ) ( VPIN V_SUB1_XX100 )
+    ROUTED M1 TAPERRULE RULE1 ( 54040 30300 0 ) ( * 30900 ) nd1VIA12 ( * * 0 ) 
+    ( 56280 * ) nd1VIA23 ( * 31500 ) ( 55160 * )
+  + SUBNET SUB2_XX100 ( Z38A03 G ) ( VPIN V_SUB2_XX100 ) ( PIN P )
+    NONDEFAULTRULE R1
+    FIXED M1 ( 168280 63300 700 ) ( * 64500 ) M1_M2 FN ( 169400 * 800 ) M2_M3 W
+  + SUBNET SUB3_XX100 ( Z38A01 G ) ( VPIN V_SUB3_XX100 )
+    COVER M1 TAPERRULE R1 ( 188440 26100 0 ) ( * 27300 0 ) M1_M2
+    ( 189560 * 0 ) M1_M2
+  + SUBNET SUB0_XX100 ( VPIN V_SUB1_XX100 ) ( VPIN V_SUB2_XX100 )
+    ( VPIN V_SUB3_XX100 )
+    NONDEFAULTRULE RULE1
+    ROUTED M3 TAPER ( 169400 64500 0 ) ( * 54900 ) ( 170520 * ) ( * 37500 )
+     ( * 30300 ) nd1VIA23 ( 171080 * ) ( 174440 * 0 ) nd1VIA23 ( * * )
+     ( * 26700 800 ) nd1VIA23 
+     ( 177800 * )
+     nd1VIA23 ( * * 800 ) ( * 30300 800 ) nd1VIA23 ( 189560 * 800 ) nd1VIA12 
+     ( * 27300 0 )
+    NEW M3 TAPER ( 55160 31500 800 ) ( * 34500 0 ) M2_M3 ( 149800 * 800 ) M2_M3 
+     ( * 35700 ) ( * 37500 ) M2_M3 ( * * 800 ) ( 170520 * 0 ) M2_M3 ;
+- SCAN ( scancell1 P10 + SYNTHESIZED ) ( scancell2 PA0 + SYNTHESIZED )
+  + SOURCE TEST ;
+- my_net2 ( I1 A ) ( BUF Z )
+  + NONDEFAULTRULE RULE1
+  + SHIELDNET VSS
+  + SHIELDNET VDD
+  + USE RESET
+  + ROUTED
+    M2 ( 14000 341440 ) ( 9600 * ) ( * 282400 ) nd1VIA12 S ( 2400 * )
+  + NOSHIELD M2 ( 14100 341440 ) ( 14000 * )
+    TAPER M1 N ( 2400 282400 ) ( 240 * )
+  ;
+- n1 ( PIN n1 ) ( driver1 in ) ( bumpa1 bumppin ) + FIXEDBUMP ;
+# Net and pin n2 are assigned to bumpa2 but IO optimization commands
+# are allowed to re-assign bumpa2 to a different net.
+- n2 ( PIN n2 ) ( driver2 in ) ( bumpa2 bumppin ) ;
+END NETS
+
+SCANCHAINS 6 ;
+- the_chain
+  + COMMONSCANPINS ( IN PA1 ) ( OUT PA2 )
+  + START PIN scanpin
+  + STOP  cell4 PA2
+  + ORDERED 
+     cell2 ( IN PA0 )
+     cell1 ( OUT P10 )
+  + FLOATING
+     scancell1 ( IN PA0 )
+     scancell2 ( OUT P10 )
+  ;
+- chain2
+  + START comp1 scanpin
+  + FLOATING float1 ( IN P1 ) float2 ( OUT P2 ) float3 ( IN P1 ) ( OUT P2 )
+  + ORDERED C1 ( IN P1 ) ( OUT P2 )
+    C2 ( IN P1 )
+    C3 ( OUT P2 )
+    C4 ( IN P1 ) ( OUT P2 )
+    C5 ( OUT P2 )
+  + STOP PIN
+  ;
+- chain1_clock1
+  + PARTITION clock1
+  # No MAXBITS given, so sequential length of longest chain in
+  # any clock1 partition is the assumed maximum
+  + START block1/bsr_reg_0 Q
+  + FLOATING
+    block1/pgm_cgm_en_reg_reg ( IN SD ) ( OUT QZ )
+    block1/start_reset_dd_reg ( IN SD ) ( OUT QZ )
+  + STOP block/start_reset_d_reg SD ;
+- chain2_clock2
+  + PARTITION clock2        #a partition associated with clock2
+    MAXBITS 1000            #this chain has max length of 1000
+  + START block1/current_state_reg_0_QZ
+  + FLOATING
+    block1/port2_phy_addr_reg_0_ ( IN SD ) ( OUT QZ )
+    block1/port2_phy_addr_reg_4_ ( IN SD ) ( OUT QZ )
+    # Element below is scannable register bank of length 4
+    block1/port3_intfc ( IN SD ) ( OUT MSB ) ( BITS 4 )
+    # Ordered segments shown below have total bit-lengths of ONE each
+    # because the mux's have ZERO sequential length
+    + ORDERED
+      block1/mux1 ( IN A ) ( OUT X ) ( BITS 0 )
+      block1/ff1 ( IN SD ) ( OUT Q )
+    + ORDERED
+      block1/mux2 ( IN A ) ( OUT X ) ( BITS 0 )
+      block1/ff1 ( IN SD ) ( OUT Q ) ;
+- chain3_clock2
+  + PARTITION clock2     #another partition associated with clock2
+    MAXBITS 1200         #this chain has max length of 1200
+  + START block1/LV_testpoint_0_Q_reg Q
+  + FLOATING
+    block1/LV_testpoint_0_Q_reg ( IN SE ) ( OUT Q )
+    block1/tm_state_reg_1_ ( IN SD ) ( OUT QZ ) ;
+- chain4_clock3
+  + PARTITION clock3
+  + START block1/prescaler_IO/lfsr_reg1
+  + FLOATING
+    block1/dp1_timers
+    # Scannable register bank of length 8 with default pins
+    block1/bus8 ( BITS 8 )
+    # Segment of length = 2
+  + ORDERED
+    block1/ds1/ff1 ( IN SD ) ( OUT Q )
+    block1/ds1/mux1 ( IN B ) ( OUT Y ) ( BITS 0 )
+    block1/ds1/ff2 ( IN SD ) ( OUT Q ) ; 
+END SCANCHAINS
+
+GROUPS 2 ;
+- group1  cell2 cell3
+  + REGION region1
+  + PROPERTY ggrp "xx" side 2 maxarea 5.6
+  ;
+- group2 cell1
+  + PROPERTY ggrp "after the fall"
+  + REGION foo
+  ;
+END GROUPS
+
+BLOCKAGES 5 ;
+- LAYER m1 + COMPONENT comp1
+  RECT ( 3456 4535 ) ( 3000 4000 ) RECT ( 4500 6500 ) ( 5500 6000 ) 
+  RECT ( 5000 6000 ) ( 4000 5000 ) ;
+- PLACEMENT + COMPONENT comp2 RECT ( 4000 6000 ) ( 8000 4000 )
+  RECT ( 8000 400 ) ( 600 800 ) ;
+- LAYER m2 RECT ( 3000 4000 ) ( 6000 5000 ) ;
+- LAYER m3 + SLOTS RECT ( 455 454 ) ( 344 890 ) ;
+- LAYER m4 + FILLS RECT ( 455 454 ) ( 344 890 ) ;
+- LAYER m5 + PUSHDOWN RECT ( 455 454 ) ( 344 890 ) ;
+- PLACEMENT RECT ( 4000 6000 ) ( 8000 4000 ) ;
+- PLACEMENT + PUSHDOWN RECT ( 4000 6000 ) ( 8000 4000 ) ;
+END BLOCKAGES
+
+BEGINEXT tag
+- OTTER furry
+  + PROPERTY arrg later
+  ;
+- SEAL cousin to WALRUS ;
+ENDEXT
+
+END DESIGN
+

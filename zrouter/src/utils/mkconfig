@@ -1,0 +1,208 @@
+#!/bin/ksh -p
+#
+#
+
+function die {
+    echo "$*" >&2
+    exit 1
+}
+
+function buildtype {
+typeset GCC=$(whence gcc)
+if [[ -z $GCC ]] ; then
+	die "GCC not found "
+else
+	typeset compile_type=$(gcc --version | head -1 | awk '{print $3}' | sed -e 's/\.//g')
+fi
+
+case $compile_type in
+	323)
+		;;
+	343)
+		DCOMP=$compile_type
+		;;
+	346)
+		DCOMP=$compile_type
+		;;
+	*)
+		
+		;;
+esac
+
+}
+
+
+function linux_setup {
+        case "$arch" in
+        	x86_64)
+            		if [ $BUILD_ARCH == 64 ] ; then
+            		linux_setup_64_64
+			else
+            		linux_setup_64_32
+            		fi
+            		;;
+                *) die "$arch" is not supported ;;
+        esac
+}
+
+function linux_setup_64_32 {
+    if [[ ! -z "$DCOMP" && $(whence gcc) == "/fs/release/Standard-2008b/i686-linux/bin/gcc" ]] ; then
+        X11_LIB="-L/fs/release/Standard-2008b/i686-linux/X11R6/usr/X11R6/lib"
+        QTDIR="/fs/release/Standard-2008b/i686-linux"
+        TCLTOP="/fs/release/Standard-2008b/i686-linux"
+        CC="gcc"
+        CXX="c++ -D D$DCOMP"
+	else
+        X11_LIB="-L/usr/X11R6/lib"
+        QTDIR="/usr/lib64/qt-3.3"
+    #	TCLTOP="/fs/release/Standard-2008a/i386-linux"
+        CC=gcc
+        CXX=c++
+    fi
+    target=i386-linux
+    tcl_find
+    MKSHLIB="gcc -pipe -shared"
+    CFLAGS_SH=-fPIC
+    SOSUFFIX=so
+    SOPREFIX=lib
+    LD_ARCH="-m elf_i386"
+        if [ $do_static_link == 1 ]
+        then
+            LDLIB="ar crs"
+        else
+            LDLIB="ld -r -m elf_i386 -o"
+        fi
+        MACHINEOPTS=-m32
+        TCLSH=tclsh
+}
+
+# 64-bit linux is compiled in 64-bit mode
+function linux_setup_64_64 {
+
+        #X11_LIB="-L/space2/athena/release/Standard-2008b/x86_64-linux/X11R6/usr/X11R6/lib64/"
+        X11_LIB="-L/usr/X11R6/lib"
+        QTDIR="/usr/lib64/qt-3.3"
+        CC="gcc"
+        #CXX="c++ -D D432"
+        CXX="c++"
+        #CXX="g++"
+        #tcl_find
+# DIMITRIS 1/22/10 -- hardwired for ammo1
+# NOTE 09052012
+	#TCLTOP="/space2/athena/release/Standard-2008b/x86_64-linux"
+	TCLTOP="/usr"
+	#TCLTOP=$PUBTOOLS
+#PUBTOOLS=/space2/athena/pubtools/x86-64-linux/
+
+
+    target=x86-64-linux
+    MKSHLIB="gcc -pipe -shared"
+    CFLAGS_SH=-fPIC
+    SOSUFFIX=so
+    SOPREFIX=lib
+    LD_ARCH="-m elf_x86_64"
+        if [ $do_static_link == 1 ] ; then
+            LDLIB="ar crs"
+#            CC="gcc"
+#            CXX="c++"
+        else
+            LDLIB="ld -r -m elf_x86_64 -o"
+#            CC=gcc
+#            CXX=c++
+        fi
+        MACHINEOPTS=-m64
+        TCLSH=tclsh
+}
+
+function tcl_find {
+    tcl=$(whence tclsh)
+    test "$tcl" || die "tclsh: not found"
+    TCLTOP=$(dirname "$tcl")
+    export TCLTOP=$(dirname "$TCLTOP")
+}
+
+do_static_link=0
+PURIFY=
+
+if [ "$1" == "static_link" ]
+then
+    do_static_link=1
+    PURIFY=$2
+fi
+
+os="`uname -s`"
+arch="`uname -m`"
+
+case "$os" in
+        SunOS)
+		solaris_setup
+		;;
+        Linux)
+		buildtype
+		linux_setup
+		;;
+        CYGWIN_NT*)
+		cygwin_setup
+		;;
+        *)
+		die "$os" is not supported
+		;;
+esac
+
+top=$(pwd)
+dtop=$(dirname "$top")
+
+if [ $BUILD_ARCH == 64 ]
+then
+    ATHENAOPTS=-DATHENA_64BIT
+else
+    ATHENAOPTS=-DATHENA_32BIT
+fi
+
+DEBUG=-g
+CFLAGS="-I$top/include -I/usr/include/c++ -I$TCLTOP/include -Wformat -Wreturn-type -Wno-write-strings"
+CXXFLAGS="-I$top/include -I/usr/include/c++ -I$TCLTOP/include -Wformat -Wreturn-type -Wno-write-strings"
+
+cat <<EOF
+#
+# TOP LEVEL CONFIGURATION FILE, GENERATED FOR:
+# $(uname -a)
+
+# NORMALLY YOU SHOULD NOT EDIT IT.
+# If local modifications are needed, just create 
+# Makefile.local at the same level as your Makefile.defs
+#
+TARGET=$target
+EOF
+echo "$top"  | sed -e 's/ /\\ /g' -e 's/^/TOP=/'
+echo "$dtop" | sed -e 's/ /\\ /g' -e 's/^/DTOP=/'
+cat <<EOF
+TI=\$(TOP)/ti/ti
+DEBUG=$DEBUG
+DIST=\$(DTOP)/\$(TARGET)/zrouter
+PBINDIR=\$(DTOP)/bin
+BINDIR=\$(DIST)/bin
+LIBDIR=\$(DIST)/lib
+MANDIR=\$(DIST)/man
+
+TCLLIB=$TCLTOP/lib64
+TCLINC=$TCLTOP/include
+MKSHLIB=$MKSHLIB
+CFLAGS_SH=$CFLAGS_SH
+SOSUFFIX=$SOSUFFIX
+SOPREFIX=$SOPREFIX
+CC=$CC
+CXX=$PURIFY $CXX
+CFLAGS=$CFLAGS -Wall \$(DEBUG) $MACHINEOPTS $ATHENAOPTS \$(DEFINES) -g
+CXXFLAGS=$CXXFLAGS -Wall \$(DEBUG) $MACHINEOPTS $ATHENAOPTS \$(DEFINES) -g
+LDLIB=$LDLIB
+LD_ARCH=$LD_ARCH
+X11_LIB=$X11_LIB
+TCLSH=$TCLSH
+PURIFY=$PURIFY
+MAKE_ZC_QT=1
+QTDIR=$QTDIR
+BUILD_ARCH=$BUILD_ARCH
+
+-include \$(TOP)/Makefile.local
+EOF

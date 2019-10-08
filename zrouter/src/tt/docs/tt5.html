@@ -1,0 +1,55 @@
+<head>
+<title>TT Testing Tool</title>
+</head>
+<body>
+
+<h2>TT - Testing Tool Documentation</h2>
+
+<h3>Logging of output</h3>
+
+<p>All output from tt is sent both to stdout, AND to a log file. By default,
+this is tt.log in the directory where tt resides. The -l option to tt
+specifies a different log file location/name.</p>
+
+
+<h3>tt command-line options</h3>
+
+tt has several command-line options which affect the behavior of tt. 
+<ul>
+<li>-h              Show this help message and then exit
+<li>-l &lt;file&gt;       copy output to &lt;file&gt; instead of tt.log
+<li>-n              Show Only mode - show what would be done without doing it
+<li>-t &lt;dir&gt;        Redefine the "top" level directory where tests are located
+<li>-u &lt;path&gt;       Use this ade instead of the one in PATH
+<li>-v              Verbose mode - show more information
+<li>-z &lt;args&gt;       Specify ade startup arguments
+</ul>
+
+<ul>
+<li>The most useful for starting out is the -n "dry-run" mode, which is just
+like make -n.<br>
+    It shows each test that would be processed, without actually doing
+    anything.
+
+<li>The -l option is useful for saving the output log to a different location.
+
+<li>The -v option will show more details than the default.
+
+<li>Example for -z: test_sta_1-3 -z "-P 12"<br>
+    will invoke as: ade -P 12 &lt;other...&gt;
+</ul>
+
+<p>
+You can use the <b>~/.ttrc</b> file to store "frequently used" options. If
+you call tt with: tt -t dir, and ~/.ttrc contains "-t otherdir", then tt
+will act as if you had called it with: tt -t otherdir -t dir. That is, .ttrc
+arguments are parsed FIRST, and THEN command-line arguments.
+</p>
+
+
+
+<a href="tt4.html">prev</a>
+<a href="tt6.html">next</a>
+<br><a href="ttidx.html">Index</a>
+</body>
+</html>

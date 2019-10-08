@@ -1,0 +1,188 @@
+Set up development environment and build Athena-OpenROAD
+   follow instructions in ~zrouter/src/BUILD/compilation_package_dependencies
+
+Create a new module under OpenDB 
+	cd src
+	./BUILD/Templates/makeNewModule.bash DEV_PLACE RPL
+		// RPL will be the Tcl Object --- instantial at Tcl scripts like: RPL rep
+
+Clone RePLace branch:develop
+	cd DEV_PLACE/
+	git clone https://github.com/The-OpenROAD-Project/RePLace.git
+	cd RePLace/
+	git checkout develop
+
+Build/Create RePLace libs:
+
+	Edit RePLace/src/main.cpp
+		-- change function main to RePLace_main not to collide with OpenDB main
+
+	Edit CMakeLists.txt:
+                uncomment add_library( replacelib  
+                and
+		change --- add_library( replacelib  SHARED
+		to     --- add_library( replacelib  STATIC
+
+	Edit src/replace_external.cpp right after replace_external::init_replace() {
+		add --- std::cout << " I got to replace_external::init_replace !" << std::endl;
+		to verify that the command : "rep init_replace" executes correctly
+		
+	Setup Development environment to build RePLace following instructions found in ../prerequisite/install_centos7.sh and/or Dockerfile.
+        	The following steps did the job:
+               sudo yum install -y wget libstdc++-devel libstdc++-static libX11-devel \
+                        boost-devel zlib-devel tcl-devel tk-devel autoconf automake swig flex libtool \
+                        libtool-ltdl gmp-devel mpfr-devel libmpc-devel bison byacc ctags \
+                        ImageMagick ImageMagick-devel git glibc-static zlib-static libjpeg-turbo-static
+
+               sudo yum -y install centos-release-scl
+               sudo yum -y install devtoolset-7 devtoolset-7-libatomic-devel
+               sudo yum install -y yum-utils
+               sudo yum-config-manager --add-repo https://yum.repos.intel.com/setup/intelproducts.repo
+               sudo rpm --import https://yum.repos.intel.com/intel-gpg-keys/GPG-PUB-KEY-INTEL-SW-PRODUCTS-2019.PUB
+
+               # Might need to edit  /etc/yum.repos.d/intelproducts.repo  to change all lines with
+                 gpgcheck=0
+                 repo_gpgcheck=0
+
+               to
+
+                 gpgcheck=1
+                 repo_gpgcheck=1
+
+               sudo yum install -y intel-mkl-2018.2-046
+               sudo yum remove -y bison
+               wget https://ftp.gnu.org/gnu/bison/bison-3.0.1.tar.gz &&     tar -xvzf bison-3.0.1.tar.gz &&     cd bison-3.0.1 &&     ./configure &&     make -j$(nproc) &&     make install
+               sudo make install
+               wget https://cmake.org/files/v3.9/cmake-3.9.0-Linux-x86_64.sh
+               chmod +x cmake-3.9.0-Linux-x86_64.sh
+               sudo ./cmake-3.9.0-Linux-x86_64.sh --skip-license --prefix=/usr/local
+
+               export CC=/opt/rh/devtoolset-7/root/usr/bin/gcc
+               export CPP=/opt/rh/devtoolset-7/root/usr/bin/cpp
+               export CXX=/opt/rh/devtoolset-7/root/usr/bin/g++
+               export PATH=/opt/rh/devtoolset-7/root/usr/bin:$PATH
+               export LD_LIBRARY_PATH=/opt/rh/devtoolset-7/root/usr/lib64:/opt/rh/devtoolset-7/root/usr/lib:/opt/rh/devtoolset-7/root/usr/lib64/dyninst:/opt/rh/devtoolset-7/root/usr/lib/dyninst:/opt/rh/devtoolset-7/root/usr/lib64:/opt/rh/devtoolset-7/root/usr/lib:$LD_LIBRARY_PATH
+
+	Compile/Link RePLace
+		git submodule update --init --recursive
+		mkdir build
+		cd build
+		cmake ..    // mke sure you have the right cmake version 3.9 or higher
+		make
+
+	Verify libreplace.a (or libreplacelib.a) under build
+
+
+Add RePLace Libs and flags at main/Makefile to build OpenDB
+
+	Edit main/Makefile to add all RePLace libs in DIRS after line: " ../ModuleTemplate/TMP_t ....."
+	
+        	../DEV_PLACE/RePLace/build/libreplace.a \
+        	../DEV_PLACE/RePLace/module/def/lib/libcdef.a \
+        	../DEV_PLACE/RePLace/module/def/lib/libcdefzlib.a \
+        	../DEV_PLACE/RePLace/module/def/lib/libdef.a \
+        	../DEV_PLACE/RePLace/module/def/lib/libdefzlib.a \
+        	../DEV_PLACE/RePLace/module/flute/lib/libflute.a \
+        	../DEV_PLACE/RePLace/module/lef/lib/libclef.a \
+        	../DEV_PLACE/RePLace/module/lef/lib/libclefzlib.a \
+        	../DEV_PLACE/RePLace/module/lef/lib/liblef.a \
+        	../DEV_PLACE/RePLace/module/lef/lib/liblefzlib.a \
+        	../DEV_PLACE/RePLace/module/OpenSTA/app/libOpenSTA.a \
+
+	NOTE 1: the replace lib might be called libreplacelib.a
+	NOTE 2: Make sure there is no blank line after a backslash
+
+	Edit main/Makefile to Add additional flags to link with RePLace packages
+		at line: $(PURIFY) $(CXX) -m$(BUILD_ARCH)
+			add "-ljpeg -fopenmp -Dcimg_use_jpeg=1 -lX11"
+		
+
+Add C++ Functions on DEV_PLACE module to access the RePLace objects
+
+	Create C++ functions on DEV_PLACE to connect with RePLace
+
+		at DEV_PLACE/DEV_PLACE.cpp add function:
+			void DEV_PLACE::init_replace()
+			{
+        			notice(0, "DEV_PLACE::init_replace\n");
+        			_rep->init_replace();
+			};
+
+		at DEV_PLACE/DEV_PLACE.h 
+
+			add pointer at private: section to RePLace replace_external object
+				replace_external *_rep;
+
+			add include file: 
+				#include "RePLace/src/replace_external.h"
+
+			add function definition at public:
+				void init_replace();
+
+	Create C++ functions on DEV_PLACE/RPL_tcl to create the tcl command apis
+
+		at DEV_PLACE/RPL_tcl/RPL.ti add function to define the Tcl Command Name
+			export init_replace
+        		(
+        		);
+
+		at DEV_PLACE/RPL_tcl/RPL.h at public: section add
+		        TCL_METHOD( init_replace );
+
+		at DEV_PLACE/RPL_tcl/RPL.cpp at public: section add
+			TCL_METHOD(RPL::init_replace)
+			{
+        			notice(0, "rep::init_replace\n");
+        			_main->init_replace();
+        			return TCL_OK;
+			}
+
+	Add Include dirs in DEV_PLACE/Makefile and DEV_PLACE/RPL_tcl/Makefile
+
+		REPLACE_INCLUDE_FILES= -I<full-path-to-repo>/Athena-OpenROAD/zrouter/src/DEV_PLACE/RePLace/module/lef/lef
+		REPLACE_INCLUDE_FILES += -I<full-path-to-repo>/Athena-OpenROAD/zrouter/src/DEV_PLACE/RePLace/module/def/def
+
+	Add special flag -std=c++11 in DEV_PLACE/Makefile and  DEV_PLACE/RPL_tcl/Makefile
+
+		CFLAGS += $(REPLACE_INCLUDE_FILES) -std=c++11
+		CXXFLAGS += $(REPLACE_INCLUDE_FILES) -std=c++11
+
+
+
+
+Build/Link with OpenDB
+	cd src
+	make clean
+	make 
+	make install
+
+Verify that the OpenDB build has completed
+	last line after make install look like:
+		"cp run_test <path-to-repo>/Athena-OpenROAD/zrouter/bin"
+
+Set Env for testing:
+
+	Edit BUILD/set_ade_env.bash
+		RELEASE=<path-to-repo>/Athena-OpenROAD/zrouter
+
+	source BUILD/set_ade_env.bash
+
+Run a simple script that runs RePLace code
+
+	mkdir test
+	cd test
+		
+	edit test.tcl
+		RPL rep
+		rep init_replace
+	
+	run ade
+		ade test.tcl
+
+	verify stdout msg: "I got to replace_external::init_replace"
+	
+	NOTE: Segmentation fault is because replace has not been initialized
+
+
+NOTE: many of these steps can be part of OpenDB standard and/or automated with scripts
+

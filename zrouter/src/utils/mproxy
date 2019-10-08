@@ -1,0 +1,61 @@
+#!/bin/ksh -p
+# Multiple Architecture Wrapper
+# (c) Manolis Tsangaris, mtlib open source library (mtlib@karpathos.net)
+#
+# mproxy should reside on the bin directory and be symlinked to any
+# program. Upon execution, mproxy will exec the same binary as it is called
+# but residing in the appropriate architecture directory.
+# for example, if foo is -> mproxy, then running bin/foo will actually run
+# ../bin.$ARCH/program (where ARCH is set based on the switch statement below 
+#
+
+function dirname {
+	echo ${1%/*}
+}
+
+function basename {
+	echo ${1##*/}
+}
+
+function die {
+	echo "$me: $*" 1>&2
+	exit 1
+}
+
+dir=`dirname $0`
+me=`basename $0`
+case x$dir in
+	x.) base=.. ;;
+    x)  die "cannot determine bin directory from $0" ;;
+	*)  base=`dirname $dir` ;;
+esac
+
+test "$dir" = $base && base=.
+
+# --------------------------------------------------------------------------
+# determine here the path where everything should be based on $ARCH
+# set the appropriate LD_LIBRARY_PATH
+# --------------------------------------------------------------------------
+ARCH=`uname -s`.`uname -m`
+case "$ARCH" in
+	Linux.*86*)
+		p=i386-linux
+		LD_LIBRARY_PATH=$base/$p/lib:$LD_LIBRARY_PATH
+		;;
+  	   SunOS.*)
+		p=sun7
+		LD_LIBRARY_PATH=$base/$p/lib:$LD_LIBRARY_PATH
+		;;
+       *) die "unsupported OS/platform: $os";;
+esac
+
+
+# echo " dir: $dir"
+# echo "base: $base"
+# echo "prog: $me"
+
+f=$base/$p/bin/$me
+test -f $f || die "cannot locate program '$me' (in $base/$p/bin)"
+
+export LD_LIBRARY_PATH
+exec $f "$@"

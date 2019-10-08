@@ -1,0 +1,137 @@
+Milos has several "virtual" modules, each with commands and options
+
+OPT
+PDB
+RPT
+RT
+TMG
+
+Each module is invoked with a lowercase version of its name.
+
+That is: pdb <command>
+
+
+Currently working commands/options:
+
+PDB commands:
+
+    new_inst, select_inst: reserved - future use for multiple instances
+
+    load_design: loads a design from LEF/DEF files 
+        Options:
+            lefs: list of LEF files to read (use this, or leffiles)
+            leffiles: list of files CONTAINING LEF filenames
+            def: def filename
+            readdb: if true, look for a database to read instead of DEF
+
+    load_timing: loads timing libraries for timing analysis
+        Dependencies:
+            must have successfully loaded a design using load_design
+        Options:
+            sdc_file: sdc file to load
+            timing_lib_file: list of timing libraries to read
+            timing_lib_base: if set, prepended to each timing_lib_file
+            verilog_file: Verilog file to read [optional]
+
+    save_design: writes LEF/DEF
+        Dependencies:
+            must have successfully loaded a design using load_design
+        Options:
+            lef_out: output LEF filename
+            def_out: output DEF filename
+
+    save_db: saves a .db file
+        Dependencies:
+            must have successfully loaded a design using load_design
+        Options:
+            outfile: output filename (default: name of DEF file - .def + .db)
+
+    write_spef: writes a .spef file 
+        Dependencies:
+            must have successfully loaded a design using load_design
+        Options:
+            outfile: output filename (default: name of DEF file - .def + .spef.gz)
+
+    rlog { args }: calls "db rlog" $args
+
+
+TMG commands:
+    analyze: perform Timing Analysis (initial or ECO)
+        Dependencies:
+            must have successfully loaded a design using load_design
+            must have successfully loaded timing libraries
+        Options:
+            ext_rules: File containing Extraction rules 
+
+    all_registers: return all registers from STA 
+        Dependencies:
+            must have successfully analyzed timing
+
+
+RPT commands:
+
+    report_timing: create timing report
+    Dependencies:
+            must have successfully analyzed timing
+
+    Options:
+            capacitance [1]:
+            from [""]:
+            to [""]:
+            rpt_file: report filename
+            sort_by [slack]:
+            max_paths [100]:
+            nworst [2]:
+            path_type [full]:
+            sig_digits [4]:
+
+    get_total_slack: return total negative slack
+        Dependencies:
+            must have successfully analyzed timing
+        Options:
+            delay [max]:
+
+
+    get_worst_slack: return worst slack
+        Dependencies:
+            must have successfully analyzed timing
+        Options:
+            delay [max]:
+
+
+RTE commands:
+
+    tile_and_route: perform tiling and routing 
+        Dependencies:
+            must have successfully loaded a design using load_design
+        Options:
+            tilenum [16]: number of tiles
+            debug_db: for debugging
+            debug_skip_routing: for debugging
+
+OPT commands
+
+    size: perform sizing optimization
+    Dependencies:
+    Options:
+            setup_incr [0]:
+            slew_limit [0.8]:
+            area_limit_pct [0.5]:
+            change_limit [10]:
+
+---
+REMOTE modules/proxies
+
+A user can create a proxy for a remote instance of milos using the RMT
+syntax:
+
+RMT <name> 
+
+The user can then send commands to this remote slave/proxy using the proxy.
+
+E.g.:
+RMT A
+A pdb configure -lefs "a.lef" -def "a.def"
+A pdb load_design
+etc...
+

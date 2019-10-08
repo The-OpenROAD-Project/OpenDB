@@ -1,0 +1,17 @@
+.git
+Dockerfile
+.dockerignore
+.gitignore
+
+# from .gitignore file
+autom4te.cache
+**/.deps
+**/*.o
+**/*.so
+**/lib*.a
+**/pkgIndex.tcl
+**/tclIndex
+**/Makefile.defs
+**/*~
+**/core
+**/*.core

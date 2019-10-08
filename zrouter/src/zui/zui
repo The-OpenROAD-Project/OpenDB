@@ -1,0 +1,40 @@
+#!/bin/sh
+# \
+    exec wish $0 -- ${@+"$@"}
+
+package require Itcl
+catch {package require Img}
+
+set top [file dirname [file norm $argv0]]
+
+# we need to distinguish if zui runs from the source directory
+# or from the installation directory
+if { [string match */zrouter/src/* [file normalize $argv0]] } {
+    set lib $top
+    regsub "/zrouter/src/.*" $lib "/zrouter/src" lib
+    lappend auto_path . $lib [file join $lib mtlib]
+} else {
+    set lib [file join [file dirname $top] lib]
+    lappend auto_path $lib [file join $lib mtlib]
+}
+
+proc ck {v} {
+    if [catch {uplevel package require -exact ade::ui $v} rc] {
+	puts stderr "zui: cannot load zui version $v"
+	puts stderr "$rc"
+	global errorInfo
+	puts $errorInfo
+	exit -1
+    }
+}
+
+switch -glob -- @$argv {
+    "*-v 1.0*" { ck 1.0 }
+    default    { ck 2.0 }
+}
+
+ZUI zui -top $top
+zui Run
+zui Wait
+zui delete
+exit

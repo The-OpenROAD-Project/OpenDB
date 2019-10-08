@@ -1,0 +1,26 @@
+ZROUTE LICENSING 
+
+Until we use flexlm, zroute expects a valid athenads license, or it will
+not work.
+
+upon startup and before anything else, zroute looks for a license file in:
+
+	1. -L file option
+	2. ADS_LICENSE enviroment variable
+	3. ../../../src/utils/ads.lic (from the place zroute script run)
+
+-L has priority over ADS_LICENSE, etc.
+
+the license file can be constructed by modifying ads.lic first,
+and then running it through the mklicense program:
+
+mklicense < foo.lic ADS2005
+
+where ADS2005 is the salt for the digital encryption, we use so far
+
+utils/ads.lic is a license upto 2010 and should not be distributed to
+any customer
+
+(see zroute/zr.tcl for the exact value)
+
+Please check the utils/*.lic for examples

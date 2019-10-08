@@ -1,0 +1,24 @@
+<opt_step>
+  <wns> 1e+39 </wns> 
+  <tns> 0.0 </tns>
+  <viol> 0 </viol>
+  <wns> 1e+39 </wns>
+  <worst_id> none </worst_id>
+  <swap_cnt> 0 </swap_cnt>
+  <create_cell_cnt> 0 </create_cell_cnt>
+  <remove_cell_cnt> 0 </remove_cell_cnt>
+  <opt_method> init </opt_method>
+  <elaps>      1 </elaps>
+</opt_step>
+<opt_step>
+  <wns> 1e+39 </wns> 
+  <tns> 0.0 </tns>
+  <viol> 0 </viol>
+  <wns> 1e+39 </wns>
+  <worst_id> none </worst_id>
+  <swap_cnt> 0 </swap_cnt>
+  <create_cell_cnt> 0 </create_cell_cnt>
+  <remove_cell_cnt> 0 </remove_cell_cnt>
+  <opt_method> init </opt_method>
+  <elaps>      1 </elaps>
+</opt_step>

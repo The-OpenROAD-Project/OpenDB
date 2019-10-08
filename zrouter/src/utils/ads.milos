@@ -1,0 +1,110 @@
+#!/bin/ksh -p
+#
+# Generic wrapper script for ads
+# this script sets up the environment for other ads tools to run
+#
+# USAGE:
+#
+# ads -h : to get the usage
+# ads cmd: run any ads commands (zroute and zui)
+# ads ksh: run ksh or any other shell
+# 
+unset ENV
+
+function die {
+	echo "ads: $*" 1>&2
+	exit 1
+}
+
+
+args=$@
+dir=`dirname $0`
+case $dir in
+        .) TOP=$(dirname $(pwd)) ;;
+        *) TOP=$(dirname $dir) ;;
+esac
+
+
+# default ADSHOME directory
+export ADSHOME=$TOP
+
+RC=$ADSHOME/conf/ads.conf
+
+test -f $RC && . $RC
+
+test -d "$ADSHOME" || {
+	die "cannot figure out ADSHOME top directory"
+}
+test -d "$ADSHOME/pubtools/i386-linux/bin"    || die "$ADSHOME: does not contain pubtools"
+test -d "$ADSHOME/ads/i386-linux/zrouter/bin" || die "$ADSHOME: does not contain zrouter executables"
+
+export ADSHOME
+
+export ADS_PATH=$PATH
+export ADS_LD_LIBRARY_PATH=$LD_LIBRARY_PATH
+
+EXT=$ADSHOME/pubtools
+ADS=$ADSHOME/ads/bin
+
+os=`uname -s`.`uname -m`
+case "$os" in
+        Linux.*86)
+                p=i386-linux
+                ISLIB=`ldd $TOP/pubtools/i386-linux/bin/tclsh8.4 | /bin/grep found | /usr/bin/wc -l`
+                if [ "$ISLIB" != "0" ]; then
+                xlib=$TOP/lib/lib-linux:$TOP/pubtools/$p/lib:$TOP/ads/$p/zrouter/lib:$TOP/ads/$p/msh/lib
+                else
+                xlib=$TOP/pubtools/$p/lib:$TOP/ads/$p/zrouter/lib:$TOP/ads/$p/msh/lib
+                fi
+                ;;
+        Linux.x86_64)
+                p=i386-linux
+                xlib=$TOP/pubtools/$p/lib:$TOP/ads/$p/zrouter/lib::$TOP/ads/$p/msh/lib
+                ;;
+        *) echo "$os: unsupported OS/platform: $os" 1>&2 ; exit -1;;
+esac
+
+export TCL_LIBRARY=$EXT/lib/tcl8.4
+export TK_LIBRARY=$EXT/lib/tk8.4
+
+export  ADS_LICENSE=$ADSHOME/conf/ads_license.dat
+export	PATH=$EXT/bin:$ADS:$PATH
+export	MSHCONFIG=$ADSHOME/conf/msh.conf
+
+ads_port=`grep "ads_port " $MSHCONFIG | awk '{print $2}'`
+ads_lic=`grep "ads_lic " $MSHCONFIG | awk '{print $2}'`
+if [ -z "$ads_port" ] ; then
+        echo "LM_LICENSE_FILE environment is not set \! Please check $MSHCONFIG."
+        exit
+fi
+
+if [ -z "$ads_lic" ] ; then
+echo "LM_LICENSE_FILE environment is not set \! Please check $MSHCONFIG."
+fi
+
+export LM_LICENSE_FILE=$ads_port"@"$ads_lic:$LM_LICENSE_FILE
+if [ -e "$ADSHOME/license/bin/lmstat" ] ; then
+ISATHENA=`$ADSHOME/license/bin/lmstat -c $ads_port@$ads_lic | grep athena | cut -d":" -f1`
+fi
+
+if [ -z "$ISATHENA" ] ; then
+        echo "  License Daemon for Athena is not running."
+        exit 1
+fi
+
+
+case "$1" in 
+	ksh) export PS1="ksh(zr)> "; exec ksh -i -p   ;;
+	csh) export PS1="csh(zr)> "; exec csh -i   ;;
+	zui) export PS1="ksh(zr)> "; exec zui "$@" ;;
+	zproxytest) shift 2>/dev/null ; exec zproxytest "$@" ;;
+	turborc) shift 2>/dev/null ; exec turborc32 "$@" ;;
+	turborc64) shift 2>/dev/null ; exec turborc64 "$@" ;;
+	ade) shift 2>/dev/null ; exec ade32 "$@" ;;
+	ade64) shift 2>/dev/null ; exec ade64 "$@" ;;
+	turbopro) shift 2>/dev/null ; exec turbopro "$@" ;;
+	turbopro64) shift 2>/dev/null ; exec turbopro64 "$@" ;;
+	milos) shift 2>/dev/null ; exec milos32 "$@" ;;
+	milos64) shift 2>/dev/null ; exec milos64 "$@" ;;
+	  *) echo "	Error: $1 is not a Valid Command Option!" ; exit ;;
+esac

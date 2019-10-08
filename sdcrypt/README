@@ -1,0 +1,8 @@
+Package to generate a token to invoke ClkWork..
+
+1. generate token using example given in Test.cpp:
+
+i.e.  const char* token=sdCrypt::gen_token(SD_CIPHER_KEY,SD_KEY_LENGTH) ;
+
+2. invoke clkwork using: cw -e token -t script.tcl
+

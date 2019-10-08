@@ -1,0 +1,10 @@
+run_cmd start_init debug_log MAX
+
+set SDC /home/nefelus/z/zrouter/test/tmg/buf1/buf1.sdc
+
+run_cmd init_netlist 0.4  2.0  /home/nefelus/z/zrouter/test/tmg/buf1/buf1.sdc  tmp/milos1.22686.2.v  {  }  { tmp/psta.22686.2.spef.max.gz }  { tmp/psta.22686.2.spef.min.gz } { } {/fs/designs/nec_CB90BLOCK/time_libs/CB90M_WIDE2_1V_M9_MAX_PRIM.lib } {/fs/designs/nec_CB90BLOCK/time_libs/CB90M_WIDE2_1V_M9_MIN_PRIM.lib } 0 top { } {}
+
+run_cmd open_eco eco.MAX
+
+run_cmd write_cterms cterms.dat
+

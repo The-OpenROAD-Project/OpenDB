@@ -1,0 +1,12 @@
+**/rpm/RPM-GPG-KEY-nefelus
+autom4te.cache
+**/.deps
+**/*.o
+**/*.so
+**/lib*.a
+**/pkgIndex.tcl
+**/tclIndex
+**/Makefile.defs
+**/*~
+**/core
+**/*.core

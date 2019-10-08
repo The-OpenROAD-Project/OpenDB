@@ -1,0 +1,13 @@
+#!/bin/csh
+
+echo ""
+echo " **************** Beginning of Test *****************"
+echo "Testing mproxy-zrouter 32 BIT  wrapper"
+set cpath1=`echo $PATH`
+set cldpath=`echo $LD_LIBRARY_PATH`
+set cdir=`pwd`
+echo "Search Path = $cpath1"
+echo "LD_LIBRARY_PATH = $cldpath"
+echo "Directory of script = $cdir"
+echo " ****************** End of Test ********************"
+echo ""

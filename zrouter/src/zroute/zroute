@@ -1,0 +1,3 @@
+#!/bin/ksh -p
+echo "$0: please do not run zroute. Use ade instead"
+exec ade "$@"

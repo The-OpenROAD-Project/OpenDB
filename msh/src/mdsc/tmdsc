@@ -1,0 +1,962 @@
+#!/bin/sh
+#\
+ ulimit -n 1024 ; exec tclsh "$0" "$@"
+#PATH=/home/mmt/work/dist/bin:$PATH
+
+#==============================================================================
+# This is a rather simplistic test for the mdsc implementation
+#
+# TEST DESCRIPTION
+# ===============
+# The server listens for connections from the clients.
+# Whenever a client connects to the server, the server sends a memory
+# object (the same for all clients)
+# You can invoke the server as:
+#
+#	tmdsc server [options]
+#
+# Type "tmdsc" to get information usage
+#
+# The clients connect to the given server and try to download the object
+# data. Each client can do multiple downloads. You can control the total
+# number of downloads and the number of downloads happenning concurrently
+# The client is invoked as
+#	
+#	tmdsc client [options]
+# 
+#==============================================================================
+
+lappend auto_path .
+#lappend auto_path /u/mmt/sjp/lib
+#lappend auto_path /u/mmt/work/latest/msh/dist/i386-linux/lib
+
+package require Mdsc
+
+
+#==============================================================================
+#=== COMMON
+#==============================================================================
+set LogFp {}
+
+#------------------------------------------------------------------------------
+# log
+#------------------------------------------------------------------------------
+# Log the given message
+#------------------------------------------------------------------------------
+proc log {args} {
+    set f "%Y%m%d %T"
+    set msg [clock format [clock seconds] -format $f]
+    append msg " " [join $args " "]
+
+    global LogFp
+    if {$LogFp != ""} {
+	puts $LogFp $msg
+	flush $LogFp
+    }
+}
+#------------------------------------------------------------------------------
+# logopen
+#------------------------------------------------------------------------------
+proc logopen {fname} {
+    global LogFp
+    logclose
+
+    if {$fname == ""} {
+	# do nothing
+    } elseif {$fname == "stdout" || $fname == "stderr"} {
+	# Special cases. Log goes to stdout or stderr
+	set LogFp $fname
+    } else {
+	# It is a file name. Open it
+	#
+	set LogFp [open $fname "w"]
+    }
+}
+
+#------------------------------------------------------------------------------
+# logclose
+#------------------------------------------------------------------------------
+proc logclose {} {
+    global LogFp
+    if {$LogFp == ""} { return }
+    if {$LogFp == "stderr"} { return }
+    if {$LogFp == "stdout"} { return }
+    close $LogFp
+}
+
+#------------------------------------------------------------------------------
+# _parse_numbytes
+#------------------------------------------------------------------------------
+# Parse a "number of bytes" specification.
+# This is an integer optionally followed by the letters "k" or "K" (kilobytes)
+# "m" or "M" (megabytes) and "b" or "B" (bytes - the default)
+#
+# ARGUMENTS:
+#	str : the string
+#	minval : a minimum value for the number.
+#		 If equal to "" then there is no minimum lmit
+#	maxval : a max val for the number.
+#		 If equal to "" then there is no maximum lmit
+#
+# RETURNS:
+#	The number of bytes (an integer)
+# ERRORS:
+#	If the string is invalid or out of bounds, an appropriate
+#	error is generated.
+#------------------------------------------------------------------------------
+proc _parse_numbytes {str {minval ""} {maxval ""}} {
+
+    set last_char [string index $str end]
+    set last_char [string tolower $last_char]	;# ignore case
+    if {$last_char == "m"} {
+	set multiplier [expr {1024*1024}]
+	set num [string range $str 0 end-1]
+    } elseif {$last_char == "k"} {
+	set multiplier 1024
+	set num [string range $str 0 end-1]
+    } elseif {$last_char == "b"} {
+	set multiplier 1
+	set num [string range $str 0 end-1]
+    } else {
+	set multiplier 1
+	set num $str
+    }
+
+    if {[string is integer -strict $num]} {
+	set val [expr {$num * $multiplier}]
+	if {($minval == "" || $val >= $minval) \
+		&& ($maxval == "" || $val <= $maxval)} {
+	    # We are done!
+	    return $val
+	}
+    }
+
+    # If we arrive here the string was invalid or out of bounds.
+    # Construct an appropriate error message and throw an error
+    #
+    set msg "Invalid value \"$str\". Must be an integer optionally"
+    append msg " followed by the letters \"m\" (megabytes), \"k\"" \
+    		" (kilobytes) or \"b\" (bytes - the default)"
+
+    if {$minval == "" && $maxval == ""} {
+	append msg "."
+    } elseif {$minval != "" && $maxval == ""} {
+	append msg " greater or equal to $minval."
+    } elseif {$minval == "" && $maxval != ""} {
+	append msg " less or equal to $maxval."
+    } else {
+	# {$minval != "" && $maxval != ""}
+	append msg " greater or equal to $minval"
+	append msg " and less or equal to $maxval."
+    }
+    error $msg
+}
+
+#------------------------------------------------------------------------------
+# _parse_boolean
+#------------------------------------------------------------------------------
+# Parse a string representing a boolen value
+# ARGUMENTS:
+#	str : the string
+# RETURNS:
+#	0 or 1 depending on whether the value was false or true
+# ERRORS:
+#	Generates an error if the string is invalid
+#------------------------------------------------------------------------------
+proc _parse_boolean {str} {
+    if {[string is integer -strict $str]} {
+	if {$str} {
+	    return 1
+	} else {
+	    return 0
+	}
+    }
+    switch -exact -- $str {
+	"true"	-
+	"t"	-
+	"on"	-
+	"y"	-
+	"yes"	{return 1}
+	"false"	-
+	"f"	-
+	"off"	-
+	"n"	-
+	"no"	{return 0}
+    }
+
+    set msg "Invalid boolean value \"$str\"."
+    error $msg
+}
+
+#------------------------------------------------------------------------------
+# stat_init
+#------------------------------------------------------------------------------
+# Initialize statistics
+#------------------------------------------------------------------------------
+proc stat_init {{msg ""}} {
+    global STATS
+    catch {unset STATS};
+    array set STATS {}
+
+    set STATS(extramsg) $msg
+}
+
+#------------------------------------------------------------------------------
+# stat_do
+#------------------------------------------------------------------------------
+# Calculate & print some statistics
+# ARGUMENTS:
+#	who   : who I am (a server, a client?)
+#	id    : the id for this copy (used mainly for debugging)
+#	status: one of "end" (if the copy has ended) or "run"
+#		if the copy is still running (and this is just an intermediate
+#		statistic)
+#	tstart: when the copy started
+#	tend  : when the copy ended
+#	nbytes: number of bytes copied
+#------------------------------------------------------------------------------
+proc stat_do {who id status tstart tend nbytes} {
+
+    set rate [stat_getrate $tstart $tend $nbytes]
+
+    # Log a message
+    set msg "STAT: ${who}:"
+    append msg " id= $id"
+    append msg " status= $status"
+    append msg " rate= " [format "%.3f" $rate]
+    append msg " tstart= $tstart"
+    append msg " tend= $tend"
+    append msg " nbytes= $nbytes"
+    log $msg
+
+    # Also print in stdout 
+    set msg [format \
+	"%s: copyid= %2d status= %s rate= %6.3f mbytes= %6.3f" \
+	$who $id $status $rate [expr {$nbytes / 1024.0 / 1024.0}]]
+    puts stdout "STAT: $msg"
+
+    # NOTE: "id" uniquely identidies this copy
+    global STATS
+    set STATS(copy_last.$id) [list $status $tstart $tend $nbytes]
+    lappend STATS(copy_history.$id) [list $status $tstart $tend $nbytes]
+}
+#------------------------------------------------------------------------------
+# stat_getrate
+#------------------------------------------------------------------------------
+# Small uitlity function. Calculate rate (in mbytes/sec) given
+# start/end time and number of bytes transferred
+#------------------------------------------------------------------------------
+proc stat_getrate {tstart tend nbytes} {
+
+    # Find time elapsed (take care of zeros)
+    set dt [expr {$tend - $tstart}]
+    if {$dt == 0} {
+	set dt 1
+    }
+
+    # Calculate rate (in MBytes/sec)
+    #
+    set rate [expr {1.0 * $nbytes / $dt / 1024.0 / 1024.0}]
+    return $rate
+}
+
+#------------------------------------------------------------------------------
+# stat_print
+#------------------------------------------------------------------------------
+# Print the statistics collected so fat
+#------------------------------------------------------------------------------
+proc stat_print {} {
+    global STATS
+
+    set ncopies 0
+    set total_time 0
+    set total_mbytes 0
+    foreach x [array names STATS "copy_last.*"] {
+	incr ncopies
+	foreach {status tstart tend nbytes} $STATS($x) {break}
+	set mbytes [expr {$nbytes / 1024.0 / 1024.0 }]
+	set total_mbytes [expr {$total_mbytes + $mbytes}]
+	set total_time [expr {$total_time + $tend - $tstart}]
+    }
+
+    if {$total_time == 0} {
+	set avg_rate 0
+    } else {
+	set avg_rate [expr {1.0 * $total_mbytes / $total_time}]
+    }
+
+    set msg "STATISTICS:"
+    # Print extra message
+    if {$STATS(extramsg) != ""} {
+	append msg "\n" $STATS(extramsg)
+    }
+
+    append msg "\nTOTAL_COPIES:  " $ncopies
+    append msg "\nTOTAL_MBYTES:  " [format "%.3f" $total_mbytes]
+    append msg "\nTOTAL_TIME:    " $total_time
+    append msg "\nAVRG_RATE:     " [format "%.3f" $avg_rate]
+
+    puts stdout $msg
+}
+
+
+#==============================================================================
+#=== SERVER
+#==============================================================================
+catch {unset SERVER}
+array set SERVER {}
+
+#------------------------------------------------------------------------------
+# do_server
+#------------------------------------------------------------------------------
+# This is the main entry point to the server routines
+# ARGUMENTS:
+#	port  : the port to listen to
+#	memobj: a memory object to send to clients
+#	copyoptions: A list with the copy options to be used when
+#		copying data from object to channel
+#------------------------------------------------------------------------------
+proc do_server {port memobj {copyoptions ""}} {
+
+
+    global SERVER
+    set SERVER(port) $port
+    set SERVER(memobj) $memobj
+    set SERVER(copyoptions) $copyoptions
+    set SERVER(nextid) 0
+
+    # Create a new "copy manager"
+    #
+    set SERVER(copymgr) [CopyMgr #auto]
+
+    # Calculate the md5 checksum of the object
+    #
+    set SERVER(md5sum) [$memobj md5sum]
+
+    set socket [socket -server server_accept_callback $port]
+    set SERVER(socket) $socket
+    set msg "DEBUG: server: start port= $port socket= $socket"
+    append msg " copyoptions= [list $copyoptions]"
+    log $msg
+}
+
+#------------------------------------------------------------------------------
+# server_accept_callback
+#------------------------------------------------------------------------------
+# Callback when a new connection arrives...
+#------------------------------------------------------------------------------
+proc server_accept_callback {fp clienthost clientport} {
+    global SERVER
+
+    set clientid [format "%s:%d" $clienthost $clientport]
+    log "DEBUG: server: Connection_from $clientid"
+
+    # The first thing we send through the socket is the checksum
+    # of the object (so that the client can check that the
+    # transfer was successfull
+    fconfigure $fp -buffering line
+    puts $fp $SERVER(md5sum)
+
+    # now start the copy
+    incr SERVER(nextid)
+    set myid $SERVER(nextid)
+    set copyid [eval [list $SERVER(copymgr)] copyto \
+    	[list $SERVER(memobj)] [list $fp] \
+	$SERVER(copyoptions) \
+    	-callback [list "server_copy_callback $myid"]]
+    set SERVER(copy.$myid) [list $fp $copyid]
+
+    log "DEBUG: server: copystart id= $myid copyid= $copyid socket= $fp"
+}
+
+#------------------------------------------------------------------------------
+# server_copy_callback
+#------------------------------------------------------------------------------
+# This is the callback to be called when the copy between
+# object/channel is finished
+#------------------------------------------------------------------------------
+proc server_copy_callback {myid infolist} {
+    global SERVER
+    log "DEBUG: server: copyend id= $myid info= $infolist"
+
+    array set info $infolist
+    if {$info(status) == "error"} {
+	# Oooops!
+	log "ERROR: server: copyend id= $myid info= $infolist"
+    }
+
+    # Close the socket
+    close [lindex $SERVER(copy.$myid) 0]
+    unset SERVER(copy.$myid)
+
+    # Calculate & print some stats
+    #
+    stat_do "server" $myid "end" $info(tstart) $info(tlast) $info(ncopied)
+}
+
+#==============================================================================
+#=== CLIENT
+#==============================================================================
+catch {unset CLIENT}
+array set CLIENT {}
+
+#------------------------------------------------------------------------------
+# do_client
+#------------------------------------------------------------------------------
+# This is the main entry point to the client routines
+# ARGUMENTS:
+#	server : the server to connect to
+#	port   : the port to connect to
+#	ncopies: how many copies to perform (in total)
+#	nparallel: max number of copies to perform in parallel
+#	copyoptions: copy options to pass to the "CopyMgt copyfrom"
+#	usemd5: specifies whether to use checksum or not
+#------------------------------------------------------------------------------
+proc do_client {server port ncopies nparallel {copyoptions ""} {usemd5 1}} {
+
+    set clientid [format "client\[%d\]" [pid]]
+    set msg "DEBUG: ${clientid}: start server= $server port= $port"
+    append msg " ncopies= $ncopies nparallel= $nparallel"
+    append msg " copyoptions= [list $copyoptions]"
+    log $msg
+
+    global CLIENT
+    set CLIENT(clientid) $clientid
+    set CLIENT(server) $server
+    set CLIENT(port) $port
+    set CLIENT(copyoptions) $copyoptions
+    set CLIENT(usemd5) $usemd5
+    set CLIENT(nextid) 0
+
+    set CLIENT(ncopies) $ncopies
+    set CLIENT(nparallel) $nparallel
+
+    set CLIENT(ncopies_remaining) $ncopies
+    set CLIENT(ncopies_running) 0
+
+    set CLIENT(copymgr) [CopyMgr #auto]
+
+
+    # Start parallel copies
+    for {set i 0} {$i < $CLIENT(nparallel)} {incr i} {
+	client_do_copy
+    }
+}
+
+#------------------------------------------------------------------------------
+# client_do_copy
+#------------------------------------------------------------------------------
+# Do one copy
+#------------------------------------------------------------------------------
+proc client_do_copy {} {
+    global CLIENT
+
+    # If there are no more copies to do, stop!
+    #
+    if {$CLIENT(ncopies_remaining) <= 0} {
+	return
+    }
+
+    # Update the counters of copies currently running in parallel,
+    # and copies currently remaining to be done
+    #
+    incr CLIENT(ncopies_running)
+    incr CLIENT(ncopies_remaining) -1
+
+    # Connect to the server
+    #
+    set socket [socket $CLIENT(server) $CLIENT(port)]
+    set tmp [fconfigure $socket -sockname]
+    set mysocket [format "%s:%d"  [lindex $tmp 1] [lindex $tmp 2]]
+    set srvsocket [format "%s:%d" $CLIENT(server) $CLIENT(port)]
+    set msg "DEBUG: $CLIENT(clientid): connect "
+    append msg " mysocket= $mysocket server= $srvsocket"
+    log $msg
+
+    # Get a unique id
+    #
+    incr CLIENT(nextid)
+    set myid $CLIENT(nextid)
+    set memobj [MemObj #auto]
+
+    # Read the checksum
+    set line [gets $socket]
+    set md5sum [string trim $line]
+
+    # now start the data copy (asynchronously)
+    set copyid [eval [list $CLIENT(copymgr)] copyfrom \
+    	[list $memobj] [list $socket] \
+	$CLIENT(copyoptions) \
+    	-callback [list "client_copy_callback $myid"]]
+
+    set msg "DEBUG: $CLIENT(clientid): copystart"
+    append msg " id= $myid copyid= $copyid socket= $socket md5= $md5sum"
+    log $msg
+    set CLIENT(copy.$myid) [list $socket $memobj $md5sum $copyid]
+}
+
+#------------------------------------------------------------------------------
+# client_copy_callback
+#------------------------------------------------------------------------------
+proc client_copy_callback {myid infolist} {
+    global CLIENT
+
+    #set msg "DEBUG: $CLIENT(clientid): copyend"
+    #append msg " id= $myid info= [list $infolist]"
+    #log $msg
+
+    array set info $infolist
+    if {$info(status) == "error"} {
+	# Oooops!
+	set msg "ERROR: $CLIENT(clientid): copyend"
+	append msg " id= $myid info= [list $infolist]"
+	log $msg
+	exit 1
+    }
+
+    if {$info(status) == "run"} {
+	# This is an itermediate callback. Just collect some statistics
+	#
+	stat_do $CLIENT(clientid) $myid "run" \
+		    $info(tstart) $info(tlast) $info(ncopied)
+	return
+    }
+
+    # If we arrive here, the copy has ended
+    #
+    set msg "DEBUG: $CLIENT(clientid): copyend"
+    append msg " id= $myid info= [list $infolist]"
+    log $msg
+
+    # Close the socket
+    set socket [lindex $CLIENT(copy.$myid) 0]
+    set memobj [lindex $CLIENT(copy.$myid) 1]
+    set md5sum_correct [lindex $CLIENT(copy.$myid) 2]
+    unset CLIENT(copy.$myid)
+
+    close $socket
+
+    # Calculate and print some stats
+    #
+    stat_do $CLIENT(clientid) $myid "end" \
+    		$info(tstart) $info(tlast) $info(ncopied)
+
+    # Check the checksums to make sure that the job was transferred ok
+    if {$CLIENT(usemd5) && $md5sum_correct != ""} {
+	set md5sum [$memobj md5sum]
+	if {$md5sum != $md5sum_correct} {
+	    set msg "ERROR IN MD5SUM $md5sum_correct != $md5sum"
+	    error $msg
+	} else {
+	    log "$myid md5sum_ok $md5sum"
+	}
+    }
+    #log "DELETING  OBJECT $memobj = [$memobj size]"
+    #$memobj delete
+    itcl::delete object $memobj
+
+    # Update the counter of "currently running" copies
+    incr CLIENT(ncopies_running) -1
+
+    # If there are more copies to do, then start another one
+    #
+    if {$CLIENT(ncopies_remaining) > 0} {
+	after idle client_do_copy
+    }
+
+    # If on the other hand there are no more copies running or remaining
+    # signal the global variable DONE!
+    if {$CLIENT(ncopies_remaining) == 0 && $CLIENT(ncopies_running) == 0} {
+	global DONE
+	set DONE 1
+    }
+}
+
+#==============================================================================
+#=== MAIN
+#==============================================================================
+
+proc usage {{msg ""}} {
+    if {$msg != ""} {
+	puts stderr $msg
+	puts stderr ""
+    }
+
+    set prog [file tail [info script]]
+    puts stderr "Usage: $prog \[client|server\] \[options\]"
+    puts stderr "Type \"$prog -help\" for detailed help."
+    exit 1
+}
+
+proc print_help {} {
+
+    set prog [file tail [info script]]
+    puts stderr "Usage: $prog \[client|server\] \[options\]
+
+This is a small test/benchmark program for the mdsc implementation.
+If the first argument is \"server\" then the program runs in server
+mode and waits for connections.
+If the first argument is \"client\" then the program runs (yes, you
+have guessed it!) in client mode and attempts to connect to a server
+and download an object.
+
+SERVER SPECIFIC OPTIONS:
+------------------------
+-port p  : the port to listen to. There is no default, so you must
+	specify this option.
+-size n  : specifies the size of the object that will be copied to
+	the clients. An object of this size will be generated,
+	consisting of random bytes.
+	The size can be specified as either a number (of bytes) or
+	a number followed by the letter \"k\" or \"K\" (for kilobytes)
+	or \"m\" or \"M\" (for megabytes).
+	Note: You must specify one and only one of the \"-size\"
+	and \"-file\" options (see below).
+-file fname: Use the contents of this file as the object's data.
+	Note: You must specify one and only one of the \"-size\"
+	and \"-file\" options (see above).
+
+CLIENT SPECIFIC OPTIONS:
+------------------------
+-server name : name (or IP address) of the server to connect to.
+-port   p    : the port where the server is listening
+-checksum boolean: If the boolean value is true, then after
+	downloading the object we check for transfer errors
+	by calculating the checksum of the object and comparing
+	it with the correct checksum as it was given to us by
+	the server (this is the default). This might take a couple
+	of seconds if the object is large. If the value is false
+	we skip the checksum calculation.
+-n 	num  : number of copies to do in total (default is 1).
+-p 	num  : max number of copies to do in parallel (default is 1).
+
+COMMON OPTIONS:
+---------------
+-help 	: Print this message and exit
+-log fname: log information to the given file. The following file
+	names have special meaning:
+	stderr : log goes to stderr (the default)
+	stdout : log goes to stdout
+	auto   : log goes to \"server.log\" if we are running in server
+		 mode, and to \"clientXXXX.log\" if we are running
+		 in client mode (where \"XXXX\" is the pid of the client)
+	Anything else is assummed to be a file name, and log goes
+	there (overwriting previous file contents)
+	The default value is \"stderr\".
+-debugfile fname: a file name to be used for debugging information
+	(NOTE: this is different from \"-log\". We generate much more
+	verbose information used for tracking down bugs.
+	The following names have special meaning:
+	\"\"     : (the empty string) no debugging
+	stderr : debug messages go to stderr
+	stdout : debug messages go to stdout
+	auto   : log goes to \"debug_server.log\" if we are running in server
+		 mode, and to \"debug_clientXXXX.log\" if we are running
+		 in client mode (where \"XXXX\" is the pid of the client)
+	Anything else is assummed to be a file name, and debug output goes
+	there (overwriting previous file contents)
+	The default value is \"\".
+-debuglevel n: the debugging level to be used. The larger the number,
+	the more verbose the debugging messages.
+	NOTE: you must specify *both* -debugfile and -debuglevel
+	to have debugging output!
+
+Apart from the options described above, all other options
+are considered to be \"copy\" options and are passed directly
+to the \"mdsc::copy to\" and \"mdsc::copy from\" commands invoked
+by the server and the clients respectivelly (such as -buffersize,
+-chunksize etc). However you should not specify the \"-callback\"
+option as the program uses its own callback!
+"
+    exit 0
+}
+
+#------------------------------------------------------------------------------
+# doit
+#------------------------------------------------------------------------------
+# Parse command line arguments and do whatever you have to do...
+#------------------------------------------------------------------------------
+proc doit {} {
+    global argv
+
+    set nargs [llength $argv]
+    set mode [lindex $argv 0]
+    if {$mode == "server"} {
+	parse_server_args
+    } elseif {$mode == "client"} {
+	parse_client_args
+    } else {
+	print_help
+	exit 0
+    }
+}
+
+#------------------------------------------------------------------------------
+# parse_server_args
+#------------------------------------------------------------------------------
+proc parse_server_args {} {
+    global argv
+    set nargs [llength $argv]
+
+    array set args {-port "" -size "" -file "" -log stderr 
+    	-debugfile "" -debuglevel 0}
+    set copyoptions {}
+
+    for {set i 1} {$i < $nargs} {incr i} {
+	set a [lindex $argv $i]
+	if {$a == "-help"} {
+	    print_help
+	    exit 0
+	} elseif {$a == "-port"} {
+	    incr i
+	    if {$i >= $nargs} {
+		set msg "The \"$a\" option must be followed by a port number."
+		usage $msg
+	    }
+	    set val [lindex $argv $i]
+	    if {![string is integer -strict $val] || $val <= 0} {
+		set msg "Invalid port number \"$val\"."
+		append msg " Must be a positive integer."
+		usage $msg
+	    }
+	    set args($a) $val
+	} elseif {$a == "-size"} {
+	    incr i
+	    if {$i >= $nargs} {
+		set msg "The \"$a\" option must be followed by a size."
+		usage $msg
+	    }
+	    set val [lindex $argv $i]
+	    set val [_parse_numbytes $val 0]
+	    set args($a) $val
+	} elseif {$a == "-file"} {
+	    incr i
+	    set val [lindex $argv $i]
+	    if {$i >= $nargs || $val == ""} {
+		set msg "The \"$a\" option must be followed by a"
+		append msg " valid file name."
+		usage $msg
+	    }
+	    set args($a) $val
+	} elseif {$a == "-log"} {
+	    incr i
+	    set val [lindex $argv $i]
+	    if {$i >= $nargs || $val == ""} {
+		set msg "The \"$a\" option must be followed by a"
+		append msg " valid file name."
+		usage $msg
+	    }
+	    if {$val == "auto"} {
+		set val "server.log"
+	    }
+	    set args($a) $val
+	} elseif {$a == "-debugfile"} {
+	    incr i
+	    set val [lindex $argv $i]
+	    if {$i >= $nargs || $val == ""} {
+		set msg "The \"$a\" option must be followed by a"
+		append msg " valid file name."
+		usage $msg
+	    }
+	    if {$val == "auto"} {
+		set val "debug_server.log"
+	    }
+	    set args($a) $val
+	} elseif {$a == "-debuglevel"} {
+	    incr i
+	    set val [lindex $argv $i]
+	    if {$i >= $nargs} {
+		set msg "The \"$a\" option must be followed by an integer"
+		usage $msg
+	    }
+	    if {![string is integer -strict $val] || $val <= 0} {
+		set msg "The \"$a\" option must be followed by an integer"
+		usage $msg
+	    }
+	    set args($a) $val
+	} else {
+	    # Consider this and the next argument a copy option
+	    lappend copyoptions $a
+	    incr i
+	    lappend copyoptions [lindex $argv $i]
+	}
+    }
+
+    if {$args(-port) == ""} {
+	usage "You must specify a valid port number"
+    }
+    if {$args(-size) == "" && $args(-file) == ""} {
+	usage "You must specify exactly one of the -size and -file options"
+    }
+    if {$args(-size) != "" && $args(-file) != ""} {
+	usage "You must specify exactly one of the -size and -file options"
+    }
+
+    logopen $args(-log)
+    mdsc::debug configure -file $args(-debugfile) -level $args(-debuglevel)
+
+    # Ok, now create the object we are going to use
+    #
+    set mobj [MemObj #auto]
+    if {$args(-size) != ""} {
+	$mobj makerandom $args(-size)
+    } else {
+	$mobj load $args(-file)
+    }
+
+    # Call the server routine...
+    #
+    stat_init
+    do_server $args(-port) $mobj $copyoptions
+
+}
+
+#------------------------------------------------------------------------------
+# parse_client_args
+#------------------------------------------------------------------------------
+proc parse_client_args {} {
+    global argv
+    set nargs [llength $argv]
+
+    array set args {-port "" -server "" -checksum 1 -n 1 -p 1 -log stderr
+    		-debugfile "" -debuglevel 0}
+    set copyoptions {}
+
+    for {set i 1} {$i < $nargs} {incr i} {
+	set a [lindex $argv $i]
+	if {$a == "-help"} {
+	    print_help
+	    exit 0
+	} elseif {$a == "-port"} {
+	    incr i
+	    if {$i >= $nargs} {
+		set msg "The \"$a\" option must be followed by a port number."
+		usage $msg
+	    }
+	    set val [lindex $argv $i]
+	    if {![string is integer -strict $val] || $val <= 0} {
+		set msg "Invalid port number \"$val\"."
+		append msg " Must be a positive integer."
+		usage $msg
+	    }
+	    set args($a) $val
+	} elseif {$a == "-checksum"} {
+	    incr i
+	    if {$i >= $nargs} {
+		set msg "The \"$a\" option must be followed by a boolean."
+		usage $msg
+	    }
+	    set val [lindex $argv $i]
+	    set val [_parse_boolean $val]
+	    set args($a) $val
+	} elseif {$a == "-server"} {
+	    incr i
+	    set val [lindex $argv $i]
+	    if {$i >= $nargs || $val == ""} {
+		set msg "The \"$a\" option must be followed by a"
+		append msg " valid server name."
+		usage $msg
+	    }
+	    set args($a) $val
+	} elseif {$a == "-n"} {
+	    incr i
+	    if {$i >= $nargs} {
+		set msg "The \"$a\" option must be followed by an integer"
+		usage $msg
+	    }
+	    set val [lindex $argv $i]
+	    if {![string is integer -strict $val] || $val <= 0} {
+		set msg "Invalid number of copies \"$val\"."
+		append msg " Must be a positive integer"
+		usage $msg
+	    }
+	    set args($a) $val
+	} elseif {$a == "-p"} {
+	    incr i
+	    if {$i >= $nargs} {
+		set msg "The \"$a\" option must be followed by an integer"
+		usage $msg
+	    }
+	    set val [lindex $argv $i]
+	    if {![string is integer -strict $val] || $val <= 0} {
+		set msg "Invalid number of parallel copies \"$val\"."
+		append msg " Must be a positive integer"
+		usage $msg
+	    }
+	    set args($a) $val
+	} elseif {$a == "-log"} {
+	    incr i
+	    set val [lindex $argv $i]
+	    if {$i >= $nargs || $val == ""} {
+		set msg "The \"$a\" option must be followed by a"
+		append msg " valid file name."
+		usage $msg
+	    }
+	    if {$val == "auto"} {
+		set val [format "client%04d.log" [pid]]
+	    }
+	    set args($a) $val
+	} elseif {$a == "-debugfile"} {
+	    incr i
+	    set val [lindex $argv $i]
+	    if {$i >= $nargs || $val == ""} {
+		set msg "The \"$a\" option must be followed by a"
+		append msg " valid file name."
+		usage $msg
+	    }
+	    if {$val == "auto"} {
+		set val [format "debug_client%04d.log" [pid]]
+	    }
+	    set args($a) $val
+	} elseif {$a == "-debuglevel"} {
+	    incr i
+	    set val [lindex $argv $i]
+	    if {$i >= $nargs} {
+		set msg "The \"$a\" option must be followed by an integer"
+		usage $msg
+	    }
+	    if {![string is integer -strict $val] || $val <= 0} {
+		set msg "The \"$a\" option must be followed by an integer"
+		usage $msg
+	    }
+	    set args($a) $val
+	} else {
+	    # Consider this and the next argument a copy option
+	    lappend copyoptions $a
+	    incr i
+	    lappend copyoptions [lindex $argv $i]
+	}
+    }
+
+    if {$args(-server) == ""} {
+	usage "You must specify a server to connect to"
+    }
+    if {$args(-port) == ""} {
+	usage "You must specify the server's port"
+    }
+    logopen $args(-log)
+    mdsc::debug configure -file $args(-debugfile) -level $args(-debuglevel)
+
+    # Call the client routine...
+    #
+    set msg "PARALLELISM: $args(-p)"
+    stat_init $msg
+    do_client $args(-server) $args(-port) \
+    		$args(-n) $args(-p) $copyoptions $args(-checksum)
+}
+
+#-----------------------------------------
+# Initialize statistics
+
+# Do whatever you have to do
+doit
+
+
+# NOTE: the "DONE" variable will be only updated when in client
+# mode and all copies are done.
+set DONE 0
+while {$DONE == 0} {vwait DONE}
+stat_print
+
+puts "Bye!"
+

@@ -1,0 +1,29 @@
+#!/bin/sh
+#
+# -- ignore interrupts
+# \
+	trap '' 2 ; exec tclsh $0 "$@"
+package require Itcl
+
+set top [file dirname [file normalize $argv0]]
+if [file exists $top/Makefile] {
+    set lib [file dirname $top]
+} else {
+    set lib [file join [file dirname $top] lib]
+}
+lappend auto_path $lib
+
+package require mtlib 1.0
+package require MSH 1.0
+
+if [info exists env(MSHCONFIG)] {
+	set cf $env(MSHCONFIG)
+} else {
+	set cf /opt/ads/conf/msh.conf
+}
+MSH msh -cf $cf
+msh Run
+msh Wait
+msh delete
+LLog msh notice "exited."
+exit

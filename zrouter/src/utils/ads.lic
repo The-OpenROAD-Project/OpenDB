@@ -1,0 +1,15 @@
+ck 09E76A9151FDC055756F4375C87771B0
+comment {
+        This license file can only be used internally for ADS.
+        It is hardwired into the code to check this file, if none is specified
+        (-L option or ADS_LICENSE)
+}
+expires {
+    2010-01-01
+}
+features {
+        msh "multiprocessing control"
+        mds "multiprocessing data"
+        zroute "basic zroute functionality"
+        zui "ui for zroute"
+}

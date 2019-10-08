@@ -1,0 +1,167 @@
+#
+#
+#
+include ../Makefile.defs
+
+# WIN32 libs
+CMAKE_LIBS=C:/zlib/lib/zdll.lib
+
+all:: zroutesh
+
+BINNAME=zroutesh
+
+EXCLUDE_SRCS= z2tcl.cpp   factories.cpp blkHandle.cpp zroute_zui.cpp zroute_tiler.cpp tiler_pkg.c zui_pkg.c db_pkg.c  ztop.cpp
+SRCS=tclAppInit.c tcl2cpp.cpp zroute_pkg.c modules.cpp logger.cpp
+
+EXCLUDE_OBJS=z2tcl.o  factories.o blkHandle.o zroute_zui.o zroute_tiler.o tiler_pkg.o zui_pkg.o db_pkg.o  zroute_db.o  ztop.o
+OBJS=tclAppInit.o tcl2cpp.o zroute_pkg.o modules.o logger.o 
+
+QTLIBS=$(X11_LIB) -L$(QTDIR)/lib -lqt-mt 
+
+ifdef PURIFY
+LIBS= \
+      ../dcr/libdcr.a \
+      ../proto1/libproto1.a \
+      ../tilext/libtilext.a \
+      ../tilpln1/libtilpln1.a \
+      ../db/db_tcl/libdb_tcl.a \
+      ../db/libdb.a \
+      ../oa/liboa.a \
+      ../tmg/libtmg.a \
+      ../power/libpower.a \
+      ../sylib/libsylib.a \
+      ../sver/libsver.a \
+      ../groute/libgroute.a \
+      ../gdsii/libgdsii.a \
+      ../ws/libws.a \
+      ../defout/libdefout.a \
+      ../ztiler/libztiler.a \
+      ../placer/libplacer.a \
+      ../ext/libext.a \
+      ../dcr/libdcr.a \
+      ../yroute/libyroute.a \
+      ../dui/libdui.a \
+      ../tm/libtm.a \
+      ../lefin/liblefin.a \
+      ../defin/libdefin.a \
+      ../lefout/liblefout.a \
+      ../cdslef56/lef/liblef.a \
+      ../zlib/libzlib.a \
+      ../zutil/libzutil.a \
+      ../ui/libui.a \
+	  ../sdcrypt/libsdcrypt.a \
+      $(ZLIB) \
+	  ../eco/libeco.a
+
+else
+LIBS= \
+      ../db/db_tcl/libdb_tcl.a \
+      ../db/WireConn/libdb_conn.a \
+      ../db/libdb.a \
+      ../oa/liboa.a \
+      ../sver/libsver.a \
+      ../defout/libdefout.a \
+      ../tm/libtm.a \
+      ../lefin/liblefin.a \
+      ../defin/libdefin.a \
+      ../lefout/liblefout.a \
+      ../cdslef56/lef/liblef.a \
+      ../zlib/libzlib.a \
+      ../zutil/libzutil.a \
+      ../sdcrypt/libsdcrypt.a \
+      $(ZLIB)
+endif
+
+ifeq ($(MAKEDUI),1)
+USEQT=1
+CXXFLAGS+=-DMAKEDUI
+endif
+
+ifeq ($(MAKEUI),1)
+USEQT=1
+CXXFLAGS+=-DMAKEUI
+endif
+
+ifeq ($(USENEWQT),1)
+#GLUT=/opt/glut
+QTLIBS2=-L$(X11_LIB) -L$(QT)/lib -lqt-mt -lpthread  -lXmu -lXt -lSM -lICE -lXext -lX11 -lXi -lXext -lX11 -lm 
+endif
+
+ifeq ($(USEQT),1)
+QT=/opt/qt3
+GLUT=/opt/glut
+QTLIBS=-L/usr/X11R6/lib -L$(QT)/lib -L$(GLUT)/lib -lqt-mt -lpthread -lglut -lGLU -lGL -lXmu -lXt -lSM -lICE -lXext -lX11 -lXi -lXext -lX11 -lm 
+endif
+
+STALIBS=
+
+# SRCS+=zroute_sta.cpp
+# OBJS+=zroute_sta.o
+
+# zroute_sta.o:	zroute_sta.cpp
+	# $(CXX) $(CXXFLAGS) $(STAINC) -c zroute_sta.cpp
+
+# STALIBS= \
+../sta/sta_z/libsta_z.a \
+../sta/search/libsearch.a \
+../sta/constraints/libconstraints.a \
+../sta/dcalc/libdcalc.a \
+../sta/liberty/libliberty.a \
+../sta/graph/libgraph.a \
+../sta/network/libnetwork.a \
+../sta/parasitics/libparasitics.a \
+../sta/sdf/libsdf.a \
+../sta/util/libutil.a 
+
+LIBS += $(STALIBS)
+
+IMGLIBS=
+ifeq ($(USEJPEG),1)
+	IMGLIBS=-ljpeg
+endif
+
+ifeq ($(USEPNG),1)
+	IMGLIBS:=$(IMGLIBS) -lpng
+endif
+
+TCLLIBS=-L$(TCLLIB) -ltcl8.5 -lpthread
+
+zroutesh: $(OBJS) $(LIBS) $(STALIBS)
+	-rm logger.o
+	-rm cvs_version.h
+	make logger.o
+	#$(PURIFY) $(CXX) -m$(BUILD_ARCH) -o $@ $(OBJS) $(LIBS) $(STALIBS) $(TCLLIBS) $(QTLIBS) $(IMGLIBS) -lz -lstdc++ -lrt
+	$(PURIFY) $(CXX) -m$(BUILD_ARCH) -o $@ $(OBJS) $(LIBS) $(TCLLIBS) $(QTLIBS) $(IMGLIBS) -lz -lstdc++ -lrt
+
+logger.o: logger.cpp cvs_version.h
+
+cvs_version.h:
+	cp cvs_pref.h cvs_version.h
+	exec ../utils/mkcvsversion ./Makefile  | sed -e "s/$$/\\\\n/" >> cvs_version.h
+	cat cvs_suff.h >> cvs_version.h
+	cat cvs_version.h | tr -d '\n' > tmp.h
+	echo "" >> tmp.h
+	mv -f tmp.h cvs_version.h
+
+install:: zroutesh
+	mkdir -p $(BINDIR)
+	install -c zroutesh $(BINDIR)
+#install::
+
+clean::
+	rm -rf .deps *.o zroutesh
+
+
+# CMAKE_INCLUDES=\
+                ../sta/constraints \
+                ../sta/dcalc \
+                ../sta/graph \
+                ../sta/liberty \
+                ../sta/network \
+                ../sta/parasitics \
+                ../sta/sdf \
+                ../sta/search \
+                ../sta/sta_z \
+                ../sta/util \
+
+include ../Makefile.rules

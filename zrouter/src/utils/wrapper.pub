@@ -1,0 +1,57 @@
+#!/bin/ksh -p
+#
+#
+# just link any name to wrapper to make wrapper run ../bin.$ARCH/program
+#
+#
+#exec 2> $$.log 
+#set -x
+
+#unset ENV
+unset LD_LIBRARY_PATH
+args=$@
+dir=`dirname $0`
+case $dir in
+        .) base=$(dirname $(dirname $(pwd))) ;;
+        *) base=$(dirname $(dirname $dir)) ;;
+esac
+me=`basename $0`
+os=`uname -s`.`uname -m`
+case "$os" in
+	Linux.*86)
+		p=i386-linux
+		ISLIB=`ldd $base/pubtools/i386-linux/bin/tclsh8.4 | /bin/grep found | /usr/bin/wc -l`
+		if [ $ISLIB != 0 ]; then
+		xlib=$base/pubtools/$p/lib:$base/ads/$p/aim/lib:/lib:/usr/lib:$base/lib/lib-linux
+		else
+		xlib=$base/pubtools/$p/lib:/lib:/usr/lib
+		fi
+		;;
+	Linux.x86_64)
+		p=i386-linux
+		xlib=$base/pubtools/$p/lib:/lib:/usr/lib
+		;;
+	SunOS.sun4u)
+		p=sun4u-sparc
+		xlib=$base/pubtools/$p/lib:$base/lib/lib-solaris:/lib:/usr/lib
+		;;
+	*) echo "$me: unsupported OS/platform: $os" 1>&2
+		exit -1
+		;;
+esac
+
+f=$base/pubtools/$p/bin/$me
+
+if [ ! -z $ADS_LD_LIBRARY_PATH ]
+then
+export LD_LIBRARY_PATH=$xlib:$ADS_LD_LIBRARY_PATH
+else
+export LD_LIBRARY_PATH=$xlib
+fi
+
+test -f $f || {
+        echo "$me: cannot locate $f"
+        exit 1
+}
+
+exec $f "$@"

@@ -1,0 +1,56 @@
+PUBLISH & SUBSCRIBE PROTOCOL
+
+The protocol is defined between the MDS server and the MDS Clients
+Publisher P    Subscriber S        SERVER
+publish x                          note publisher(x) = P
+               subscribe x         note subscriber(x) = S
+                                   if in cache
+                                       RequestGet x by S
+                                   if not in cache:
+                                        requestPost x by P
+
+post x Vx------------------------->receive Vx
+                                   RequestGet x by S forall S
+               get x-------------->send Vx
+
+
+MDS is a server listening to connections regarding publish & subscribe events
+of data sets. The server manages objects representing the data sets being
+shared. Each dataset holds a list of subscribers to be notified if
+and when the data set is ready, and a publisher, the current entity
+which will provide the data.
+
+For each data set being shared, mds creates a new object (MDSVar)
+which is solely responsible for all protocol interatcions with 
+publishers and subscribers.
+
+To use MDS, the user has to create an MDSVar and bind it to a name:
+
+set dv [mds::new dsname]
+(this actually creates a local proxie of the mds server resident real object)
+
+The publisher will register its intention to provide data to this variable,
+through a call back mechanism:
+
+$dv publish "send_data"
+
+send_data will be called when the first subscriber requests the data.
+The return value should be the provided data. This data will be cached
+for subsequent requests.
+
+If needed, the publisher can declared a new, updated value:
+
+$dv touch
+
+In this case, any cached value is discarded, and the new one is requested.
+
+The subscriber can declare its intention to share this variable, and it
+will be notified through a call-back mechanism:
+
+$dv subscribe "receive_data"
+
+$dv get
+
+will force the latest data to be transmitted back to the subscriber
+
+

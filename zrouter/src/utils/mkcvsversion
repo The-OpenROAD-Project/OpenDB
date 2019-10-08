@@ -1,0 +1,25 @@
+#!/bin/ksh -p
+#
+#
+#
+
+gitdir=`git rev-parse --git-dir`
+#check if we are in a git repository
+if [ $? -eq 0 ]; then
+
+  #cvsversion string should be set to the last known git commit hash
+  git show --pretty=format:%H|head -1 2> /dev/null
+
+else
+
+  a=`readlink $1`
+
+  cd ./${a%Makefile}/..
+
+  for i in `find . -name "Entries" | grep CVS `
+  do
+    echo $i
+    cat $i
+  done
+
+fi

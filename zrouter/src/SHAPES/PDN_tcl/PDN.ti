@@ -1,0 +1,15 @@
+%{
+#include "PDN.h"
+%}
+module PDN
+{
+	constructor
+	(
+	);
+
+
+    	export print_macros
+	(
+		in string file = "macros.dump"  [ usage = "traverses components on to file" ; ]
+	);
+}

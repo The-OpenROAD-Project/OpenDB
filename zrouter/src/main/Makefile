@@ -41,6 +41,8 @@ LIBS= \
       ../zlib/libzlib.a \
       ../zutil/libzutil.a \
       $(ZLIB) \
+ 	../SHAPES/PDN_tcl/libPDN_tcl.a \
+ 	../SHAPES/libSHAPES.a \
 	 ../ModuleTemplate/libTEMPLATE.a \
 	 ../ModuleTemplate/TMP_tcl/libTMP_tcl.a
 endif

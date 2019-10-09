@@ -35,6 +35,7 @@ endif
 #           libraries.
 #
 LIBDIRS= \
+ 	SHAPES \
 	cdslef56/lef \
 	tm \
 	zlib \

@@ -47,7 +47,7 @@
 #endif
 #endif
 
-#include <malloc.h>
+#include <stdlib.h>
 #include <assert.h>
 
 #include "logger.h"

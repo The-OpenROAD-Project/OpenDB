@@ -33,7 +33,7 @@ esac
 
 
 function linux_setup {
-        case "$arch" in
+	case "$arch" in
         	x86_64)
             		if [ $BUILD_ARCH == 64 ] ; then
             		linux_setup_64_64
@@ -50,6 +50,7 @@ function linux_setup_64_32 {
         X11_LIB="-L/fs/release/Standard-2008b/i686-linux/X11R6/usr/X11R6/lib"
         QTDIR="/fs/release/Standard-2008b/i686-linux"
         TCLTOP="/fs/release/Standard-2008b/i686-linux"
+	TCLLIB=$TCLTOP/lib64
         CC="gcc"
         CXX="c++ -D D$DCOMP"
 	else
@@ -91,6 +92,8 @@ function linux_setup_64_64 {
 # NOTE 09052012
 	#TCLTOP="/space2/athena/release/Standard-2008b/x86_64-linux"
 	TCLTOP="/usr"
+	TCL_LIB_DIR=$TCLTOP/lib64
+	TCL_LIB=tcl8.5
 	#TCLTOP=$PUBTOOLS
 #PUBTOOLS=/space2/athena/pubtools/x86-64-linux/
 
@@ -112,6 +115,27 @@ function linux_setup_64_64 {
         fi
         MACHINEOPTS=-m64
         TCLSH=tclsh
+}
+
+function darwin_setup {
+    X11_LIB="-L/usr/X11/lib"
+    QTDIR="/usr"
+    CC="cc"
+    CXX="c++"
+    if [ $do_static_link == 1 ] ; then
+        LDLIB="ar crs"
+    else
+        LDLIB="ld -r -o"
+    fi
+
+    TCLTOP="/usr"
+    TCL_LIB_DIR=$TCLTOP/lib
+    TCL_LIB=tcl8.6
+    target=x86-64-linux
+    SOSUFFIX=so
+    SOPREFIX=lib
+    MACHINEOPTS=-m64
+    TCLSH=tclsh
 }
 
 function tcl_find {
@@ -140,6 +164,10 @@ case "$os" in
         Linux)
 		buildtype
 		linux_setup
+		;;
+        Darwin)
+		buildtype
+		darwin_setup
 		;;
         CYGWIN_NT*)
 		cygwin_setup
@@ -185,7 +213,8 @@ BINDIR=\$(DIST)/bin
 LIBDIR=\$(DIST)/lib
 MANDIR=\$(DIST)/man
 
-TCLLIB=$TCLTOP/lib64
+TCL_LIB_DIR=$TCL_LIB_DIR
+TCL_LIB=$TCL_LIB
 TCLINC=$TCLTOP/include
 MKSHLIB=$MKSHLIB
 CFLAGS_SH=$CFLAGS_SH

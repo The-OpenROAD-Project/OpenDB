@@ -33,7 +33,7 @@
 #define ZUI_H
 
 #include <stdio.h>
-#include <malloc.h>
+#include <stdlib.h>
 #include <assert.h>
 
 #include "array1.h"

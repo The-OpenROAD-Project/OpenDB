@@ -31,7 +31,7 @@
 
 
 #include <stdio.h>
-#include <malloc.h>
+#include <stdlib.h>
 
 #ifdef _WIN32
 #include <direct.h>

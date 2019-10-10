@@ -34,7 +34,7 @@
 
 
 #include <stdio.h>
-#include <malloc.h>
+#include <stdlib.h>
 #include <assert.h>
 
 template <class T> class Ath__array1D

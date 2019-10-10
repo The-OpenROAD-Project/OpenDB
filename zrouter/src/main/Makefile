@@ -100,14 +100,13 @@ ifeq ($(USEPNG),1)
 	IMGLIBS:=$(IMGLIBS) -lpng
 endif
 
-TCLLIBS=-L$(TCLLIB) -ltcl8.5 -lpthread
+TCLLIBS=-L$(TCL_LIB_DIR) -l$(TCL_LIB) -lpthread
 
 zroutesh: $(OBJS) $(LIBS) $(STALIBS)
 	-rm logger.o
 	-rm cvs_version.h
 	make logger.o
-	#$(PURIFY) $(CXX) -m$(BUILD_ARCH) -o $@ $(OBJS) $(LIBS) $(STALIBS) $(TCLLIBS) $(QTLIBS) $(IMGLIBS) -lz -lstdc++ -lrt
-	$(PURIFY) $(CXX) -m$(BUILD_ARCH) -o $@ $(OBJS) $(LIBS) $(TCLLIBS) $(QTLIBS) $(IMGLIBS) -lz -lstdc++ -lrt
+	$(PURIFY) $(CXX) -m$(BUILD_ARCH) -o $@ $(OBJS) $(LIBS) $(TCLLIBS) -lz -lstdc++
 
 logger.o: logger.cpp cvs_version.h
 

@@ -216,16 +216,15 @@ void write_cpp( const char * out_prefix )
     fprintf( out, "#include <tcl.h>\n");
     fprintf( out, "#include \"tm.h\"\n");
     fprintf( out, "#include \"tm_bind.h\"\n");
-    fprintf( out, "#include \"tm.hpp\"\n");
     fprintf( out, "#include \"tm_bind.hpp\"\n");
     fprintf( out, "#include \"%s.h\"\n", out_prefix);
     fprintf( out, "#include <list>\n");
     fprintf( out, "#include <string>\n");
 
     write_ccode( out );
+    write_static_initializations( out );
     fprintf( out, "\nBEGIN_NAMESPACE_ADS\n");
     write_template_instantations( out );
-    write_static_initializations( out );
     write_static_declarations( out );
     write_ZInOutArgs_cpp( out );
     fprintf( out, "\nEND_NAMESPACE_ADS\n");
@@ -876,8 +875,11 @@ void write_static_initializations( FILE * out )
     for( itr = modules.begin(); itr != modules.end(); ++itr )
     {
         Module * m = * itr;
+        fprintf( out, "BEGIN_NAMESPACE_ADS\n");
         fprintf( out, "template<> ZBindings<%s> * ZTechModule<%s>::_bindings = NULL;\n", m->name, m->name );
         fprintf( out, "template<> const char * ZTechModule<%s>::_module = \"%s\";\n", m->name, m->name );
+        fprintf( out, "END_NAMESPACE_ADS\n");
+        fprintf( out, "#include \"tm.hpp\"\n");
     }
 }
 

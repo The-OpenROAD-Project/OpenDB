@@ -33,7 +33,7 @@
 #define ITYPE_H
 
 #include <stdio.h>
-#include <malloc.h>
+#include <stdlib.h>
 
 
 class Ath__itype

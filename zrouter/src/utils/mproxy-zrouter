@@ -72,7 +72,7 @@ case $me in
 	ARCH=`uname -s`.`uname -m`."32"
 	me=`echo $me | awk -F\32 '{print $1}'`
 	;;
-	ade64)
+	ade|ade64)
 	ARCH=`uname -s`.`uname -m`."64"
 	me=`echo $me | awk -F\64 '{print $1}'`
 	;;
@@ -95,7 +95,7 @@ esac
 #	ARCH=`uname -s`.`uname -m`.`echo $MPT_ARCH`
 #fi
 BRANCH="zrouter"
-# echo "ARCH = $ARCH"
+ echo "ARCH = $ARCH"
 case "$ARCH" in
 	Linux.i686.)
 		p=i386-linux
@@ -144,6 +144,14 @@ case "$ARCH" in
 		PATH=$base/$p/$BRANCH/bin:$pdir/$p/bin:$PATH
                 TCL_LIBRARY=$pdir/$p/lib/tcl8.5
                 TK_LIBRARY=$pdir/$p/lib/tk8.5
+
+                ;;
+	Darwin.x86_64.64)
+		p=x86-64-linux
+                LD_LIBRARY_PATH=$base/$p/$BRANCH/lib:$pdir/$p/lib:$LD_LIBRARY_PATH
+		PATH=$base/$p/$BRANCH/bin:$pdir/$p/bin:$PATH
+                TCL_LIBRARY=$pdir/$p/lib/tcl8.6
+                TK_LIBRARY=$pdir/$p/lib/tk8.6
 
                 ;;
   	   SunOS.*)

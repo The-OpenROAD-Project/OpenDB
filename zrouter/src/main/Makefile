@@ -20,8 +20,6 @@ OBJS=tclAppInit.o zroute_pkg.o tcl2cpp.o \
      db_pkg.o modules.o logger.o
 
 
-QTLIBS=$(X11_LIB) -L$(QTDIR)/lib -lqt-mt 
-
 ifdef PURIFY
 LIBS= 
 
@@ -41,8 +39,8 @@ LIBS= \
       ../zlib/libzlib.a \
       ../zutil/libzutil.a \
       $(ZLIB) \
- 	../SHAPES/PDN_tcl/libPDN_tcl.a \
- 	../SHAPES/libSHAPES.a \
+	../SHAPES/PDN_tcl/libPDN_tcl.a \
+	../SHAPES/libSHAPES.a \
 	 ../ModuleTemplate/libTEMPLATE.a \
 	 ../ModuleTemplate/TMP_tcl/libTMP_tcl.a
 endif
@@ -66,6 +64,8 @@ ifeq ($(USEQT),1)
 QT=/opt/qt3
 GLUT=/opt/glut
 QTLIBS=-L/usr/X11R6/lib -L$(QT)/lib -L$(GLUT)/lib -lqt-mt -lpthread -lglut -lGLU -lGL -lXmu -lXt -lSM -lICE -lXext -lX11 -lXi -lXext -lX11 -lm 
+else
+QTLIBS=
 endif
 
 STALIBS=

@@ -95,7 +95,7 @@
 #include "ZComponents.h"
 #include "parse.h"
 #include "logger.h"
-#include "../defout/defout.h"
+#include "defout.h"
 #include "lefout.h"
 #include<string>
 

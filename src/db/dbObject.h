@@ -39,7 +39,7 @@
 BEGIN_NAMESPACE_ADS
 
 #ifndef DB_PRIVATE
-#define DB_PRIVATE private
+#define DB_PRIVATE public
 #endif
 
 ///

@@ -91,8 +91,3 @@ add_library(db
 
 target_compile_features(db PRIVATE cxx_auto_type)
 target_compile_options(db PRIVATE $<$<CXX_COMPILER_ID:GNU>:-Wall>)
-
-set_target_properties(db 
-    PROPERTIES
-        DB_PRIVATE public
-)

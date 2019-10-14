@@ -89,5 +89,13 @@ add_library(db
     dbUtil.cpp 
 )
 
+target_include_directories(db
+    PUBLIC
+        $<INSTALL_INTERFACE:include/opendb>
+        $<BUILD_INTERFACE:${PROJECT_SOURCE_DIR}/include/opendb>
+    PRIVATE
+        ${PROJECT_SOURCE_DIR}/src/db
+)
+
 target_compile_features(db PRIVATE cxx_auto_type)
 target_compile_options(db PRIVATE $<$<CXX_COMPILER_ID:GNU>:-Wall>)

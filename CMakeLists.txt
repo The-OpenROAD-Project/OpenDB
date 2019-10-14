@@ -26,37 +26,15 @@ configure_file (
 
 # db
 add_subdirectory(src/db)
-target_include_directories(db
-    PUBLIC
-        $<INSTALL_INTERFACE:include/opendb>
-        $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include/opendb>
-    PRIVATE
-        ${CMAKE_CURRENT_SOURCE_DIR}/src/db
-)
 
 # defin
 add_subdirectory(src/defin)
-target_include_directories(defin
-    PUBLIC
-        $<INSTALL_INTERFACE:include/opendb>
-        $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include/opendb>
-    PRIVATE
-        ${CMAKE_CURRENT_SOURCE_DIR}/src/defin
-)
 
 # defout
 add_subdirectory(src/defout)
-target_include_directories(defout
-    PUBLIC
-        $<INSTALL_INTERFACE:include/opendb>
-        $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include/opendb>
-    PRIVATE
-        ${CMAKE_CURRENT_SOURCE_DIR}/src/defout
-)
 
 # lefin
 add_subdirectory(src/cdslef56)
-
 
 #add_subdirectory(src/lefin)
 

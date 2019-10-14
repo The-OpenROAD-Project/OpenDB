@@ -31,9 +31,9 @@ add_library(lef
 target_include_directories(lef
     PUBLIC
         $<INSTALL_INTERFACE:include/cdslef56>
-        $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include/cdslef56>
+        $<BUILD_INTERFACE:${PROJECT_SOURCE_DIR}/include/cdslef56>
     PRIVATE
-        ${CMAKE_CURRENT_SOURCE_DIR}/src/cdslef56/lef
+        ${PROJECT_SOURCE_DIR}/src/cdslef56/lef
         ${CMAKE_CURRENT_BINARY_DIR}
         .
 )
@@ -69,9 +69,9 @@ add_library(clef
 target_include_directories(clef
     PUBLIC
         $<INSTALL_INTERFACE:include/cdslef56>
-        $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include/cdslef56>
+        $<BUILD_INTERFACE:${PROJECT_SOURCE_DIR}/include/cdslef56>
     PRIVATE
-        ${CMAKE_CURRENT_SOURCE_DIR}/src/cdslef56/clef
+        ${PROJECT_SOURCE_DIR}/src/cdslef56/clef
         ${CMAKE_CURRENT_BINARY_DIR}
         .
 )

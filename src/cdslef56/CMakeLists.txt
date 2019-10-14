@@ -75,3 +75,15 @@ target_include_directories(clef
         ${CMAKE_CURRENT_BINARY_DIR}
         .
 )
+
+add_library(clefzlib
+    clefzlib/lefzlib.c 
+)
+
+target_include_directories(clefzlib
+    PUBLIC
+        $<INSTALL_INTERFACE:include/cdslef56>
+        $<BUILD_INTERFACE:${PROJECT_SOURCE_DIR}/include/cdslef56>
+    PRIVATE
+        ${PROJECT_SOURCE_DIR}/src/cdslef56/clefzlib
+)

@@ -492,7 +492,7 @@ lef_init_symbol_table(void *Keyword_set)
 #define yyparse	lefyyparse
 #define yylex	lefyylex
 #define yyerror	lefyyerror
-#define yylval	lefyylval
+#define yylval	yylval
 #define yychar	lefyychar
 #define yydebug	lefyydebug
 #define yynerrs	lefyynerrs

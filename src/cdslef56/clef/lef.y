@@ -31,12 +31,12 @@
 
  /* # endif */
 
- #include "FEF_stringhash.h"
- #include "lex.h"
- #include "lefiDefs.h"
- #include "lefiUser.h"
- #include "lefiUtil.h"
- #include "lefrCallBacks.h"
+ #include "clef/FEF_stringhash.h"
+ #include "clef/lex.h"
+ #include "clef/lefiDefs.h"
+ #include "clef/lefiUser.h"
+ #include "clef/lefiUtil.h"
+ #include "clef/lefrCallBacks.h"
  #ifdef WIN32
  #include <malloc.h>
  #endif

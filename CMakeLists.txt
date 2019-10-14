@@ -12,7 +12,7 @@ endif()
 # Setting up OpenDB project
 project(OpenDB VERSION 0.0.1
                 DESCRIPTION "Database and Tool Framework for EDA"
-                LANGUAGES CXX)
+                LANGUAGES C CXX)
 
 # Configure build version
 configure_file (
@@ -53,6 +53,10 @@ target_include_directories(defout
     PRIVATE
         ${CMAKE_CURRENT_SOURCE_DIR}/src/defout
 )
+
+# lefin
+add_subdirectory(src/cdslef56)
+#add_subdirectory(src/lefin)
 
 # opendb
 add_library(opendb

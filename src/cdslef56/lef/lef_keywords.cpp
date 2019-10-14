@@ -15,7 +15,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include "lefiDefs.hpp"
-#include "lef_parser.h"
+#include "lef_parser.hpp"
 #include "lefiDebug.hpp"
 #include "FEF_stringhash.h"
 #include "lex.h"
@@ -493,7 +493,7 @@ void lef_init_symbol_table(void *Keyword_set)
 #define yyparse	lefyyparse
 #define yylex	lefyylex
 #define yyerror	lefyyerror
-#define yylval	lefyylval
+#define yylval	yylval
 #define yychar	lefyychar
 #define yydebug	lefyydebug
 #define yynerrs	lefyynerrs

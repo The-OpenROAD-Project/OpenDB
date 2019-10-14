@@ -33,6 +33,7 @@
 
 # build
 build
+lbuild
 .DS_Store
 .vscode
 

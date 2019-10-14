@@ -44,7 +44,6 @@ BISON_TARGET(CLEFParser
 )
 add_library(clef
     ${BISON_CLEFParser_OUTPUTS}
-    lef/lef.tab.cpp
     clef/FEF_malloc.c 
     clef/FEF_stringhash.c 
     clef/crypt.c 

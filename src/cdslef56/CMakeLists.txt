@@ -1,6 +1,6 @@
 find_package(BISON REQUIRED)
 BISON_TARGET(LEFParser 
-    lef/lef.y 
+    ${CMAKE_CURRENT_SOURCE_DIR}/lef/lef.y 
     ${CMAKE_CURRENT_BINARY_DIR}/lef_parser.cpp
 )
 
@@ -39,7 +39,7 @@ target_include_directories(lef
 )
 
 BISON_TARGET(CLEFParser 
-    clef/lef.y 
+    ${CMAKE_CURRENT_SOURCE_DIR}/clef/lef.y 
     ${CMAKE_CURRENT_BINARY_DIR}/lef.tab.c
 )
 add_library(clef

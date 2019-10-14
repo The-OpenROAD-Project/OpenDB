@@ -6774,12 +6774,12 @@ lefPropDefType) ;
  }
  
  prop_define:
- K_INTEGER { lefRealNum = 0 } opt_def_range opt_def_value
+ K_INTEGER { lefRealNum = 0; } opt_def_range opt_def_value
  {
  if (lefrPropCbk) lefiProp_setPropInteger( &(lefrProp) ) ;
- lefPropDefType = 'I'
+ lefPropDefType = 'I';
  }
- | K_REAL { lefRealNum = 1 } opt_def_range opt_def_value
+ | K_REAL { lefRealNum = 1; } opt_def_range opt_def_value
  {
  if (lefrPropCbk) lefiProp_setPropReal( &(lefrProp) ) ;
  lefPropDefType = 'R';
@@ -6788,19 +6788,19 @@ lefPropDefType) ;
  | K_STRING
  {
  if (lefrPropCbk) lefiProp_setPropString( &(lefrProp) ) ;
- lefPropDefType = 'S'
+ lefPropDefType = 'S';
  }
  | K_STRING QSTRING
  {
  if (lefrPropCbk) lefiProp_setPropQString( &(lefrProp),
  $2) ;
- lefPropDefType = 'Q'
+ lefPropDefType = 'Q';
  }
  | K_NAMEMAPSTRING T_STRING
  {
  if (lefrPropCbk) lefiProp_setPropNameMapString( &(lefrProp),
  $2) ;
- lefPropDefType = 'S'
+ lefPropDefType = 'S';
  }
  
  

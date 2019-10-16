@@ -69,7 +69,7 @@ class ZObject;
 /// Associate the interface identifier this the interface. This macro
 /// should be added to the public section of the interface class.
 ///
-#define ZINTERFACE_ID(INTERFACE) enum { ZIID = ZIID_##INTERFACE };
+#define ZINTERFACE_ID(INTERFACE) enum { ZIID = ZIID_##INTERFACE }
 
 ///
 /// ZCID - Returns the component interface identifier. You must include

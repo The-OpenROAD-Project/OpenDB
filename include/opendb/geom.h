@@ -697,7 +697,7 @@ inline void adsRect::mergeInit()
     _yhi = INT_MIN;
     
 }
-inline void adsRect::notice(const char * prefix)
+inline void adsRect::notice(const char *)
 {
 	;//notice(0, "%s%12d %12d - %12d %12d\n", prefix, _xlo, _ylo, dx, dy);
 }

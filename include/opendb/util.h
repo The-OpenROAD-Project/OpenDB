@@ -337,7 +337,7 @@ template <class T> class AthHash {
 		return m_listOfPrimes[i];
 	}
 
-	unsigned int hashFunction(char *key, unsigned int len, unsigned int prime)
+	unsigned int hashFunction(char *key, unsigned int , unsigned int prime)
         {
             unsigned int hash = 0;
             int c;

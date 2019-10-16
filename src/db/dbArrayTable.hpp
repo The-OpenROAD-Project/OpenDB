@@ -168,7 +168,7 @@ template <class T>
 dbArrayTable<T>::dbArrayTable( _dbDatabase * db,
                         dbObject * owner,
                         const dbArrayTable<T> & t )
-        : dbObjectTable(_db, _owner, t._getObjectTable, t._type, sizeof(T)),
+        : dbObjectTable(db, owner, t._getObjectTable, t._type, sizeof(T)),
           _page_mask( t._page_mask ),
           _page_shift( t._page_shift ),
           _page_cnt( t._page_cnt ),

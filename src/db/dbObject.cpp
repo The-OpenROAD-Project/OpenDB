@@ -43,7 +43,7 @@ uint dbObject::getId() const
     return getOID();
 }
 
-void dbObject::getDbName( char name[256] ) const
+void dbObject::getDbName( char name[max_name_length] ) const
 {
     const dbObject * parent;
     const dbObject * child;

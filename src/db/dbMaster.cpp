@@ -517,7 +517,7 @@ dbMaster::findMTerm( dbBlock *block, const char * name )
     if (mterm)
         return mterm;
     char blk_left_bus_del, blk_right_bus_del, lib_left_bus_del, lib_right_bus_del;
-    char ttname[256];
+    char ttname[max_name_length];
     uint ii = 0;
     block->getBusDelimeters(blk_left_bus_del, blk_right_bus_del);
     getLib()->getBusDelimeters(lib_left_bus_del, lib_right_bus_del);

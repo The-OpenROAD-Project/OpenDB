@@ -3395,7 +3395,7 @@ void dbBlock::saveDef(char *filename, char *nets)
 void dbBlock::writeDb(char *filename, int allNode)
 {
     _dbBlock * block = (_dbBlock *) this;
-    char dbname[256];
+    char dbname[max_name_length];
     if (allNode)
     {
 #ifndef _WIN32

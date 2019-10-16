@@ -1260,7 +1260,7 @@ void defout_impl::writeSNet( dbNet * net )
             ++i;
         }
     }
-    char ttname[256];
+    char ttname[dbObject::max_name_length];
 //    else
     if (1)
     {
@@ -1755,7 +1755,7 @@ void defout_impl::writeNet( dbNet * net )
         fprintf(_out, "    - %s", nname.c_str() );
     }
 
-    char ttname[256];
+    char ttname[dbObject::max_name_length];
     int i = 0;
     dbSet<dbITerm>::iterator iterm_itr;
 
@@ -2079,7 +2079,7 @@ void defout_impl::writePinProperties( dbBlock * block )
     }
     
 
-    char ttname[256];
+    char ttname[dbObject::max_name_length];
     for( iitr = iterms.begin(); iitr != iterms.end(); ++iitr )
     {
         dbITerm * iterm = *iitr;

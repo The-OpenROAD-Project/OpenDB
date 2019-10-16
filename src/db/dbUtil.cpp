@@ -299,7 +299,7 @@ dbInst *dbCreateNetUtil::updateInst(dbInst *inst0, bool createInstance, bool des
     public proc milos_disconnectNet { id net } {
     public proc milos_removeNet { name } {
 */
-bool dbCreateNetUtil::printEcoInstVerbose(FILE *fp, dbInst *inst, char *header)
+bool dbCreateNetUtil::printEcoInstVerbose(FILE *fp, dbInst *inst, const char *header)
 {
 	if (_verbose)
 		return false;

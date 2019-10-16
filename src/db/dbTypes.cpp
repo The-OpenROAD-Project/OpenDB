@@ -544,6 +544,10 @@ const char * dbMasterType::getString() const
             value = "CORE TIELOW";
             break;
             
+        case CORE_SPACER:
+            value = "CORE SPACER";
+            break;
+
         case ENDCAP:
             value = "ENDCAP";
             break;

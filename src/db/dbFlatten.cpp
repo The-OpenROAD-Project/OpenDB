@@ -484,8 +484,7 @@ void dbFlatten::printShapes(FILE *fp, dbWire *wire, bool skip_rcSegs)
 
 
 		fprintf(fp, " prop%d tgt%d node%d\n", 
-			rsegId, rc->getTargetNode(), capNode->getId(), 
-			r.xMin(), r.yMin(), r.xMax(), r.yMax());
+			rsegId, rc->getTargetNode(), capNode->getId());
 	}
 }
 void dbFlatten::setOldShapeIds(dbWire *wire)
@@ -548,7 +547,7 @@ void dbFlatten::setShapeProperties(dbWire *wire)
 	}
 }
 
-FILE *dbFlatten::debugNetWires(FILE *fp, dbNet * dst, dbNet * src, char *msg)
+FILE *dbFlatten::debugNetWires(FILE *fp, dbNet * dst, dbNet * src, const char *msg)
 {
 	if (fp==NULL) {
 		char buf[32];

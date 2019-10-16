@@ -194,8 +194,10 @@ void _dbTechNonDefaultRule::out( dbDiff & diff, char side, const char * field ) 
 
 _dbTech * _dbTechNonDefaultRule::getTech()
 {
+#if 0 // dead code generates warnings -cherry
     if (_flags._block_rule == 0)
         (_dbTech *) getOwner();
+#endif
 
     return (_dbTech *) getDb()->getTech();
 }

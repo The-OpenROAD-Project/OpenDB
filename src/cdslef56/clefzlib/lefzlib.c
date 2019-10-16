@@ -25,7 +25,8 @@ lefGZipOpen(const char *gzipPath, const char* mode) {
   if (!gzipPath)
     return NULL;
 
-  if (fptr = gzopen(gzipPath, mode)) {
+  fptr = gzopen(gzipPath, mode);
+  if (fptr) {
     /* successfully open the gzip file */
     /* set the read function to read from a compressed file */
     lefrSetReadFunction(lefGZip_read);

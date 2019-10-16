@@ -118,7 +118,7 @@ class dbFlatten
     uint createRSegs(dbNet *src, dbNet *dst);
     uint printRSegs(FILE *fp, dbNet *net);
     uint setCorrectRsegIds(dbNet *dst);
-    FILE *debugNetWires(FILE *fp, dbNet * dst, dbNet * src, char *msg);
+    FILE *debugNetWires(FILE *fp, dbNet * dst, dbNet * src, const char *msg);
 
 
   public:

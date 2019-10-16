@@ -162,8 +162,10 @@ void _dbTechLayerRule::out( dbDiff & diff, char side, const char * field ) const
 
 _dbTech * _dbTechLayerRule::getTech()
 {
+#if 0 // dead code generates warnings -cherry
     if (_flags._block_rule == 0)
         (_dbTech *) getOwner();
+#endif
 
     return (_dbTech *) getDb()->getTech();
 }

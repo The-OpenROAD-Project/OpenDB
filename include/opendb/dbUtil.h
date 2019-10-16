@@ -124,7 +124,7 @@ class dbCreateNetUtil
 	uint printDeletedInsts(dbBlock *ecoBlock, dbBlock *srcBlock, FILE *fp);
 	uint printModifiedInsts(dbBlock *ecoBlock, dbBlock *srcBlock, FILE *fp);
 	uint printEcoInst(dbInst *inst0, dbBlock *srcBlock, FILE *fp);
-	bool printEcoInstVerbose(FILE *fp, dbInst *inst, char *header);
+	bool printEcoInstVerbose(FILE *fp, dbInst *inst, const char *header);
 	uint printNewNets(dbBlock *ecoBlock, dbBlock *srcBlock, FILE *fp, int itermCnt);
 	uint printDeletedNets(dbBlock *ecoBlock, dbBlock *srcBlock, FILE *fp, int itermCnt);
 	uint printDisconnectedTerms(dbBlock *ecoBlock, dbBlock *srcBlock, FILE *fp);

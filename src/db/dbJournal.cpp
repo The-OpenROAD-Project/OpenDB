@@ -1211,12 +1211,14 @@ void dbJournal::undo_updateInstField()
     int field;
     _log.pop(field);
 
+#if 0 // dead code generates warnings -cherry
     switch( (_dbInst::Field) field )
     {
         case _dbInst::FLAGS:
         case _dbInst::ORIGIN:
             break;
     }
+#endif
 }
 
 void dbJournal::undo_updateITermField()

@@ -70,8 +70,8 @@ class _dbTechMinCutRule : public dbObject
     _dbTechMinCutRule( _dbDatabase * db );
     ~_dbTechMinCutRule();
 
-    int operator==( const _dbTechMinCutRule & rhs ) const;
-    int operator!=( const _dbTechMinCutRule & rhs ) const { return ! operator==(rhs); }
+    bool operator==( const _dbTechMinCutRule & rhs ) const;
+    bool operator!=( const _dbTechMinCutRule & rhs ) const { return ! operator==(rhs); }
     void differences( dbDiff & diff, const char * field, const _dbTechMinCutRule & rhs ) const;
     void out( dbDiff & diff, char side, const char * field ) const;
 };
@@ -117,8 +117,8 @@ class _dbTechMinEncRule : public dbObject
     _dbTechMinEncRule( _dbDatabase * db );
     _dbTechMinEncRule( _dbDatabase * db, const _dbTechMinEncRule & r);
     ~_dbTechMinEncRule();
-    int operator==( const _dbTechMinEncRule & rhs ) const;
-    int operator!=( const _dbTechMinEncRule & rhs ) const { return ! operator==(rhs); }
+    bool operator==( const _dbTechMinEncRule & rhs ) const;
+    bool operator!=( const _dbTechMinEncRule & rhs ) const { return ! operator==(rhs); }
     void differences( dbDiff & diff, const char * field, const _dbTechMinEncRule & rhs ) const;
     void out( dbDiff & diff, char side, const char * field ) const;
 };

@@ -42,7 +42,7 @@ namespace odb {
 
 template class dbTable<_dbTechSameNetRule>;
 
-int _dbTechSameNetRule::operator==( const _dbTechSameNetRule & rhs ) const
+bool _dbTechSameNetRule::operator==( const _dbTechSameNetRule & rhs ) const
 {
     if( _flags._stack != rhs._flags._stack )
         return false;

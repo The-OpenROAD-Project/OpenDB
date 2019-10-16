@@ -115,7 +115,7 @@ dbIStream & operator>>( dbIStream & stream, _dbTechNonDefaultRule & rule )
     return stream;
 }
 
-int _dbTechNonDefaultRule::operator==( const _dbTechNonDefaultRule & rhs ) const
+bool _dbTechNonDefaultRule::operator==( const _dbTechNonDefaultRule & rhs ) const
 {
     if ( _flags._hard_spacing != rhs._flags._hard_spacing )
         return false;
@@ -208,7 +208,7 @@ _dbBlock * _dbTechNonDefaultRule::getBlock()
     return (_dbBlock *) getOwner();
 }
 
-int _dbTechNonDefaultRule::operator<( const _dbTechNonDefaultRule & rhs ) const
+bool _dbTechNonDefaultRule::operator<( const _dbTechNonDefaultRule & rhs ) const
 {
     return strcmp( _name, rhs._name ) < 0;
 }

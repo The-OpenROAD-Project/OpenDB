@@ -194,7 +194,7 @@ class dbShape
         _via = (dbObject *) via;
     }
 
-    int operator==( const dbShape & s )
+    bool operator==( const dbShape & s )
     {
         return     (_type == s._type)
                &&  (_rect == s._rect)
@@ -202,12 +202,12 @@ class dbShape
                &&  (_layer == s._layer);
     }
 
-    int operator!=( const dbShape & s )
+    bool operator!=( const dbShape & s )
     {
         return ! operator==(s);
     }
 
-    int operator<( const dbShape & rhs );
+    bool operator<( const dbShape & rhs );
 
     ///
     /// Get the lower coordinate.

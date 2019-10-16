@@ -76,9 +76,9 @@ class _dbObstruction : public dbObject
     _dbObstruction( _dbDatabase * );
     ~_dbObstruction();
 
-    int operator==( const _dbObstruction & rhs ) const;
-    int operator!=( const _dbObstruction & rhs ) const { return ! operator==(rhs); }
-    int operator<( const _dbObstruction & rhs ) const;
+    bool operator==( const _dbObstruction & rhs ) const;
+    bool operator!=( const _dbObstruction & rhs ) const { return ! operator==(rhs); }
+    bool operator<( const _dbObstruction & rhs ) const;
     void differences( dbDiff & diff, const char * field, const _dbObstruction & rhs ) const;
     void out( dbDiff & diff, char side, const char * field ) const;
 };

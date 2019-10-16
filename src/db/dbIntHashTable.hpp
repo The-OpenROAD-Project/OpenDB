@@ -70,7 +70,7 @@ dbIntHashTable<T>::~dbIntHashTable()
 }
 
 template <class T>
-int dbIntHashTable<T>::operator==( const dbIntHashTable<T> & rhs ) const
+bool dbIntHashTable<T>::operator==( const dbIntHashTable<T> & rhs ) const
 {
     if ( _num_entries != rhs._num_entries )
         return false;

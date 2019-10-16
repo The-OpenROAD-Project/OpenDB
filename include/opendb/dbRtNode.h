@@ -71,8 +71,8 @@ public:
     dbRtNodeEdgeIterator( const dbRtNodeEdgeIterator & i ) { _node = i._node; _cur = i._cur; }
     dbRtNodeEdgeIterator & operator=( const dbRtNodeEdgeIterator & i ) { _node = i._node; _cur = i._cur; return *this; }
                 
-    int operator==( const dbRtNodeEdgeIterator & i ) const { return _cur == i._cur; } 
-    int operator!=( const dbRtNodeEdgeIterator & i ) const { return _cur != i._cur; } 
+    bool operator==( const dbRtNodeEdgeIterator & i ) const { return _cur == i._cur; } 
+    bool operator!=( const dbRtNodeEdgeIterator & i ) const { return _cur != i._cur; } 
     dbRtEdge * operator*() { return _cur; }
     dbRtNodeEdgeIterator & operator++() { incr(); return *this; }
     dbRtNodeEdgeIterator operator++(int) { dbRtNodeEdgeIterator i = *this; incr(); return i; }

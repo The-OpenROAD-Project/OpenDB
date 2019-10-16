@@ -95,9 +95,9 @@ class _dbITerm : public dbObject
     _dbITerm( _dbDatabase * );
     _dbITerm( _dbDatabase *, const _dbITerm & i );
     ~_dbITerm();
-    int operator==( const _dbITerm & rhs ) const;
-    int operator!=( const _dbITerm & rhs ) const { return ! operator==(rhs); }
-    int operator<( const _dbITerm & rhs ) const;
+    bool operator==( const _dbITerm & rhs ) const;
+    bool operator!=( const _dbITerm & rhs ) const { return ! operator==(rhs); }
+    bool operator<( const _dbITerm & rhs ) const;
     void differences( dbDiff & diff, const char * field, const _dbITerm & rhs ) const;
     void out( dbDiff & diff, char side, const char * field ) const;
 

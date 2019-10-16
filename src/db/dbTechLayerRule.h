@@ -86,9 +86,9 @@ class _dbTechLayerRule : public dbObject
     _dbTech * getTech();
     _dbBlock * getBlock();
 
-    int operator==( const _dbTechLayerRule & rhs ) const;
-    int operator!=( const _dbTechLayerRule & rhs ) const { return ! operator==(rhs); }
-    int operator<( const _dbTechLayerRule & rhs ) const
+    bool operator==( const _dbTechLayerRule & rhs ) const;
+    bool operator!=( const _dbTechLayerRule & rhs ) const { return ! operator==(rhs); }
+    bool operator<( const _dbTechLayerRule & rhs ) const
     {
         if  ( _layer < rhs._layer )
             return true;

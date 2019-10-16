@@ -136,9 +136,9 @@ class _dbNet : public dbObject
     _dbNet( _dbDatabase *, const _dbNet & n );
     ~_dbNet();
 
-    int operator==( const _dbNet & rhs ) const;
-    int operator!=( const _dbNet & rhs ) const { return ! operator==(rhs); }
-    int operator<( const _dbNet & rhs ) const;
+    bool operator==( const _dbNet & rhs ) const;
+    bool operator!=( const _dbNet & rhs ) const { return ! operator==(rhs); }
+    bool operator<( const _dbNet & rhs ) const;
     void differences( dbDiff & diff, const char * field, const _dbNet & rhs ) const;
     void out( dbDiff & diff, char side, const char * field ) const;
 };

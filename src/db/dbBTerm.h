@@ -106,9 +106,9 @@ class _dbBTerm : public dbObject
     _dbBTerm( _dbDatabase *, const _dbBTerm & b );
     ~_dbBTerm();
 
-    int operator==( const _dbBTerm & rhs ) const;
-    int operator!=( const _dbBTerm & rhs ) const { return ! operator==(rhs); }
-    int operator<(const _dbBTerm & rhs ) const;
+    bool operator==( const _dbBTerm & rhs ) const;
+    bool operator!=( const _dbBTerm & rhs ) const { return ! operator==(rhs); }
+    bool operator<(const _dbBTerm & rhs ) const;
     void differences( dbDiff & diff, const char * field, const _dbBTerm & rhs ) const;
     void out( dbDiff & diff, char side, const char * field ) const;
 };

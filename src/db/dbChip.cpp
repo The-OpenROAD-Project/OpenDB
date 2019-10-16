@@ -45,7 +45,7 @@ namespace odb {
 
 template class dbTable<_dbChip>;
 
-int _dbChip::operator==( const _dbChip & rhs ) const
+bool _dbChip::operator==( const _dbChip & rhs ) const
 {
     if( _top != rhs._top )
         return false;

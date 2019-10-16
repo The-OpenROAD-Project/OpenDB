@@ -755,13 +755,13 @@ dbIStream & operator>>( dbIStream & stream, dbTable<T> & table )
 }
 
 template <class T>
-int dbTable<T>::operator!=( const dbTable<T> & table ) const
+bool dbTable<T>::operator!=( const dbTable<T> & table ) const
 {
     return ! operator==(table);
 }
 
 template <class T>
-int dbTable<T>::operator==( const dbTable<T> & rhs ) const
+bool dbTable<T>::operator==( const dbTable<T> & rhs ) const
 {
     const dbTable<T> & lhs = *this;
 

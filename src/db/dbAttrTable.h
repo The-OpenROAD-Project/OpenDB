@@ -122,8 +122,8 @@ class dbAttrTable
         _page_cnt = 0;
     }
 
-    int operator==( const dbAttrTable<T> & rhs ) const;
-    int operator!=( const dbAttrTable<T> & rhs ) const { return ! operator==(rhs); }
+    bool operator==( const dbAttrTable<T> & rhs ) const;
+    bool operator!=( const dbAttrTable<T> & rhs ) const { return ! operator==(rhs); }
     void differences( dbDiff & diff, const char * field, const dbAttrTable<T> & rhs ) const;
     void out( dbDiff & diff, char side, const char * field ) const;
     
@@ -176,7 +176,7 @@ template <typename T> const uint dbAttrTable<T>::PAGE_SIZE = 32;
 template <typename T> const uint dbAttrTable<T>::PAGE_SHIFT = 5;
 
 template <typename T>
-inline int dbAttrTable<T>::operator==( const dbAttrTable<T> & rhs ) const
+inline bool dbAttrTable<T>::operator==( const dbAttrTable<T> & rhs ) const
 {
     if ( _page_cnt != rhs._page_cnt )
         return false;

@@ -50,7 +50,7 @@ template class dbTable<_dbTechViaGenerateRule>;
 //
 ////////////////////////////////////////////////////////////////////
 
-int _dbTechViaGenerateRule::operator==( const _dbTechViaGenerateRule & rhs ) const
+bool _dbTechViaGenerateRule::operator==( const _dbTechViaGenerateRule & rhs ) const
 {
     if( _flags._default != rhs._flags._default )
         return false;

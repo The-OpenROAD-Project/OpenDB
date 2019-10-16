@@ -45,7 +45,7 @@ namespace odb {
 
 template class dbTable<_dbTechLayer>;
 
-int _dbTechLayer::operator==( const _dbTechLayer & rhs ) const
+bool _dbTechLayer::operator==( const _dbTechLayer & rhs ) const
 {
     if( _flags._type != rhs._flags._type )
         return false;

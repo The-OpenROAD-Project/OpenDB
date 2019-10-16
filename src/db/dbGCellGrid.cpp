@@ -43,7 +43,7 @@ namespace odb {
 
 template class dbTable<_dbGCellGrid>;
 
-int _dbGCellGrid::operator==( const _dbGCellGrid & rhs ) const
+bool _dbGCellGrid::operator==( const _dbGCellGrid & rhs ) const
 {
     if ( _x_origin != rhs._x_origin )
         return false;

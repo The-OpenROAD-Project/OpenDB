@@ -86,9 +86,9 @@ class _dbTechViaGenerateRule : public dbObject
     _dbTechViaGenerateRule( _dbDatabase * );
     ~_dbTechViaGenerateRule();
 
-    int operator==( const _dbTechViaGenerateRule & rhs ) const;
-    int operator!=( const _dbTechViaGenerateRule & rhs ) const { return ! operator==(rhs); }
-    int operator<( const _dbTechViaGenerateRule & rhs ) const
+    bool operator==( const _dbTechViaGenerateRule & rhs ) const;
+    bool operator!=( const _dbTechViaGenerateRule & rhs ) const { return ! operator==(rhs); }
+    bool operator<( const _dbTechViaGenerateRule & rhs ) const
     {
         return strcmp( _name, rhs._name ) < 0;
     }

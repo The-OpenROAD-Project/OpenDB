@@ -1057,7 +1057,7 @@ void _dbBlock::remove_rect( const adsRect & rect )
         _flags._valid_bbox = box->_rect.inside(rect);
 }
 
-int _dbBlock::operator==( const _dbBlock & rhs ) const
+bool _dbBlock::operator==( const _dbBlock & rhs ) const
 {
     if ( _flags._valid_bbox != rhs._flags._valid_bbox )
         return false;

@@ -77,8 +77,8 @@ class _dbTarget : public dbObject
     _dbTarget( _dbDatabase * );
     ~_dbTarget();
 
-    int operator==( const _dbTarget & rhs ) const;
-    int operator!=( const _dbTarget & rhs ) const { return ! operator==(rhs); }
+    bool operator==( const _dbTarget & rhs ) const;
+    bool operator!=( const _dbTarget & rhs ) const { return ! operator==(rhs); }
     void differences( dbDiff & diff, const char * field, const _dbTarget & rhs ) const;
     void out( dbDiff & diff, char side, const char * field ) const;
 };

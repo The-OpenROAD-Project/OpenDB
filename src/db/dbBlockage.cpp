@@ -60,7 +60,7 @@ _dbInst * _dbBlockage::getInst()
     return block->_inst_tbl->getPtr(_inst);
 }
 
-int _dbBlockage::operator==( const _dbBlockage & rhs ) const
+bool _dbBlockage::operator==( const _dbBlockage & rhs ) const
 {
     if ( _flags._pushed_down != rhs._flags._pushed_down )
         return false;
@@ -74,7 +74,7 @@ int _dbBlockage::operator==( const _dbBlockage & rhs ) const
     return true;
 }
 
-int _dbBlockage::operator<( const _dbBlockage & rhs ) const
+bool _dbBlockage::operator<( const _dbBlockage & rhs ) const
 {
     _dbBox * b0 = getBBox();
     _dbBox * b1 = rhs.getBBox();

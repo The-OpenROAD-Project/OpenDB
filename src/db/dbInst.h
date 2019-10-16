@@ -120,9 +120,9 @@ class _dbInst : public dbObject
     _dbInst( _dbDatabase *, const _dbInst & i );
     ~_dbInst();
 
-    int operator==( const _dbInst & rhs ) const;
-    int operator!=( const _dbInst & rhs ) const { return ! operator==(rhs); }
-    int operator<( const _dbInst & rhs ) const;
+    bool operator==( const _dbInst & rhs ) const;
+    bool operator!=( const _dbInst & rhs ) const { return ! operator==(rhs); }
+    bool operator<( const _dbInst & rhs ) const;
     void differences( dbDiff & diff, const char * field, const _dbInst & rhs ) const;
     void out( dbDiff & diff, char side, const char * field ) const;
 };

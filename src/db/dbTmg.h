@@ -72,9 +72,9 @@ class _dbTmg : public dbObject
     _dbTmg( _dbDatabase * );
     _dbTmg( _dbDatabase *, const _dbTmg & i );
     ~_dbTmg();
-    int operator==( const _dbTmg & rhs ) const;
-    int operator!=( const _dbTmg & rhs ) const { return ! operator==(rhs); }
-    int operator<( const _dbTmg & rhs ) const;
+    bool operator==( const _dbTmg & rhs ) const;
+    bool operator!=( const _dbTmg & rhs ) const { return ! operator==(rhs); }
+    bool operator<( const _dbTmg & rhs ) const;
     void differences( dbDiff & diff, const char * field, const _dbTmg & rhs ) const;
     void out( dbDiff & diff, char side, const char * field ) const;
     bool updateSlacks(float wns[2], float tns[2], uint mode);
@@ -111,7 +111,7 @@ inline _dbTmg::~_dbTmg()
 {
 }
 
-inline int _dbTmg::operator==( const _dbTmg & rhs ) const
+inline bool _dbTmg::operator==( const _dbTmg & rhs ) const
 {
     if ( _slew_rise != rhs._slew_rise )
         return false;
@@ -140,7 +140,7 @@ inline int _dbTmg::operator==( const _dbTmg & rhs ) const
     return true;
 }
 
-inline int _dbTmg::operator<( const _dbTmg & rhs ) const
+inline bool _dbTmg::operator<( const _dbTmg & rhs ) const
 {
     return getOID() < rhs.getOID();
 }

@@ -158,8 +158,8 @@ class dbArrayTable : public dbObjectTable
         return  p;
     }
 
-    int operator==( const dbArrayTable<T> & table ) const;
-    int operator!=( const dbArrayTable<T> & table ) const;
+    bool operator==( const dbArrayTable<T> & table ) const;
+    bool operator!=( const dbArrayTable<T> & table ) const;
     void differences( dbDiff & diff, const dbArrayTable<T> & rhs ) const;
     void out( dbDiff & diff, char side ) const;
 

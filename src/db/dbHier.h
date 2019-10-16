@@ -75,8 +75,8 @@ class _dbHier : public dbObject
     _dbHier(_dbDatabase * db);
     _dbHier(_dbDatabase * db, const _dbHier & h);
     ~_dbHier();
-    int operator==( const _dbHier & rhs ) const;
-    int operator!=( const _dbHier & rhs ) const { return ! operator==(rhs); }
+    bool operator==( const _dbHier & rhs ) const;
+    bool operator!=( const _dbHier & rhs ) const { return ! operator==(rhs); }
     void differences( dbDiff & diff, const char * field, const _dbHier & rhs ) const;
     void out( dbDiff & diff, char side, const char * field ) const;
 

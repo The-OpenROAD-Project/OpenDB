@@ -120,12 +120,12 @@ struct _LyFlags
     _dbTechLayer( _dbDatabase * db, const _dbTechLayer & l);
     ~_dbTechLayer();
 
-    int operator==( const _dbTechLayer & rhs ) const;
-    int operator!=( const _dbTechLayer & rhs ) const { return ! operator==(rhs); }
+    bool operator==( const _dbTechLayer & rhs ) const;
+    bool operator!=( const _dbTechLayer & rhs ) const { return ! operator==(rhs); }
     void differences( dbDiff & diff, const char * field, const _dbTechLayer & rhs ) const;
     void out( dbDiff & diff, char side, const char * field ) const;
 
-    int operator<( const _dbTechLayer & rhs ) const
+    bool operator<( const _dbTechLayer & rhs ) const
     {
         return _number < rhs._number;
     }

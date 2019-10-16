@@ -83,8 +83,8 @@ class dbMatrix
     const T & operator()(uint i, uint j) const;
     T & operator()(uint i, uint j);
 
-    int operator==( const dbMatrix<T> & rhs ) const;
-    int operator!=( const dbMatrix<T> & rhs ) const { return ! operator==(rhs); }
+    bool operator==( const dbMatrix<T> & rhs ) const;
+    bool operator!=( const dbMatrix<T> & rhs ) const { return ! operator==(rhs); }
     void differences( dbDiff & diff, const char * field, const dbMatrix<T> & rhs ) const;
     void out( dbDiff & diff, char side, const char * field ) const;
 };
@@ -191,7 +191,7 @@ inline T & dbMatrix<T>::operator()(uint i, uint j)
 }
 
 template <class T>
-inline int dbMatrix<T>::operator==( const dbMatrix<T> & rhs ) const
+inline bool dbMatrix<T>::operator==( const dbMatrix<T> & rhs ) const
 {
     return _matrix == rhs._matrix;
 }

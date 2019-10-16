@@ -65,8 +65,8 @@ class _dbMPin : public dbObject
     _dbMPin( _dbDatabase * );
     ~_dbMPin();
 
-    int operator==( const _dbMPin & rhs ) const;
-    int operator!=( const _dbMPin & rhs ) const { return ! operator==(rhs); }
+    bool operator==( const _dbMPin & rhs ) const;
+    bool operator!=( const _dbMPin & rhs ) const { return ! operator==(rhs); }
     void differences( dbDiff & diff, const char * field, const _dbMPin & rhs ) const;
     void out( dbDiff & diff, char side, const char * field ) const;
 };

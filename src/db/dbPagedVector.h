@@ -114,8 +114,8 @@ class dbPagedVector
         return _pages[page][offset];
     }
 
-    int operator==( const dbPagedVector<T,PAGE_SIZE,PAGE_SHIFT> & rhs ) const;
-    int operator!=( const dbPagedVector<T,PAGE_SIZE,PAGE_SHIFT> & rhs ) const { return ! operator==(rhs); }
+    bool operator==( const dbPagedVector<T,PAGE_SIZE,PAGE_SHIFT> & rhs ) const;
+    bool operator!=( const dbPagedVector<T,PAGE_SIZE,PAGE_SHIFT> & rhs ) const { return ! operator==(rhs); }
     void differences( dbDiff & diff, const char * field, const dbPagedVector<T,PAGE_SIZE,PAGE_SHIFT> & rhs ) const;
     void out( dbDiff & diff, char side, const char * field ) const;
 };
@@ -286,7 +286,7 @@ void dbPagedVector<T,P,S>::push_back( const T & item )
 }
 
 template <class T, const uint P, const uint S>
-inline int dbPagedVector<T,P,S>::operator==( const dbPagedVector<T,P,S> & rhs ) const
+inline bool dbPagedVector<T,P,S>::operator==( const dbPagedVector<T,P,S> & rhs ) const
 {
     uint sz = size();
 

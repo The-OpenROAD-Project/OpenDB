@@ -71,8 +71,8 @@ class _dbChip : public dbObject
     _dbChip( _dbDatabase * db, const _dbChip & c );
     ~_dbChip();
 
-    int operator==( const _dbChip & rhs ) const;
-    int operator!=( const _dbChip & rhs ) const { return ! operator==(rhs); }
+    bool operator==( const _dbChip & rhs ) const;
+    bool operator!=( const _dbChip & rhs ) const { return ! operator==(rhs); }
     void differences( dbDiff & diff, const char * field, const _dbChip & rhs ) const;
     void out( dbDiff & diff, char side, const char * field ) const;
     dbObjectTable * getObjectTable( dbObjectType type );

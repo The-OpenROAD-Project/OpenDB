@@ -47,7 +47,7 @@ namespace odb {
 template class dbTable<_dbTechVia>;
 static void create_via_boxes( _dbTechVia * via, const dbViaParams & P );
 
-int _dbTechVia::operator==( const _dbTechVia & rhs ) const
+bool _dbTechVia::operator==( const _dbTechVia & rhs ) const
 {
     if( _flags._default_via != rhs._flags._default_via )
         return false;

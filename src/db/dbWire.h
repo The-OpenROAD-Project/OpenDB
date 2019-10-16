@@ -86,8 +86,8 @@ public:
     
     uint length() { return _opcodes.size(); }
 
-    int operator==( const _dbWire & rhs ) const;
-    int operator!=( const _dbWire & rhs ) const { return ! operator==(rhs); }
+    bool operator==( const _dbWire & rhs ) const;
+    bool operator!=( const _dbWire & rhs ) const { return ! operator==(rhs); }
     void differences( dbDiff & diff, const char * field, const _dbWire & rhs ) const;
     void out( dbDiff & diff, char side, const char * field ) const;
 };

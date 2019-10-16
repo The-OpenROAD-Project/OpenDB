@@ -72,7 +72,7 @@ _dbName::~_dbName()
         free( (void *) _name );
 }
 
-int _dbName::operator==( const _dbName & rhs ) const
+bool _dbName::operator==( const _dbName & rhs ) const
 {
     if ( strcmp( _name, rhs._name) != 0 )
         return false;
@@ -86,7 +86,7 @@ int _dbName::operator==( const _dbName & rhs ) const
     return true;
 }
 
-int _dbName::operator<( const _dbName & rhs ) const
+bool _dbName::operator<( const _dbName & rhs ) const
 {
     return strcmp( _name, rhs._name ) < 0;
 }
@@ -151,7 +151,7 @@ _dbNameCache::~_dbNameCache()
     delete _name_tbl;
 }
 
-int _dbNameCache::operator==( const _dbNameCache & rhs ) const
+bool _dbNameCache::operator==( const _dbNameCache & rhs ) const
 {
     if ( _name_hash != rhs._name_hash )
         return false;

@@ -49,7 +49,7 @@ template class dbTable<_dbLib>;
 template class dbHashTable<_dbMaster>;
 template class dbHashTable<_dbSite>;
 
-int _dbLib::operator==( const _dbLib & rhs ) const
+bool _dbLib::operator==( const _dbLib & rhs ) const
 {
     if( _lef_units != rhs._lef_units )
         return false;

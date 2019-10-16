@@ -68,7 +68,7 @@ _dbProperty::~_dbProperty()
 {
 }
 
-int _dbProperty::operator==( const _dbProperty & rhs ) const
+bool _dbProperty::operator==( const _dbProperty & rhs ) const
 {
     if( _flags._type != rhs._flags._type )
         return false;
@@ -203,7 +203,7 @@ dbIStream & operator>>( dbIStream & stream, _dbProperty & prop )
     return stream;
 }
 
-int _dbProperty::operator<( const _dbProperty & rhs ) const
+bool _dbProperty::operator<( const _dbProperty & rhs ) const
 {
     return _name < rhs._name;
 }

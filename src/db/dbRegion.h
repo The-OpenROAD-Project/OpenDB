@@ -84,9 +84,9 @@ class _dbRegion : public dbObject
     _dbRegion( _dbDatabase *, const _dbRegion & b );
     ~_dbRegion();
 
-    int operator==( const _dbRegion & rhs ) const;
-    int operator!=( const _dbRegion & rhs ) const { return ! operator==(rhs); }
-    int operator<( const _dbRegion & rhs ) const;
+    bool operator==( const _dbRegion & rhs ) const;
+    bool operator!=( const _dbRegion & rhs ) const { return ! operator==(rhs); }
+    bool operator<( const _dbRegion & rhs ) const;
 
     void differences( dbDiff & diff, const char * field, const _dbRegion & rhs ) const;
     void out( dbDiff & diff, char side, const char * field ) const;

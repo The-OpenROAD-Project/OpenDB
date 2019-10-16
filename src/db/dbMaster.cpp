@@ -52,7 +52,7 @@ namespace odb {
 template class dbHashTable<_dbMTerm>;
 template class dbTable<_dbMaster>;
 
-int _dbMaster::operator==( const _dbMaster & rhs ) const
+bool _dbMaster::operator==( const _dbMaster & rhs ) const
 {
     if( _flags._frozen != rhs._flags._frozen )
         return false;

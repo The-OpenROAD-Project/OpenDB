@@ -85,7 +85,7 @@ dbHashTable<T>::~dbHashTable()
 }
 
 template <class T>
-int dbHashTable<T>::operator==( const dbHashTable<T> & rhs ) const
+bool dbHashTable<T>::operator==( const dbHashTable<T> & rhs ) const
 {
     if ( _num_entries != rhs._num_entries )
         return false;

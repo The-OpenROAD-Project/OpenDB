@@ -59,9 +59,9 @@ class _dbMetrics : public dbObject
     _dbMetrics( _dbDatabase * );
     _dbMetrics( _dbDatabase *, const _dbMetrics & i );
     ~_dbMetrics();
-    int operator==( const _dbMetrics & rhs ) const;
-    int operator!=( const _dbMetrics & rhs ) const { return ! operator==(rhs); }
-    int operator<( const _dbMetrics & rhs ) const;
+    bool operator==( const _dbMetrics & rhs ) const;
+    bool operator!=( const _dbMetrics & rhs ) const { return ! operator==(rhs); }
+    bool operator<( const _dbMetrics & rhs ) const;
     void differences( dbDiff & diff, const char * field, const _dbMetrics & rhs ) const;
     void out( dbDiff & diff, char side, const char * field ) const;
     static void merge( _dbMetrics & dst, _dbMetrics & src, int slew_op, int slack_op);
@@ -83,7 +83,7 @@ inline _dbMetrics::~_dbMetrics()
 {
 }
 
-inline int _dbMetrics::operator==( const _dbMetrics & rhs ) const
+inline bool _dbMetrics::operator==( const _dbMetrics & rhs ) const
 {
     if ( _worst_slack != rhs._worst_slack )
         return false;
@@ -94,7 +94,7 @@ inline int _dbMetrics::operator==( const _dbMetrics & rhs ) const
     return true;
 }
 
-inline int _dbMetrics::operator<( const _dbMetrics & rhs ) const
+inline bool _dbMetrics::operator<( const _dbMetrics & rhs ) const
 {
     return getOID() < rhs.getOID();
 }

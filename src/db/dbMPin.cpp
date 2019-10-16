@@ -73,7 +73,7 @@ dbIStream & operator>>( dbIStream & stream, _dbMPin & mpin )
     return stream;
 }
 
-int _dbMPin::operator==( const _dbMPin & rhs ) const
+bool _dbMPin::operator==( const _dbMPin & rhs ) const
 {
     if( _mterm != rhs._mterm )
         return false;

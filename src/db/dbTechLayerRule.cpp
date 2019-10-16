@@ -101,7 +101,7 @@ dbIStream & operator>>( dbIStream & stream, _dbTechLayerRule & rule )
     return stream;
 }
 
-int _dbTechLayerRule::operator==( const _dbTechLayerRule & rhs ) const
+bool _dbTechLayerRule::operator==( const _dbTechLayerRule & rhs ) const
 {
     if( _width != rhs._width )
         return false;

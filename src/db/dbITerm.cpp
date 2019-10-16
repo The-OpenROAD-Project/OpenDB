@@ -65,7 +65,7 @@ namespace odb {
 
 template class dbTable<_dbITerm>;
 
-int _dbITerm::operator==( const _dbITerm & rhs ) const
+bool _dbITerm::operator==( const _dbITerm & rhs ) const
 {
     if( _flags._mterm_idx != rhs._flags._mterm_idx )
         return false;
@@ -100,7 +100,7 @@ int _dbITerm::operator==( const _dbITerm & rhs ) const
     return true;
 }
 
-int _dbITerm::operator<( const _dbITerm & rhs ) const
+bool _dbITerm::operator<( const _dbITerm & rhs ) const
 {
     _dbBlock * lhs_blk = (_dbBlock *) getOwner();
     _dbBlock * rhs_blk = (_dbBlock *) rhs.getOwner();

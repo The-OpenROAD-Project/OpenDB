@@ -69,9 +69,9 @@ class _dbName : public dbObject
     _dbName( _dbDatabase *, const _dbName & n );
     ~_dbName();
 
-    int operator==( const _dbName & rhs ) const;
-    int operator!=( const _dbName & rhs ) const { return ! operator==(rhs); }
-    int operator<( const _dbName & rhs ) const;
+    bool operator==( const _dbName & rhs ) const;
+    bool operator!=( const _dbName & rhs ) const { return ! operator==(rhs); }
+    bool operator<( const _dbName & rhs ) const;
     void differences( dbDiff & diff, const char * field, const _dbName & rhs ) const;
     void out( dbDiff & diff, char side, const char * field ) const;
 };

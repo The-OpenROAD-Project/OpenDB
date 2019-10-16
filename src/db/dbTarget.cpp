@@ -44,7 +44,7 @@ namespace odb {
 
 template class dbTable<_dbTarget>;
 
-int _dbTarget::operator==( const _dbTarget & rhs ) const
+bool _dbTarget::operator==( const _dbTarget & rhs ) const
 {
     if( _point != rhs._point )
         return false;

@@ -72,8 +72,8 @@ class _ARuleFactor
   _ARuleFactor();
   ~_ARuleFactor();
   void setFactors(double factor, double diffuse);
-  int operator==( const _ARuleFactor & rhs ) const;
-  int operator!=( const _ARuleFactor & rhs ) const { return ! operator==(rhs); }
+  bool operator==( const _ARuleFactor & rhs ) const;
+  bool operator!=( const _ARuleFactor & rhs ) const { return ! operator==(rhs); }
   void differences( dbDiff & diff, const char * field, const _ARuleFactor & rhs ) const;
   void out( dbDiff & diff, char side, const char * field ) const;
 };
@@ -114,8 +114,8 @@ class _ARuleRatio
   void  setRatios(double ratio, double diff_ratio);
   void  setPWL(const std::vector<double> & diff_idx, const std::vector<double> & ratios);
 
-  int operator==( const _ARuleRatio & rhs ) const;
-  int operator!=( const _ARuleRatio & rhs ) const { return ! operator==(rhs); }
+  bool operator==( const _ARuleRatio & rhs ) const;
+  bool operator!=( const _ARuleRatio & rhs ) const { return ! operator==(rhs); }
   void differences( dbDiff & diff, const char * field, const _ARuleRatio & rhs ) const;
     void out( dbDiff & diff, char side, const char * field ) const;
 };
@@ -164,8 +164,8 @@ class _dbTechLayerAntennaRule : public dbObject
   }
 
   ~_dbTechLayerAntennaRule() {}
-  int operator==( const _dbTechLayerAntennaRule & rhs ) const;
-  int operator!=( const _dbTechLayerAntennaRule & rhs ) const { return ! operator==(rhs); }
+  bool operator==( const _dbTechLayerAntennaRule & rhs ) const;
+  bool operator!=( const _dbTechLayerAntennaRule & rhs ) const { return ! operator==(rhs); }
   void differences( dbDiff & diff, const char * field, const _dbTechLayerAntennaRule & rhs ) const;
     void out( dbDiff & diff, char side, const char * field ) const;
 };
@@ -190,8 +190,8 @@ class _dbTechAntennaAreaElement
 
   _dbTechAntennaAreaElement(const _dbTechAntennaAreaElement & e);
 
-  int operator==( const _dbTechAntennaAreaElement & rhs ) const;
-  int operator!=( const _dbTechAntennaAreaElement & rhs ) const { return ! operator==(rhs); }
+  bool operator==( const _dbTechAntennaAreaElement & rhs ) const;
+  bool operator!=( const _dbTechAntennaAreaElement & rhs ) const { return ! operator==(rhs); }
   void differences( dbDiff & diff, const char * field, const _dbTechAntennaAreaElement & rhs ) const;
     void out( dbDiff & diff, char side, const char * field ) const;
 
@@ -217,8 +217,8 @@ class _dbTechAntennaPinModel : public dbObject
   _dbTechAntennaPinModel(_dbDatabase * ) {}
   ~_dbTechAntennaPinModel() {}
 
-  int operator==( const _dbTechAntennaPinModel & rhs ) const;
-  int operator!=( const _dbTechAntennaPinModel & rhs ) const { return ! operator==(rhs); }
+  bool operator==( const _dbTechAntennaPinModel & rhs ) const;
+  bool operator!=( const _dbTechAntennaPinModel & rhs ) const { return ! operator==(rhs); }
   void differences( dbDiff & diff, const char * field, const _dbTechAntennaPinModel & rhs ) const;
     void out( dbDiff & diff, char side, const char * field ) const;
 };

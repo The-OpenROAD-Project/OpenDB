@@ -83,12 +83,12 @@ class dbRtEndStyle
     Type getType() const { return _type; }
     int getExt() const { return _ext; }
 
-    int operator==( const dbRtEndStyle & s ) const
+    bool operator==( const dbRtEndStyle & s ) const
     {
         return (_type == s._type) && (_ext == s._ext);
     }
 
-    int operator!=( const dbRtEndStyle & s ) const
+    bool operator!=( const dbRtEndStyle & s ) const
     {
         return (_type != s._type) || (_ext != s._ext);
     }

@@ -77,8 +77,8 @@ class _dbTechSameNetRule : public dbObject
     _dbTechSameNetRule( _dbDatabase * );
     ~_dbTechSameNetRule();
 
-    int operator==( const _dbTechSameNetRule & rhs ) const;
-    int operator!=( const _dbTechSameNetRule & rhs ) const { return ! operator==(rhs); }
+    bool operator==( const _dbTechSameNetRule & rhs ) const;
+    bool operator!=( const _dbTechSameNetRule & rhs ) const { return ! operator==(rhs); }
     void differences( dbDiff & diff, const char * field, const _dbTechSameNetRule & rhs ) const;
     void out( dbDiff & diff, char side, const char * field ) const;
 };

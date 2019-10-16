@@ -46,7 +46,7 @@ namespace odb {
 
 template class dbTable<_dbSBox>;
 
-int _dbSBox::operator==( const _dbSBox & rhs ) const
+bool _dbSBox::operator==( const _dbSBox & rhs ) const
 {
     if( _sflags._wire_type != rhs._sflags._wire_type )
         return false;
@@ -65,7 +65,7 @@ int _dbSBox::equal( const _dbSBox & rhs ) const
     return _dbBox::equal( rhs );
 }
 
-int _dbSBox::operator<( const _dbSBox & rhs ) const
+bool _dbSBox::operator<( const _dbSBox & rhs ) const
 {
     if( _sflags._wire_type < rhs._sflags._wire_type )
         return true;

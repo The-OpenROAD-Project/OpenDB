@@ -81,9 +81,9 @@ class _dbRow : public dbObject
     _dbRow( _dbDatabase * );
     ~_dbRow();
 
-    int operator==( const _dbRow & rhs ) const;
-    int operator!=( const _dbRow & rhs ) const { return ! operator==(rhs); }
-    int operator<( const _dbRow & rhs ) const;
+    bool operator==( const _dbRow & rhs ) const;
+    bool operator!=( const _dbRow & rhs ) const { return ! operator==(rhs); }
+    bool operator<( const _dbRow & rhs ) const;
     void differences( dbDiff & diff, const char * field, const _dbRow & rhs ) const;
     void out( dbDiff & diff, char side, const char * field ) const;
 };

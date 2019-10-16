@@ -54,7 +54,7 @@ namespace odb {
 
 template class dbTable<_dbTech>;
 
-int _dbTech::operator==( const _dbTech & rhs ) const
+bool _dbTech::operator==( const _dbTech & rhs ) const
 {
     if( _flags._namecase != rhs._flags._namecase )
         return false;

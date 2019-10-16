@@ -197,12 +197,12 @@ dbIStream & operator>>( dbIStream & stream, _dbNet & net )
     return stream;
 }
 
-int _dbNet::operator<( const _dbNet & rhs ) const
+bool _dbNet::operator<( const _dbNet & rhs ) const
 {
     return strcmp( _name, rhs._name ) < 0;
 }
 
-int _dbNet::operator==( const _dbNet & rhs ) const
+bool _dbNet::operator==( const _dbNet & rhs ) const
 {
     if( _flags._sig_type != rhs._flags._sig_type )
         return false;

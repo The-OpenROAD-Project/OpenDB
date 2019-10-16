@@ -57,7 +57,7 @@ namespace odb {
 
 template class dbTable<_dbBox>;
 
-int _dbBox::operator==( const _dbBox & rhs ) const
+bool _dbBox::operator==( const _dbBox & rhs ) const
 {
     if( _flags._owner_type != rhs._flags._owner_type )
         return false;
@@ -133,7 +133,7 @@ int _dbBox::equal( const _dbBox & rhs ) const
     return true;
 }
 
-int _dbBox::operator<( const _dbBox & rhs ) const
+bool _dbBox::operator<( const _dbBox & rhs ) const
 {
     Type lhs_type = getType();
     Type rhs_type = rhs.getType();

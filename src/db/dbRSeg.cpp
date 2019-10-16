@@ -46,7 +46,7 @@ template class dbTable<_dbRSeg>;
 
 #define FLAGS(net) (*((uint *) &net->_flags))
 
-int _dbRSeg::operator==( const _dbRSeg & rhs ) const
+bool _dbRSeg::operator==( const _dbRSeg & rhs ) const
 {
     if( _flags._path_dir != rhs._flags._path_dir )
         return false;

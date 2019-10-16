@@ -99,12 +99,12 @@ _dbBTerm::~_dbBTerm()
         free( (void *) _name );
 }
 
-int _dbBTerm::operator<(const _dbBTerm & rhs ) const
+bool _dbBTerm::operator<(const _dbBTerm & rhs ) const
 {
     return strcmp( _name, rhs._name ) < 0;
 }
 
-int _dbBTerm::operator==( const _dbBTerm & rhs ) const
+bool _dbBTerm::operator==( const _dbBTerm & rhs ) const
 {
     if( _flags._io_type != rhs._flags._io_type )
         return false;

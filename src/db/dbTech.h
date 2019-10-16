@@ -138,8 +138,8 @@ class _dbTech : public dbObject
     _dbTech( _dbDatabase * db, const _dbTech & t );
     ~_dbTech();
 
-    int operator==( const _dbTech & rhs ) const;
-    int operator!=( const _dbTech & rhs ) const { return ! operator==(rhs); }
+    bool operator==( const _dbTech & rhs ) const;
+    bool operator!=( const _dbTech & rhs ) const { return ! operator==(rhs); }
     void differences( dbDiff & diff, const char * field, const _dbTech & rhs ) const;
     void out( dbDiff & diff, char side, const char * field ) const;
     dbObjectTable * getObjectTable( dbObjectType type );

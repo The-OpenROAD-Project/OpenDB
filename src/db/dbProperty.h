@@ -95,9 +95,9 @@ class _dbProperty : public dbObject
     _dbProperty( _dbDatabase *, const _dbProperty & n );
     ~_dbProperty();
 
-    int operator==( const _dbProperty & rhs ) const;
-    int operator!=( const _dbProperty & rhs ) const { return ! operator==(rhs); }
-    int operator<( const _dbProperty & rhs ) const;
+    bool operator==( const _dbProperty & rhs ) const;
+    bool operator!=( const _dbProperty & rhs ) const { return ! operator==(rhs); }
+    bool operator<( const _dbProperty & rhs ) const;
     void differences( dbDiff & diff, const char * field, const _dbProperty & rhs ) const;
     void out( dbDiff & diff, char side, const char * field ) const;
 

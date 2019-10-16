@@ -50,7 +50,7 @@ template class dbTable<_dbTechViaRule>;
 //
 ////////////////////////////////////////////////////////////////////
 
-int _dbTechViaRule::operator==( const _dbTechViaRule & rhs ) const
+bool _dbTechViaRule::operator==( const _dbTechViaRule & rhs ) const
 {
     if ( _name && rhs._name )
     {

@@ -54,8 +54,8 @@ class _dbNameCache
     _dbNameCache( _dbDatabase * db, dbObject * owner, const _dbNameCache & cache );
     ~_dbNameCache();
 
-    int operator==( const _dbNameCache & rhs ) const;
-    int operator!=( const _dbNameCache & rhs ) const { return ! operator==(rhs); }
+    bool operator==( const _dbNameCache & rhs ) const;
+    bool operator!=( const _dbNameCache & rhs ) const { return ! operator==(rhs); }
     void differences( dbDiff & diff, const char * field, const _dbNameCache & rhs ) const;
     void out( dbDiff & diff, char side, const char * field ) const;
 

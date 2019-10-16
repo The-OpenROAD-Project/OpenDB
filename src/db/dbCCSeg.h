@@ -101,12 +101,12 @@ class _dbCCSeg : public dbObject
     const int idx( dbId<_dbCapNode> n ) { return n == _cap_node[0] ? 0 : 1; }
     dbId<_dbCCSeg> & next( dbId<_dbCapNode> n ) { return _next[idx(n)]; }
 
-    int operator==( const _dbCCSeg & rhs ) const;
-    int operator!=( const _dbCCSeg & rhs ) const { return ! operator==(rhs); }
+    bool operator==( const _dbCCSeg & rhs ) const;
+    bool operator!=( const _dbCCSeg & rhs ) const { return ! operator==(rhs); }
     void differences( dbDiff & diff, const char * field, const _dbCCSeg & rhs ) const;
     void out( dbDiff & diff, char side, const char * field ) const;
 
-    int operator<( const _dbCCSeg & rhs ) const
+    bool operator<( const _dbCCSeg & rhs ) const
     {
         _dbCCSeg * o1 = (_dbCCSeg *) this;
         _dbCCSeg * o2 = (_dbCCSeg *) &rhs;

@@ -45,7 +45,7 @@ namespace odb {
 
 template class dbTable<_dbHier>;
 
-int _dbHier::operator==( const _dbHier & rhs ) const
+bool _dbHier::operator==( const _dbHier & rhs ) const
 {
     if( _inst != rhs._inst )
         return false;

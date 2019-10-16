@@ -72,7 +72,7 @@ template class dbTable<_dbDatabase>;
 static dbTable<_dbDatabase> * db_tbl = NULL;
 static uint db_unique_id = 0;
 
-int _dbDatabase::operator==( const _dbDatabase & rhs ) const
+bool _dbDatabase::operator==( const _dbDatabase & rhs ) const
 {
     //
     // For the time being the fields,

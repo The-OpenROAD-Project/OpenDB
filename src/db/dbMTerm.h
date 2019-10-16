@@ -99,8 +99,8 @@ class _dbMTerm : public dbObject
     _dbMTerm( _dbDatabase * db, const _dbMTerm & m );
     ~_dbMTerm();
 
-    int operator==( const _dbMTerm & rhs ) const;
-    int operator!=( const _dbMTerm & rhs ) const { return ! operator==(rhs); }
+    bool operator==( const _dbMTerm & rhs ) const;
+    bool operator!=( const _dbMTerm & rhs ) const { return ! operator==(rhs); }
     void differences( dbDiff & diff, const char * field, const _dbMTerm & rhs ) const;
     void out( dbDiff & diff, char side, const char * field ) const;
 };

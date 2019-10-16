@@ -46,7 +46,7 @@ template class dbTable<_dbTechAntennaPinModel>;
 
 using std::vector;
 
-int _ARuleFactor::operator==( const _ARuleFactor & rhs ) const
+bool _ARuleFactor::operator==( const _ARuleFactor & rhs ) const
 {
     if( _factor != rhs._factor )
         return false;
@@ -92,7 +92,7 @@ void _ARuleFactor::out( dbDiff & diff, char side, const char * field ) const
     diff.end_object();
 }
 
-int _ARuleRatio::operator==( const _ARuleRatio & rhs ) const
+bool _ARuleRatio::operator==( const _ARuleRatio & rhs ) const
 {
     if( _ratio != rhs._ratio )
         return false;
@@ -132,7 +132,7 @@ void _ARuleRatio::out( dbDiff & diff, char side, const char * field ) const
     diff.end_object();
 }
 
-int _dbTechLayerAntennaRule::operator==( const _dbTechLayerAntennaRule & rhs ) const
+bool _dbTechLayerAntennaRule::operator==( const _dbTechLayerAntennaRule & rhs ) const
 {
     if( _layer != rhs._layer )
         return false;
@@ -184,7 +184,7 @@ void _dbTechLayerAntennaRule::out( dbDiff & diff, char side, const char * field 
     DIFF_END
 }
 
-int _dbTechAntennaAreaElement::operator==( const _dbTechAntennaAreaElement & rhs ) const
+bool _dbTechAntennaAreaElement::operator==( const _dbTechAntennaAreaElement & rhs ) const
 {
     if( _area != rhs._area )
         return false;
@@ -219,7 +219,7 @@ void _dbTechAntennaAreaElement::out( dbDiff & diff, char side, const char * fiel
     diff.end_object();
 }
 
-int _dbTechAntennaPinModel::operator==( const _dbTechAntennaPinModel & rhs ) const
+bool _dbTechAntennaPinModel::operator==( const _dbTechAntennaPinModel & rhs ) const
 {
     if( _mterm != rhs._mterm )
         return false;

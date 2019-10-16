@@ -44,7 +44,7 @@ namespace odb {
 
 template class dbTable<_dbSWire>;
 
-int _dbSWire::operator==( const _dbSWire & rhs ) const
+bool _dbSWire::operator==( const _dbSWire & rhs ) const
 {
     if( _flags._wire_type != rhs._flags._wire_type )
         return false;
@@ -64,7 +64,7 @@ int _dbSWire::operator==( const _dbSWire & rhs ) const
     return true;
 }
 
-int _dbSWire::operator<( const _dbSWire & rhs ) const
+bool _dbSWire::operator<( const _dbSWire & rhs ) const
 {
     if ( _flags._wire_type < rhs._flags._wire_type )
         return true;

@@ -82,8 +82,8 @@ class _dbSite : public dbObject
     _dbSite(_dbDatabase * );
     ~_dbSite();
 
-    int operator==( const _dbSite & rhs ) const;
-    int operator!=( const _dbSite & rhs ) const { return ! operator==(rhs); }
+    bool operator==( const _dbSite & rhs ) const;
+    bool operator!=( const _dbSite & rhs ) const { return ! operator==(rhs); }
     void differences( dbDiff & diff, const char * field, const _dbSite & rhs ) const;
     void out( dbDiff & diff, char side, const char * field ) const;
 };

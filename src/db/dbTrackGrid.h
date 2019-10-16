@@ -76,10 +76,10 @@ class _dbTrackGrid : public dbObject
     _dbTrackGrid( _dbDatabase * );
     ~_dbTrackGrid();
 
-    int operator==( const _dbTrackGrid & rhs ) const;
-    int operator!=( const _dbTrackGrid & rhs ) const { return ! operator==(rhs); }
+    bool operator==( const _dbTrackGrid & rhs ) const;
+    bool operator!=( const _dbTrackGrid & rhs ) const { return ! operator==(rhs); }
 
-    int operator<( const _dbTrackGrid & rhs ) const
+    bool operator<( const _dbTrackGrid & rhs ) const
     {
         if ( _layer < rhs._layer )
             return true;

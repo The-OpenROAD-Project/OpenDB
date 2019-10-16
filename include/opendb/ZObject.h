@@ -220,10 +220,10 @@ class ZPtr
         return *this;
     }
 
-    int operator==( const ZPtr<T> & p ) const { return _p == p._p; }
-    int operator!=( const ZPtr<T> & p ) const { return _p != p._p; }
-    int operator==( const T * p ) const { return _p == p; }
-    int operator!=( const T * p ) const { return _p != p; }
+    bool operator==( const ZPtr<T> & p ) const { return _p == p._p; }
+    bool operator!=( const ZPtr<T> & p ) const { return _p != p._p; }
+    bool operator==( const T * p ) const { return _p == p; }
+    bool operator!=( const T * p ) const { return _p != p; }
 
     // pointer operator
     T * operator->() { return _p; }

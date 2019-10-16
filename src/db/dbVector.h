@@ -110,7 +110,7 @@ class dbVector<T *> : public std::vector<T *>
     const_iterator begin() const { return _base::begin(); }
     const_iterator end() const { return _base::end(); }
 
-    int operator==( const dbVector<T*> & rhs ) const 
+    bool operator==( const dbVector<T*> & rhs ) const 
     { 
         if ( _base::size() != rhs.size() )
             return false;
@@ -125,7 +125,7 @@ class dbVector<T *> : public std::vector<T *>
         return true;
     }
 
-    int operator!=( const dbVector<T*> & rhs ) const { return ! this->operator==(rhs); }
+    bool operator!=( const dbVector<T*> & rhs ) const { return ! this->operator==(rhs); }
 
     void differences( dbDiff & diff, const char * field, const dbVector<T *> & rhs ) const;
     void out( dbDiff & diff, char side, const char * field ) const;

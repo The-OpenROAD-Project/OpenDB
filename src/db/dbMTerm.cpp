@@ -45,7 +45,7 @@ namespace odb {
 
 template class dbTable<_dbMTerm>;
 
-int _dbMTerm::operator==( const _dbMTerm & rhs ) const
+bool _dbMTerm::operator==( const _dbMTerm & rhs ) const
 {
     if( _flags._io_type != rhs._flags._io_type )
         return false;

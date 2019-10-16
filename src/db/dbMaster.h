@@ -118,8 +118,8 @@ class _dbMaster : public dbObject
     _dbMaster( _dbDatabase * db );
     _dbMaster( _dbDatabase * db, const _dbMaster & m );
     ~_dbMaster();
-    int operator==( const _dbMaster & rhs ) const;
-    int operator!=( const _dbMaster & rhs ) const { return ! operator==(rhs); }
+    bool operator==( const _dbMaster & rhs ) const;
+    bool operator!=( const _dbMaster & rhs ) const { return ! operator==(rhs); }
     void differences( dbDiff & diff, const char * field, const _dbMaster & rhs ) const;
     void out( dbDiff & diff, char side, const char * field ) const;
     dbObjectTable * getObjectTable( dbObjectType type );

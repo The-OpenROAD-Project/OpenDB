@@ -40,7 +40,7 @@ namespace odb {
 
 template class dbTable<_dbSite>;
 
-int _dbSite::operator==( const _dbSite & rhs ) const
+bool _dbSite::operator==( const _dbSite & rhs ) const
 {
     if( _flags._x_symmetry != rhs._flags._x_symmetry )
         return false;

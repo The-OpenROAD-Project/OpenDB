@@ -105,12 +105,12 @@ class dbWireGraph
             _ext = ext;
         }
 
-        int operator==( const EndStyle & s ) const
+        bool operator==( const EndStyle & s ) const
         {
             return (_type == s._type) && (_ext == s._ext);
         }
 
-        int operator!=( const EndStyle & s ) const
+        bool operator!=( const EndStyle & s ) const
         {
             return (_type != s._type) || (_ext != s._ext);
         }

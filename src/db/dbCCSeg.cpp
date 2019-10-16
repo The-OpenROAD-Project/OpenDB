@@ -43,7 +43,7 @@ namespace odb {
 
 template class dbTable<_dbCCSeg>;
 
-int _dbCCSeg::operator==( const _dbCCSeg & rhs ) const
+bool _dbCCSeg::operator==( const _dbCCSeg & rhs ) const
 {
     if( _flags._spef_mark_1 != rhs._flags._spef_mark_1 )
         return false;

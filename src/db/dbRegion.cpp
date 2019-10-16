@@ -72,7 +72,7 @@ _dbRegion::~_dbRegion()
         free( (void *) _name );
 }
 
-int _dbRegion::operator==( const _dbRegion & rhs ) const
+bool _dbRegion::operator==( const _dbRegion & rhs ) const
 {
     if( _flags._type != rhs._flags._type )
         return false;
@@ -103,7 +103,7 @@ int _dbRegion::operator==( const _dbRegion & rhs ) const
     return true;
 }
 
-int _dbRegion::operator<( const _dbRegion & rhs ) const
+bool _dbRegion::operator<( const _dbRegion & rhs ) const
 {
     if ( _flags._type < rhs._flags._type )
         return false;

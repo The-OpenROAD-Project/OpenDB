@@ -80,8 +80,8 @@ class _dbBPin : public dbObject
     _dbBPin( _dbDatabase * );
     ~_dbBPin();
 
-    int operator==( const _dbBPin & rhs ) const;
-    int operator!=( const _dbBPin & rhs ) const { return ! operator==(rhs); }
+    bool operator==( const _dbBPin & rhs ) const;
+    bool operator!=( const _dbBPin & rhs ) const { return ! operator==(rhs); }
     void differences( dbDiff & diff, const char * field, const _dbBPin & rhs ) const;
     void out( dbDiff & diff, char side, const char * field ) const;
 };

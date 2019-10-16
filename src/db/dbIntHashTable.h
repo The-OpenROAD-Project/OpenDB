@@ -76,8 +76,8 @@ class dbIntHashTable
     dbIntHashTable();
     dbIntHashTable( const dbIntHashTable<T> & t );
     ~dbIntHashTable();
-    int operator==( const dbIntHashTable<T> & rhs ) const;
-    int operator!=( const dbIntHashTable<T> & rhs ) const { return ! operator==(rhs); }
+    bool operator==( const dbIntHashTable<T> & rhs ) const;
+    bool operator!=( const dbIntHashTable<T> & rhs ) const { return ! operator==(rhs); }
     void differences( dbDiff & diff, const char * field, const dbIntHashTable<T> & rhs ) const;
     void out( dbDiff & diff, char side, const char * field ) const;
 

@@ -43,7 +43,7 @@ namespace odb {
 
 template class dbTable<_dbInstHdr>;
 
-int _dbInstHdr::operator==( const _dbInstHdr & rhs ) const
+bool _dbInstHdr::operator==( const _dbInstHdr & rhs ) const
 {
     if( _mterm_cnt != rhs._mterm_cnt )
         return false;

@@ -167,8 +167,8 @@ class dbTable : public dbObjectTable, public dbIterator
     void readPage( dbIStream & stream, dbTablePage * page );
     void writePage( dbOStream & stream, const dbTablePage * page ) const;
 
-    int operator==( const dbTable<T> & table ) const;
-    int operator!=( const dbTable<T> & table ) const;
+    bool operator==( const dbTable<T> & table ) const;
+    bool operator!=( const dbTable<T> & table ) const;
     void differences( dbDiff & diff, const dbTable<T> & rhs ) const;
     void out( dbDiff & diff, char side ) const;
 

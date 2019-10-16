@@ -89,9 +89,9 @@ public:
     {
     }
 
-    int operator==( const _dbSWire & rhs ) const;
-    int operator!=( const _dbSWire & rhs ) const { return ! operator==(rhs); }
-    int operator<( const _dbSWire & rhs ) const;
+    bool operator==( const _dbSWire & rhs ) const;
+    bool operator!=( const _dbSWire & rhs ) const { return ! operator==(rhs); }
+    bool operator<( const _dbSWire & rhs ) const;
     
     void differences( dbDiff & diff, const char * field, const _dbSWire & rhs ) const;
     void out( dbDiff & diff, char side, const char * field ) const;

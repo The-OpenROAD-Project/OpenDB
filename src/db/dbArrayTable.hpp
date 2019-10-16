@@ -501,13 +501,13 @@ dbIStream & operator>>( dbIStream & stream, dbArrayTable<T> & table )
 }
 
 template <class T>
-int dbArrayTable<T>::operator!=( const dbArrayTable<T> & table ) const
+bool dbArrayTable<T>::operator!=( const dbArrayTable<T> & table ) const
 {
     return ! operator==(table);
 }
 
 template <class T>
-int dbArrayTable<T>::operator==( const dbArrayTable<T> & rhs ) const
+bool dbArrayTable<T>::operator==( const dbArrayTable<T> & rhs ) const
 {
     const dbArrayTable<T> & lhs = *this;
 

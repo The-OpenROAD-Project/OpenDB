@@ -91,8 +91,8 @@ class _dbTechVia : public dbObject
     _dbTechVia( _dbDatabase * );
     ~_dbTechVia();
 
-    int operator==( const _dbTechVia  & rhs ) const;
-    int operator!=( const _dbTechVia  & rhs ) const { return ! operator==(rhs); }
+    bool operator==( const _dbTechVia  & rhs ) const;
+    bool operator!=( const _dbTechVia  & rhs ) const { return ! operator==(rhs); }
     void differences( dbDiff & diff, const char * field, const _dbTechVia  & rhs ) const;
     void out( dbDiff & diff, char side, const char * field ) const;
 };

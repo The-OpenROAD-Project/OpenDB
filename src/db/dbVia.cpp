@@ -56,7 +56,7 @@ static void create_via_boxes( _dbVia * via, const dbViaParams & P );
 //
 ////////////////////////////////////////////////////////////////////
 
-int _dbVia::operator==( const _dbVia & rhs ) const
+bool _dbVia::operator==( const _dbVia & rhs ) const
 {
     if( _flags._is_rotated != rhs._flags._is_rotated )
         return false;

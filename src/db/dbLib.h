@@ -84,8 +84,8 @@ class _dbLib : public dbObject
     _dbLib( _dbDatabase * db );
     _dbLib( _dbDatabase * db, const _dbLib & l );
     ~_dbLib();
-    int operator==( const _dbLib & rhs ) const;
-    int operator!=( const _dbLib & rhs ) const { return ! operator==(rhs); }
+    bool operator==( const _dbLib & rhs ) const;
+    bool operator!=( const _dbLib & rhs ) const { return ! operator==(rhs); }
     void differences( dbDiff & diff, const char * field, const _dbLib & rhs ) const;
     void out( dbDiff & diff, char side, const char * field ) const;
     dbObjectTable * getObjectTable( dbObjectType type );

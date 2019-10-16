@@ -75,8 +75,8 @@ class _dbViaParams
     _dbViaParams();
     ~_dbViaParams();
 
-    int operator==( const _dbViaParams & rhs ) const;
-    int operator!=( const _dbViaParams & rhs ) const { return ! operator==(rhs); }
+    bool operator==( const _dbViaParams & rhs ) const;
+    bool operator!=( const _dbViaParams & rhs ) const { return ! operator==(rhs); }
     void differences( dbDiff & diff, const char * field, const _dbViaParams & rhs ) const;
     void out( dbDiff & diff, char side, const char * field ) const;
     friend dbOStream & operator<<( dbOStream & stream, const _dbViaParams & v );

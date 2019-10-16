@@ -43,7 +43,7 @@ namespace odb {
 template class dbTable<_dbTechLayerSpacingRule>;
 template class dbTable<_dbTechV55InfluenceEntry>;
 
-int _dbTechLayerSpacingRule::operator==( const _dbTechLayerSpacingRule & rhs ) const
+bool _dbTechLayerSpacingRule::operator==( const _dbTechLayerSpacingRule & rhs ) const
 {
     if( _flags._rule != rhs._flags._rule )
         return false;
@@ -105,7 +105,7 @@ void _dbTechLayerSpacingRule::out( dbDiff & diff, char side, const char * field 
     DIFF_END
 }
 
-int _dbTechV55InfluenceEntry::operator==( const _dbTechV55InfluenceEntry & rhs ) const
+bool _dbTechV55InfluenceEntry::operator==( const _dbTechV55InfluenceEntry & rhs ) const
 {
     if( _width != rhs._width )
         return false;

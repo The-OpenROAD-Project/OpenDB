@@ -90,8 +90,8 @@ class _dbInstHdr : public dbObject
     _dbInstHdr(_dbDatabase * db);
     _dbInstHdr(_dbDatabase * db, const _dbInstHdr & i);
     ~_dbInstHdr();
-    int operator==( const _dbInstHdr & rhs ) const;
-    int operator!=( const _dbInstHdr & rhs ) const { return ! operator==(rhs); }
+    bool operator==( const _dbInstHdr & rhs ) const;
+    bool operator!=( const _dbInstHdr & rhs ) const { return ! operator==(rhs); }
     void differences( dbDiff & diff, const char * field, const _dbInstHdr & rhs ) const;
     void out( dbDiff & diff, char side, const char * field ) const;
 };

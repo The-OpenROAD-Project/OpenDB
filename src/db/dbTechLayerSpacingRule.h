@@ -74,8 +74,8 @@ class _dbTechLayerSpacingRule : public dbObject
     _dbTechLayerSpacingRule( _dbDatabase * );
     ~_dbTechLayerSpacingRule();
 
-    int operator==( const _dbTechLayerSpacingRule & rhs ) const;
-    int operator!=( const _dbTechLayerSpacingRule & rhs ) const { return ! operator==(rhs); }
+    bool operator==( const _dbTechLayerSpacingRule & rhs ) const;
+    bool operator!=( const _dbTechLayerSpacingRule & rhs ) const { return ! operator==(rhs); }
     void differences( dbDiff & diff, const char * field, const _dbTechLayerSpacingRule & rhs ) const;
     void out( dbDiff & diff, char side, const char * field ) const;
 };
@@ -119,8 +119,8 @@ class _dbTechV55InfluenceEntry : public dbObject
   _dbTechV55InfluenceEntry( _dbDatabase * db, const _dbTechV55InfluenceEntry & e );
   _dbTechV55InfluenceEntry(_dbDatabase * db );
   ~_dbTechV55InfluenceEntry();
-  int operator==( const _dbTechV55InfluenceEntry & rhs ) const;
-  int operator!=( const _dbTechV55InfluenceEntry & rhs ) const { return ! operator==(rhs); }
+  bool operator==( const _dbTechV55InfluenceEntry & rhs ) const;
+  bool operator!=( const _dbTechV55InfluenceEntry & rhs ) const { return ! operator==(rhs); }
   void differences( dbDiff & diff, const char * field, const _dbTechV55InfluenceEntry & rhs ) const;
     void out( dbDiff & diff, char side, const char * field ) const;
 };

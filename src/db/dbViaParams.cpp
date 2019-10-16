@@ -41,7 +41,7 @@ namespace odb {
 //
 ////////////////////////////////////////////////////////////////////
 
-int _dbViaParams::operator==( const _dbViaParams & rhs ) const
+bool _dbViaParams::operator==( const _dbViaParams & rhs ) const
 {
     if( _x_cut_size != rhs._x_cut_size )
         return false;

@@ -43,7 +43,7 @@ namespace odb {
 template class dbTable<_dbTechMinCutRule>;
 template class dbTable<_dbTechMinEncRule>;
 
-int _dbTechMinCutRule::operator==( const _dbTechMinCutRule & rhs ) const
+bool _dbTechMinCutRule::operator==( const _dbTechMinCutRule & rhs ) const
 {
     if( _flags._rule != rhs._flags._rule )
         return false;
@@ -90,7 +90,7 @@ void _dbTechMinCutRule::out( dbDiff & diff, char side, const char * field ) cons
     DIFF_END
 }
 
-int _dbTechMinEncRule::operator==( const _dbTechMinEncRule & rhs ) const
+bool _dbTechMinEncRule::operator==( const _dbTechMinEncRule & rhs ) const
 {
     if( _flags._has_width != rhs._flags._has_width )
         return false;

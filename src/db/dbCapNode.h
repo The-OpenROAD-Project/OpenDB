@@ -116,9 +116,9 @@ class _dbCapNode : public dbObject
     _dbCapNode( _dbDatabase *, const _dbCapNode & n );
     ~_dbCapNode();
 
-    int operator==( const _dbCapNode & rhs ) const;
-    int operator!=( const _dbCapNode & rhs ) const { return ! operator==(rhs); }
-    int operator<( const _dbCapNode & rhs ) const
+    bool operator==( const _dbCapNode & rhs ) const;
+    bool operator!=( const _dbCapNode & rhs ) const { return ! operator==(rhs); }
+    bool operator<( const _dbCapNode & rhs ) const
     {
         _dbCapNode * o1 = (_dbCapNode *) this;
         _dbCapNode * o2 = (_dbCapNode *) &rhs;

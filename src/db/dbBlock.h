@@ -288,8 +288,8 @@ class _dbBlock : public dbObject
                      const char * name,
                      char delimeter );
 
-    int operator==( const _dbBlock & rhs ) const;
-    int operator!=( const _dbBlock & rhs ) const { return ! operator==(rhs); }
+    bool operator==( const _dbBlock & rhs ) const;
+    bool operator!=( const _dbBlock & rhs ) const { return ! operator==(rhs); }
     void differences( dbDiff & diff, const char * field, const _dbBlock & rhs ) const;
     void out( dbDiff & diff, char side, const char * field ) const;
 

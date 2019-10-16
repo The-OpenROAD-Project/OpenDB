@@ -50,7 +50,7 @@ template class dbTable<_dbWire>;
 static void set_symmetric_diff( dbDiff & diff, std::vector<dbShape *> & lhs, std::vector<dbShape *> & rhs );
 static void out( dbDiff & diff, char side, dbShape * s );
 
-int _dbWire::operator==( const _dbWire & rhs ) const
+bool _dbWire::operator==( const _dbWire & rhs ) const
 {
     if( _flags._is_global != rhs._flags._is_global )
         return false;

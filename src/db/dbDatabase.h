@@ -128,8 +128,8 @@ class _dbDatabase : public dbObject
     _dbDatabase( _dbDatabase * db, const _dbDatabase & d );
     ~_dbDatabase();
 
-    int operator==( const _dbDatabase & rhs ) const;
-    int operator!=( const _dbDatabase & rhs ) const { return ! operator==(rhs); }
+    bool operator==( const _dbDatabase & rhs ) const;
+    bool operator!=( const _dbDatabase & rhs ) const { return ! operator==(rhs); }
     void differences( dbDiff & diff, const char * field, const _dbDatabase & rhs ) const;
     void out( dbDiff & diff, char side, const char * field ) const;
 

@@ -68,8 +68,8 @@ public:
     adsDListIterator( const adsDListIterator & i ) { _cur = i._cur; }
     adsDListIterator & operator=( const adsDListIterator & i ) { _cur = i._cur; return *this; }
                 
-    int operator==( const adsDListIterator & i ) const { return _cur == i._cur; } 
-    int operator!=( const adsDListIterator & i ) const { return _cur != i._cur; } 
+    bool operator==( const adsDListIterator & i ) const { return _cur == i._cur; } 
+    bool operator!=( const adsDListIterator & i ) const { return _cur != i._cur; } 
     T * operator*() { return _cur; }
     adsDListIterator<T,ENTRY> & operator++() { incr(); return *this; }
     adsDListIterator<T,ENTRY> operator++(int) { adsDListIterator<T,ENTRY> i = *this; incr(); return i; }
@@ -423,7 +423,7 @@ struct elem
         next = NULL;
     }
 
-    int operator<( const elem & e ) { return a < e.a; }
+    bool operator<( const elem & e ) { return a < e.a; }
     
     static adsDListEntry<elem> * getEntry( elem * e ) 
     {

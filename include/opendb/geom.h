@@ -60,9 +60,9 @@ class adsPoint
     adsPoint( int x, int y );
 
     adsPoint & operator=( const adsPoint & p );
-    int operator==( const adsPoint & p ) const;
-    int operator!=( const adsPoint & p ) const;
-    int operator<( const adsPoint & p ) const;
+    bool operator==( const adsPoint & p ) const;
+    bool operator!=( const adsPoint & p ) const;
+    bool operator<( const adsPoint & p ) const;
 
     int getX() const;
     int getY() const;
@@ -136,9 +136,9 @@ class adsRect
     adsRect(int x1, int y1, int x2, int y2);
 
     adsRect & operator=( const adsRect & r );
-    int operator==( const adsRect & r ) const;
-    int operator!=( const adsRect & r ) const;
-    int operator<( const adsRect & r ) const;
+    bool operator==( const adsRect & r ) const;
+    bool operator!=( const adsRect & r ) const;
+    bool operator<( const adsRect & r ) const;
     
     // Reinitialize the rectangle
     void init(int x1, int y1, int x2, int y2);
@@ -248,12 +248,12 @@ inline adsPoint & adsPoint::operator=( const adsPoint & p )
     return *this;
 }
 
-inline int adsPoint::operator==( const adsPoint & p ) const
+inline bool adsPoint::operator==( const adsPoint & p ) const
 {
     return (_x == p._x) && (_y == p._y);
 }
 
-inline int adsPoint::operator!=( const adsPoint & p ) const
+inline bool adsPoint::operator!=( const adsPoint & p ) const
 {
     return (_x != p._x) || (_y != p._y);
 }
@@ -345,7 +345,7 @@ inline uint64 adsPoint::manhattanDistance( adsPoint p0, adsPoint p1 )
     return (uint64) (dx + dy);
 }
 
-inline int adsPoint::operator<( const adsPoint & rhs ) const
+inline bool adsPoint::operator<( const adsPoint & rhs ) const
 {
     if ( _x < rhs._x )
         return true;
@@ -356,7 +356,7 @@ inline int adsPoint::operator<( const adsPoint & rhs ) const
     return _y < rhs._y;
 }
 
-inline int adsRect::operator<( const adsRect & rhs ) const
+inline bool adsRect::operator<( const adsRect & rhs ) const
 {
     if ( _xlo < rhs._xlo )
         return true;
@@ -504,12 +504,12 @@ inline adsRect & adsRect::operator=( const adsRect & r )
     return *this;
 }
 
-inline int adsRect::operator==( const adsRect & r ) const
+inline bool adsRect::operator==( const adsRect & r ) const
 {
     return (_xlo == r._xlo) && (_ylo == r._ylo) && (_xhi == r._xhi) && (_yhi == r._yhi);
 }
 
-inline int adsRect::operator!=( const adsRect & r ) const
+inline bool adsRect::operator!=( const adsRect & r ) const
 {
     return (_xlo != r._xlo) || (_ylo != r._ylo) || (_xhi != r._xhi) || (_yhi != r._yhi);
 }

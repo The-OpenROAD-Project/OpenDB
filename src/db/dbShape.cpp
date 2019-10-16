@@ -37,7 +37,7 @@
 
 namespace odb {
 
-int dbShape::operator<( const dbShape & rhs )
+bool dbShape::operator<( const dbShape & rhs )
 {
     if ( _type < rhs._type )
         return true;

@@ -80,9 +80,9 @@ class _dbSBox : public _dbBox
     _dbSBox( _dbDatabase * );
     ~_dbSBox();
 
-    int operator==( const _dbSBox & rhs ) const;
-    int operator!=( const _dbSBox & rhs ) const { return ! operator==(rhs); }
-    int operator<( const _dbSBox & rhs ) const;
+    bool operator==( const _dbSBox & rhs ) const;
+    bool operator!=( const _dbSBox & rhs ) const { return ! operator==(rhs); }
+    bool operator<( const _dbSBox & rhs ) const;
     void differences( dbDiff & diff, const char * field, const _dbSBox & rhs ) const;
     void out( dbDiff & diff, char side, const char * field ) const;
     int equal( const _dbSBox & rhs ) const;

@@ -47,7 +47,7 @@ double getExtCCmult(dbNet *aggressor);
 #define FLAGS(seg) (*((uint *) &seg->_flags))
 template class dbTable<_dbCapNode>;
 
-int _dbCapNode::operator==( const _dbCapNode & rhs ) const
+bool _dbCapNode::operator==( const _dbCapNode & rhs ) const
 {
     if( _flags._name != rhs._flags._name )
         return false;

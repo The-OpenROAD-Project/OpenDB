@@ -73,12 +73,12 @@ class _dbGCellGrid : public dbObject
     _dbGCellGrid(_dbDatabase *, const _dbGCellGrid & g );
     ~_dbGCellGrid();
 
-    int operator==( const _dbGCellGrid & rhs ) const;
-    int operator!=( const _dbGCellGrid & rhs ) const { return ! operator==(rhs); }
+    bool operator==( const _dbGCellGrid & rhs ) const;
+    bool operator!=( const _dbGCellGrid & rhs ) const { return ! operator==(rhs); }
     void differences( dbDiff & diff, const char * field, const _dbGCellGrid & rhs ) const;
     void out( dbDiff & diff, char side, const char * field ) const;
 
-    int operator<( const _dbGCellGrid & rhs ) const
+    bool operator<( const _dbGCellGrid & rhs ) const
     {
         _dbGCellGrid * o1 = (_dbGCellGrid *) this;
         _dbGCellGrid * o2 = (_dbGCellGrid *) &rhs;

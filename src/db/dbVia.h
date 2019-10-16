@@ -94,9 +94,9 @@ class _dbVia : public dbObject
     _dbVia( _dbDatabase * );
     ~_dbVia();
 
-    int operator==( const _dbVia & rhs ) const;
-    int operator!=( const _dbVia & rhs ) const { return ! operator==(rhs); }
-    int operator<( const _dbVia & rhs ) const
+    bool operator==( const _dbVia & rhs ) const;
+    bool operator!=( const _dbVia & rhs ) const { return ! operator==(rhs); }
+    bool operator<( const _dbVia & rhs ) const
     {
         return strcmp( _name, rhs._name ) < 0;
     }

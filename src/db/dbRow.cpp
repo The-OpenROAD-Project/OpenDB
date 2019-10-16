@@ -45,7 +45,7 @@ namespace odb {
 
 template class dbTable<_dbRow>;
 
-int _dbRow::operator==( const _dbRow & rhs ) const
+bool _dbRow::operator==( const _dbRow & rhs ) const
 {
     if( _flags._orient != rhs._flags._orient )
         return false;
@@ -82,7 +82,7 @@ int _dbRow::operator==( const _dbRow & rhs ) const
     return true;
 }
 
-int _dbRow::operator<( const _dbRow & rhs ) const
+bool _dbRow::operator<( const _dbRow & rhs ) const
 {
     int r = strcmp(_name, rhs._name);
     

@@ -214,12 +214,12 @@ dbIStream & operator>>( dbIStream & stream, _dbInst & inst )
     return stream;
 }
 
-int _dbInst::operator<( const _dbInst & rhs ) const
+bool _dbInst::operator<( const _dbInst & rhs ) const
 {
     return strcmp( _name, rhs._name ) < 0;
 }   
 
-int _dbInst::operator==( const _dbInst & rhs ) const
+bool _dbInst::operator==( const _dbInst & rhs ) const
 {
     if( _flags._orient != rhs._flags._orient )
         return false;

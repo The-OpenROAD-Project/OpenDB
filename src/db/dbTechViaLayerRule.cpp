@@ -52,7 +52,7 @@ template class dbTable<_dbTechViaLayerRule>;
 //
 ////////////////////////////////////////////////////////////////////
 
-int _dbTechViaLayerRule::operator==( const _dbTechViaLayerRule & rhs ) const
+bool _dbTechViaLayerRule::operator==( const _dbTechViaLayerRule & rhs ) const
 {
     if( _flags._direction != rhs._flags._direction )
         return false;

@@ -98,8 +98,8 @@ class _dbTechViaLayerRule : public dbObject
     _dbTechViaLayerRule( _dbDatabase * );
     ~_dbTechViaLayerRule();
 
-    int operator==( const _dbTechViaLayerRule & rhs ) const;
-    int operator!=( const _dbTechViaLayerRule & rhs ) const { return ! operator==(rhs); }
+    bool operator==( const _dbTechViaLayerRule & rhs ) const;
+    bool operator!=( const _dbTechViaLayerRule & rhs ) const { return ! operator==(rhs); }
     void differences( dbDiff & diff, const char * field, const _dbTechViaLayerRule & rhs ) const;
     void out( dbDiff & diff, char side, const char * field ) const;
 };

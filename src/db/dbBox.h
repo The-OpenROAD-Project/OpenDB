@@ -88,9 +88,9 @@ class _dbBox : public dbObject
     _dbBox( _dbDatabase * );
     _dbBox( _dbDatabase *, const _dbBox & b );
     ~_dbBox();
-    int operator==( const _dbBox & rhs ) const;
-    int operator!=( const _dbBox & rhs ) const { return ! operator==(rhs); }
-    int operator<( const _dbBox & rhs ) const;
+    bool operator==( const _dbBox & rhs ) const;
+    bool operator!=( const _dbBox & rhs ) const { return ! operator==(rhs); }
+    bool operator<( const _dbBox & rhs ) const;
     int equal( const _dbBox & rhs ) const;
     void differences( dbDiff & diff, const char * field, const _dbBox & rhs ) const;
     void out( dbDiff & diff, char side, const char * field ) const;

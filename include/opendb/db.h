@@ -197,10 +197,10 @@ class dbString
     dbString( const dbString & str ) { _str = NULL; copy(str); }
     ~dbString()                      { if(_str) free((void *)_str); }
 
-    int operator==(const char * str) { return strcmp( _str, str ) == 0; }
-    int operator!=(const char * str) { return strcmp( _str, str ) != 0; }
-    int operator==(const dbString & str) { return strcmp( _str, str._str ) == 0; }
-    int operator!=(const dbString & str) { return strcmp( _str, str._str ) != 0; }
+    bool operator==(const char * str) { return strcmp( _str, str ) == 0; }
+    bool operator!=(const char * str) { return strcmp( _str, str ) != 0; }
+    bool operator==(const dbString & str) { return strcmp( _str, str._str ) == 0; }
+    bool operator!=(const dbString & str) { return strcmp( _str, str._str ) != 0; }
 
     ///
     /// dbString assignment operator;

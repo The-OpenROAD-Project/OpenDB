@@ -46,7 +46,7 @@ namespace odb {
 
 template class dbTable<_dbTrackGrid>;
 
-int _dbTrackGrid::operator==( const _dbTrackGrid & rhs ) const
+bool _dbTrackGrid::operator==( const _dbTrackGrid & rhs ) const
 {
     if( _layer != rhs._layer )
         return false;

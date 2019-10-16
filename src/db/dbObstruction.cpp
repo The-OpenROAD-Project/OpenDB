@@ -97,7 +97,7 @@ dbIStream & operator>>( dbIStream & stream, _dbObstruction & obs )
     return stream;
 }
 
-int _dbObstruction::operator==( const _dbObstruction & rhs ) const
+bool _dbObstruction::operator==( const _dbObstruction & rhs ) const
 {
     if( _flags._slot_obs != rhs._flags._slot_obs )
         return false;
@@ -204,7 +204,7 @@ void _dbObstruction::out( dbDiff & diff, char side, const char * field ) const
     DIFF_END
 }
 
-int _dbObstruction::operator<( const _dbObstruction & rhs ) const
+bool _dbObstruction::operator<( const _dbObstruction & rhs ) const
 {
     _dbBlock * lhs_block = (_dbBlock *) getOwner();
     _dbBlock * rhs_block = (_dbBlock *) rhs.getOwner();

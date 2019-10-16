@@ -99,9 +99,9 @@ class _dbTechNonDefaultRule : public dbObject
     _dbTech * getTech();
     _dbBlock * getBlock();
 
-    int operator==( const _dbTechNonDefaultRule & rhs ) const;
-    int operator!=( const _dbTechNonDefaultRule & rhs ) const { return ! operator==(rhs); }
-    int operator<( const _dbTechNonDefaultRule & rhs ) const;
+    bool operator==( const _dbTechNonDefaultRule & rhs ) const;
+    bool operator!=( const _dbTechNonDefaultRule & rhs ) const { return ! operator==(rhs); }
+    bool operator<( const _dbTechNonDefaultRule & rhs ) const;
     void differences( dbDiff & diff, const char * field, const _dbTechNonDefaultRule & rhs ) const;
     void out( dbDiff & diff, char side, const char * field ) const;
 };

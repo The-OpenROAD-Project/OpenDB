@@ -67,7 +67,7 @@ _dbBPin::~_dbBPin()
 {
 }
 
-int _dbBPin::operator==( const _dbBPin & rhs ) const
+bool _dbBPin::operator==( const _dbBPin & rhs ) const
 {
     if( _flags._status != rhs._flags._status )
         return false;

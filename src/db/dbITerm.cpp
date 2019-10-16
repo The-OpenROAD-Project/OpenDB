@@ -1031,7 +1031,7 @@ dbITerm::getAvgXY( int *x, int *y)
     *y = int(yy); 
     return true;
 }
-void dbITerm::print(FILE *fp, char *trail)
+void dbITerm::print(FILE *fp, const char *trail)
 {
 	if (fp==NULL)
 	{

@@ -215,9 +215,9 @@ class adsRect
     uint64 area();
     uint64 margin();
 
-	void notice(char * prefix="");
-	void printf(FILE *fp, char * prefix="");
-	void print(char * prefix="");
+    void notice(const char * prefix="");
+    void printf(FILE *fp, const char * prefix="");
+    void print(const char * prefix="");
 
     friend dbIStream & operator>>( dbIStream & stream, adsRect & r );
     friend dbOStream & operator<<( dbOStream & stream, const adsRect & r );
@@ -697,15 +697,15 @@ inline void adsRect::mergeInit()
     _yhi = INT_MIN;
     
 }
-inline void adsRect::notice(char * prefix)
+inline void adsRect::notice(const char * prefix)
 {
 	;//notice(0, "%s%12d %12d - %12d %12d\n", prefix, _xlo, _ylo, dx, dy);
 }
-inline void adsRect::printf(FILE *fp, char * prefix)
+inline void adsRect::printf(FILE *fp, const char * prefix)
 {
 	fprintf(fp, "%s%12d %12d - %12d %12d\n", prefix, _xlo, _ylo, dx(), dy());
 }
-inline void adsRect::print(char * prefix)
+inline void adsRect::print(const char * prefix)
 {
 	fprintf(stdout,"%s%12d %12d - %12d %12d\n", prefix, _xlo, _ylo, dx(), dy());
 }

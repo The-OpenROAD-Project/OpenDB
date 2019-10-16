@@ -53,16 +53,16 @@ bool dbCapNodeItr::orderReversed()
     return true;
 }
 
-void dbCapNodeItr::reverse(register dbObject * parent)
+void dbCapNodeItr::reverse(dbObject * parent)
 {
     _dbNet * net = (_dbNet *) parent;
-    register uint id = net->_cap_nodes;
-    register uint list = 0;
+    uint id = net->_cap_nodes;
+    uint list = 0;
 
     while( id !=  0 )
     {
         _dbCapNode * seg =  _seg_tbl->getPtr(id);
-        register uint n = seg->_next;
+        uint n = seg->_next;
         seg->_next = list;
         list = id; 
         id = n;
@@ -76,10 +76,10 @@ uint dbCapNodeItr::sequential()
     return 0;
 }
 
-uint dbCapNodeItr::size( register dbObject * parent )
+uint dbCapNodeItr::size( dbObject * parent )
 {
-    register uint id;
-    register uint cnt = 0;
+    uint id;
+    uint cnt = 0;
 
     for( id = dbCapNodeItr::begin(parent); id != dbCapNodeItr::end(parent); id = dbCapNodeItr::next(id) )
         ++cnt;
@@ -87,24 +87,24 @@ uint dbCapNodeItr::size( register dbObject * parent )
     return cnt; 
 }
 
-uint dbCapNodeItr::begin( register dbObject * parent )
+uint dbCapNodeItr::begin( dbObject * parent )
 {
     _dbNet * net = (_dbNet *) parent;
     return net->_cap_nodes;
 }
 
-uint dbCapNodeItr::end( register dbObject * parent )
+uint dbCapNodeItr::end( dbObject * parent )
 {
     return 0;
 }
 
-uint dbCapNodeItr::next( register uint id, ... )
+uint dbCapNodeItr::next( uint id, ... )
 {
     _dbCapNode * seg = _seg_tbl->getPtr(id);
     return seg->_next;
 }
 
-dbObject * dbCapNodeItr::getObject( register uint id, ... )
+dbObject * dbCapNodeItr::getObject( uint id, ... )
 {
     return _seg_tbl->getPtr(id);
 }

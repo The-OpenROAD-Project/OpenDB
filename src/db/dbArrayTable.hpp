@@ -280,7 +280,7 @@ T * dbArrayTable<T>::create()
     dbArrayTablePage * page = (dbArrayTablePage *) t->getObjectPage();
     page->_alloccnt++;
     
-    //register uint id = t->getOID();
+    //uint id = t->getOID();
     return t;
 }
 
@@ -527,7 +527,7 @@ int dbArrayTable<T>::operator==( const dbArrayTable<T> & rhs ) const
     if ( lhs._alloc_cnt != rhs._alloc_cnt )
         return false;
     
-    register uint i;
+    uint i;
 
     for ( i = 1; i < _alloc_cnt; ++i )
     {
@@ -564,9 +564,9 @@ void dbArrayTable<T>::differences( dbDiff & diff, const dbArrayTable<T> & rhs ) 
     assert( lhs._page_mask == rhs._page_mask );
     assert( lhs._page_shift == rhs._page_shift );
 
-    register uint page_sz = 1U << lhs._page_shift;
-    register uint lhs_max = lhs._page_cnt * page_sz;
-    register uint rhs_max = rhs._page_cnt * page_sz;
+    uint page_sz = 1U << lhs._page_shift;
+    uint lhs_max = lhs._page_cnt * page_sz;
+    uint rhs_max = rhs._page_cnt * page_sz;
     
     uint i;
     const char * name = dbObject::getObjName(_type);

@@ -56,22 +56,22 @@ bool dbNetBTermItr::orderReversed()
     return true;
 }
 
-void dbNetBTermItr::reverse(register dbObject * parent)
+void dbNetBTermItr::reverse(dbObject * parent)
 {
     _dbNet * net = (_dbNet *) parent;
-    register uint id = net->_bterms;
-    register uint list = 0;
+    uint id = net->_bterms;
+    uint list = 0;
 
     while( id !=  0 )
     {
         _dbBTerm * bterm =  _bterm_tbl->getPtr(id);
-        register uint n = bterm->_next_bterm;
+        uint n = bterm->_next_bterm;
         bterm->_next_bterm = list;
         list = id; 
         id = n;
     }
 
-    register uint prev = 0;
+    uint prev = 0;
     id = list;
     
     while( id !=  0 )
@@ -90,10 +90,10 @@ uint dbNetBTermItr::sequential()
     return 0;
 }
 
-uint dbNetBTermItr::size( register dbObject * parent )
+uint dbNetBTermItr::size( dbObject * parent )
 {
-    register uint id;
-    register uint cnt = 0;
+    uint id;
+    uint cnt = 0;
 
     for( id = dbNetBTermItr::begin(parent); id != dbNetBTermItr::end(parent); id = dbNetBTermItr::next(id) )
         ++cnt;
@@ -101,24 +101,24 @@ uint dbNetBTermItr::size( register dbObject * parent )
     return cnt; 
 }
 
-uint dbNetBTermItr::begin( register dbObject * parent )
+uint dbNetBTermItr::begin( dbObject * parent )
 {
     _dbNet * net = (_dbNet *) parent;
     return net->_bterms;
 }
 
-uint dbNetBTermItr::end( register dbObject * parent )
+uint dbNetBTermItr::end( dbObject * parent )
 {
     return 0;
 }
 
-uint dbNetBTermItr::next( register uint id, ... )
+uint dbNetBTermItr::next( uint id, ... )
 {
     _dbBTerm * bterm = _bterm_tbl->getPtr(id);
     return bterm->_next_bterm;
 }
 
-dbObject * dbNetBTermItr::getObject( register uint id, ... )
+dbObject * dbNetBTermItr::getObject( uint id, ... )
 {
     return _bterm_tbl->getPtr(id);
 }

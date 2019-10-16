@@ -47,13 +47,13 @@ class dbIterator
 
     virtual bool reversible() = 0;
     virtual bool orderReversed() = 0;
-    virtual void reverse( register dbObject * parent ) = 0;
+    virtual void reverse( dbObject * parent ) = 0;
     virtual uint sequential() = 0;
-    virtual uint size( register dbObject * parent ) = 0;
-    virtual uint begin( register dbObject * parent ) = 0;
-    virtual uint end( register dbObject * parent ) = 0;
-    virtual uint next( register uint id, ... ) = 0;
-    virtual dbObject * getObject( register uint id, ... ) = 0;
+    virtual uint size( dbObject * parent ) = 0;
+    virtual uint begin( dbObject * parent ) = 0;
+    virtual uint end( dbObject * parent ) = 0;
+    virtual uint next( uint id, ... ) = 0;
+    virtual dbObject * getObject( uint id, ... ) = 0;
 };
 
 } // namespace

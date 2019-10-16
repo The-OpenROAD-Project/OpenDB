@@ -289,7 +289,7 @@ T * dbTable<T>::create()
     dbTablePage * page = (dbTablePage *) t->getObjectPage();
     page->_alloccnt++;
     
-    register uint id = t->getOID();
+    uint id = t->getOID();
 
     if ( id > _top_idx )
         _top_idx = id;
@@ -316,7 +316,7 @@ T * dbTable<T>::duplicate( T * c )
     dbTablePage * page = (dbTablePage *) t->getObjectPage();
     page->_alloccnt++;
     
-    register uint id = t->getOID();
+    uint id = t->getOID();
 
     if ( id > _top_idx )
         _top_idx = id;
@@ -464,8 +464,8 @@ void dbTable<T>::destroy( T * t )
     t->~T(); // call destructor
     t->_oid &= ~DB_ALLOC_BIT;
 
-    register uint offset = t - (T *) page->_objects;
-    register uint id = page->_page_addr + offset;
+    uint offset = t - (T *) page->_objects;
+    uint id = page->_page_addr + offset;
 
     // Add to freelist
     _dbObject * o = (_dbObject *) t;
@@ -491,7 +491,7 @@ bool dbTable<T>::orderReversed()
 }
 
 template <class T>
-void dbTable<T>::reverse( register dbObject * parent )
+void dbTable<T>::reverse( dbObject * parent )
 {
 }
 
@@ -520,7 +520,7 @@ uint dbTable<T>::end( dbObject * parent )
 }
 
 template <class T>
-uint dbTable<T>::next( register uint id, ... )
+uint dbTable<T>::next( uint id, ... )
 {
     ZASSERT(id !=0);
     ++id;
@@ -528,13 +528,13 @@ uint dbTable<T>::next( register uint id, ... )
     if ( id > _top_idx )
         return 0;
 
-    register uint page_id = id >> _page_shift;
-    register dbTablePage * page = _pages[page_id];
-    register uint offset = id & _page_mask;
+    uint page_id = id >> _page_shift;
+    dbTablePage * page = _pages[page_id];
+    uint offset = id & _page_mask;
 
   next_obj:
-    register T * p = (T *) &(page->_objects[offset*sizeof(T)]);
-    register T * e = (T *) &(page->_objects[page_size()*sizeof(T)]);
+    T * p = (T *) &(page->_objects[offset*sizeof(T)]);
+    T * e = (T *) &(page->_objects[page_size()*sizeof(T)]);
 
     for( ; p < e; ++p )
     {
@@ -563,7 +563,7 @@ uint dbTable<T>::next( register uint id, ... )
 }
 
 template <class T>
-dbObject * dbTable<T>::getObject( register uint id, ... )
+dbObject * dbTable<T>::getObject( uint id, ... )
 {
     return getPtr(id);
 }
@@ -615,7 +615,7 @@ void dbTable<T>::readPage( dbIStream & stream, dbTablePage * page )
         else
         {
             new(t) T(_db);
-            register uint oid = uint((char *) t - page->_objects) | DB_ALLOC_BIT;
+            uint oid = uint((char *) t - page->_objects) | DB_ALLOC_BIT;
             t->_oid = oid; // Set the oid so the stream code can call the dbObject methods.
             page->_alloccnt++;
             stream >> *t;
@@ -789,7 +789,7 @@ int dbTable<T>::operator==( const dbTable<T> & rhs ) const
     if ( lhs._alloc_cnt != rhs._alloc_cnt )
         return false;
     
-    register uint i;
+    uint i;
 
     for ( i = _bottom_idx; i <= _top_idx; ++i )
     {
@@ -826,9 +826,9 @@ void dbTable<T>::differences( dbDiff & diff, const dbTable<T> & rhs ) const
     assert( lhs._page_mask == rhs._page_mask );
     assert( lhs._page_shift == rhs._page_shift );
 
-    register uint page_sz = 1U << lhs._page_shift;
-    register uint lhs_max = lhs._page_cnt * page_sz;
-    register uint rhs_max = rhs._page_cnt * page_sz;
+    uint page_sz = 1U << lhs._page_shift;
+    uint lhs_max = lhs._page_cnt * page_sz;
+    uint rhs_max = rhs._page_cnt * page_sz;
     
     uint i;
     const char * name = dbObject::getObjName(_type);

@@ -99,18 +99,18 @@ class dbPagedVector
     void freeIdx (uint idx); // DKF - to delete
     void clear();
     
-    T & operator[]( register unsigned int id )
+    T & operator[]( unsigned int id )
     {
         ZASSERT( id < _next_idx );
-        register unsigned int page = (id & ~(PAGE_SIZE-1)) >> PAGE_SHIFT;
-        register unsigned int offset = id & (PAGE_SIZE-1);
+        unsigned int page = (id & ~(PAGE_SIZE-1)) >> PAGE_SHIFT;
+        unsigned int offset = id & (PAGE_SIZE-1);
         return _pages[page][offset];
     }
-    const T & operator[]( register unsigned int id ) const
+    const T & operator[]( unsigned int id ) const
     {
         ZASSERT( id < _next_idx );
-        register unsigned int page = (id & ~(PAGE_SIZE-1)) >> PAGE_SHIFT;
-        register unsigned int offset = id & (PAGE_SIZE-1);
+        unsigned int page = (id & ~(PAGE_SIZE-1)) >> PAGE_SHIFT;
+        unsigned int offset = id & (PAGE_SIZE-1);
         return _pages[page][offset];
     }
 
@@ -128,7 +128,7 @@ unsigned int dbPagedVector<T,P,S>::getIdx(uint chunkSize, const T & ival)
     {
         idx = _next_idx;
         _next_idx += chunkSize;
-        register unsigned int page = ((_next_idx-1) & ~(P-1)) >> S;
+        unsigned int page = ((_next_idx-1) & ~(P-1)) >> S;
         if ( page == _page_cnt )
             newPage();
         //return idx;
@@ -140,8 +140,8 @@ unsigned int dbPagedVector<T,P,S>::getIdx(uint chunkSize, const T & ival)
             _freedIdxHead = -1;
         else
         {
-            register unsigned int page = (idx & ~(P-1)) >> S;
-            register unsigned int offset = idx & (P-1);
+            unsigned int page = (idx & ~(P-1)) >> S;
+            unsigned int offset = idx & (P-1);
             uint *fidxp = (uint *)(&_pages[page][offset]);
             _freedIdxHead = (int) *fidxp;
         }
@@ -150,8 +150,8 @@ unsigned int dbPagedVector<T,P,S>::getIdx(uint chunkSize, const T & ival)
     {
         uint id = idx + dd;
         ZASSERT( id < _next_idx );
-        register unsigned int page = (id & ~(P-1)) >> S;
-        register unsigned int offset = id & (P-1);
+        unsigned int page = (id & ~(P-1)) >> S;
+        unsigned int offset = id & (P-1);
         _pages[page][offset] = ival;
     }
     return idx;
@@ -164,8 +164,8 @@ void dbPagedVector<T,P,S>::freeIdx (uint idx)
         _freedIdxHead = _freedIdxTail = idx;
     else
     {
-        register unsigned int page = (_freedIdxTail & ~(P-1)) >> S;
-        register unsigned int offset = _freedIdxTail & (P-1);
+        unsigned int page = (_freedIdxTail & ~(P-1)) >> S;
+        unsigned int offset = _freedIdxTail & (P-1);
         uint *fidxp = (uint *)(&_pages[page][offset]);
         *fidxp = _freedIdxTail = idx;
     }
@@ -273,12 +273,12 @@ void dbPagedVector<T,P,S>::newPage()
 template <class T, const uint P, const uint S>
 void dbPagedVector<T,P,S>::push_back( const T & item )
 {
-    register unsigned int page = (_next_idx & ~(P-1)) >> S;
+    unsigned int page = (_next_idx & ~(P-1)) >> S;
 
     if ( page == _page_cnt )
         newPage();
 
-    register unsigned int offset = _next_idx & (P-1);
+    unsigned int offset = _next_idx & (P-1);
     ++_next_idx;
 
     T * objects = _pages[page];

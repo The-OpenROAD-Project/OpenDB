@@ -129,10 +129,10 @@ class dbTable : public dbObjectTable, public dbIterator
         return  p;
     }
 
-    bool validId( register uint id ) const
+    bool validId( uint id ) const
     {
-        register uint page = id >> _page_shift;
-        register uint offset = id & _page_mask;
+        uint page = id >> _page_shift;
+        uint offset = id & _page_mask;
 
         if( (id != 0) && (page < _page_cnt) )
         {
@@ -148,10 +148,10 @@ class dbTable : public dbObjectTable, public dbIterator
     // This method is the same as getPtr() but is is
     // use to get objects on the free-list.
     //
-    T * getFreeObj( register uint id )
+    T * getFreeObj( uint id )
     {
-        register uint page = id >> _page_shift;
-        register uint offset = id & _page_mask;
+        uint page = id >> _page_shift;
+        uint offset = id & _page_mask;
         assert( (id != 0) && (page < _page_cnt) );
         T * p = (T *) &(_pages[page]->_objects[offset*sizeof(T)]);
         assert( (p->_oid & DB_ALLOC_BIT) == 0 );
@@ -175,13 +175,13 @@ class dbTable : public dbObjectTable, public dbIterator
     // dbIterator interface methods
     bool reversible();
     bool orderReversed();
-    void reverse( register dbObject * parent );
+    void reverse( dbObject * parent );
     uint sequential();
-    uint size( register dbObject * parent );
-    uint begin( register dbObject * parent );
-    uint end( register dbObject * parent );
-    uint next( register uint cur, ... );
-    dbObject * getObject( register uint cur, ... );
+    uint size( dbObject * parent );
+    uint begin( dbObject * parent );
+    uint end( dbObject * parent );
+    uint next( uint cur, ... );
+    dbObject * getObject( uint cur, ... );
     void getObjects( std::vector<T *> & objects );
     
   private:

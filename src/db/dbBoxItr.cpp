@@ -53,7 +53,7 @@ bool dbBoxItr::orderReversed()
     return true;
 }
 
-void dbBoxItr::reverse(register dbObject * parent)
+void dbBoxItr::reverse(dbObject * parent)
 {
 
     switch( parent->getType() )
@@ -61,13 +61,13 @@ void dbBoxItr::reverse(register dbObject * parent)
         case dbRegionObj:
         {
             _dbRegion * region = (_dbRegion *) parent;
-            register uint id = region->_boxes;
-            register uint list = 0;
+            uint id = region->_boxes;
+            uint list = 0;
 
             while( id !=  0 )
             {
                 _dbBox * b =  _box_tbl->getPtr(id);
-                register uint n = b->_next_box;
+                uint n = b->_next_box;
                 b->_next_box = list;
                 list = id; 
                 id = n;
@@ -83,13 +83,13 @@ void dbBoxItr::reverse(register dbObject * parent)
         case dbViaObj:
         {
             _dbVia * via = (_dbVia *) parent;
-            register uint id = via->_boxes;
-            register uint list = 0;
+            uint id = via->_boxes;
+            uint list = 0;
 
             while( id !=  0 )
             {
                 _dbBox * b =  _box_tbl->getPtr(id);
-                register uint n = b->_next_box;
+                uint n = b->_next_box;
                 b->_next_box = list;
                 list = id; 
                 id = n;
@@ -102,13 +102,13 @@ void dbBoxItr::reverse(register dbObject * parent)
         case dbMasterObj:
         {
             _dbMaster * master = (_dbMaster *) parent;
-            register uint id = master->_obstructions;
-            register uint list = 0;
+            uint id = master->_obstructions;
+            uint list = 0;
 
             while( id !=  0 )
             {
                 _dbBox * b =  _box_tbl->getPtr(id);
-                register uint n = b->_next_box;
+                uint n = b->_next_box;
                 b->_next_box = list;
                 list = id; 
                 id = n;
@@ -121,13 +121,13 @@ void dbBoxItr::reverse(register dbObject * parent)
         case dbMPinObj:
         {
             _dbMPin * pin = (_dbMPin *) parent;
-            register uint id = pin->_geoms;
-            register uint list = 0;
+            uint id = pin->_geoms;
+            uint list = 0;
 
             while( id !=  0 )
             {
                 _dbBox * b =  _box_tbl->getPtr(id);
-                register uint n = b->_next_box;
+                uint n = b->_next_box;
                 b->_next_box = list;
                 list = id; 
                 id = n;
@@ -140,13 +140,13 @@ void dbBoxItr::reverse(register dbObject * parent)
         case dbTechViaObj:
         {
             _dbTechVia * via = (_dbTechVia *) parent;
-            register uint id = via->_boxes;
-            register uint list = 0;
+            uint id = via->_boxes;
+            uint list = 0;
 
             while( id !=  0 )
             {
                 _dbBox * b =  _box_tbl->getPtr(id);
-                register uint n = b->_next_box;
+                uint n = b->_next_box;
                 b->_next_box = list;
                 list = id; 
                 id = n;
@@ -166,10 +166,10 @@ uint dbBoxItr::sequential()
     return 0;
 }
 
-uint dbBoxItr::size( register dbObject * parent )
+uint dbBoxItr::size( dbObject * parent )
 {
-    register uint id;
-    register uint cnt = 0;
+    uint id;
+    uint cnt = 0;
 
     for( id = dbBoxItr::begin(parent); id != dbBoxItr::end(parent); id = dbBoxItr::next(id) )
         ++cnt;
@@ -177,7 +177,7 @@ uint dbBoxItr::size( register dbObject * parent )
     return cnt; 
 }
 
-uint dbBoxItr::begin( register dbObject * parent )
+uint dbBoxItr::begin( dbObject * parent )
 {
     switch( parent->getType() )
     {
@@ -218,7 +218,7 @@ uint dbBoxItr::begin( register dbObject * parent )
     return 0;
 }
 
-uint dbBoxItr::end( register dbObject * parent )
+uint dbBoxItr::end( dbObject * parent )
 {
     return 0;
 }
@@ -229,7 +229,7 @@ uint dbBoxItr::next( uint id, ... )
     return box->_next_box;
 }
 
-dbObject * dbBoxItr::getObject( register uint id, ... )
+dbObject * dbBoxItr::getObject( uint id, ... )
 {
     return _box_tbl->getPtr(id);
 }

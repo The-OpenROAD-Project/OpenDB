@@ -37,9 +37,9 @@
 
 namespace odb {
 
-inline uint hash_int( register uint id )
+inline uint hash_int( uint id )
 {
-    register int key = (int) id;
+    int key = (int) id;
     key += ~(key << 15);
     key ^=  (key >> 10);
     key +=  (key << 3);
@@ -203,7 +203,7 @@ void dbIntHashTable<T>::insert( T * object )
 }
 
 template <class T>
-T * dbIntHashTable<T>::find( register uint id )
+T * dbIntHashTable<T>::find( uint id )
 {
     uint sz = _hash_tbl.size();
 
@@ -227,7 +227,7 @@ T * dbIntHashTable<T>::find( register uint id )
 }
 
 template <class T>
-int dbIntHashTable<T>::hasMember( register uint id )
+int dbIntHashTable<T>::hasMember( uint id )
 {
     uint sz = _hash_tbl.size();
 

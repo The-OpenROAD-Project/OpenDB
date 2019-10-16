@@ -86,7 +86,7 @@ class dbAttrTable
         // Pages are not created util the prop-list is being set.
         // This approach allows objects to test for properties without populating pages.
         // (which would populate the table).
-        register unsigned int page = (id & ~(PAGE_SIZE-1)) >> PAGE_SHIFT;
+        unsigned int page = (id & ~(PAGE_SIZE-1)) >> PAGE_SHIFT;
 
         if ( page >= _page_cnt ) // Page not present...
             return T();
@@ -94,15 +94,15 @@ class dbAttrTable
         if ( _pages[page] == NULL ) // Page not present
             return T();
         
-        register unsigned int offset = id & (PAGE_SIZE-1);
+        unsigned int offset = id & (PAGE_SIZE-1);
         return _pages[page][offset];
     }
 
     void setAttr( uint id, T attr )
     {
-        register unsigned int page = (id & ~(PAGE_SIZE-1)) >> PAGE_SHIFT;
+        unsigned int page = (id & ~(PAGE_SIZE-1)) >> PAGE_SHIFT;
         T * pg = getPage(page);
-        register unsigned int offset = id & (PAGE_SIZE-1);
+        unsigned int offset = id & (PAGE_SIZE-1);
         pg[offset] = attr;
     }
 

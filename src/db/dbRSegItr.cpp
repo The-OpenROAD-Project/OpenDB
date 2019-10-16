@@ -53,16 +53,16 @@ bool dbRSegItr::orderReversed()
     return true;
 }
 
-void dbRSegItr::reverse(register dbObject * parent)
+void dbRSegItr::reverse(dbObject * parent)
 {
     _dbNet * net = (_dbNet *) parent;
-    register uint id = net->_r_segs;
-    register uint list = 0;
+    uint id = net->_r_segs;
+    uint list = 0;
 
     while( id !=  0 )
     {
         _dbRSeg * seg =  _seg_tbl->getPtr(id);
-        register uint n = seg->_next;
+        uint n = seg->_next;
         seg->_next = list;
         list = id; 
         id = n;
@@ -76,10 +76,10 @@ uint dbRSegItr::sequential()
     return 0;
 }
 
-uint dbRSegItr::size( register dbObject * parent )
+uint dbRSegItr::size( dbObject * parent )
 {
-    register uint id;
-    register uint cnt = 0;
+    uint id;
+    uint cnt = 0;
 
     for( id = dbRSegItr::begin(parent); id != dbRSegItr::end(parent); id = dbRSegItr::next(id) )
         ++cnt;
@@ -87,7 +87,7 @@ uint dbRSegItr::size( register dbObject * parent )
     return cnt; 
 }
 
-uint dbRSegItr::begin( register dbObject * parent )
+uint dbRSegItr::begin( dbObject * parent )
 {
     _dbNet * net = (_dbNet *) parent;
     if (net->_r_segs == 0)
@@ -96,18 +96,18 @@ uint dbRSegItr::begin( register dbObject * parent )
     return seg->_next;
 }
 
-uint dbRSegItr::end( register dbObject * parent )
+uint dbRSegItr::end( dbObject * parent )
 {
     return 0;
 }
 
-uint dbRSegItr::next( register uint id, ... )
+uint dbRSegItr::next( uint id, ... )
 {
     _dbRSeg * seg = _seg_tbl->getPtr(id);
     return seg->_next;
 }
 
-dbObject * dbRSegItr::getObject( register uint id, ... )
+dbObject * dbRSegItr::getObject( uint id, ... )
 {
     return _seg_tbl->getPtr(id);
 }

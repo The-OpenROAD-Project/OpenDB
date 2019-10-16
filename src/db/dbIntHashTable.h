@@ -83,8 +83,8 @@ class dbIntHashTable
 
     void setTable( dbTable<T> * table ) { _obj_tbl = table; }
     
-    T * find( register uint id );
-    int hasMember( register uint id );
+    T * find( uint id );
+    int hasMember( uint id );
     void insert( T * object );
     void remove( T * object );
 };

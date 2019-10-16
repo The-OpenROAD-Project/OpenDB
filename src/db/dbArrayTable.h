@@ -119,20 +119,20 @@ class dbArrayTable : public dbObjectTable
     uint page_size() const { return _page_mask + 1; }
     
     // Get the object of this id
-    T * getPtr( register uint id ) const
+    T * getPtr( uint id ) const
     {
-        register uint page = id >> _page_shift;
-        register uint offset = id & _page_mask;
+        uint page = id >> _page_shift;
+        uint offset = id & _page_mask;
         ZASSERT( (id != 0) && (page < _page_cnt) );
         T * p = (T *) &(_pages[page]->_objects[offset*sizeof(T)]);
         ZASSERT( p->_oid & DB_ALLOC_BIT );
         return  p;
     }
 
-    bool validId( register uint id ) const
+    bool validId( uint id ) const
     {
-        register uint page = id >> _page_shift;
-        register uint offset = id & _page_mask;
+        uint page = id >> _page_shift;
+        uint offset = id & _page_mask;
 
         if( (id != 0) && (page < _page_cnt) )
         {
@@ -148,10 +148,10 @@ class dbArrayTable : public dbObjectTable
     // This method is the same as getPtr() but is is
     // used to get objects on the free-list.
     //
-    T * getFreeObj( register uint id )
+    T * getFreeObj( uint id )
     {
-        register uint page = id >> _page_shift;
-        register uint offset = id & _page_mask;
+        uint page = id >> _page_shift;
+        uint offset = id & _page_mask;
         ZASSERT( (id != 0) && (page < _page_cnt) );
         T * p = (T *) &(_pages[page]->_objects[offset*sizeof(T)]);
         ZASSERT( (p->_oid & DB_ALLOC_BIT) == 0 );
@@ -166,7 +166,7 @@ class dbArrayTable : public dbObjectTable
     void readPage( dbIStream & stream, dbArrayTablePage * page );
     void writePage( dbOStream & stream, const dbArrayTablePage * page ) const;
     void getObjects( std::vector<T *> & objects );
-    dbObject * getObject( register uint id, ... ) { return getPtr(id); }
+    dbObject * getObject( uint id, ... ) { return getPtr(id); }
     
   private:
     T * create();

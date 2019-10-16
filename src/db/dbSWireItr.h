@@ -57,13 +57,13 @@ public:
     
     bool reversible();
     bool orderReversed();
-    void reverse(register dbObject * parent);
+    void reverse(dbObject * parent);
     uint sequential();
-    uint size( register dbObject * parent );
-    uint begin( register dbObject * parent );
-    uint end( register dbObject * parent );
-    uint next( register uint id, ... );
-    dbObject * getObject( register uint id, ... );
+    uint size( dbObject * parent );
+    uint begin( dbObject * parent );
+    uint end( dbObject * parent );
+    uint next( uint id, ... );
+    dbObject * getObject( uint id, ... );
 };
 
 } // namespace

@@ -46,7 +46,7 @@ bool dbTechLayerItr::orderReversed()
     return false;
 }
 
-void dbTechLayerItr::reverse(register dbObject * parent)
+void dbTechLayerItr::reverse(dbObject * parent)
 {
 }
 
@@ -55,10 +55,10 @@ uint dbTechLayerItr::sequential()
     return 0;
 }
 
-uint dbTechLayerItr::size( register dbObject * parent )
+uint dbTechLayerItr::size( dbObject * parent )
 {
-    register uint id;
-    register uint cnt = 0;
+    uint id;
+    uint cnt = 0;
 
     for( id = dbTechLayerItr::begin(parent); id != dbTechLayerItr::end(parent); id = dbTechLayerItr::next(id) )
         ++cnt;
@@ -66,24 +66,24 @@ uint dbTechLayerItr::size( register dbObject * parent )
     return cnt; 
 }
 
-uint dbTechLayerItr::begin( register dbObject * parent )
+uint dbTechLayerItr::begin( dbObject * parent )
 {
     _dbTech * tech = (_dbTech *) parent;
     return (uint) tech->_bottom;
 }
 
-uint dbTechLayerItr::end( register dbObject * parent )
+uint dbTechLayerItr::end( dbObject * parent )
 {
     return 0;
 }
 
-uint dbTechLayerItr::next( register uint id, ... )
+uint dbTechLayerItr::next( uint id, ... )
 {
     _dbTechLayer * layer = _layer_tbl->getPtr(id);
     return layer->_upper;
 }
 
-dbObject * dbTechLayerItr::getObject( register uint id, ... )
+dbObject * dbTechLayerItr::getObject( uint id, ... )
 {
     return _layer_tbl->getPtr(id);
 }

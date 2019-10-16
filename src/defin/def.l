@@ -128,8 +128,8 @@ inline int id()
 
     if ( deflex_casesens == false )
     {
-        register char * p;
-        register int c;
+        char * p;
+        int c;
         for( p = yytext; (c = *p) != '\0'; ++p )
         {
             if ( (c >= 'a') && (c <= 'z') )

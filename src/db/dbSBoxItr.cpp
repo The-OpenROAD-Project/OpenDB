@@ -47,20 +47,20 @@ bool dbSBoxItr::orderReversed()
     return true;
 }
 
-void dbSBoxItr::reverse(register dbObject * parent)
+void dbSBoxItr::reverse(dbObject * parent)
 {
     switch( parent->getType() )
     {
         case dbSWireObj:
         {
             _dbSWire * wire = (_dbSWire *) parent;
-            register uint id = wire->_wires;
-            register uint list = 0;
+            uint id = wire->_wires;
+            uint list = 0;
 
             while( id !=  0 )
             {
                 _dbSBox * b =  _box_tbl->getPtr(id);
-                register uint n = b->_next_box;
+                uint n = b->_next_box;
                 b->_next_box = list;
                 list = id; 
                 id = n;
@@ -80,10 +80,10 @@ uint dbSBoxItr::sequential()
     return 0;
 }
 
-uint dbSBoxItr::size( register dbObject * parent )
+uint dbSBoxItr::size( dbObject * parent )
 {
-    register uint id;
-    register uint cnt = 0;
+    uint id;
+    uint cnt = 0;
 
     for( id = dbSBoxItr::begin(parent); id != dbSBoxItr::end(parent); id = dbSBoxItr::next(id) )
         ++cnt;
@@ -91,7 +91,7 @@ uint dbSBoxItr::size( register dbObject * parent )
     return cnt; 
 }
 
-uint dbSBoxItr::begin( register dbObject * parent )
+uint dbSBoxItr::begin( dbObject * parent )
 {
     switch( parent->getType() )
     {
@@ -108,7 +108,7 @@ uint dbSBoxItr::begin( register dbObject * parent )
     return 0;
 }
 
-uint dbSBoxItr::end( register dbObject * parent )
+uint dbSBoxItr::end( dbObject * parent )
 {
     return 0;
 }
@@ -119,7 +119,7 @@ uint dbSBoxItr::next( uint id, ... )
     return box->_next_box;
 }
 
-dbObject * dbSBoxItr::getObject( register uint id, ... )
+dbObject * dbSBoxItr::getObject( uint id, ... )
 {
     return _box_tbl->getPtr(id);
 }

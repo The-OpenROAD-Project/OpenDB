@@ -99,7 +99,7 @@ bool dbWireShapeItr::next( dbShape & shape )
     if ( _idx == (int) _wire->_opcodes.size() )
         return false;
 
-    register unsigned char opcode = nextOp(operand);
+    unsigned char opcode = nextOp(operand);
 
     switch( opcode & WOP_OPCODE_MASK )
     {

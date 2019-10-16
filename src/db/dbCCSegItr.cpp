@@ -54,17 +54,17 @@ bool dbCCSegItr::orderReversed()
     return true;
 }
 
-void dbCCSegItr::reverse(register dbObject * parent)
+void dbCCSegItr::reverse(dbObject * parent)
 {
     _dbCapNode * node = (_dbCapNode *) parent;
-    register uint id = node->_cc_segs;
-    register uint pid = parent->getId();
-    register uint list = 0;
+    uint id = node->_cc_segs;
+    uint pid = parent->getId();
+    uint list = 0;
 
     while( id !=  0 )
     {
         _dbCCSeg * seg =  _seg_tbl->getPtr(id);
-        register uint n = seg->next(pid);
+        uint n = seg->next(pid);
         seg->next(pid) = list;
         list = id; 
         id = n;
@@ -78,10 +78,10 @@ uint dbCCSegItr::sequential()
     return 0;
 }
 
-uint dbCCSegItr::size( register dbObject * parent )
+uint dbCCSegItr::size( dbObject * parent )
 {
-    register uint id;
-    register uint cnt = 0;
+    uint id;
+    uint cnt = 0;
 
     for( id = dbCCSegItr::begin(parent); id != dbCCSegItr::end(parent); id = dbCCSegItr::next(id) )
         ++cnt;
@@ -89,18 +89,18 @@ uint dbCCSegItr::size( register dbObject * parent )
     return cnt; 
 }
 
-uint dbCCSegItr::begin( register dbObject * parent)
+uint dbCCSegItr::begin( dbObject * parent)
 {
     _dbCapNode * node = (_dbCapNode *) parent;
     return node->_cc_segs;
 }
 
-uint dbCCSegItr::end( register dbObject * parent )
+uint dbCCSegItr::end( dbObject * parent )
 {
     return 0;
 }
 
-uint dbCCSegItr::next( register uint id, ... )
+uint dbCCSegItr::next( uint id, ... )
 {
     va_list ap;
     va_start(ap,id);
@@ -110,7 +110,7 @@ uint dbCCSegItr::next( register uint id, ... )
     return seg->next(pid);
 }
 
-dbObject * dbCCSegItr::getObject( register uint id, ... )
+dbObject * dbCCSegItr::getObject( uint id, ... )
 {
     return _seg_tbl->getPtr(id);
 }

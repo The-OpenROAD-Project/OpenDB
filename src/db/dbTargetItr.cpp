@@ -53,16 +53,16 @@ bool dbTargetItr::orderReversed()
     return true;
 }
 
-void dbTargetItr::reverse(register dbObject * parent)
+void dbTargetItr::reverse(dbObject * parent)
 {
     _dbMTerm * mterm = (_dbMTerm *) parent;
-    register uint id = mterm->_targets;
-    register uint list = 0;
+    uint id = mterm->_targets;
+    uint list = 0;
 
     while( id !=  0 )
     {
         _dbTarget * target =  _target_tbl->getPtr(id);
-        register uint n = target->_next;
+        uint n = target->_next;
         target->_next = list;
         list = id; 
         id = n;
@@ -76,10 +76,10 @@ uint dbTargetItr::sequential()
     return 0;
 }
 
-uint dbTargetItr::size( register dbObject * parent )
+uint dbTargetItr::size( dbObject * parent )
 {
-    register uint id;
-    register uint cnt = 0;
+    uint id;
+    uint cnt = 0;
 
     for( id = dbTargetItr::begin(parent); id != dbTargetItr::end(parent); id = dbTargetItr::next(id) )
         ++cnt;
@@ -87,24 +87,24 @@ uint dbTargetItr::size( register dbObject * parent )
     return cnt; 
 }
 
-uint dbTargetItr::begin( register dbObject * parent )
+uint dbTargetItr::begin( dbObject * parent )
 {
     _dbMTerm * mterm = (_dbMTerm *) parent;
     return mterm->_targets;
 }
 
-uint dbTargetItr::end( register dbObject * parent )
+uint dbTargetItr::end( dbObject * parent )
 {
     return 0;
 }
 
-uint dbTargetItr::next( register uint id, ... )
+uint dbTargetItr::next( uint id, ... )
 {
     _dbTarget * target = _target_tbl->getPtr(id);
     return target->_next;
 }
 
-dbObject * dbTargetItr::getObject( register uint id, ... )
+dbObject * dbTargetItr::getObject( uint id, ... )
 {
     return _target_tbl->getPtr(id);
 }

@@ -82,8 +82,8 @@ class dbHashTable
     void out( dbDiff & diff, char side, const char * field ) const;
     
     void setTable( dbTable<T> * table ) { _obj_tbl = table; }
-    T * find( register const char * name );
-    int hasMember( register const char * name );
+    T * find( const char * name );
+    int hasMember( const char * name );
     void insert( T * object );
     void remove( T * object );
 };

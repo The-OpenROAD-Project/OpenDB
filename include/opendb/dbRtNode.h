@@ -115,8 +115,8 @@ class dbRtNode
 
     void remove_edge( dbRtEdge * edge )
     {
-        register dbRtEdge * n = edge->next(this);
-        register dbRtEdge * p = edge->prev(this);
+        dbRtEdge * n = edge->next(this);
+        dbRtEdge * p = edge->prev(this);
 
         if ( p )
             p->next(this) = n;

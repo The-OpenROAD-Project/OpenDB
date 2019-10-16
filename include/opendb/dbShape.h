@@ -595,7 +595,7 @@ inline void dbShape::setSegment( int prev_x, int prev_y, int prev_ext, bool has_
                                  int cur_x, int cur_y, int cur_ext, bool has_cur_ext,
                                  int dw, dbTechLayer * layer )
 {
-    register int x1, x2, y1, y2;
+    int x1, x2, y1, y2;
     if ( cur_x == prev_x ) // vert. path
     {
         x1 = cur_x - dw;

@@ -667,7 +667,7 @@ void dbWire::getShape( int shape_id, dbShape & shape )
 {
     _dbWire * wire = (_dbWire *) this;
     ZASSERT( (0 <= shape_id) && (shape_id < (int) wire->length()) );
-    register unsigned char opcode = wire->_opcodes[shape_id];
+    unsigned char opcode = wire->_opcodes[shape_id];
 
     switch( opcode & WOP_OPCODE_MASK )
     {
@@ -683,7 +683,7 @@ void dbWire::getShape( int shape_id, dbShape & shape )
         {
             dbBlock * block = (dbBlock *) getOwner();
             dbTech * tech = getDb()->getTech();
-            register int operand = wire->_data[shape_id];
+            int operand = wire->_data[shape_id];
             dbVia * via = dbVia::getVia( block, operand );
             dbBox * box = via->getBBox();
 
@@ -710,7 +710,7 @@ void dbWire::getShape( int shape_id, dbShape & shape )
         {
             dbBlock * block = (dbBlock *) getOwner();
             dbTech * tech = getDb()->getTech();
-            register int operand = wire->_data[shape_id];
+            int operand = wire->_data[shape_id];
             dbTechVia * via = dbTechVia::getTechVia( tech, operand );
             dbBox * box = via->getBBox();
 
@@ -1079,10 +1079,10 @@ void dbWire::getSegment( int shape_id, dbShape & shape )
     bool found_width = false;
     bool default_width = false;
 
-    register int idx = shape_id;
-    register int state = 0;
-    register unsigned char opcode;
-    register int input;
+    int idx = shape_id;
+    int state = 0;
+    unsigned char opcode;
+    int input;
 
     int cur[3];
     int prev[3];
@@ -1194,7 +1194,7 @@ void dbWire::getSegment( int shape_id, dbShape & shape )
                 }
             }
 
-            int register value = wire->_data[idx];
+            int value = wire->_data[idx];
             cur[curCoord[state][input]] = value;
             prev[prevCoord[state][input]] = value;
             state = nextState[state][input];
@@ -1312,10 +1312,10 @@ void dbWire::getSegment( int shape_id, dbTechLayer * layer, dbShape & shape )
     bool found_width = false;
     bool default_width = false;
 
-    register int idx = shape_id;
-    register int state = 0;
-    register unsigned char opcode;
-    register int input;
+    int idx = shape_id;
+    int state = 0;
+    unsigned char opcode;
+    int input;
 
     int cur[3];
     int prev[3];
@@ -1399,7 +1399,7 @@ void dbWire::getSegment( int shape_id, dbTechLayer * layer, dbShape & shape )
                 }
             }
 
-            int register value = wire->_data[idx];
+            int value = wire->_data[idx];
             cur[curCoord[state][input]] = value;
             prev[prevCoord[state][input]] = value;
             state = nextState[state][input];
@@ -1464,7 +1464,7 @@ inline unsigned char getPrevOpcode( _dbWire * wire, int & idx )
     
   prevOpCode:
     assert(idx >= 0);
-    register unsigned char opcode = wire->_opcodes[idx];
+    unsigned char opcode = wire->_opcodes[idx];
 
     switch( opcode & WOP_OPCODE_MASK )
     {
@@ -1495,7 +1495,7 @@ inline bool createTechVia( _dbWire * wire, int idx, dbShape & shape )
 {
     dbBlock * block = (dbBlock *) wire->getOwner();
     dbTech * tech = wire->getDb()->getTech();
-    register int operand = wire->_data[idx];
+    int operand = wire->_data[idx];
     dbVia * via = dbVia::getVia( block, operand );
     dbBox * box = via->getBBox();
 
@@ -1522,7 +1522,7 @@ inline bool createVia( _dbWire * wire, int idx, dbShape & shape )
 {
     dbBlock * block = (dbBlock *) wire->getOwner();
     dbTech * tech = wire->getDb()->getTech();
-    register int operand = wire->_data[idx];
+    int operand = wire->_data[idx];
     dbTechVia * via = dbTechVia::getTechVia( tech, operand );
     dbBox * box = via->getBBox();
 
@@ -1552,7 +1552,7 @@ bool dbWire::getPrevVia( int idx, dbShape & shape )
     _dbWire * wire = (_dbWire *) this;
     ZASSERT( (0 < idx) && (idx < (int) wire->length()) );
 
-    register unsigned char opcode;
+    unsigned char opcode;
     opcode = getPrevOpcode(wire,idx);
 
     switch( opcode & WOP_OPCODE_MASK )
@@ -1608,7 +1608,7 @@ bool dbWire::getNextVia( int idx, dbShape & shape )
     if (  (uint) idx == wire->length() )
         return false;
     
-    register unsigned char opcode = wire->_opcodes[idx];
+    unsigned char opcode = wire->_opcodes[idx];
 
     switch( opcode & WOP_OPCODE_MASK )
     {
@@ -1780,11 +1780,11 @@ void dbWire::copy( dbWire * dst_, dbWire * src_, bool removeITermsBTerms, bool c
 
     if ( removeITermsBTerms )
     {
-        register uint i;
+        uint i;
 
         for( i = 0; i < n; ++i )
         {
-            register unsigned char opcode = dst->_opcodes[i] & WOP_OPCODE_MASK;
+            unsigned char opcode = dst->_opcodes[i] & WOP_OPCODE_MASK;
     
             if ( opcode == WOP_ITERM || opcode == WOP_BTERM || opcode == WOP_BTERM_MAP )
             {
@@ -1801,11 +1801,11 @@ void dbWire::copy( dbWire * dst_, dbWire * src_, bool removeITermsBTerms, bool c
 
         if ( src_block != dst_block )
         {
-            register uint i;
+            uint i;
 
             for( i = 0; i < n; ++i )
             {
-                register unsigned char opcode = dst->_opcodes[i] & WOP_OPCODE_MASK;
+                unsigned char opcode = dst->_opcodes[i] & WOP_OPCODE_MASK;
         
                 if ( opcode == WOP_VIA )
                 {

@@ -157,35 +157,35 @@ class adsPagedVector
     iterator begin() { return iterator( this ); }
     iterator end() { return iterator( this, _next_idx ); }
 
-    T & operator[]( register unsigned int id )
+    T & operator[]( unsigned int id )
     {
         assert( id < _next_idx );
-        register unsigned int page = (id & ~(PAGE_SIZE-1)) >> PAGE_SHIFT;
-        register unsigned int offset = id & (PAGE_SIZE-1);
+        unsigned int page = (id & ~(PAGE_SIZE-1)) >> PAGE_SHIFT;
+        unsigned int offset = id & (PAGE_SIZE-1);
         return _pages[page][offset];
     }
 
-    const T & operator[]( register unsigned int id ) const
+    const T & operator[]( unsigned int id ) const
     {
         assert( id < _next_idx );
-        register unsigned int page = (id & ~(PAGE_SIZE-1)) >> PAGE_SHIFT;
-        register unsigned int offset = id & (PAGE_SIZE-1);
+        unsigned int page = (id & ~(PAGE_SIZE-1)) >> PAGE_SHIFT;
+        unsigned int offset = id & (PAGE_SIZE-1);
         return _pages[page][offset];
     }
 
     T & back()
     {
         assert (!_next_idx);
-        register unsigned int page = _page_cnt-1;
-        register unsigned int offset = (_next_idx-1) & (PAGE_SIZE-1);
+        unsigned int page = _page_cnt-1;
+        unsigned int offset = (_next_idx-1) & (PAGE_SIZE-1);
         return _pages[page][offset];
     }
 
     const T & back() const
     {
         assert (!_next_idx);
-        register unsigned int page = _page_cnt-1;
-        register unsigned int offset = (_next_idx-1) & (PAGE_SIZE-1);
+        unsigned int page = _page_cnt-1;
+        unsigned int offset = (_next_idx-1) & (PAGE_SIZE-1);
         return _pages[page][offset];
     }
 
@@ -205,8 +205,8 @@ class adsPagedVector
     {
         if (!_next_idx)
             return NULL;
-        register unsigned int page = _page_cnt-1;
-        register unsigned int offset = (_next_idx-1) & (PAGE_SIZE-1);
+        unsigned int page = _page_cnt-1;
+        unsigned int offset = (_next_idx-1) & (PAGE_SIZE-1);
         return _pages[page]+offset;
     }
 
@@ -391,12 +391,12 @@ void adsPagedVector<T,P,S>::newPage()
 template <class T, const uint P, const uint S>
 void adsPagedVector<T,P,S>::push_back( const T & item )
 {
-    register unsigned int page = (_next_idx & ~(P-1)) >> S;
+    unsigned int page = (_next_idx & ~(P-1)) >> S;
 
     if ( page == _page_cnt )
         newPage();
 
-    register unsigned int offset = _next_idx & (P-1);
+    unsigned int offset = _next_idx & (P-1);
     ++_next_idx;
 
     T * objects = _pages[page];

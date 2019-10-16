@@ -65,7 +65,7 @@ class dbId
     
     dbId() { _id = 0; }
     dbId( const dbId<T> & id ) : _id(id._id) { }
-    dbId( register unsigned int id ) { _id = id; }
+    dbId( unsigned int id ) { _id = id; }
     
     operator unsigned int () const { return _id; }
     unsigned int & id() { return _id; }

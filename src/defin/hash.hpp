@@ -40,11 +40,11 @@ inline unsigned int hash_string( const char * str )
     return hash;
 }
 
-inline int streq( register const char * s1, register const char * s2 )
+inline int streq( const char * s1, const char * s2 )
 {
   do_str_cmp:
-    register char c1 = *s1++;
-    register char c2 = *s2++;
+    char c1 = *s1++;
+    char c2 = *s2++;
     
     if ( c1 != c2 )
         return 0;

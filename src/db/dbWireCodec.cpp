@@ -706,7 +706,7 @@ dbWireDecoder::OpCode dbWireDecoder::peek() const
     if ( idx == (int) _wire->_opcodes.size() )
         return END_DECODE;
 
-    register unsigned char opcode = _wire->_opcodes[idx];
+    unsigned char opcode = _wire->_opcodes[idx];
 
     switch( opcode & WOP_OPCODE_MASK )
     {
@@ -764,7 +764,7 @@ dbWireDecoder::OpCode dbWireDecoder::next()
         return END_DECODE;
 
     _jct_id = _idx;
-    register unsigned char opcode = nextOp(_operand);
+    unsigned char opcode = nextOp(_operand);
 
     switch( opcode & WOP_OPCODE_MASK )
     {

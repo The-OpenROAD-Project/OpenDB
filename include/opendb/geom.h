@@ -280,24 +280,24 @@ inline void adsPoint::setY( int y )
 
 inline void adsPoint::rotate90()
 {
-    register int xp = -_y;
-    register int yp = _x;
+    int xp = -_y;
+    int yp = _x;
     _x = xp;
     _y = yp;
 }
 
 inline void adsPoint::rotate180()
 {
-    register int xp = -_x;
-    register int yp = -_y;
+    int xp = -_x;
+    int yp = -_y;
     _x = xp;
     _y = yp;
 }
 
 inline void adsPoint::rotate270()
 {
-    register int xp = _y;
-    register int yp = -_x;
+    int xp = _y;
+    int yp = -_x;
     _x = xp;
     _y = yp;
 }  
@@ -306,41 +306,41 @@ inline int64 adsPoint::crossProduct( adsPoint p0, adsPoint p1, adsPoint p2 )
 {
     // because the cross-product might overflow in an "int"
     // 64-bit arithmetic is used here
-    register int64 x0 = p0._x;
-    register int64 x1 = p1._x;
-    register int64 x2 = p2._x;
-    register int64 y0 = p0._y;
-    register int64 y1 = p1._y;
-    register int64 y2 = p2._y;
+    int64 x0 = p0._x;
+    int64 x1 = p1._x;
+    int64 x2 = p2._x;
+    int64 y0 = p0._y;
+    int64 y1 = p1._y;
+    int64 y2 = p2._y;
     return (x1 - x0) * (y2 - y0) - (x2 - x0) * (y1 - y0);
 }
 
 inline int adsPoint::rotation( adsPoint p0, adsPoint p1, adsPoint p2 )
 {
-    register int64 cp = crossProduct(p0, p1, p2);
+    int64 cp = crossProduct(p0, p1, p2);
     return ( cp == 0 ? 0 : cp < 0 ? -1 : 1 );
 }
 
 inline uint64 adsPoint::squaredDistance( adsPoint p0, adsPoint p1 )
 {
-    register int64 x0 = p0._x;
-    register int64 x1 = p1._x;
-    register int64 dx = x1-x0;
-    register int64 y0 = p0._y;
-    register int64 y1 = p1._y;
-    register int64 dy = y1-y0;
+    int64 x0 = p0._x;
+    int64 x1 = p1._x;
+    int64 dx = x1-x0;
+    int64 y0 = p0._y;
+    int64 y1 = p1._y;
+    int64 dy = y1-y0;
     return (uint64) (dx * dx + dy * dy);
 }
 
 inline uint64 adsPoint::manhattanDistance( adsPoint p0, adsPoint p1 )
 {
-    register int64 x0 = p0._x;
-    register int64 x1 = p1._x;
-    register int64 dx = x1-x0;
+    int64 x0 = p0._x;
+    int64 x1 = p1._x;
+    int64 dx = x1-x0;
     if ( dx < 0 ) dx = -dx;
-    register int64 y0 = p0._y;
-    register int64 y1 = p1._y;
-    register int64 dy = y1-y0;
+    int64 y0 = p0._y;
+    int64 y1 = p1._y;
+    int64 dy = y1-y0;
     if ( dy < 0 ) dy = -dy;
     return (uint64) (dx + dy);
 }
@@ -516,8 +516,8 @@ inline int adsRect::operator!=( const adsRect & r ) const
 
 inline uint adsRect::minDXDY()
 {
-    register uint DX = dx();
-    register uint DY = dy();
+    uint DX = dx();
+    uint DY = dy();
     if (DX<DY)
 	return DX;
     else
@@ -525,8 +525,8 @@ inline uint adsRect::minDXDY()
 }
 inline uint adsRect::maxDXDY()
 {
-    register uint DX = dx();
-    register uint DY = dy();
+    uint DX = dx();
+    uint DY = dy();
     if (DX>DY)
 	return DX;
     else
@@ -534,8 +534,8 @@ inline uint adsRect::maxDXDY()
 }
 inline int adsRect::getDir()
 {
-    register uint DX = dx();
-    register uint DY = dy();
+    uint DX = dx();
+    uint DY = dy();
     if (DX<DY)
 	return 0;
     else if (DX>DY)
@@ -545,8 +545,8 @@ inline int adsRect::getDir()
 }
 inline void adsRect::moveTo( int x, int y )
 {
-    register uint DX = dx();
-    register uint DY = dy();
+    uint DX = dx();
+    uint DY = dy();
     _xlo = x;
     _ylo = y;
     _xhi = x + DX;
@@ -677,15 +677,15 @@ inline adsRect adsRect::intersect( const adsRect & r )
 
 inline uint64 adsRect::area()
 {
-    register uint64 a = dx();
-    register uint64 b = dy();
+    uint64 a = dx();
+    uint64 b = dy();
     return a * b;
 }
 
 inline uint64 adsRect::margin()
 {
-    register uint64 DX = dx();
-    register uint64 DY = dy();
+    uint64 DX = dx();
+    uint64 DY = dy();
     return DX + DX + DY + DY;
 }
 

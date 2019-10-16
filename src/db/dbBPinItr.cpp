@@ -56,16 +56,16 @@ bool dbBPinItr::orderReversed()
     return true;
 }
 
-void dbBPinItr::reverse(register dbObject * parent)
+void dbBPinItr::reverse(dbObject * parent)
 {
     _dbBTerm * bterm = (_dbBTerm *) parent;
-    register uint id = bterm->_bpins;
-    register uint list = 0;
+    uint id = bterm->_bpins;
+    uint list = 0;
 
     while( id !=  0 )
     {
         _dbBPin * bpin =  _bpin_tbl->getPtr(id);
-        register uint n = bpin->_next_bpin;
+        uint n = bpin->_next_bpin;
         bpin->_next_bpin = list;
         list = id; 
         id = n;
@@ -79,10 +79,10 @@ uint dbBPinItr::sequential()
     return 0;
 }
 
-uint dbBPinItr::size( register dbObject * parent )
+uint dbBPinItr::size( dbObject * parent )
 {
-    register uint id;
-    register uint cnt = 0;
+    uint id;
+    uint cnt = 0;
 
     for( id = dbBPinItr::begin(parent); id != dbBPinItr::end(parent); id = dbBPinItr::next(id) )
         ++cnt;
@@ -90,24 +90,24 @@ uint dbBPinItr::size( register dbObject * parent )
     return cnt; 
 }
 
-uint dbBPinItr::begin( register dbObject * parent )
+uint dbBPinItr::begin( dbObject * parent )
 {
     _dbBTerm * bterm = (_dbBTerm *) parent;
     return bterm->_bpins;
 }
 
-uint dbBPinItr::end( register dbObject * parent )
+uint dbBPinItr::end( dbObject * parent )
 {
     return 0;
 }
 
-uint dbBPinItr::next( register uint id, ... )
+uint dbBPinItr::next( uint id, ... )
 {
     _dbBPin * bpin = _bpin_tbl->getPtr(id);
     return bpin->_next_bpin;
 }
 
-dbObject * dbBPinItr::getObject( register uint id, ... )
+dbObject * dbBPinItr::getObject( uint id, ... )
 {
     return _bpin_tbl->getPtr(id);
 }

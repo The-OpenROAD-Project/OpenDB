@@ -304,9 +304,9 @@ inline adsRTreeLeaf<T> * adsRTree<T>::findLeaf( const adsRect & rect, const T & 
 template <class T>
 inline adsRTreeLeaf<T> * adsRTree<T>::findLeaf( const adsRect & rect, const T & value, adsRTreeNode * stack[] )
 {
-    register adsRTreeNode ** sp = &stack[_root->_level];
-    register adsRTreeNode ** max = sp;
-    register adsRTreeNode * node = _root;
+    adsRTreeNode ** sp = &stack[_root->_level];
+    adsRTreeNode ** max = sp;
+    adsRTreeNode * node = _root;
     
   find_leaf_next_child:
     while( node != NULL )
@@ -315,7 +315,7 @@ inline adsRTreeLeaf<T> * adsRTree<T>::findLeaf( const adsRect & rect, const T & 
         {
             if ( node->_level == 1 )
             {
-                register adsRTreeLeaf<T> * leaf = (adsRTreeLeaf<T> *) ((adsRTreeBranch *) node)->_children;
+                adsRTreeLeaf<T> * leaf = (adsRTreeLeaf<T> *) ((adsRTreeBranch *) node)->_children;
     
                 for( ; leaf != NULL ; leaf = (adsRTreeLeaf<T> *) leaf->_next )
                 {
@@ -354,9 +354,9 @@ inline adsRTreeLeaf<T> * adsRTree<T>::findLeaf( const adsRect & rect, const T & 
 template <class T>
 inline adsRTreeLeaf<T> * adsRTree<T>::findLeaf( const adsRect & rect, const T & value, adsRTreeNode * stack[] )
 {
-    register int sp = _root->_level;
-    register int max = _root->_level;
-    register adsRTreeNode * node = _root;
+    int sp = _root->_level;
+    int max = _root->_level;
+    adsRTreeNode * node = _root;
     stack[sp] = _root;
 
     for( ;; )

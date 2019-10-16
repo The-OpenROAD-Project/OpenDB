@@ -51,19 +51,19 @@ bool dbPropertyItr::orderReversed()
     return true;
 }
 
-void dbPropertyItr::reverse(register dbObject * parent)
+void dbPropertyItr::reverse(dbObject * parent)
 {
     dbObjectTable * table = parent->getTable();
     uint id = table->getPropList(parent->getOID());
 
     if ( id )
     {
-        register uint list = 0;
+        uint list = 0;
 
         while( id !=  0 )
         {
             _dbProperty * p =  _prop_tbl->getPtr(id);
-            register uint n = p->_next;
+            uint n = p->_next;
             p->_next = list;
             list = id; 
             id = n;
@@ -78,10 +78,10 @@ uint dbPropertyItr::sequential()
     return 0;
 }
 
-uint dbPropertyItr::size( register dbObject * parent )
+uint dbPropertyItr::size( dbObject * parent )
 {
-    register uint id;
-    register uint cnt = 0;
+    uint id;
+    uint cnt = 0;
 
     for( id = dbPropertyItr::begin(parent); id != dbPropertyItr::end(parent); id = dbPropertyItr::next(id) )
         ++cnt;
@@ -89,25 +89,25 @@ uint dbPropertyItr::size( register dbObject * parent )
     return cnt; 
 }
 
-uint dbPropertyItr::begin( register dbObject * parent )
+uint dbPropertyItr::begin( dbObject * parent )
 {
     dbObjectTable * table = parent->getTable();
     uint id = table->getPropList(parent->getOID());
     return id;
 }
 
-uint dbPropertyItr::end( register dbObject * parent )
+uint dbPropertyItr::end( dbObject * parent )
 {
     return 0;
 }
 
-uint dbPropertyItr::next( register uint id, ... )
+uint dbPropertyItr::next( uint id, ... )
 {
     _dbProperty * prop = _prop_tbl->getPtr(id);
     return prop->_next;
 }
 
-dbObject * dbPropertyItr::getObject( register uint id, ... )
+dbObject * dbPropertyItr::getObject( uint id, ... )
 {
     return _prop_tbl->getPtr(id);
 }

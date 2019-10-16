@@ -45,7 +45,7 @@ bool dbNullIterator::orderReversed()
     return false;
 }
 
-void dbNullIterator::reverse( register dbObject * )
+void dbNullIterator::reverse( dbObject * )
 {
 }
 
@@ -54,27 +54,27 @@ uint dbNullIterator::sequential()
     return 0;
 }
 
-uint dbNullIterator::size( register dbObject * )
+uint dbNullIterator::size( dbObject * )
 {
     return 0;
 }
 
-uint dbNullIterator::begin( register dbObject * )
+uint dbNullIterator::begin( dbObject * )
 {
     return 0;
 }
 
-uint dbNullIterator::end( register dbObject * )
+uint dbNullIterator::end( dbObject * )
 {
     return 0;
 }
 
-uint dbNullIterator::next( register uint , ... )
+uint dbNullIterator::next( uint , ... )
 {
     return 0;
 }
 
-dbObject * dbNullIterator::getObject( register uint, ... )
+dbObject * dbNullIterator::getObject( uint, ... )
 {
     return NULL;
 }

@@ -54,22 +54,22 @@ bool dbRegionInstItr::orderReversed()
     return true;
 }
 
-void dbRegionInstItr::reverse(register dbObject * parent)
+void dbRegionInstItr::reverse(dbObject * parent)
 {
     _dbRegion * region = (_dbRegion *) parent;
-    register uint id = region->_insts;
-    register uint list = 0;
+    uint id = region->_insts;
+    uint list = 0;
 
     while( id !=  0 )
     {
         _dbInst * inst =  _inst_tbl->getPtr(id);
-        register uint n = inst->_region_next;
+        uint n = inst->_region_next;
         inst->_region_next = list;
         list = id; 
         id = n;
     }
 
-    register uint prev = 0;
+    uint prev = 0;
     id = list;
     
     while( id !=  0 )
@@ -88,10 +88,10 @@ uint dbRegionInstItr::sequential()
     return 0;
 }
 
-uint dbRegionInstItr::size( register dbObject * parent )
+uint dbRegionInstItr::size( dbObject * parent )
 {
-    register uint id;
-    register uint cnt = 0;
+    uint id;
+    uint cnt = 0;
 
     for( id = dbRegionInstItr::begin(parent); id != dbRegionInstItr::end(parent); id = dbRegionInstItr::next(id) )
         ++cnt;
@@ -99,24 +99,24 @@ uint dbRegionInstItr::size( register dbObject * parent )
     return cnt; 
 }
 
-uint dbRegionInstItr::begin( register dbObject * parent )
+uint dbRegionInstItr::begin( dbObject * parent )
 {
     _dbRegion * region = (_dbRegion *) parent;
     return (uint) region->_insts;
 }
 
-uint dbRegionInstItr::end( register dbObject * parent )
+uint dbRegionInstItr::end( dbObject * parent )
 {
     return 0;
 }
 
-uint dbRegionInstItr::next( register uint id, ... )
+uint dbRegionInstItr::next( uint id, ... )
 {
     _dbInst * inst = _inst_tbl->getPtr(id);
     return inst->_region_next;
 }
 
-dbObject * dbRegionInstItr::getObject( register uint id, ... )
+dbObject * dbRegionInstItr::getObject( uint id, ... )
 {
     return _inst_tbl->getPtr(id);
 }

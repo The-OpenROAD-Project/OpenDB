@@ -55,22 +55,22 @@ bool dbNetITermItr::orderReversed()
     return true;
 }
 
-void dbNetITermItr::reverse(register dbObject * parent)
+void dbNetITermItr::reverse(dbObject * parent)
 {
     _dbNet * net = (_dbNet *) parent;
-    register uint id = net->_iterms;
-    register uint list = 0;
+    uint id = net->_iterms;
+    uint list = 0;
 
     while( id !=  0 )
     {
         _dbITerm * iterm =  _iterm_tbl->getPtr(id);
-        register uint n = iterm->_next_net_iterm;
+        uint n = iterm->_next_net_iterm;
         iterm->_next_net_iterm = list;
         list = id; 
         id = n;
     }
 
-    register uint prev = 0;
+    uint prev = 0;
     id = list;
     
     while( id !=  0 )
@@ -89,10 +89,10 @@ uint dbNetITermItr::sequential()
     return 0;
 }
 
-uint dbNetITermItr::size( register dbObject * parent )
+uint dbNetITermItr::size( dbObject * parent )
 {
-    register uint id;
-    register uint cnt = 0;
+    uint id;
+    uint cnt = 0;
 
     for( id = dbNetITermItr::begin(parent); id != dbNetITermItr::end(parent); id = dbNetITermItr::next(id) )
         ++cnt;
@@ -100,24 +100,24 @@ uint dbNetITermItr::size( register dbObject * parent )
     return cnt; 
 }
 
-uint dbNetITermItr::begin( register dbObject * parent )
+uint dbNetITermItr::begin( dbObject * parent )
 {
     _dbNet * net = (_dbNet *) parent;
     return (uint) net->_iterms;
 }
 
-uint dbNetITermItr::end( register dbObject * parent )
+uint dbNetITermItr::end( dbObject * parent )
 {
     return 0;
 }
 
-uint dbNetITermItr::next( register uint id, ... )
+uint dbNetITermItr::next( uint id, ... )
 {
     _dbITerm * iterm = _iterm_tbl->getPtr(id);
     return iterm->_next_net_iterm;
 }
 
-dbObject * dbNetITermItr::getObject( register uint id, ... )
+dbObject * dbNetITermItr::getObject( uint id, ... )
 {
     return _iterm_tbl->getPtr(id);
 }
@@ -138,7 +138,7 @@ bool dbInstITermItr::orderReversed()
     return false;
 }
 
-void dbInstITermItr::reverse(register dbObject * parent)
+void dbInstITermItr::reverse(dbObject * parent)
 {
 }
 
@@ -147,10 +147,10 @@ uint dbInstITermItr::sequential()
     return 0;
 }
 
-uint dbInstITermItr::size( register dbObject * parent )
+uint dbInstITermItr::size( dbObject * parent )
 {
-    register uint id;
-    register uint cnt = 0;
+    uint id;
+    uint cnt = 0;
 
     for( id = dbInstITermItr::begin(parent); id != dbInstITermItr::end(parent); id = dbInstITermItr::next(id) )
         ++cnt;
@@ -158,7 +158,7 @@ uint dbInstITermItr::size( register dbObject * parent )
     return cnt; 
 }
 
-uint dbInstITermItr::begin( register dbObject * parent )
+uint dbInstITermItr::begin( dbObject * parent )
 {
     _dbInst * inst = (_dbInst *) parent;
 
@@ -168,12 +168,12 @@ uint dbInstITermItr::begin( register dbObject * parent )
     return inst->_iterms[0];
 }
 
-uint dbInstITermItr::end( register dbObject * parent )
+uint dbInstITermItr::end( dbObject * parent )
 {
     return 0;
 }
 
-uint dbInstITermItr::next( register uint id, ... )
+uint dbInstITermItr::next( uint id, ... )
 {
     _dbITerm * iterm = _iterm_tbl->getPtr(id);
     _dbBlock * block = (_dbBlock *) iterm->getOwner();
@@ -188,7 +188,7 @@ uint dbInstITermItr::next( register uint id, ... )
     return next;
 }
 
-dbObject * dbInstITermItr::getObject( register uint id, ... )
+dbObject * dbInstITermItr::getObject( uint id, ... )
 {
     return _iterm_tbl->getPtr(id);
 }

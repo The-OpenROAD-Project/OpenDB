@@ -290,9 +290,9 @@ class HashP : public HashG<Keyval<Key, Key>, Val> {
   private:
   typedef HashG<Keyval<Key, Key>, Val> base;
   ub4 _map(Keyval<Key, Key> key) {
-    register ub4 a,b,c;
-    register ub4 ikey1 = (ub4)(key.key);
-    register ub4 ikey2 = (ub4)(key.val);
+    ub4 a,b,c;
+    ub4 ikey1 = (ub4)(key.key);
+    ub4 ikey2 = (ub4)(key.val);
     a = b = 0x7fffffff;
     c = 0;
     a += ikey1;
@@ -315,11 +315,11 @@ class Hash : public HashG<Key, Val>  {
   typedef HashG<Key, Val> base;
 
   ub4 _map(Key key) {
-    register ub4 a,b,c;
+    ub4 a,b,c;
 
     // Per sanjiv, break key into hi/lo words...
-    register ub4 ikey1 = (ub4) HASH_LO_WORD(key);
-    register ub4 ikey2 = (ub4) HASH_HI_WORD(key);
+    ub4 ikey1 = (ub4) HASH_LO_WORD(key);
+    ub4 ikey2 = (ub4) HASH_HI_WORD(key);
     // golden ratio
     a = b = 0x7fffffff;
     c = 0;
@@ -338,11 +338,11 @@ class HashN : public HashG<char*, Val>  {
   private:
   typedef HashG<char*, Val> base;
   ub4 _map(char *key) {
-    register ub4 a, b, c, len, leng;
+    ub4 a, b, c, len, leng;
     a = b = 0x7fffffff;
     c = 0;
     leng = len = strlen(key);
-    register char *k = key;
+    char *k = key;
     while(len>=12) {
       a += k[0]+((ub4)k[1]<<8)+((ub4)k[2]<<16)+((ub4)k[3]<<24);
       b += k[4]+((ub4)k[5]<<8)+((ub4)k[6]<<16)+((ub4)k[7]<<24);

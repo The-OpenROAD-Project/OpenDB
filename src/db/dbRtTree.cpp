@@ -166,8 +166,8 @@ void dbRtTree::addObjects( dbWireEncoder & encoder, dbRtNode * node )
 
 void dbRtVia::getBBox( adsRect & bbox )
 {
-    register int x = _src->_x;
-    register int y = _src->_y;
+    int x = _src->_x;
+    int y = _src->_y;
     dbBox * box = _via->getBBox();
 
     if ( box == NULL )
@@ -178,17 +178,17 @@ void dbRtVia::getBBox( adsRect & bbox )
 
     adsRect b;
     box->getBox( b );
-    register int xmin = b.xMin() + x;
-    register int ymin = b.yMin() + y;
-    register int xmax = b.xMax() + x;
-    register int ymax = b.yMax() + y;
+    int xmin = b.xMin() + x;
+    int ymin = b.yMin() + y;
+    int xmax = b.xMax() + x;
+    int ymax = b.yMax() + y;
     bbox.reset(xmin,ymin,xmax,ymax);
 }
 
 void dbRtTechVia::getBBox( adsRect & bbox )
 {
-    register int x = _src->_x;
-    register int y = _src->_y;
+    int x = _src->_x;
+    int y = _src->_y;
     dbBox * box = _via->getBBox();
 
     if ( box == NULL )
@@ -199,10 +199,10 @@ void dbRtTechVia::getBBox( adsRect & bbox )
 
     adsRect b;
     box->getBox( b );
-    register int xmin = b.xMin() + x;
-    register int ymin = b.yMin() + y;
-    register int xmax = b.xMax() + x;
-    register int ymax = b.yMax() + y;
+    int xmin = b.xMin() + x;
+    int ymin = b.yMin() + y;
+    int xmax = b.xMax() + x;
+    int ymax = b.yMax() + y;
     bbox.reset(xmin,ymin,xmax,ymax);
 }
 
@@ -216,12 +216,12 @@ int dbRtSegment::getWidth() const
 
 void dbRtSegment::getBBox( adsRect & bbox )
 {
-    register int src_x = _src->_x;
-    register int src_y = _src->_y;
-    register int tgt_x = _tgt->_x;
-    register int tgt_y = _tgt->_y;
-    register int dw = getWidth() >> 1;
-    register int x1, x2, y1, y2;
+    int src_x = _src->_x;
+    int src_y = _src->_y;
+    int tgt_x = _tgt->_x;
+    int tgt_y = _tgt->_y;
+    int dw = getWidth() >> 1;
+    int x1, x2, y1, y2;
     
     if ( src_x == tgt_x ) // vert. path
     {

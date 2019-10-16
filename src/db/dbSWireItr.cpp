@@ -56,16 +56,16 @@ bool dbSWireItr::orderReversed()
     return true;
 }
 
-void dbSWireItr::reverse(register dbObject * parent)
+void dbSWireItr::reverse(dbObject * parent)
 {
     _dbNet * net = (_dbNet *) parent;
-    register uint id = net->_swires;
-    register uint list = 0;
+    uint id = net->_swires;
+    uint list = 0;
 
     while( id !=  0 )
     {
         _dbSWire * swire =  _swire_tbl->getPtr(id);
-        register uint n = swire->_next_swire;
+        uint n = swire->_next_swire;
         swire->_next_swire = list;
         list = id; 
         id = n;
@@ -79,10 +79,10 @@ uint dbSWireItr::sequential()
     return 0;
 }
 
-uint dbSWireItr::size( register dbObject * parent )
+uint dbSWireItr::size( dbObject * parent )
 {
-    register uint id;
-    register uint cnt = 0;
+    uint id;
+    uint cnt = 0;
 
     for( id = dbSWireItr::begin(parent); id != dbSWireItr::end(parent); id = dbSWireItr::next(id) )
         ++cnt;
@@ -90,24 +90,24 @@ uint dbSWireItr::size( register dbObject * parent )
     return cnt; 
 }
 
-uint dbSWireItr::begin( register dbObject * parent )
+uint dbSWireItr::begin( dbObject * parent )
 {
     _dbNet * net = (_dbNet *) parent;
     return net->_swires;
 }
 
-uint dbSWireItr::end( register dbObject * parent )
+uint dbSWireItr::end( dbObject * parent )
 {
     return 0;
 }
 
-uint dbSWireItr::next( register uint id, ... )
+uint dbSWireItr::next( uint id, ... )
 {
     _dbSWire * swire = _swire_tbl->getPtr(id);
     return swire->_next_swire;
 }
 
-dbObject * dbSWireItr::getObject( register uint id, ... )
+dbObject * dbSWireItr::getObject( uint id, ... )
 {
     return _swire_tbl->getPtr(id);
 }

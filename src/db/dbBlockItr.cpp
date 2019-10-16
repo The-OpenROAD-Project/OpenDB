@@ -46,7 +46,7 @@ bool dbBlockItr::orderReversed()
     return false;
 }
 
-void dbBlockItr::reverse(register dbObject * parent)
+void dbBlockItr::reverse(dbObject * parent)
 {
     _dbBlock * block = (_dbBlock *) parent;
     std::reverse( block->_children_v1.begin(), block->_children_v1.end());
@@ -57,24 +57,24 @@ uint dbBlockItr::sequential()
     return 0;
 }
 
-uint dbBlockItr::size( register dbObject * parent )
+uint dbBlockItr::size( dbObject * parent )
 {
     _dbBlock * block = (_dbBlock *) parent;
     return block->_children_v1.size();
 }
 
-uint dbBlockItr::begin( register dbObject * )
+uint dbBlockItr::begin( dbObject * )
 {
     return 0;
 }
 
-uint dbBlockItr::end( register dbObject * parent )
+uint dbBlockItr::end( dbObject * parent )
 {
     _dbBlock * block = (_dbBlock *) parent;
     return block->_children_v1.size();
 }
 
-uint dbBlockItr::next( register uint id, ... )
+uint dbBlockItr::next( uint id, ... )
 {
     return ++id;
 }
@@ -82,7 +82,7 @@ uint dbBlockItr::next( register uint id, ... )
 // dbBlockItr.cpp:54:5: warning: undefined behavior when second parameter of ‘va_start’ is declared with ‘register’ storage [-Wvarargs]
 //     va_start(ap,id);
 
-// dbObject * dbBlockItr::getObject( register uint id, ... )
+// dbObject * dbBlockItr::getObject( uint id, ... )
 dbObject * dbBlockItr::getObject( uint id, ... )
 {
     va_list ap;

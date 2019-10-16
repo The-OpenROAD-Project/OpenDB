@@ -44,7 +44,7 @@
 #include "definBase.h"
 #endif
 
-BEGIN_NAMESPACE_ADS
+namespace odb {
 
 class definBlockage;
 class definComponent;
@@ -117,6 +117,6 @@ class definReader : public definIReader, public definBase
     bool replaceWires( dbBlock * block, const char * def_file );
 };
     
-END_NAMESPACE_ADS
+} // namespace
 
 #endif

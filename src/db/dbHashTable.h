@@ -40,7 +40,7 @@
 #include "dbPagedVector.h"
 #endif
 
-BEGIN_NAMESPACE_ADS
+namespace odb {
 
 class dbIStream;
 class dbOStream;
@@ -91,6 +91,6 @@ class dbHashTable
 template <class T> dbOStream & operator<<( dbOStream & stream, const dbHashTable<T> & table );
 template <class T> dbIStream & operator>>( dbIStream & stream, dbHashTable<T> & table );
 
-END_NAMESPACE_ADS
+} // namespace
 
 #endif

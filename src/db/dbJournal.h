@@ -40,7 +40,7 @@
 #include "dbJournalLog.h"
 #endif
 
-BEGIN_NAMESPACE_ADS
+namespace odb {
 
 class dbIStream;
 class dbOStream;
@@ -166,7 +166,7 @@ class dbJournal
 dbIStream & operator>>( dbIStream & stream, dbJournal & jrnl );
 dbOStream & operator<<( dbOStream & stream, const dbJournal & jrnl );
 
-END_NAMESPACE_ADS    
+} // namespace    
 
 
 #endif

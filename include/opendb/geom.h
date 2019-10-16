@@ -36,7 +36,7 @@
 #include "ads.h"
 #endif
 
-BEGIN_NAMESPACE_ADS
+namespace odb {
 
 #ifndef MIN
 #define MIN(a,b) ((a) < (b) ? (a) : (b))
@@ -711,6 +711,6 @@ inline void adsRect::print(char * prefix)
 }
 
 
-END_NAMESPACE_ADS
+} // namespace
 
 #endif

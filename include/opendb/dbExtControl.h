@@ -32,7 +32,7 @@
 #ifndef ADS_DB_EXTCONTROL_H
 #define ADS_DB_EXTCONTROL_H
 
-BEGIN_NAMESPACE_ADS
+namespace odb {
     
 class dbExtControl : public dbObject
 {
@@ -75,6 +75,6 @@ class dbExtControl : public dbObject
 dbOStream & operator<<( dbOStream & stream, const dbExtControl & extControl );
 dbIStream & operator>>( dbIStream & stream, dbExtControl & extControl );
 
-END_NAMESPACE_ADS
+} // namespace
 
 #endif

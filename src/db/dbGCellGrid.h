@@ -52,7 +52,7 @@
 #include "dbVector.h"
 #endif
 
-BEGIN_NAMESPACE_ADS
+namespace odb {
 
 class _dbDatabase;
 class dbIStream;
@@ -126,6 +126,6 @@ inline dbIStream & operator>>( dbIStream & stream, _dbGCellGrid & grid )
     return stream;
 }
 
-END_NAMESPACE_ADS
+} // namespace
 
 #endif

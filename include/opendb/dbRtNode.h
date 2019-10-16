@@ -50,7 +50,7 @@
 
 #include <vector>
 
-BEGIN_NAMESPACE_ADS
+namespace odb {
 
 class dbObject;
 class dbTechLayer;
@@ -220,6 +220,6 @@ class dbRtNode
     friend class dbRtVWire;
 };
 
-END_NAMESPACE_ADS
+} // namespace
 
 #endif

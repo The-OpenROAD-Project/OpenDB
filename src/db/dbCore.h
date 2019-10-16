@@ -60,7 +60,7 @@
 #include "dbAttrTable.h"
 #endif
 
-BEGIN_NAMESPACE_ADS
+namespace odb {
 
 class _dbDatabase;
 class _dbProperty;
@@ -211,6 +211,6 @@ inline dbObjectPage * dbObject::getObjectPage() const
     return page;
 }
 
-END_NAMESPACE_ADS
+} // namespace
 
 #endif

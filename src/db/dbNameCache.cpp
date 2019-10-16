@@ -40,7 +40,7 @@
 #include "dbDiff.h"
 #include "dbDiff.hpp"
 
-BEGIN_NAMESPACE_ADS
+namespace odb {
 
 template class dbHashTable<_dbName>;
 template class dbTable<_dbName>;
@@ -246,4 +246,4 @@ dbIStream & operator>>( dbIStream & stream, _dbNameCache & cache )
     return stream;
 }
 
-END_NAMESPACE_ADS
+} // namespace

@@ -58,7 +58,7 @@
 
 extern int lefrRelaxMode; // This variable turns off strick checking in the lef 5.6 parser.
 
-BEGIN_NAMESPACE_ADS
+namespace odb {
 
 extern bool lefin_parse( lefin *, const char * );
 
@@ -2073,4 +2073,4 @@ bool lefin::updateTech( dbTech * tech,
     return _errors == 0;
 }
 
-END_NAMESPACE_ADS
+} // namespace

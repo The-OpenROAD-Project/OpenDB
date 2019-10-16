@@ -52,7 +52,7 @@
 #include "dbVector.h"
 #endif
 
-BEGIN_NAMESPACE_ADS
+namespace odb {
 
 class _dbMPin;
 class _dbTarget;
@@ -158,6 +158,6 @@ inline _dbMTerm::~_dbMTerm()
     _diffarea.clear();
 ***********************************************************************************************************/
 }
-END_NAMESPACE_ADS
+} // namespace
 
 #endif

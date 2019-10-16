@@ -58,7 +58,7 @@
 #include "db.h"
 #include <algorithm>
 
-BEGIN_NAMESPACE_ADS
+namespace odb {
 
 template class dbTable<_dbInst>;
 
@@ -1448,4 +1448,4 @@ dbITerm *dbInst::getFirstOutput()
 	return NULL;
 }
 
-END_NAMESPACE_ADS
+} // namespace

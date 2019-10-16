@@ -35,7 +35,7 @@
 #include "dbTechLayer.h"
 #include "db.h"
 
-BEGIN_NAMESPACE_ADS
+namespace odb {
 
 int dbShape::operator<( const dbShape & rhs )
 {
@@ -231,4 +231,4 @@ void dbShape::getViaBoxes( dbShape & via, std::vector<dbShape> & shapes )
     }
 }
 
-END_NAMESPACE_ADS
+} // namespace

@@ -42,7 +42,7 @@
 #include "dbDiff.hpp"
 #include "db.h"
 
-BEGIN_NAMESPACE_ADS
+namespace odb {
 
 template class dbTable<_dbTechViaLayerRule>;
 
@@ -441,4 +441,4 @@ dbTechViaLayerRule::getTechViaLayerRule( dbTech * tech_, uint dbid_ )
     return (dbTechViaLayerRule *) tech->_via_layer_rule_tbl->getPtr( dbid_ );
 }
 
-END_NAMESPACE_ADS
+} // namespace

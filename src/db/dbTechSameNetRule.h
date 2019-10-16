@@ -48,7 +48,7 @@
 #include "dbObject.h"
 #endif
 
-BEGIN_NAMESPACE_ADS
+namespace odb {
 
 class _dbDatabase;
 class _dbTechSameNet;
@@ -122,6 +122,6 @@ inline dbIStream & operator>>( dbIStream & stream, _dbTechSameNetRule & rule )
     return stream;
 }
 
-END_NAMESPACE_ADS
+} // namespace
 
 #endif

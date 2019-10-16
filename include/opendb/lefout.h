@@ -36,7 +36,7 @@
 #include "ads.h"
 #endif
 
-BEGIN_NAMESPACE_ADS
+namespace odb {
 
 class dbTech;
 class dbTechLayer;
@@ -109,6 +109,6 @@ class lefout
     FILE * out() { return _out; }
 };
 
-END_NAMESPACE_ADS
+} // namespace
 
 #endif

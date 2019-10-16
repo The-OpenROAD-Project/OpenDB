@@ -32,7 +32,7 @@
 #include "dbBlockCallBackObj.h"
 #include "dbBlock.h"
 
-BEGIN_NAMESPACE_ADS
+namespace odb {
 
 ////////////////////////////////////////////////////////////////////
 //
@@ -66,4 +66,4 @@ dbBlockCallBackObj::removeOwner()
     }
 }
 
-END_NAMESPACE_ADS
+} // namespace

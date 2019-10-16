@@ -50,7 +50,7 @@
 
 #include "dbDatabase.h"
 
-BEGIN_NAMESPACE_ADS
+namespace odb {
 
 class _dbCapNode;
 class _dbDatabase;
@@ -160,6 +160,6 @@ inline dbIStream & operator>>( dbIStream & stream, _dbCCSeg & seg )
     return stream;
 }
 
-END_NAMESPACE_ADS
+} // namespace
 
 #endif

@@ -39,7 +39,7 @@
 #include "dbTable.hpp"
 #include "db.h"
 
-BEGIN_NAMESPACE_ADS
+namespace odb {
 
 template class dbTable<_dbCCSeg>;
 
@@ -731,4 +731,4 @@ dbCCSeg::getCCSeg( dbBlock * block_, uint dbid_ )
     return (dbCCSeg *) block->_cc_seg_tbl->getPtr( dbid_ );
 }
 
-END_NAMESPACE_ADS
+} // namespace

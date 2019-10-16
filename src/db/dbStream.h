@@ -42,7 +42,7 @@
 #include "ZException.h"
 #endif
 
-BEGIN_NAMESPACE_ADS
+namespace odb {
 
 class _dbDatabase;
 
@@ -300,6 +300,6 @@ class dbIStream
 };
 
 
-END_NAMESPACE_ADS
+} // namespace
 
 #endif

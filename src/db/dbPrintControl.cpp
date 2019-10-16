@@ -39,7 +39,7 @@
 #include "dbPrintControl.h"
 #endif
 
-BEGIN_NAMESPACE_ADS
+namespace odb {
 
 dbPrintControl::dbPrintControl()
 {
@@ -117,4 +117,4 @@ uint dbNet::getPrintCnt(dbPrintControl::Type type)
     return pcnt;
 }
 
-END_NAMESPACE_ADS
+} // namespace

@@ -34,7 +34,7 @@
 #include "dbTable.h"
 #include <algorithm>
 
-BEGIN_NAMESPACE_ADS
+namespace odb {
 
 bool dbBlockItr::reversible()
 {
@@ -93,4 +93,4 @@ dbObject * dbBlockItr::getObject( uint id, ... )
     return _block_tbl->getPtr(cid);
 }
 
-END_NAMESPACE_ADS
+} // namespace

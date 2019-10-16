@@ -32,7 +32,7 @@
 #include "definBase.h"
 #include "db.h"
 
-BEGIN_NAMESPACE_ADS
+namespace odb {
 
 definBase::definBase()
 {
@@ -68,4 +68,4 @@ void definBase::setBlock( dbBlock * block )
     _block = block;
 }
 
-END_NAMESPACE_ADS
+} // namespace

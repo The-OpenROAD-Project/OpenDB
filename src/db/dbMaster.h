@@ -52,7 +52,7 @@
 #include "dbHashTable.h"
 #endif
 
-BEGIN_NAMESPACE_ADS
+namespace odb {
 
 template <class T> class dbTable;
 class _dbMTerm;
@@ -128,6 +128,6 @@ class _dbMaster : public dbObject
 dbOStream & operator<<( dbOStream & stream, const _dbMaster & master );
 dbIStream & operator>>( dbIStream & stream, _dbMaster & master );
 
-END_NAMESPACE_ADS
+} // namespace
 
 #endif

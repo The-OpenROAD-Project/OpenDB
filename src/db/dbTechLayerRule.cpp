@@ -39,7 +39,7 @@
 #include "dbTable.hpp"
 #include "db.h"
 
-BEGIN_NAMESPACE_ADS
+namespace odb {
 
 template class dbTable<_dbTechLayerRule>;
 
@@ -333,4 +333,4 @@ dbTechLayerRule::getTechLayerRule( dbBlock * block_, uint dbid_ )
     return (dbTechLayerRule *) block->_layer_rule_tbl->getPtr( dbid_ );
 }
 
-END_NAMESPACE_ADS
+} // namespace

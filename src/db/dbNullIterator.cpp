@@ -31,7 +31,7 @@
 
 #include "dbNullIterator.h"
 
-BEGIN_NAMESPACE_ADS
+namespace odb {
 
 dbNullIterator dbNullIterator::null_iterator;
 
@@ -79,4 +79,4 @@ dbObject * dbNullIterator::getObject( register uint, ... )
     return NULL;
 }
 
-END_NAMESPACE_ADS
+} // namespace

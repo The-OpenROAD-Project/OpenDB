@@ -41,7 +41,7 @@
 #include "db.h"
 
 
-BEGIN_NAMESPACE_ADS
+namespace odb {
 
 template class dbTable<_dbTechLayer>;
 
@@ -1292,4 +1292,4 @@ dbTechLayer::getTechLayer( dbTech * tech_, uint dbid_ )
     return (dbTechLayer *) tech->_layer_tbl->getPtr( dbid_ );
 }
 
-END_NAMESPACE_ADS
+} // namespace

@@ -48,7 +48,7 @@
 #include "definBase.h"
 #endif
 
-BEGIN_NAMESPACE_ADS
+namespace odb {
 
 class dbSite;
 class dbLib;
@@ -95,6 +95,6 @@ class definRow : public definIRow, public definBase
     
 };
     
-END_NAMESPACE_ADS
+} // namespace
 
 #endif

@@ -38,7 +38,7 @@
 #include "db.h"
 #include "lefout.h"
 
-BEGIN_NAMESPACE_ADS
+namespace odb {
 
 template class dbTable<_dbTechLayerSpacingRule>;
 template class dbTable<_dbTechV55InfluenceEntry>;
@@ -588,4 +588,4 @@ dbTechV55InfluenceEntry::getV55InfluenceEntry( dbTechLayer * inly, uint oid )
   return (dbTechV55InfluenceEntry *) layer->_v55inf_tbl->getPtr(oid);
 }
 
-END_NAMESPACE_ADS
+} // namespace

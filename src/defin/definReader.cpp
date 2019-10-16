@@ -52,7 +52,7 @@
 #include "db.h"
 #include "dbShape.h"
 
-BEGIN_NAMESPACE_ADS
+namespace odb {
 
 class DefHeader
 {
@@ -668,4 +668,4 @@ bool definReader::replaceWires( const char * file )
     return errors() == 0;
 }
 
-END_NAMESPACE_ADS
+} // namespace

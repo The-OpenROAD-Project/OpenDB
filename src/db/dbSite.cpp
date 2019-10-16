@@ -36,7 +36,7 @@
 #include "dbTable.hpp"
 #include "db.h"
 
-BEGIN_NAMESPACE_ADS
+namespace odb {
 
 template class dbTable<_dbSite>;
 
@@ -257,4 +257,4 @@ dbSite::getSite( dbLib * lib_, uint dbid_ )
     return (dbSite *) lib->_site_tbl->getPtr( dbid_ );
 }
 
-END_NAMESPACE_ADS
+} // namespace

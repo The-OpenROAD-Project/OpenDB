@@ -48,7 +48,7 @@
 #include "dbObject.h"
 #endif
 
-BEGIN_NAMESPACE_ADS
+namespace odb {
 
 class _dbTechLayer;
 class _dbTarget;
@@ -123,6 +123,6 @@ inline dbIStream & operator>>( dbIStream & stream, _dbTarget & target )
     return stream;
 }
 
-END_NAMESPACE_ADS
+} // namespace
 
 #endif

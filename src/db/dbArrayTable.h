@@ -50,7 +50,7 @@
 
 #include <vector>
 
-BEGIN_NAMESPACE_ADS
+namespace odb {
 
 class dbIStream;
 class dbOStream;
@@ -181,6 +181,6 @@ dbOStream & operator<<( dbOStream & stream, const dbArrayTable<T> & table );
 template <class T>
 dbIStream & operator>>( dbIStream & stream, dbArrayTable<T> & table );
 
-END_NAMESPACE_ADS
+} // namespace
 
 #endif

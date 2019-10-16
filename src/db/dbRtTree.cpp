@@ -35,7 +35,7 @@
 #include "dbWireCodec.h"
 #include "adsAllocator.h"
 
-BEGIN_NAMESPACE_ADS
+namespace odb {
 
 // object allocators
 static adsAllocator<dbRtNode> g_node_alloc;
@@ -1302,4 +1302,4 @@ void dbRtTree::copy( dbRtTree * T )
     }
 }
 
-END_NAMESPACE_ADS
+} // namespace

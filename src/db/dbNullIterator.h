@@ -40,7 +40,7 @@
 #include "dbIterator.h"
 #endif
 
-BEGIN_NAMESPACE_ADS
+namespace odb {
 
 class dbObject;
 
@@ -61,6 +61,6 @@ class dbNullIterator : public dbIterator
 };
 
 
-END_NAMESPACE_ADS
+} // namespace
 
 #endif

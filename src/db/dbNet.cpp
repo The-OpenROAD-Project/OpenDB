@@ -60,7 +60,7 @@
 #include "db.h"
 #include <algorithm>
 
-BEGIN_NAMESPACE_ADS
+namespace odb {
 
 template class dbTable<_dbNet>;
 static void set_symmetric_diff( dbDiff & diff, std::vector<_dbBTerm *> & lhs, std::vector<_dbBTerm *> & rhs );
@@ -1036,7 +1036,7 @@ bool dbNet::adjustCC(uint adjOrder, float adjFactor, double ccThreshHold, std::v
     return true;
 }
 
-void dbNet::undoAdjustedCC(std::vector<dbCCSeg *> & adjustedCC, std::vector<ads::dbNet*> & halonets)
+void dbNet::undoAdjustedCC(std::vector<dbCCSeg *> & adjustedCC, std::vector<dbNet*> & halonets)
 {
     if (((_dbNet*)this)->_ccAdjustFactor < 0)
         return;
@@ -3010,4 +3010,4 @@ dbNet::createTerms4SingleNet(int x1, int y1, int x2, int y2, dbTechLayer *inly)
 }
 
 #endif
-END_NAMESPACE_ADS
+} // namespace

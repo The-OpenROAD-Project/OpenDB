@@ -38,7 +38,7 @@
 #include "db.h"
 #include "lefout.h"
 
-BEGIN_NAMESPACE_ADS
+namespace odb {
 
 template class dbTable<_dbTechMinCutRule>;
 template class dbTable<_dbTechMinEncRule>;
@@ -360,4 +360,4 @@ dbTechMinEncRule * dbTechMinEncRule::getMinEncRule( dbTechLayer * inly, uint dbi
     return (dbTechMinEncRule *) layer->_min_enc_rules_tbl->getPtr( dbid );
 }
 
-END_NAMESPACE_ADS
+} // namespace

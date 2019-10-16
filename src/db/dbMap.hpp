@@ -36,7 +36,7 @@
 #include "ZException.h"
 #endif
 
-BEGIN_NAMESPACE_ADS
+namespace odb {
 
 template <class T, class D>
 inline dbMap< T, D >::dbMap( const dbSet<T> & set )
@@ -105,6 +105,6 @@ inline D & dbMap<T,D>::operator[]( T * object )
     return (*_vector)[idx];
 }
 
-END_NAMESPACE_ADS
+} // namespace
 
 #endif

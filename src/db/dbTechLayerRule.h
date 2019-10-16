@@ -48,7 +48,7 @@
 #include "dbObject.h"
 #endif
 
-BEGIN_NAMESPACE_ADS
+namespace odb {
 
 class _dbDatabase;
 class _dbTech;
@@ -106,6 +106,6 @@ class _dbTechLayerRule : public dbObject
 dbOStream & operator<<( dbOStream & stream, const _dbTechLayerRule & rule );
 dbIStream & operator>>( dbIStream & stream, _dbTechLayerRule & rule );
 
-END_NAMESPACE_ADS
+} // namespace
 
 #endif

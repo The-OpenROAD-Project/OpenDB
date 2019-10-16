@@ -40,7 +40,7 @@
 #include "dbCore.h"
 #endif
 
-BEGIN_NAMESPACE_ADS
+namespace odb {
 
 template <class T> class dbTable;
 class _dbProperty;
@@ -81,6 +81,6 @@ class _dbChip : public dbObject
 dbOStream & operator<<( dbOStream & stream, const _dbChip & chip );
 dbIStream & operator>>( dbIStream & stream, _dbChip & chip );
 
-END_NAMESPACE_ADS
+} // namespace
 
 #endif

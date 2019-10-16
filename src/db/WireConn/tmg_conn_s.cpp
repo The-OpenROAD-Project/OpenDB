@@ -36,7 +36,7 @@
 #include "dbWireCodec.h"
 #include "tmg_conn.h"
 
-BEGIN_NAMESPACE_ADS
+namespace odb {
 
 // very simple slow implementation for testing
 
@@ -496,4 +496,4 @@ bool tmg_conn_search::searchNext(int *id)
 }
 
 
-END_NAMESPACE_ADS
+} // namespace

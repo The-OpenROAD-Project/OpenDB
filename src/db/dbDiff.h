@@ -56,7 +56,7 @@
 #include "dbTypes.h"
 #endif
 
-BEGIN_NAMESPACE_ADS
+namespace odb {
 
 class dbNet;
 class dbBTerm;
@@ -395,6 +395,6 @@ void diff_out_set( dbDiff & diff,
                    dbObject * owner,
                    dbIterator * itr );
 
-END_NAMESPACE_ADS
+} // namespace
 
 #endif

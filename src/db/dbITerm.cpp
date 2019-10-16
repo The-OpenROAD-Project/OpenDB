@@ -58,7 +58,7 @@
 #define MAXFLOAT 1.0e+20
 #endif
 
-BEGIN_NAMESPACE_ADS
+namespace odb {
 #ifdef FULL_ECO
 #define FLAGS(iterm) (*((uint *) &iterm->_flags))
 #endif
@@ -1043,4 +1043,4 @@ void dbITerm::print(FILE *fp, char *trail)
 			getMTerm()->getMaster()->getConstName(),getInst()->getConstName(), trail);
 	}
 }
-END_NAMESPACE_ADS
+} // namespace

@@ -42,7 +42,7 @@
 #include "dbTypes.h"
 #endif
 
-BEGIN_NAMESPACE_ADS
+namespace odb {
 
 class dbTech;
 class dbITerm;
@@ -614,6 +614,6 @@ void dumpDecoder(dbBlock *inblk, const char *net_name_or_id);
 void dumpDecoder4Net(dbNet *innet);
 
 
-END_NAMESPACE_ADS
+} // namespace
 
 #endif

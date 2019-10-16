@@ -49,7 +49,7 @@
 #endif
 
 #include "logger.h"
-BEGIN_NAMESPACE_ADS
+namespace odb {
 
 template <class T, const uint P, const uint S> class dbPagedVector;
 class dbDiff;
@@ -403,6 +403,6 @@ inline dbIStream & operator>>( dbIStream & stream, dbPagedVector<T,P,S> & v )
     return stream;
 }
 
-END_NAMESPACE_ADS
+} // namespace
 
 #endif

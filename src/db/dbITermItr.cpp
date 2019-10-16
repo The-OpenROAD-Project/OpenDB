@@ -37,7 +37,7 @@
 #include "dbInstHdr.h"
 #include "dbTable.h"
 
-BEGIN_NAMESPACE_ADS
+namespace odb {
 
 ////////////////////////////////////////////////
 //
@@ -193,4 +193,4 @@ dbObject * dbInstITermItr::getObject( register uint id, ... )
     return _iterm_tbl->getPtr(id);
 }
 
-END_NAMESPACE_ADS
+} // namespace

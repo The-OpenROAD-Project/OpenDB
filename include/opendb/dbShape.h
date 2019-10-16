@@ -60,7 +60,7 @@
 #include "ZException.h"
 #endif
 
-BEGIN_NAMESPACE_ADS
+namespace odb {
 
 class _dbWire;
 class dbBox;
@@ -687,6 +687,6 @@ inline void dbShape::setSegment( int prev_x, int prev_y, int prev_ext, bool has_
 //
 void dumpWirePaths4Net(dbNet *innet, const char *module_name, const char *tag);
 
-END_NAMESPACE_ADS
+} // namespace
 
 #endif

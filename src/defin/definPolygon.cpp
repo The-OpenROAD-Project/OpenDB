@@ -33,7 +33,7 @@
 #include "poly_decomp.h"
 #include <algorithm>
 
-BEGIN_NAMESPACE_ADS
+namespace odb {
 
 definPolygon::definPolygon( const std::vector<adsPoint> & points )
     : _points(points)
@@ -60,4 +60,4 @@ void definPolygon::decompose( std::vector<adsRect> & rects )
 }
 
 
-END_NAMESPACE_ADS
+} // namespace

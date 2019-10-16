@@ -36,7 +36,7 @@
 #include "ads.h"
 #endif
 
-BEGIN_NAMESPACE_ADS
+namespace odb {
 
 class defout_impl;
 class dbNet;
@@ -62,6 +62,6 @@ class defout
     
 };
 
-END_NAMESPACE_ADS
+} // namespace
 
 #endif

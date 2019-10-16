@@ -44,7 +44,7 @@
 #include "definBase.h"
 #endif
 
-BEGIN_NAMESPACE_ADS
+namespace odb {
 
 class definGCell : public definIGCell, public definBase
 {
@@ -57,6 +57,6 @@ class definGCell : public definIGCell, public definBase
     void init();
 };
     
-END_NAMESPACE_ADS
+} // namespace
 
 #endif

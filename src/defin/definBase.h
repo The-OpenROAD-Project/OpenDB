@@ -46,7 +46,7 @@
 
 #include <vector>
 
-BEGIN_NAMESPACE_ADS
+namespace odb {
 
 class dbBlock;
 class dbTech;
@@ -100,6 +100,6 @@ class definBase
     }
 };
     
-END_NAMESPACE_ADS
+} // namespace
 
 #endif

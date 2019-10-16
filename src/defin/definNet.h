@@ -51,7 +51,7 @@
 #include <map>
 #include <string>
 
-BEGIN_NAMESPACE_ADS
+namespace odb {
 
 class dbWire;
 class dbSWire;
@@ -133,6 +133,6 @@ class definNet : public definINet, public definBase
     void namesAreDBIDs()   { _names_are_ids = true; }
 };
     
-END_NAMESPACE_ADS
+} // namespace
 
 #endif

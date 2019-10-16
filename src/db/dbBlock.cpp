@@ -99,7 +99,7 @@
 #include "lefout.h"
 #include<string>
 
-BEGIN_NAMESPACE_ADS
+namespace odb {
 
 struct OldTransform
 {
@@ -543,7 +543,7 @@ _dbBlock::~_dbBlock()
     delete _extControl;
 /*
 	compilee warning
-dbBlock.cpp:513:12: warning: deleting object of polymorphic class type ‘ads::dbNetBTermItr’ which has non-virtual destructor might cause undefined behavior [-Wdelete-non-virtual-dtor]
+dbBlock.cpp:513:12: warning: deleting object of polymorphic class type ‘dbNetBTermItr’ which has non-virtual destructor might cause undefined behavior [-Wdelete-non-virtual-dtor]
      delete _net_bterm_itr;
 
     delete _net_bterm_itr;
@@ -4118,4 +4118,4 @@ void dbBlock::setDrivingItermsforNets()
 	}
 }
 
-END_NAMESPACE_ADS
+} // namespace

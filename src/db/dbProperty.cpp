@@ -42,7 +42,7 @@
 #include "dbTable.hpp"
 #include "db.h"
 
-BEGIN_NAMESPACE_ADS
+namespace odb {
 
 template class dbTable<_dbProperty>;
 
@@ -650,4 +650,4 @@ dbDoubleProperty * dbDoubleProperty::find( dbObject * object, const char * name 
     return (dbDoubleProperty *) dbProperty::find(object,name,dbProperty::DOUBLE_PROP);
 }
 
-END_NAMESPACE_ADS
+} // namespace

@@ -40,7 +40,7 @@
 #include "db.h"
 #endif
 
-BEGIN_NAMESPACE_ADS
+namespace odb {
 
 typedef enum {
  SY_template_none,
@@ -224,5 +224,5 @@ sy_library * liberty_read(FILE *fp,char *file);
 
 void sy_lib_set_power(sy_library *lib,int power);
 
-END_NAMESPACE_ADS
+} // namespace
 #endif

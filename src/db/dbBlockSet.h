@@ -36,7 +36,7 @@
 #include "dbObject.h"
 #endif
 
-BEGIN_NAMESPACE_ADS
+namespace odb {
 
 class dbBlock;
 
@@ -191,6 +191,6 @@ class dbSet<dbBlock>
     }
 };
 
-END_NAMESPACE_ADS
+} // namespace
 
 #endif

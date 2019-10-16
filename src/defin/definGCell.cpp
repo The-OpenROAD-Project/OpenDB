@@ -36,7 +36,7 @@
 #include "db.h"
 #include "dbShape.h"
 
-BEGIN_NAMESPACE_ADS
+namespace odb {
 
 definGCell::definGCell()
 {
@@ -68,4 +68,4 @@ void definGCell::gcell( defDirection dir, int orig, int count, int step )
         grid->addGridPatternY( orig, count, step );
 }
 
-END_NAMESPACE_ADS
+} // namespace

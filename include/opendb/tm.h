@@ -60,7 +60,7 @@
             void ZTCL_RegisterInterface_##MODULE( Tcl_Interp * ); \
             ZTCL_RegisterInterface_##MODULE(interp);
 
-BEGIN_NAMESPACE_ADS
+namespace odb {
 
 class dbDatabase;
 class dbObject;
@@ -226,6 +226,6 @@ public:
     static const char * _module;
 };
 
-END_NAMESPACE_ADS
+} // namespace
 
 #endif

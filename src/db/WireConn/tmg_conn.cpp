@@ -37,7 +37,7 @@
 #include "tmg_conn.h"
 #include "logger.h"
 
-BEGIN_NAMESPACE_ADS
+namespace odb {
 
 void tmg_getDriveTerm(dbNet *net,dbITerm **iterm,dbBTerm **bterm)
 {
@@ -2110,4 +2110,4 @@ void tmg_conn::addToWire(int fr,int to,int k,bool is_short,bool is_loop)
   _firstSegmentAfterVia = rc->_shape.isVia();
 }
 
-END_NAMESPACE_ADS
+} // namespace

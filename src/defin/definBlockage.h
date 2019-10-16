@@ -44,7 +44,7 @@
 #include "definBase.h"
 #endif
 
-BEGIN_NAMESPACE_ADS
+namespace odb {
 
 class dbTechLayer;
 class dbInst;
@@ -87,6 +87,6 @@ class definBlockage : public definIBlockage, public definBase
     void init();
 };
     
-END_NAMESPACE_ADS
+} // namespace
 
 #endif

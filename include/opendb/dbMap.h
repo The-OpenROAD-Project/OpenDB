@@ -43,7 +43,7 @@
 #include "../db/dbSet.h"
 #endif
 
-BEGIN_NAMESPACE_ADS
+namespace odb {
 
 ///
 /// This class creates a assocation between
@@ -118,7 +118,7 @@ class dbMap
     const D & operator[]( T * object ) const;
 };
 
-END_NAMESPACE_ADS
+} // namespace
 
 #ifndef ADS_DB_MAP_HPP
 #include "../db/dbMap.hpp"

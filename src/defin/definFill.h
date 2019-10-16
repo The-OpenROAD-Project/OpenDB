@@ -44,7 +44,7 @@
 #include "definIFill.h"
 #endif
 
-BEGIN_NAMESPACE_ADS
+namespace odb {
 
 class dbTechLayer ;
 
@@ -64,6 +64,6 @@ class definFill : public definIFill, public definBase
     void init();
 };
     
-END_NAMESPACE_ADS
+} // namespace
 
 #endif

@@ -46,7 +46,7 @@
 
 #include <vector>
 
-BEGIN_NAMESPACE_ADS
+namespace odb {
 
 template <class T>
 class dbVector : public std::vector<T> 
@@ -263,6 +263,6 @@ inline void dbVector<T*>::out( dbDiff & diff, char side, const char * field ) co
 
 #endif
 
-END_NAMESPACE_ADS
+} // namespace
 
 #endif

@@ -35,7 +35,7 @@
 #include "dbCore.h"
 #endif
 
-BEGIN_NAMESPACE_ADS
+namespace odb {
 
 inline uint hash_int( register uint id )
 {
@@ -329,4 +329,4 @@ void dbIntHashTable<T>::out( dbDiff & diff, char side, const char * field ) cons
     diff.decrement();
 }
 
-END_NAMESPACE_ADS
+} // namespace

@@ -36,7 +36,7 @@
 #include "definPinProps.h"
 #include "db.h"
 
-BEGIN_NAMESPACE_ADS
+namespace odb {
 
 definPinProps::definPinProps()
 {
@@ -113,4 +113,4 @@ void definPinProps::end()
     }
 }
 
-END_NAMESPACE_ADS
+} // namespace

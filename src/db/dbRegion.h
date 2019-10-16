@@ -52,7 +52,7 @@
 #include "dbObject.h"
 #endif
 
-BEGIN_NAMESPACE_ADS
+namespace odb {
 
 class _dbDatabase;
 class _dbInst;
@@ -96,6 +96,6 @@ class _dbRegion : public dbObject
 dbOStream & operator<<( dbOStream & stream, const _dbRegion & r );
 dbIStream & operator>>( dbIStream & stream, _dbRegion & r );
 
-END_NAMESPACE_ADS
+} // namespace
 
 #endif

@@ -34,7 +34,7 @@
 #include "defout.h"
 #include "defout_impl.h"
 
-BEGIN_NAMESPACE_ADS
+namespace odb {
 
 defout::defout()
 {
@@ -79,4 +79,4 @@ defout::writeBlock( dbBlock * block, const char * def_file )
 }
 
 
-END_NAMESPACE_ADS
+} // namespace

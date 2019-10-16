@@ -72,7 +72,7 @@
 
 #define ADS_MAX_CORNER 10
 
-BEGIN_NAMESPACE_ADS
+namespace odb {
 
 class dbShape;
 class lefout;
@@ -1134,7 +1134,7 @@ class dbBlock : public dbObject
     ///
     /// undo adjusted CC
     ///
-    void undoAdjustedCC(std::vector<dbNet *> & nets, std::vector<ads::dbNet*> & halonets);
+    void undoAdjustedCC(std::vector<dbNet *> & nets, std::vector<dbNet*> & halonets);
 
     ///
     /// Get the number of process corners.
@@ -2436,7 +2436,7 @@ class dbNet : public dbObject
     ///
     /// undo adjusted CC
     ///
-    void undoAdjustedCC(std::vector<dbCCSeg *> & adjustedCC, std::vector<ads::dbNet*> & halonets);
+    void undoAdjustedCC(std::vector<dbCCSeg *> & adjustedCC, std::vector<dbNet*> & halonets);
 
     ///
     /// add cc capacitance to gnd capacitance of capNodes of this net
@@ -7027,6 +7027,6 @@ class dbViaParams : private _dbViaParams
     void setBottomLayer( dbTechLayer * layer );
 };
 
-END_NAMESPACE_ADS
+} // namespace
 
 #endif

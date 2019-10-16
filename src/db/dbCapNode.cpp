@@ -40,7 +40,7 @@
 #include "dbTable.hpp"
 #include "db.h"
 
-BEGIN_NAMESPACE_ADS
+namespace odb {
 
 double getExtCCmult(dbNet *aggressor);
 
@@ -1062,4 +1062,4 @@ dbCapNode::getCapNode( dbBlock * block_, uint dbid_ )
     _dbBlock * block = (_dbBlock *) block_;
     return (dbCapNode *) block->_cap_node_tbl->getPtr( dbid_ );
 }
-END_NAMESPACE_ADS
+} // namespace

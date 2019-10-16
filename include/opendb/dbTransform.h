@@ -48,7 +48,7 @@
 #include "dbTypes.h"
 #endif
 
-BEGIN_NAMESPACE_ADS
+namespace odb {
 
 class dbOStream;
 class dbIStream;
@@ -159,6 +159,6 @@ inline void dbTransform::invert()
     *this = result;
 }
 
-END_NAMESPACE_ADS
+} // namespace
 
 #endif

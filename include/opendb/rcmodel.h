@@ -40,7 +40,7 @@
 #include "arnoldi1.h"
 #endif
 
-BEGIN_NAMESPACE_ADS
+namespace odb {
 
 //
 // This is the rcmodel, without Rd.
@@ -82,5 +82,5 @@ double rcmodel_ctot(rcmodel *mod);
 //
 double rcmodel_max_elmore(rcmodel *mod);
 
-END_NAMESPACE_ADS
+} // namespace
 #endif

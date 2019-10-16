@@ -36,7 +36,7 @@
 #include "ads.h"
 #endif
 
-BEGIN_NAMESPACE_ADS
+namespace odb {
 
 template <class T, const uint P, const uint S> class adsPagedVector;
 
@@ -403,6 +403,6 @@ void adsPagedVector<T,P,S>::push_back( const T & item )
     objects[offset] = item;
 }
 
-END_NAMESPACE_ADS
+} // namespace
 
 #endif

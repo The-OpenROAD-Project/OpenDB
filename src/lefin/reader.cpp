@@ -48,7 +48,7 @@
 #include <list>
 #include "lefin.h"
 
-BEGIN_NAMESPACE_ADS
+namespace odb {
 
 static int antennaCB(lefrCallbackType_e c, double value, lefiUserData ud)
 {
@@ -473,4 +473,4 @@ int lefin_get_current_line()
     return lefrLineNumber();
 }
 
-END_NAMESPACE_ADS
+} // namespace

@@ -39,7 +39,7 @@
 #include "dbDiff.hpp"
 #include "db.h"
 
-BEGIN_NAMESPACE_ADS
+namespace odb {
 
 template class dbTable<_dbMetrics>;
 
@@ -87,4 +87,4 @@ dbMetrics::getMetrics( dbBlock * block_, uint dbid_ )
 }
 
 
-END_NAMESPACE_ADS
+} // namespace

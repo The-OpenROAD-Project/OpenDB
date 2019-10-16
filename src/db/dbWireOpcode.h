@@ -37,7 +37,7 @@
 #include "db.h"
 #endif
 
-BEGIN_NAMESPACE_ADS
+namespace odb {
 
 ///
 /// dbWireCodec: - Opcode definitions
@@ -215,4 +215,4 @@ inline void getPrevPoint( dbTech * tech, dbBlock * block, O & opcodes, D & data,
     }
 }
 
-END_NAMESPACE_ADS
+} // namespace

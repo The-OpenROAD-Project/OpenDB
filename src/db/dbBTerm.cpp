@@ -49,7 +49,7 @@
 #include "dbTable.hpp"
 #include "dbDiff.hpp"
 
-BEGIN_NAMESPACE_ADS
+namespace odb {
 
 template class dbTable<_dbBTerm>;
 
@@ -974,4 +974,4 @@ dbBTerm::getBTerm( dbBlock * block_, uint dbid_ )
     return (dbBTerm *) block->_bterm_tbl->getPtr( dbid_ );
 }
 
-END_NAMESPACE_ADS
+} // namespace

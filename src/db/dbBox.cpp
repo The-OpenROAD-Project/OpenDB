@@ -53,7 +53,7 @@
 #include "dbTable.hpp"
 #include "db.h"
 
-BEGIN_NAMESPACE_ADS
+namespace odb {
 
 template class dbTable<_dbBox>;
 
@@ -965,4 +965,4 @@ void dbBox::setMarked(bool value)
     box->_flags._mark = (value == true) ? 1 : 0;
 }
 
-END_NAMESPACE_ADS
+} // namespace

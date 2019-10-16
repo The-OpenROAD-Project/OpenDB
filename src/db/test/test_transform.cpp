@@ -33,7 +33,7 @@
 #include "../../include/geom.h"
 #include "../../include/dbTransform.h"
 
-USING_NAMESPACE_ADS;
+using namespace odb
 
 int main( int argc, char **argv )
 {

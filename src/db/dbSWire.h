@@ -48,7 +48,7 @@
 #include "dbObject.h"
 #endif
 
-BEGIN_NAMESPACE_ADS
+namespace odb {
 
 class _dbSWire;
 class _dbNet;
@@ -122,5 +122,5 @@ inline dbIStream & operator>>( dbIStream & stream, _dbSWire & wire )
 }
 
 
-END_NAMESPACE_ADS
+} // namespace
 #endif

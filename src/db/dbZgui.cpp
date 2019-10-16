@@ -38,7 +38,7 @@
 DECLARE_ZFACTORY(ZguiDb, IZgui)
 
 
-BEGIN_NAMESPACE_ADS
+namespace odb {
 
 
 DECLARE_IMPLEMENTATION(ZguiDb, IZgui)
@@ -96,4 +96,4 @@ void ZguiDb::inspect(ZPtr<IZdcr> dcr)
 	_blockSearch->inspect(dcr);
 }
 
-END_NAMESPACE_ADS
+} // namespace

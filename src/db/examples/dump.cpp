@@ -32,7 +32,7 @@
 #include <stdio.h>
 #include "db.h"
 
-USING_NAMESPACE_ADS;
+using namespace odb
 
 extern void print_db( dbDatabase * db );
 

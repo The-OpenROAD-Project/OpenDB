@@ -48,7 +48,7 @@
 #include "dbObject.h"
 #endif
 
-BEGIN_NAMESPACE_ADS
+namespace odb {
 
 template <class T> class dbTable;
 class dbIStream;
@@ -151,6 +151,6 @@ inline dbIStream & operator>>( dbIStream & stream, _dbRow & row )
     return stream;
 }
 
-END_NAMESPACE_ADS
+} // namespace
 
 #endif

@@ -35,7 +35,7 @@
 #include "dbWireCodec.h"
 #include "dbShape.h"
 
-BEGIN_NAMESPACE_ADS
+namespace odb {
 
 dbCreateNetUtil::dbCreateNetUtil()
         : _ruleNameHint(0)
@@ -1667,4 +1667,4 @@ bool dbCreateNetUtil::createSingleVia(dbNet * net, int x1, int y1, int x2, int y
     return true;
 }
 
-END_NAMESPACE_ADS
+} // namespace

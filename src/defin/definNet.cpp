@@ -37,7 +37,7 @@
 #include "dbShape.h"
 #include "db.h"
 
-BEGIN_NAMESPACE_ADS
+namespace odb {
 
 inline uint get_net_dbid( const char * name )
 {
@@ -762,4 +762,4 @@ void definNet::end()
     _cur_net = NULL;
 }
     
-END_NAMESPACE_ADS
+} // namespace

@@ -35,7 +35,7 @@
 #include "parse.h"
 #include <logger.h>
 
-BEGIN_NAMESPACE_ADS
+namespace odb {
 
 char* Sdc_db::name2id(char *name, char idPrefix)
 {
@@ -164,5 +164,5 @@ Sdc_db::~Sdc_db()
 {
 	delete [] _idName;
 }
-END_NAMESPACE_ADS
+} // namespace
 

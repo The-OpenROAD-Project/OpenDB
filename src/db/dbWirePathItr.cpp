@@ -39,7 +39,7 @@
 #include "logger.h"
 #include "db.h"
 
-BEGIN_NAMESPACE_ADS
+namespace odb {
 
 #define DB_WIRE_DECODE_INVALID_OPCODE 0
 
@@ -488,4 +488,4 @@ dumpWirePaths4Net(dbNet *innet, const char *module_name, const char *tag)
     }
 }
 
-END_NAMESPACE_ADS
+} // namespace

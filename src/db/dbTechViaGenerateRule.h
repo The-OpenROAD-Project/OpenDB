@@ -56,7 +56,7 @@
 #include "dbVector.h"
 #endif
 
-BEGIN_NAMESPACE_ADS
+namespace odb {
 
 class _dbTechLayer;
 class _dbBox;
@@ -100,6 +100,6 @@ class _dbTechViaGenerateRule : public dbObject
 dbOStream & operator<<( dbOStream & stream, const _dbTechViaGenerateRule & v );
 dbIStream & operator>>( dbIStream & stream, _dbTechViaGenerateRule & v );
 
-END_NAMESPACE_ADS
+} // namespace
 
 #endif

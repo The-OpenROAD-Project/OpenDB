@@ -34,7 +34,7 @@
 #include <string.h>
 #include <ctype.h>
 
-BEGIN_NAMESPACE_ADS
+namespace odb {
 
 //
 // dbIdValidation methods here
@@ -1372,4 +1372,4 @@ dbDirection::getString() const
   return value;
 }
 
-END_NAMESPACE_ADS
+} // namespace

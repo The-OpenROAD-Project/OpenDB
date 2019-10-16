@@ -35,7 +35,7 @@
 #include "dbBPin.h"
 #include "dbTable.h"
 
-BEGIN_NAMESPACE_ADS
+namespace odb {
 
 ////////////////////////////////////////////////////////////////////
 //
@@ -112,4 +112,4 @@ dbObject * dbBPinItr::getObject( register uint id, ... )
     return _bpin_tbl->getPtr(id);
 }
 
-END_NAMESPACE_ADS
+} // namespace

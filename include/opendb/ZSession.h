@@ -36,7 +36,7 @@
 #include "tm.h"
 #endif
 
-BEGIN_NAMESPACE_ADS
+namespace odb {
 
 class ZNamespace;
 
@@ -50,6 +50,6 @@ class ZSession : public ZTechModule<ZSession>
     friend class ZInterface;
 };
 
-END_NAMESPACE_ADS
+} // namespace
 
 #endif

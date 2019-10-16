@@ -40,7 +40,7 @@
 #include "dbIterator.h"
 #endif
 
-BEGIN_NAMESPACE_ADS
+namespace odb {
 
 class _dbProperty;
 template <class T> class dbTable;
@@ -67,6 +67,6 @@ public:
 };
 
 
-END_NAMESPACE_ADS
+} // namespace
 
 #endif

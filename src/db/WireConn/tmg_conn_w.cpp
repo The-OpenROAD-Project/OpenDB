@@ -38,7 +38,7 @@
 #include "dbMap.h"
 #include "logger.h"
 
-BEGIN_NAMESPACE_ADS
+namespace odb {
 
 
 void tmg_conn::checkConnOrdered(bool verbose)
@@ -315,4 +315,4 @@ void tmg_conn::checkConnected(bool verbose)
     free(btV2);
 }
 
-END_NAMESPACE_ADS
+} // namespace

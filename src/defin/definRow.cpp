@@ -36,7 +36,7 @@
 #include "db.h"
 #include "dbShape.h"
 
-BEGIN_NAMESPACE_ADS
+namespace odb {
 
 definRow::definRow()
 {
@@ -202,4 +202,4 @@ void definRow::end()
     _cur_row = NULL;
 }  
 
-END_NAMESPACE_ADS
+} // namespace

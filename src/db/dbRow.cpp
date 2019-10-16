@@ -41,7 +41,7 @@
 #include "dbTransform.h"
 #include "db.h"
 
-BEGIN_NAMESPACE_ADS
+namespace odb {
 
 template class dbTable<_dbRow>;
 
@@ -315,4 +315,4 @@ dbRow::getRow( dbBlock * block_, uint dbid_ )
     return (dbRow *) block->_row_tbl->getPtr( dbid_ );
 }
 
-END_NAMESPACE_ADS
+} // namespace

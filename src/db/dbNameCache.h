@@ -36,7 +36,7 @@
 #include "dbHashTable.h"
 #endif
 
-BEGIN_NAMESPACE_ADS
+namespace odb {
 
 class dbOStream;
 class dbIStream;
@@ -76,5 +76,5 @@ class _dbNameCache
 dbOStream & operator<<( dbOStream & stream, const _dbNameCache & net );
 dbIStream & operator>>( dbIStream & stream, _dbNameCache & net );
 
-END_NAMESPACE_ADS
+} // namespace
 #endif

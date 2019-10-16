@@ -35,7 +35,7 @@
 #include "defout_impl.h"
 #include "dbWireCodec.h"
 
-BEGIN_NAMESPACE_ADS
+namespace odb {
 
 static const char *
 defOrient( dbOrientType orient )
@@ -2100,4 +2100,4 @@ void defout_impl::writePinProperties( dbBlock * block )
     fprintf(_out, "END PINPROPERTIES\n");
 }
 
-END_NAMESPACE_ADS
+} // namespace

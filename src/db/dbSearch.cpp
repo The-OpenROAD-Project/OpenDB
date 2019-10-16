@@ -42,7 +42,7 @@
 //#define NEW_TRACKS
 
 #include "dbShape.h"
-BEGIN_NAMESPACE_ADS
+namespace odb {
 
 
 dbBlockSearch::dbBlockSearch(dbBlock *blk, dbTech *tech)
@@ -518,7 +518,7 @@ void dbBlockSearch::chip_get(ZPtr<IZdcr> dcr)
 	getTracks(false);
 }
 
-uint dbBlockSearch::getViaLevel(ads::dbSBox *s)
+uint dbBlockSearch::getViaLevel(dbSBox *s)
 {
 	dbTechVia *via= s->getTechVia();
 	if (via!=NULL) 
@@ -535,7 +535,7 @@ uint dbBlockSearch::getViaLevel(ads::dbSBox *s)
 		return via->getTopLayer()->getRoutingLevel();
 	}
 }
-uint dbBlockSearch::getViaLevel(ads::dbShape *s)
+uint dbBlockSearch::getViaLevel(dbShape *s)
 {
 	dbTechVia *via= s->getTechVia();
 	if (via!=NULL) 
@@ -688,7 +688,7 @@ uint dbBlockSearch::getFirstShape(dbITerm * iterm, bool viaFlag, int &x1, int &y
 	
 	dbITermShapeItr term_shapes;
 	
-	ads::dbShape s;
+	dbShape s;
 	for( term_shapes.begin(iterm); term_shapes.next(s); )
 	{
 		if (s.isVia()) 
@@ -761,7 +761,7 @@ uint dbBlockSearch::getItermShapesNoVias(dbITerm * iterm)
 	
 	dbITermShapeItr term_shapes;
 	
-	ads::dbShape s;
+	dbShape s;
 	for( term_shapes.begin(iterm); term_shapes.next(s); ) {
 
 		if (s.isVia()) {
@@ -800,7 +800,7 @@ uint dbBlockSearch::getFirstInstObsShape(dbInst *inst, bool viaFlag, int &x1, in
 	
 	dbInstShapeItr obs_shapes;
 	
-	ads::dbShape s;
+	dbShape s;
 	for( obs_shapes.begin(inst, dbInstShapeItr::OBSTRUCTIONS); obs_shapes.next(s); )
 	{
 		if (s.isVia()) 
@@ -826,7 +826,7 @@ uint dbBlockSearch::getInstObs(dbInst *inst, bool viaFlag)
 	
 	dbInstShapeItr obs_shapes;
 	
-	ads::dbShape s;
+	dbShape s;
 	for( obs_shapes.begin(inst, dbInstShapeItr::OBSTRUCTIONS); obs_shapes.next(s); )
 	{
 		if (s.isVia()) 
@@ -1005,7 +1005,7 @@ uint dbBlockSearch::getDbBoxId(uint wid, uint wireType)
 	return w->getBoxId();
 }
 */
-int dbBlockSearch::getShapeLevel(ads::dbSBox *s, bool wireVia)
+int dbBlockSearch::getShapeLevel(dbSBox *s, bool wireVia)
 {	
 	if (s->isVia())
 	{
@@ -1022,7 +1022,7 @@ int dbBlockSearch::getShapeLevel(ads::dbSBox *s, bool wireVia)
 		return s->getTechLayer()->getRoutingLevel();
 	}
 }
-int dbBlockSearch::getShapeLevel(ads::dbShape *s, bool wireVia)
+int dbBlockSearch::getShapeLevel(dbShape *s, bool wireVia)
 {	
 	if (s->isVia())
 	{
@@ -1641,7 +1641,7 @@ uint dbBlockSearch::getWiresClipped(dbNet *targetNet, uint halo, bool ignoreFlag
 		return 0;
 	
 	dbWireShapeItr shapes;
-	ads::dbShape s;	
+	dbShape s;	
 	for( shapes.begin(wire); shapes.next(s); ) {				
 		//uint level= 0;
 		
@@ -2237,7 +2237,7 @@ uint dbBlockSearch::addNetShapes(dbNet * net, bool viaWireFlag, uint menuId, uin
 	uint netId= net->getId();
 	
 	dbWireShapeItr shapes;
-	ads::dbShape s;
+	dbShape s;
 	
 	for( shapes.begin(wire); shapes.next(s); ) {
 
@@ -2263,7 +2263,7 @@ void dbBlockSearch::getNetBbox(dbNet * net, adsRect & maxRect)
 	//uint wireId= wire->getId();
 	
 	dbWireShapeItr shapes;
-	ads::dbShape s;
+	dbShape s;
 	
 	for( shapes.begin(wire); shapes.next(s); )
 	{	
@@ -2942,5 +2942,5 @@ void dbBlockSearch::inspectBlock()
 	}
 #endif
 }
-END_NAMESPACE_ADS
+} // namespace
 

@@ -56,7 +56,7 @@
 #include "dbViaParams.h"
 #endif
 
-BEGIN_NAMESPACE_ADS
+namespace odb {
 
 class _dbTechLayer;
 class _dbTechViaGenerateRule;
@@ -108,6 +108,6 @@ class _dbVia : public dbObject
 dbOStream & operator<<( dbOStream & stream, const _dbVia & v );
 dbIStream & operator>>( dbIStream & stream, _dbVia & v );
 
-END_NAMESPACE_ADS
+} // namespace
 
 #endif

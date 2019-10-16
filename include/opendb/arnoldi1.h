@@ -42,7 +42,7 @@
 #include "ads.h"
 #endif
 
-BEGIN_NAMESPACE_ADS
+namespace odb {
 
 //
 // workspace for pole-residue -> delay calculations
@@ -177,5 +177,5 @@ class ar1_reduce {
   static ar1_reduce *_default;
 };
 
-END_NAMESPACE_ADS
+} // namespace
 #endif

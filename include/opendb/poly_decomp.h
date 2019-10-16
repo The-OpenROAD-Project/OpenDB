@@ -40,7 +40,7 @@
 #include "geom.h"
 #endif
 
-BEGIN_NAMESPACE_ADS
+namespace odb {
 
 //
 // Decompose a simple rectilinear polygon into rectangles.
@@ -51,6 +51,6 @@ void decompose_polygon( const std::vector<adsPoint> & points, std::vector<adsRec
 // Returns true if the verticies of this polygon are clockwise orderd.
 bool polygon_is_clockwise( const std::vector<adsPoint> & points );
 
-END_NAMESPACE_ADS
+} // namespace
 
 #endif

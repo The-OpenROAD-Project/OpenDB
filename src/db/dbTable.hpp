@@ -54,7 +54,7 @@
 
 //#define ADS_DB_CHECK_STREAM
 
-BEGIN_NAMESPACE_ADS
+namespace odb {
 
 template <class T>
 inline void dbTable<T>::pushQ( uint & Q, _dbObject * e )
@@ -924,4 +924,4 @@ void dbTable<T>::getObjects( std::vector<T *> & objects )
     }
 }
 
-END_NAMESPACE_ADS
+} // namespace

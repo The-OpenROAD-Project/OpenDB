@@ -48,7 +48,7 @@
 #include "dbObject.h"
 #endif
 
-BEGIN_NAMESPACE_ADS
+namespace odb {
 
 template <class T> class dbTable;
 class _dbDatabase;
@@ -110,6 +110,6 @@ class _dbProperty : public dbObject
 dbOStream & operator<<( dbOStream & stream, const _dbProperty & prop );
 dbIStream & operator>>( dbIStream & stream, _dbProperty & prop );
 
-END_NAMESPACE_ADS
+} // namespace
 
 #endif

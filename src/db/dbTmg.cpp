@@ -41,7 +41,7 @@
 #include "dbDiff.hpp"
 #include "db.h"
 
-BEGIN_NAMESPACE_ADS
+namespace odb {
 
 template class dbArrayTable<_dbTmg>;
 
@@ -215,4 +215,4 @@ void _dbTmg::out( dbDiff & diff, char side, const char * field ) const
 //    DIFF_OUT_FIELD(_scenario._slack_fall);
 }
 
-END_NAMESPACE_ADS
+} // namespace

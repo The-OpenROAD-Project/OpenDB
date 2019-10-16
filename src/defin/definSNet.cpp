@@ -38,7 +38,7 @@
 #include "db.h"
 #include "create_box.h"
 
-BEGIN_NAMESPACE_ADS
+namespace odb {
 
 inline uint get_net_dbid( const char * name )
 {
@@ -666,4 +666,4 @@ void definSNet::connect_all( dbNet * net, const char * term )
     }
 }
 
-END_NAMESPACE_ADS
+} // namespace

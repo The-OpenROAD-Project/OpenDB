@@ -55,7 +55,7 @@
 #include "db.h"
 #endif
 
-USING_NAMESPACE_ADS;
+using namespace odb;
 
 enum Ath__overlapAdjust {
     Z_noAdjust,

@@ -40,7 +40,7 @@
 #include "dbCore.h"
 #endif
 
-BEGIN_NAMESPACE_ADS
+namespace odb {
 
 //
 // When changing the database schema please add a #define to refer to the schema changes.
@@ -141,6 +141,6 @@ class _dbDatabase : public dbObject
 dbOStream & operator<<( dbOStream & stream, const _dbDatabase & db );
 dbIStream & operator>>( dbIStream & stream, _dbDatabase & db );
 
-END_NAMESPACE_ADS
+} // namespace
 
 #endif

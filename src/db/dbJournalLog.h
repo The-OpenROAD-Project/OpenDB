@@ -40,7 +40,7 @@
 #include "dbPagedVector.h"
 #endif
 
-BEGIN_NAMESPACE_ADS
+namespace odb {
 
 class dbIStream;
 class dbOStream;
@@ -94,7 +94,7 @@ public:
     friend dbOStream & operator<<( dbOStream & stream, const dbJournalLog & log );
 };
 
-END_NAMESPACE_ADS    
+} // namespace    
 
 
 #endif

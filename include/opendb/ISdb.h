@@ -54,7 +54,7 @@
 
 class Ath__gridTable;
 
-BEGIN_NAMESPACE_ADS
+namespace odb {
 
 class dbBox;
 class dbBlock;
@@ -82,7 +82,7 @@ class ISdb : public ZObject
 	virtual void adjustOverlapMakerEnd()=0;
 	virtual void adjustMetalFill()=0;
 	virtual void setupForBoxes(adsRect maxRect, uint minHeight, uint minWidth)=0;
-	virtual void addBox(ads::dbBox * bb, uint wtype, uint id)=0;
+	virtual void addBox(dbBox * bb, uint wtype, uint id)=0;
 	virtual uint setExtrusionMarker(uint startRow, uint startCol)=0;
 	virtual Ath__gridTable* getSearchPtr()=0;
 	virtual void setDefaultWireType(uint v)=0;
@@ -113,6 +113,6 @@ class ISdb : public ZObject
 	virtual void getIds(uint wid, uint *id1, uint *id2, uint *wtype)=0;
 
 };
-END_NAMESPACE_ADS
+} // namespace
 
 #endif

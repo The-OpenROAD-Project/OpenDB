@@ -38,7 +38,7 @@
 #include "dbMetrics.h"
 #include "db.h"
 
-BEGIN_NAMESPACE_ADS
+namespace odb {
 
 dbTmgJournal::dbTmgJournal( dbBlock * block )
         : _block(block), _start_action(false), _number_of_scenarios(0), _scenario(0)
@@ -610,4 +610,4 @@ dbIStream & operator>>( dbIStream & stream, dbTmgJournal & journal )
     return stream;
 }
 
-END_NAMESPACE_ADS
+} // namespace

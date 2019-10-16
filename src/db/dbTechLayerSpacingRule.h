@@ -48,7 +48,7 @@
 #include "dbObject.h"
 #endif
 
-BEGIN_NAMESPACE_ADS
+namespace odb {
 
 class _dbDatabase;
 class _dbTechLayer;
@@ -141,6 +141,6 @@ inline _dbTechV55InfluenceEntry::~_dbTechV55InfluenceEntry()
 dbOStream & operator<<( dbOStream & stream, const _dbTechV55InfluenceEntry & infitem );
 dbIStream & operator>>( dbIStream & stream, _dbTechV55InfluenceEntry & infitem );
 
-END_NAMESPACE_ADS
+} // namespace
 
 #endif

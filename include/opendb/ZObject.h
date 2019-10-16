@@ -51,7 +51,7 @@
 /// multiple interfaces (QueryInterface: one interface is supported per implementation).
 ///
 
-BEGIN_NAMESPACE_ADS
+namespace odb {
 
 template <class T> class ZPtr;
 class ZContext;
@@ -69,19 +69,19 @@ class ZObject;
 /// Associate the interface identifier this the interface. This macro
 /// should be added to the public section of the interface class.
 ///
-#define ZINTERFACE_ID(INTERFACE) enum { ZIID = ads::ZIID_##INTERFACE };
+#define ZINTERFACE_ID(INTERFACE) enum { ZIID = ZIID_##INTERFACE };
 
 ///
 /// ZCID - Returns the component interface identifier. You must include
 /// ZComponents.h to use this macro.
 ///
-#define ZCID(COMPONENT) (ads::ZCID_##COMPONENT)
+#define ZCID(COMPONENT) (ZCID_##COMPONENT)
 
 ///
 /// ZIID - Returns the component interface identifier. You must include
 /// ZComponents.h to use this macro.
 ///
-#define ZIID(INTERFACE) (ads::ZIID_##INTERFACE)
+#define ZIID(INTERFACE) (ZIID_##INTERFACE)
 
 ///
 /// adsCreateComponent - Create a new instance of this compomnent, return a pointer
@@ -235,6 +235,6 @@ class ZPtr
     operator ZObject *() const { return (ZObject *) _p; }
 };
 
-END_NAMESPACE_ADS
+} // namespace
 
 #endif

@@ -35,7 +35,7 @@
 #include "dbSBox.h"
 #include "dbTable.h"
 
-BEGIN_NAMESPACE_ADS
+namespace odb {
 
 bool dbSBoxItr::reversible()
 {
@@ -124,4 +124,4 @@ dbObject * dbSBoxItr::getObject( register uint id, ... )
     return _box_tbl->getPtr(id);
 }
 
-END_NAMESPACE_ADS
+} // namespace

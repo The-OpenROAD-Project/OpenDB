@@ -51,7 +51,7 @@
 /// multiple interfaces (QueryInterface: one interface is supported per implementation).
 ///
 
-BEGIN_NAMESPACE_ADS
+namespace odb {
 
 ///
 /// ZPtrCnt - Reference count implmentation
@@ -98,6 +98,6 @@ class ZImplements : public ZInterface, public INTERFACE
 #define DECLARE_IMPLEMENTATION(CLASS,INFC) \
            template class ZImplements<CLASS, INFC>;
 
-END_NAMESPACE_ADS
+} // namespace
 
 #endif

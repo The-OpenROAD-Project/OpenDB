@@ -52,7 +52,7 @@
 #include "dbObject.h"
 #endif
 
-BEGIN_NAMESPACE_ADS
+namespace odb {
 
 class _dbTechLayer;
 class _dbBox;
@@ -107,6 +107,6 @@ class _dbTechViaLayerRule : public dbObject
 dbOStream & operator<<( dbOStream & stream, const _dbTechViaLayerRule & v );
 dbIStream & operator>>( dbIStream & stream, _dbTechViaLayerRule & v );
 
-END_NAMESPACE_ADS
+} // namespace
 
 #endif

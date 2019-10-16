@@ -40,7 +40,7 @@
 #include "dbIterator.h"
 #endif
 
-BEGIN_NAMESPACE_ADS
+namespace odb {
 
 class _dbBlock;
 template <class T> class dbTable;
@@ -67,6 +67,6 @@ class dbBlockItr : public dbIterator
     dbObject * getObject( register uint id, ... );
 };
 
-END_NAMESPACE_ADS
+} // namespace
 
 #endif

@@ -39,7 +39,7 @@
 #include "dbTable.hpp"
 #include "db.h"
 
-BEGIN_NAMESPACE_ADS
+namespace odb {
 
 template class dbTable<_dbBPin>;
 
@@ -300,4 +300,4 @@ dbBPin::getBPin( dbBlock * block_, uint dbid_ )
     return (dbBPin *) block->_bpin_tbl->getPtr( dbid_ );
 }
 
-END_NAMESPACE_ADS
+} // namespace

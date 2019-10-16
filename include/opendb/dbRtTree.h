@@ -54,7 +54,7 @@
 #include "dbRtEdge.h"
 #endif
 
-BEGIN_NAMESPACE_ADS
+namespace odb {
 
 class dbWire;
 class dbVia;
@@ -214,6 +214,6 @@ dbRtTree::createSegment( dbRtNode * src, dbRtNode * tgt, dbWireType::Value type,
     return createSegment(src,tgt,dbRtEndStyle(), dbRtEndStyle(), type, rule);
 }
 
-END_NAMESPACE_ADS
+} // namespace
 
 #endif

@@ -38,7 +38,7 @@
 #include "ads.h"
 #endif
 
-BEGIN_NAMESPACE_ADS
+namespace odb {
 
 class definReader;
 class dbDatabase;
@@ -75,6 +75,6 @@ class defin
     bool replaceWires( dbBlock * block, const char * def_file );
 };
     
-END_NAMESPACE_ADS
+} // namespace
 
 #endif

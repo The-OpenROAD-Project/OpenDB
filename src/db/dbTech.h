@@ -52,7 +52,7 @@
 #include "dbMatrix.h"
 #endif
 
-BEGIN_NAMESPACE_ADS
+namespace odb {
 
 template <class T> class dbTable;
 
@@ -148,6 +148,6 @@ class _dbTech : public dbObject
 dbOStream & operator<<( dbOStream & stream, const _dbTech & tech );
 dbIStream & operator>>( dbIStream & stream, _dbTech & tech );
 
-END_NAMESPACE_ADS
+} // namespace
 
 #endif

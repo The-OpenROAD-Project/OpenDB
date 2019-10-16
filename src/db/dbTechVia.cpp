@@ -42,7 +42,7 @@
 #include "dbTable.hpp"
 #include "db.h"
 
-BEGIN_NAMESPACE_ADS
+namespace odb {
 
 template class dbTable<_dbTechVia>;
 static void create_via_boxes( _dbTechVia * via, const dbViaParams & P );
@@ -575,4 +575,4 @@ void create_via_boxes( _dbTechVia * via, const dbViaParams & P )
     dbBox::create( (dbTechVia *) via, P.getBottomLayer(), bot_minX, bot_minY, bot_maxX, bot_maxY );
 }
 
-END_NAMESPACE_ADS
+} // namespace

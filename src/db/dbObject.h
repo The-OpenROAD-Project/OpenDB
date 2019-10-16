@@ -36,7 +36,7 @@
 #include "ads.h"
 #endif
 
-BEGIN_NAMESPACE_ADS
+namespace odb {
 
 #ifndef DB_PRIVATE
 #define DB_PRIVATE public
@@ -153,4 +153,4 @@ class dbObject
 
 #endif
 
-END_NAMESPACE_ADS
+} // namespace

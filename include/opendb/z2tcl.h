@@ -51,7 +51,7 @@
 #include "IZdcr.h"
 
 
-USING_NAMESPACE_ADS;
+using namespace odb;
 
 
 class Groute;
@@ -63,9 +63,9 @@ class Ath__tech;
 class dbBlockHandle
 {
 public:
-	ads::dbBlock *_block;
-	ads::dbDatabase * _db;
-	ads::dbTech *     _tech;
+	dbBlock *_block;
+	dbDatabase * _db;
+	dbTech *     _tech;
 	uint _schema;
 	uint _id;
 
@@ -86,7 +86,7 @@ public:
 	Groute *_grObject;
 
 public:
-	dbBlockHandle(ads::dbBlock *blk, ads::dbTech *tech, uint id, uint schema);
+	dbBlockHandle(dbBlock *blk, dbTech *tech, uint id, uint schema);
 	uint makeInstSearchDb();
 	void makeNetWireSearchDb();
 	void getInstBoxes(Ath__zui *zui, Ath__hierType hier, bool ignoreFlag=false);
@@ -145,10 +145,10 @@ public:
 
 	int inspect_1(Ath__zui *zui);
 
-	uint getViaLevel(ads::dbShape *s);
-	uint getViaLevel(ads::dbSBox *s);
-	int getShapeLevel(ads::dbShape *s, bool wireVia);
-	int getShapeLevel(ads::dbSBox *s, bool wireVia);
+	uint getViaLevel(dbShape *s);
+	uint getViaLevel(dbSBox *s);
+	int getShapeLevel(dbShape *s, bool wireVia);
+	int getShapeLevel(dbSBox *s, bool wireVia);
 	void getSignalWiresAndVias(Ath__zui *zui, Ath__hierType hier, bool ignoreFlag);
 	uint getNetConnectivity(Ath__zui *zui, dbNet *net, bool contextFlag, 
 		bool ignoreLayerFlags, bool ignoreZuiFlags, bool ignoreBB=false);
@@ -186,10 +186,10 @@ public:
 class Ath__zroute
 {
 public:
-	ads::dbDatabase * _new_db;
-	ads::dbTech *     _new_tech;
-	ads::dbLib *      _new_lib;
-	ads::dbChip *     _new_chip;
+	dbDatabase * _new_db;
+	dbTech *     _new_tech;
+	dbLib *      _new_lib;
+	dbChip *     _new_chip;
 
 	uint _dbSchema;
 
@@ -268,9 +268,9 @@ public:
 	uint getLayers_1(char *layerBuff);
 	void initHandleTable();
 	void destroyHandleTable();
-	uint mkSearchDb(ads::dbChip *chip, bool isdb);
-	ads::dbBlock *getDbBlock(uint ii);
-	dbBlockHandle *getBlockHandle(ads::dbBlock *blk);
+	uint mkSearchDb(dbChip *chip, bool isdb);
+	dbBlock *getDbBlock(uint ii);
+	dbBlockHandle *getBlockHandle(dbBlock *blk);
 	dbBlockHandle *getBlockHandle(uint ii);
 	void getMaxGuiBox_0(char *buffer);
 	void getMaxGuiBox_1(char *buffer);

@@ -35,7 +35,7 @@
 #include "dbCapNode.h"
 #include "dbTable.h"
 
-BEGIN_NAMESPACE_ADS
+namespace odb {
 
 ////////////////////////////////////////////////////////////////////
 //
@@ -109,4 +109,4 @@ dbObject * dbCapNodeItr::getObject( register uint id, ... )
     return _seg_tbl->getPtr(id);
 }
 
-END_NAMESPACE_ADS
+} // namespace

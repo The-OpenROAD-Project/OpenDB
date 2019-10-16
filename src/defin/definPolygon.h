@@ -42,7 +42,7 @@
 
 #include <vector>
 
-BEGIN_NAMESPACE_ADS
+namespace odb {
 
 class definPolygon
 {
@@ -55,6 +55,6 @@ class definPolygon
     void decompose( std::vector<adsRect> & rect );
 };
 
-END_NAMESPACE_ADS
+} // namespace
 
 #endif

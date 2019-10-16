@@ -44,11 +44,6 @@
 #pragma warning (disable : 4660)
 #endif
 
-#define ADS_NAMESPACE ads
-#define BEGIN_NAMESPACE_ADS namespace ADS_NAMESPACE {
-#define END_NAMESPACE_ADS }
-#define USING_NAMESPACE_ADS using namespace ADS_NAMESPACE
-
 typedef unsigned int uint;
 typedef unsigned char uchar;
 

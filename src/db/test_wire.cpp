@@ -36,7 +36,7 @@
 #include "db.h"
 #include "logger.h"
 
-USING_NAMESPACE_ADS;
+using namespace odb;
 
 //static void print_wire( dbWire * wire );
 static void print_encoding( dbWire * wire );

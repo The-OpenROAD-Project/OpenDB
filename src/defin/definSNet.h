@@ -51,7 +51,7 @@
 #include "definBase.h"
 #endif
 
-BEGIN_NAMESPACE_ADS
+namespace odb {
 
 class dbSWire;
 class dbNet;
@@ -121,6 +121,6 @@ class definSNet : public definISNet, public definBase
     void namesAreDBIDs()   { _names_are_ids = true; }
 };
     
-END_NAMESPACE_ADS
+} // namespace
 
 #endif

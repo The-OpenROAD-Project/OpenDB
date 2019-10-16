@@ -41,7 +41,7 @@
 #include "dbTable.hpp"
 #include "db.h"
 
-BEGIN_NAMESPACE_ADS
+namespace odb {
 
 template class dbTable<_dbTechNonDefaultRule>;
 
@@ -490,4 +490,4 @@ dbTechNonDefaultRule::getTechNonDefaultRule( dbBlock * block_, uint dbid_ )
     return (dbTechNonDefaultRule *) block->_non_default_rule_tbl->getPtr( dbid_ );
 }
 
-END_NAMESPACE_ADS
+} // namespace

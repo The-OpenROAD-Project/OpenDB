@@ -48,7 +48,7 @@
 #endif
 
 
-BEGIN_NAMESPACE_ADS
+namespace odb {
 
 class sver_names;
 class sver_module;
@@ -215,6 +215,6 @@ class sver
 
 void sver_read(char *file);
 
-END_NAMESPACE_ADS
+} // namespace
 
 #endif

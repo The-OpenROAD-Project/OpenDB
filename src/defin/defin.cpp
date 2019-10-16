@@ -33,7 +33,7 @@
 #include "definReader.h"
 #include "db.h"
 
-BEGIN_NAMESPACE_ADS
+namespace odb {
 
 defin::defin( dbDatabase * db )
 {
@@ -113,4 +113,4 @@ bool defin::replaceWires( dbBlock * block, const char * def_file )
     return _reader->replaceWires(block,def_file);
 }
 
-END_NAMESPACE_ADS
+} // namespace

@@ -56,7 +56,7 @@
 #include "dbBox.h"
 #endif
 
-BEGIN_NAMESPACE_ADS
+namespace odb {
 
 class _dbDatabase;
 class dbIStream;
@@ -121,6 +121,6 @@ inline dbIStream & operator>>( dbIStream & stream, _dbSBox & box )
     return stream;
 }
 
-END_NAMESPACE_ADS
+} // namespace
 
 #endif

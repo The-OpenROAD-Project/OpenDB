@@ -36,7 +36,7 @@
 
 #define def_dbg
 
-BEGIN_NAMESPACE_ADS
+namespace odb {
 
 //
 //  Class to filter debug() level messages according to a virtual predicate
@@ -54,6 +54,6 @@ class debugMsgFilter {
   char                _module_name[20];
 };
 
-END_NAMESPACE_ADS
+} // namespace
 
 #endif

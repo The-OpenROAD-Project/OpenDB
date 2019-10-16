@@ -50,7 +50,7 @@
 #include "db.h"
 #endif
 
-USING_NAMESPACE_ADS;
+using namespace odb;
 class dcrASA;
 
 #define ZUI_MAP_SIZE 1000

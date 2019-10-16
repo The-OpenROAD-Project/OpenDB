@@ -32,7 +32,7 @@
 #include "ads.h"
 #include <list>
 
-BEGIN_NAMESPACE_ADS
+namespace odb {
 
 class dbBlock;
 class dbInst;
@@ -86,4 +86,4 @@ class dbBlockCallBackObj
   dbBlock * _owner;
 };
 
-END_NAMESPACE_ADS
+} // namespace

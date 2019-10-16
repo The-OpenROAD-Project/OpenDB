@@ -45,7 +45,7 @@
 #include <string>
 #include "defout.h"
 
-BEGIN_NAMESPACE_ADS
+namespace odb {
 
 class dbBlock;
 class dbBTerm;
@@ -156,6 +156,6 @@ class defout_impl
     bool writeBlock( dbBlock * block, const char * def_file);
 };
 
-END_NAMESPACE_ADS
+} // namespace
 
 #endif

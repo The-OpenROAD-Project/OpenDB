@@ -47,7 +47,7 @@
 #include "definBase.h"
 #endif
 
-BEGIN_NAMESPACE_ADS
+namespace odb {
 
 struct Track
 {
@@ -72,6 +72,6 @@ class definTracks : public definITracks, public definBase
     void init();
 };
     
-END_NAMESPACE_ADS
+} // namespace
 
 #endif

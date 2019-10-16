@@ -29,7 +29,7 @@
 // OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 // OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-BEGIN_NAMESPACE_ADS
+namespace odb {
 enum Dir {X=0,Y};
 typedef struct _Bufloc {
   dbMaster *mas; 
@@ -207,4 +207,4 @@ extern int buffer_net_for_slew_maxcap(dbNet *net, dbITerm *worst_in, Miscdata *d
 extern bool init_buffer(dbDatabase *db,dbBlock *block,Miscdata &data,bool fixMaxCap);
 
 
-END_NAMESPACE_ADS
+} // namespace

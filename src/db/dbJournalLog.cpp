@@ -32,7 +32,7 @@
 #include "dbJournalLog.h"
 #include <string>
 
-BEGIN_NAMESPACE_ADS
+namespace odb {
 
 #define DEBUG_JOURNAL_LOG
 
@@ -268,4 +268,4 @@ dbOStream & operator<<( dbOStream & stream, const dbJournalLog & log )
     return stream;
 }
 
-END_NAMESPACE_ADS
+} // namespace

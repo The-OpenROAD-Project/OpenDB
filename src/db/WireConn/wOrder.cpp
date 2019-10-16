@@ -39,7 +39,7 @@
 #include "wOrder.h"
 #include "logger.h"
 
-BEGIN_NAMESPACE_ADS
+namespace odb {
 
 //
 // not including tmg_db.h, only need tmg_findNet
@@ -301,5 +301,5 @@ void orderWiresTableFree()
 }
 
 
-END_NAMESPACE_ADS
+} // namespace
 

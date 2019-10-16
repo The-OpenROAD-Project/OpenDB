@@ -36,7 +36,7 @@
 #include "db.h"
 #include "dbShape.h"
 
-BEGIN_NAMESPACE_ADS
+namespace odb {
 
 definVia::definVia()
 {
@@ -251,4 +251,4 @@ void definVia::viaEnd()
 }
 
     
-END_NAMESPACE_ADS
+} // namespace

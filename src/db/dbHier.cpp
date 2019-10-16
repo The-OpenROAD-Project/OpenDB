@@ -41,7 +41,7 @@
 #include "dbTable.hpp"
 #include "db.h"
 
-BEGIN_NAMESPACE_ADS
+namespace odb {
 
 template class dbTable<_dbHier>;
 
@@ -196,4 +196,4 @@ _dbHier::destroy( _dbHier * hier )
     parent->_hier_tbl->destroy(hier);
 }
 
-END_NAMESPACE_ADS
+} // namespace

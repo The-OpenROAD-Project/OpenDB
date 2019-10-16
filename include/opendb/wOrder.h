@@ -36,7 +36,7 @@
 #include "ads.h"
 #endif
 
-BEGIN_NAMESPACE_ADS
+namespace odb {
 
 class dbBlock;
 class dbNet;
@@ -53,7 +53,7 @@ void orderWiresTableFree();
 
 void findDisconnects(dbBlock *block, bool verbose);
 
-END_NAMESPACE_ADS
+} // namespace
 
 #endif
 

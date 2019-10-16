@@ -36,7 +36,7 @@
 #include "ads.h"
 #endif
 
-BEGIN_NAMESPACE_ADS
+namespace odb {
 
 class dbObject;
 class dbObjectTable;
@@ -56,6 +56,6 @@ class dbIterator
     virtual dbObject * getObject( register uint id, ... ) = 0;
 };
 
-END_NAMESPACE_ADS
+} // namespace
 
 #endif

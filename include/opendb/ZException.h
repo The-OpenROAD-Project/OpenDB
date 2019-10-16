@@ -42,7 +42,7 @@
 #define ADS_FORMAT_PRINTF(F,A)
 #endif
 
-BEGIN_NAMESPACE_ADS
+namespace odb {
 
 /////////////////////////////////
 // Base exception class
@@ -95,6 +95,6 @@ class ZAssert : public ZException
 
 #define ZALLOCATED( expr ) do { if ( (expr) == NULL ) throw ZOutOfMemory(); } while(0);
 
-END_NAMESPACE_ADS
+} // namespace
 
 #endif

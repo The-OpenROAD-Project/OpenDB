@@ -46,7 +46,7 @@
 #include "dbTypes.h"
 #endif
 
-BEGIN_NAMESPACE_ADS
+namespace odb {
 
 class dbWire;
 class dbVia;
@@ -352,6 +352,6 @@ dbWireGraph::createSegment( Node * src, Node * tgt, dbWireType::Value type, dbTe
     return createSegment(src,tgt,EndStyle(), EndStyle(), type, rule);
 }
 
-END_NAMESPACE_ADS
+} // namespace
 
 #endif

@@ -42,7 +42,7 @@
 
 #include <string>
 
-BEGIN_NAMESPACE_ADS
+namespace odb {
 
 /**********************************************************
  *
@@ -86,6 +86,6 @@ class definPropDefs : public definIPropDefs, public definBase
     virtual void endDefinitions();
 };
 
-END_NAMESPACE_ADS
+} // namespace
     
 #endif

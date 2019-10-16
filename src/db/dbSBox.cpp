@@ -42,7 +42,7 @@
 #include "dbTable.hpp"
 #include "db.h"
 
-BEGIN_NAMESPACE_ADS
+namespace odb {
 
 template class dbTable<_dbSBox>;
 
@@ -300,4 +300,4 @@ dbSBox::getSBox( dbBlock * block_, uint dbid_ )
     return (dbSBox *) block->_sbox_tbl->getPtr( dbid_ );
 }
 
-END_NAMESPACE_ADS
+} // namespace

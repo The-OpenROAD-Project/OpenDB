@@ -52,7 +52,7 @@
 #include "dbTypes.h"
 #endif
 
-BEGIN_NAMESPACE_ADS
+namespace odb {
 
 class dbObject;
 class dbBTerm;
@@ -73,6 +73,6 @@ class definPinProps : public definIPinProps, public definBase
     virtual ~definPinProps();
 };
     
-END_NAMESPACE_ADS
+} // namespace
 
 #endif

@@ -44,7 +44,7 @@
 #include "dbObject.h"
 #endif
 
-BEGIN_NAMESPACE_ADS
+namespace odb {
 
 class dbIStream;
 class dbOStream;
@@ -113,6 +113,6 @@ inline dbIStream & operator>>( dbIStream & stream, _dbMetrics & tmg )
     return stream;
 }
 
-END_NAMESPACE_ADS
+} // namespace
 
 #endif

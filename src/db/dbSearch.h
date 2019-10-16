@@ -62,7 +62,7 @@
 //class Groute;
 
 
-BEGIN_NAMESPACE_ADS
+namespace odb {
 
 //class Ath__searchBox;
 
@@ -195,8 +195,8 @@ public:
 	uint getWiresAndVias_all(dbNet *targetNet, bool ignoreFlag);
 	uint addWireViaCoords(uint menuId, uint subMenuId, bool wireVia, uint wireId, uint shapeId);
 	uint getWireVias(uint menuId, uint subMenuId, bool wireVia, dbNet* targetNet, bool excludeFlag);
-	int getShapeLevel(ads::dbShape *s, bool wireVia);
-	int getShapeLevel(ads::dbSBox *s, bool wireVia);
+	int getShapeLevel(dbShape *s, bool wireVia);
+	int getShapeLevel(dbSBox *s, bool wireVia);
 
 	uint getItermShapesWithViaShapes(dbITerm * iterm);
 	uint getItermShapesNoVias(dbITerm * iterm);
@@ -280,7 +280,7 @@ public:
 	uint makeQuadTable(uint rowCnt, uint colCnt, uint metH, uint metV);
 	uint assignTracks(uint metH, uint metV);
 	
-//	uint getShapeCoords(dbShape *s, ads::Ath__searchBox *bb, uint id1, uint id2, uint level);
+//	uint getShapeCoords(dbShape *s, Ath__searchBox *bb, uint id1, uint id2, uint level);
 //	dbNet* getShapeCoords(bool wireVia, Ath__searchBox *bb, uint wireId, uint shapeId);
 
 	uint createTblocks();
@@ -305,8 +305,8 @@ public:
 
 	int inspect_1(Ath__zui *zui);
 
-	uint getViaLevel(ads::dbShape *s);
-	uint getViaLevel(ads::dbSBox *s);
+	uint getViaLevel(dbShape *s);
+	uint getViaLevel(dbSBox *s);
 	void getSignalWiresAndVias(Ath__zui *zui, Ath__hierType hier, bool ignoreFlag);
 	uint getNetConnectivity(Ath__zui *zui, dbNet *net, bool contextFlag, 
 		bool ignoreLayerFlags, bool ignoreZuiFlags, bool ignoreBB=false);
@@ -356,7 +356,7 @@ public:
 	uint getPowerWireVias(ZPtr<ISdb> sdb, dbNet* targetNet, bool vias, std::vector<dbBox *> &viaTable);
 };
 
-END_NAMESPACE_ADS;
+} // namespace;
 
 #endif
 

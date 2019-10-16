@@ -46,7 +46,7 @@
 #include "geom.h"
 #endif
 
-BEGIN_NAMESPACE_ADS
+namespace odb {
 
 class ZArgs;
 template <class M> class ZBindings;
@@ -192,6 +192,6 @@ class ZBindings
     ZConfig<M> * findConfig( const char * name );
 };
 
-END_NAMESPACE_ADS
+} // namespace
 
 #endif

@@ -57,7 +57,7 @@
 #include "dbDatabase.h"
 #endif
 
-BEGIN_NAMESPACE_ADS
+namespace odb {
 
 class _dbBox;
 class _dbInstHdr;
@@ -130,6 +130,6 @@ class _dbInst : public dbObject
 dbOStream & operator<<( dbOStream & stream,  const _dbInst & inst );
 dbIStream & operator>>( dbIStream & stream, _dbInst & inst );
 
-END_NAMESPACE_ADS
+} // namespace
 
 #endif

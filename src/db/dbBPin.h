@@ -48,7 +48,7 @@
 #include "dbTypes.h"
 #endif
 
-BEGIN_NAMESPACE_ADS
+namespace odb {
 
 class _dbBTerm;
 class _dbBox;
@@ -90,6 +90,6 @@ dbIStream & operator>>( dbIStream & stream, _dbBPin & bpin );
 dbOStream & operator<<( dbOStream & stream, const _dbBPin & bpin );
 
 
-END_NAMESPACE_ADS
+} // namespace
 
 #endif

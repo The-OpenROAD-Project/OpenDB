@@ -34,7 +34,7 @@
 
 #include <algorithm>
 
-BEGIN_NAMESPACE_ADS
+namespace odb {
 //
 // diff_object - Diff the object if this is a deep-diff, otherwise diff the
 // field.
@@ -361,6 +361,6 @@ inline void set_symmetric_diff( dbDiff & diff, const char * field, const std::ve
     diff.end_object();
 }
 
-END_NAMESPACE_ADS
+} // namespace
 
 #endif

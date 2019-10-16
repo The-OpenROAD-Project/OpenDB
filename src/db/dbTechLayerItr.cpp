@@ -34,7 +34,7 @@
 #include "dbTechLayer.h"
 #include "dbTable.h"
 
-BEGIN_NAMESPACE_ADS
+namespace odb {
 
 bool dbTechLayerItr::reversible()
 {
@@ -88,4 +88,4 @@ dbObject * dbTechLayerItr::getObject( register uint id, ... )
     return _layer_tbl->getPtr(id);
 }
 
-END_NAMESPACE_ADS
+} // namespace

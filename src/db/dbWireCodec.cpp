@@ -41,7 +41,7 @@
 #include "db.h"
 #include <ctype.h>
 
-BEGIN_NAMESPACE_ADS
+namespace odb {
 
 //////////////////////////////////////////////////////////////////////////////////
 //
@@ -1355,4 +1355,4 @@ dumpDecoder(dbBlock *inblk, const char *net_name_or_id)
   dumpDecoder4Net(innet);
 }
 
-END_NAMESPACE_ADS
+} // namespace

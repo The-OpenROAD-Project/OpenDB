@@ -48,7 +48,7 @@
 #include "definBase.h"
 #endif
 
-BEGIN_NAMESPACE_ADS
+namespace odb {
 
 class dbInst;
 class dbMaster;
@@ -104,6 +104,6 @@ class definComponent : public definIComponent, public definBase
     }
 };
     
-END_NAMESPACE_ADS
+} // namespace
 
 #endif

@@ -36,7 +36,7 @@
 #include "ads.h"
 #endif
 
-BEGIN_NAMESPACE_ADS
+namespace odb {
 
 ///
 /// This file declares the non-persistant database objects and misc. type-definitions.
@@ -1064,6 +1064,6 @@ class Ads_NoCopy  {
     Ads_NoCopy & operator = (const Ads_NoCopy & q); 
 };
 
-END_NAMESPACE_ADS
+} // namespace
 
 #endif

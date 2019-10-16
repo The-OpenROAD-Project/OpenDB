@@ -44,7 +44,7 @@
 #include "definBase.h"
 #endif
 
-BEGIN_NAMESPACE_ADS
+namespace odb {
 
 class dbRegion;
 
@@ -69,6 +69,6 @@ class definRegion : public definIRegion, public definBase
     virtual void end();
 };
     
-END_NAMESPACE_ADS
+} // namespace
 
 #endif

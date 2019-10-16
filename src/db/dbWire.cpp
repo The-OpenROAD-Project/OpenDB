@@ -44,7 +44,7 @@
 #include "dbRtTree.h"
 #include <algorithm>
 
-BEGIN_NAMESPACE_ADS
+namespace odb {
 
 template class dbTable<_dbWire>;
 static void set_symmetric_diff( dbDiff & diff, std::vector<dbShape *> & lhs, std::vector<dbShape *> & rhs );
@@ -124,7 +124,7 @@ void _dbWire::out( dbDiff & diff, char side, const char * field ) const
        dbShape s;
        for( itr.begin((dbWire *)this); itr.next(s); )
        {
-           ads::out( diff, side, &s );
+	 odb::out( diff, side, &s );
        }
     }
 
@@ -1945,4 +1945,4 @@ void dbWire::destroy( dbWire * wire_ )
     block->_wire_tbl->destroy(wire);
 }
 
-END_NAMESPACE_ADS
+} // namespace

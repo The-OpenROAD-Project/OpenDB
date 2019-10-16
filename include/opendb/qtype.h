@@ -42,7 +42,7 @@
 #include "conn.h"
 #include "zui.h"
 
-USING_NAMESPACE_ADS;
+using namespace odb;
 
 
 class Ath__grid;

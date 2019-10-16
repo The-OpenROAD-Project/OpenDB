@@ -48,7 +48,7 @@
 ///
 #define ZCOMPONENT(COMPONENT) ZCID_##COMPONENT
 
-BEGIN_NAMESPACE_ADS
+namespace odb {
 
 enum ZComponentID
 {
@@ -77,6 +77,6 @@ enum ZInterfaceID
     ZINTERFACE(IoaReader)
 };
 
-END_NAMESPACE_ADS
+} // namespace
 
 #endif

@@ -31,7 +31,7 @@
 
 #include "db.h"
 
-BEGIN_NAMESPACE_ADS
+namespace odb {
 
 void test_eco()
 {
@@ -148,4 +148,4 @@ void test_eco()
     fclose(file);
 }
 
-END_NAMESPACE_ADS
+} // namespace

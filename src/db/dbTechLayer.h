@@ -52,7 +52,7 @@
 #include "dbMatrix.h"
 #endif
 
-BEGIN_NAMESPACE_ADS
+namespace odb {
 
 template <class T> class dbTable;
 
@@ -136,6 +136,6 @@ struct _LyFlags
 dbOStream & operator<<( dbOStream & stream, const _dbTechLayer & layer );
 dbIStream & operator>>( dbIStream & stream, _dbTechLayer & layer );
 
-END_NAMESPACE_ADS
+} // namespace
 
 #endif

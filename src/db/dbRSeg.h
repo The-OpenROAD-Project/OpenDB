@@ -54,7 +54,7 @@
 
 #include "dbDatabase.h"
 
-BEGIN_NAMESPACE_ADS
+namespace odb {
 
 class _dbNet;
 class _dbDatabase;
@@ -194,6 +194,6 @@ inline dbIStream & operator>>( dbIStream & stream, _dbRSeg & seg )
     return stream;
 }
 
-END_NAMESPACE_ADS
+} // namespace
 
 #endif

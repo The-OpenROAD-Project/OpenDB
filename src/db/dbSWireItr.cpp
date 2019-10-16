@@ -35,7 +35,7 @@
 #include "dbSWire.h"
 #include "dbTable.h"
 
-BEGIN_NAMESPACE_ADS
+namespace odb {
 
 ////////////////////////////////////////////////////////////////////
 //
@@ -112,4 +112,4 @@ dbObject * dbSWireItr::getObject( register uint id, ... )
     return _swire_tbl->getPtr(id);
 }
 
-END_NAMESPACE_ADS
+} // namespace

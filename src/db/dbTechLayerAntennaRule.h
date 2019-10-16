@@ -44,7 +44,7 @@
 #include "dbTechLayer.h"
 #endif
 
-BEGIN_NAMESPACE_ADS
+namespace odb {
 
 class _dbDatabase;
 class _dbMTerm;
@@ -226,6 +226,6 @@ class _dbTechAntennaPinModel : public dbObject
 dbOStream & operator<<( dbOStream & stream, const _dbTechAntennaPinModel & inmod );
 dbIStream & operator>>( dbIStream & stream, _dbTechAntennaPinModel & inmod );
 
-END_NAMESPACE_ADS
+} // namespace
 
 #endif

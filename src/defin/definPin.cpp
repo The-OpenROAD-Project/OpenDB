@@ -37,7 +37,7 @@
 #include "dbShape.h"
 #include "dbTransform.h"
 
-BEGIN_NAMESPACE_ADS
+namespace odb {
 
 definPin::definPin()
         : _bterm_cnt(0),
@@ -458,4 +458,4 @@ void definPin::pinsEnd()
     }
 }
     
-END_NAMESPACE_ADS
+} // namespace

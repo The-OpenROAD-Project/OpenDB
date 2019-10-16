@@ -39,7 +39,7 @@
 #include "db.h"
 #include <algorithm>
 
-BEGIN_NAMESPACE_ADS
+namespace odb {
 
 template class dbTable<_dbGCellGrid>;
 
@@ -245,4 +245,4 @@ dbGCellGrid::getGCellGrid( dbBlock * block_, uint dbid_ )
     return (dbGCellGrid *) block->_gcell_grid_tbl->getPtr(dbid_);
 }
 
-END_NAMESPACE_ADS
+} // namespace

@@ -37,7 +37,7 @@
 #include "db.h"
 #endif
 
-BEGIN_NAMESPACE_ADS
+namespace odb {
 
 void create_box( dbSWire * wire, 
                  dbWireShapeType type,
@@ -60,4 +60,4 @@ dbTechLayer * create_via_array( dbSWire * wire,
                                 int orig_x, int orig_y,
                                 int numX, int numY, int stepX, int stepY );
 
-END_NAMESPACE_ADS
+} // namespace

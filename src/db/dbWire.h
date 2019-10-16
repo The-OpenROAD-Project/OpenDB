@@ -52,7 +52,7 @@
 #include "dbVector.h"
 #endif
 
-BEGIN_NAMESPACE_ADS
+namespace odb {
 
 class _dbWire;
 class _dbNet;
@@ -95,6 +95,6 @@ public:
 dbOStream & operator<<( dbOStream & stream, const _dbWire & wire );
 dbIStream & operator>>( dbIStream & stream, _dbWire & wire );
 
-END_NAMESPACE_ADS
+} // namespace
 
 #endif

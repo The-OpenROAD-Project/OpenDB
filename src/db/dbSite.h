@@ -52,7 +52,7 @@
 #include "dbHashTable.h"
 #endif
 
-BEGIN_NAMESPACE_ADS
+namespace odb {
 
 template <class T> class dbTable;
 class dbIStream;
@@ -110,6 +110,6 @@ inline dbIStream & operator>>( dbIStream & stream, _dbSite & site )
     return stream;
 }
 
-END_NAMESPACE_ADS
+} // namespace
 
 #endif

@@ -41,7 +41,7 @@
 #include "dbShape.h"
 #include "dbCapNode.h"
 
-BEGIN_NAMESPACE_ADS
+namespace odb {
 
 dbFlatten::dbFlatten()
         : _do_not_copy_power_wires(true),
@@ -417,7 +417,7 @@ dbNet * dbFlatten::copyNet( dbBlock * parent_block, dbNet * child_net )
 void dbFlatten::printShapes(FILE *fp, dbWire *wire, bool skip_rcSegs)
 {
         dbWireShapeItr shapes;
-        ads::dbShape s;
+        dbShape s;
 
         for( shapes.begin(wire); shapes.next(s); )
         {
@@ -491,7 +491,7 @@ void dbFlatten::printShapes(FILE *fp, dbWire *wire, bool skip_rcSegs)
 void dbFlatten::setOldShapeIds(dbWire *wire)
 {
         dbWireShapeItr shapes;
-        ads::dbShape s;
+        dbShape s;
 
         for( shapes.begin(wire); shapes.next(s); )
         {
@@ -508,7 +508,7 @@ void dbFlatten::mapOld2newIds(dbWire *wire, FILE *fp)
 	if (fp!=NULL)
 		fprintf(fp, "\nmapOld2newIds\n");
         dbWireShapeItr shapes;
-        ads::dbShape s;
+        dbShape s;
 
         for( shapes.begin(wire); shapes.next(s); )
         {
@@ -1417,4 +1417,4 @@ uint dbFlatten::printRSegs(FILE *fp, dbNet *net)
         }
         return rCnt;
 }
-END_NAMESPACE_ADS
+} // namespace

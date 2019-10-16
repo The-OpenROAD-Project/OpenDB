@@ -36,7 +36,7 @@
 #include "dbObject.h"
 #endif
 
-BEGIN_NAMESPACE_ADS
+namespace odb {
 
 class dbCCSeg;
 
@@ -195,6 +195,6 @@ class dbSet<dbCCSeg>
     }
 };
 
-END_NAMESPACE_ADS
+} // namespace
 
 #endif

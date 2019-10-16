@@ -39,7 +39,7 @@
 #include "dbCapNode.h"
 #include "db.h"
 
-BEGIN_NAMESPACE_ADS
+namespace odb {
 
 void invalidateTiming (dbBlock *block);
 void invalidateTiming (dbInst *inst);
@@ -1311,4 +1311,4 @@ dbIStream & operator>>( dbIStream & stream, dbJournal & journal )
     return stream;
 }
 
-END_NAMESPACE_ADS
+} // namespace

@@ -65,7 +65,7 @@
 extern int db_test_wires( dbDatabase * db );
 extern void db_test_wires2( dbBlock * block );
 
-BEGIN_NAMESPACE_ADS
+namespace odb {
 extern void db_report_regions( dbBlock *blk );
 int AthResourceLog(char *title, int smallScale=0);
 // breaking the link to TMG - payam 01/09/2006
@@ -323,7 +323,7 @@ int ZDB::get_children( ZArgs * in, ZArgs * out )
 	}
 	
 	std::string name_list;
-	std::list<ads::dbBlock*> blk_list;
+	std::list<dbBlock*> blk_list;
 
 	dbSet<dbBlock> children = block->getChildren();
 	dbSet<dbBlock>::iterator itr;
@@ -5054,5 +5054,5 @@ int ZDB::eco_update_wires( ZArgs * in, ZArgs * out )
 
     return TCL_OK;
 }
-END_NAMESPACE_ADS
+} // namespace
 

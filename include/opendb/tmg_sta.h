@@ -46,7 +46,7 @@ namespace sta
   class LibertyCell;
 }
 
-BEGIN_NAMESPACE_ADS
+namespace odb {
 
 class tmg_db;
 struct tmg_corner;
@@ -156,7 +156,7 @@ class tmg_sta {
 
 #include "../tmg/TmgSta.T"
 
-END_NAMESPACE_ADS
+} // namespace
 
 #endif
 

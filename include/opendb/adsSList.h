@@ -36,7 +36,7 @@
 #include "ads.h"
 #endif
 
-BEGIN_NAMESPACE_ADS
+namespace odb {
 
 ///
 /// This class implements an instrusive singlely-linked list.
@@ -384,14 +384,14 @@ class adsSList
 };
 
 
-END_NAMESPACE_ADS
+} // namespace
 
 #if 0
 #include <stdio.h>
 #include <assert.h>
 #include <vector>
 
-USING_NAMESPACE_ADS;
+using namespace odb;
 
 struct elem
 {
@@ -444,7 +444,7 @@ main()
         elems[r2] = e;
     }
     
-    ads::adsSList<elem, elem::getEntry> l1;
+    adsSList<elem, elem::getEntry> l1;
 
     for( i = 0; i < M; ++i )
     {
@@ -454,7 +454,7 @@ main()
     
     l1.sort(cmp());
     
-    ads::adsSList<elem, elem::getEntry>::iterator itr;
+    adsSList<elem, elem::getEntry>::iterator itr;
 
     for( i = 0, itr = l1.begin(); itr != l1.end(); ++itr, i++ )
     {

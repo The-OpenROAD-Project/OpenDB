@@ -35,7 +35,7 @@
 #include "definNonDefaultRule.h"
 #include "db.h"
 
-BEGIN_NAMESPACE_ADS
+namespace odb {
 
 definNonDefaultRule::definNonDefaultRule()
         : _cur_rule(NULL), _cur_layer_rule(NULL)
@@ -228,4 +228,4 @@ void definNonDefaultRule::endRules()
 {
 }
     
-END_NAMESPACE_ADS
+} // namespace

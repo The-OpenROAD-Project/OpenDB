@@ -41,7 +41,7 @@
 #include "dbTable.hpp"
 #include "db.h"
 
-BEGIN_NAMESPACE_ADS
+namespace odb {
 
 template class dbTable<_dbChip>;
 
@@ -131,7 +131,7 @@ _dbChip::~_dbChip()
     delete _prop_tbl;
     delete _name_cache;
 /* dimitri_fix: cooment 2 delete LOOK_AGAIN ******************************
- warning: deleting object of polymorphic class type ‘ads::dbBlockItr’ which has non-virtual destructor might cause undefined behavior [-Wdelete-non-virtual-dtor]
+ warning: deleting object of polymorphic class type ‘dbBlockItr’ which has non-virtual destructor might cause undefined behavior [-Wdelete-non-virtual-dtor]
 
     delete _block_itr;
     delete _prop_itr;
@@ -245,4 +245,4 @@ dbChip::destroy( dbChip * chip_ )
     db->_chip = 0;
 }
 
-END_NAMESPACE_ADS
+} // namespace

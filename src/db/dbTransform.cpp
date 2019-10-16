@@ -38,7 +38,7 @@
 #include "dbDiff.h"
 #endif
 
-BEGIN_NAMESPACE_ADS
+namespace odb {
 
 static dbOrientType::Value orientMul[8][8] =
 {
@@ -203,4 +203,4 @@ void dbTransform::concat( const dbTransform & t, dbTransform & result )
     result._orient = orientMul[_orient][t._orient];
 }
 
-END_NAMESPACE_ADS
+} // namespace

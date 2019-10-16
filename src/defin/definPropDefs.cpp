@@ -32,7 +32,7 @@
 #include "definPropDefs.h"
 #include "db.h"
 
-BEGIN_NAMESPACE_ADS
+namespace odb {
 
 void definPropDefs::beginDefinitions()
 {
@@ -177,4 +177,4 @@ void definPropDefs::end()
 {
 }
 
-END_NAMESPACE_ADS
+} // namespace

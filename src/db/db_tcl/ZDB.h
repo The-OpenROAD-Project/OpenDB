@@ -37,7 +37,7 @@
 #include "tm.h"
 #endif
 
-BEGIN_NAMESPACE_ADS
+namespace odb {
 
 class dbDatabase;
 class dbTechNonDefaultRule;
@@ -169,4 +169,4 @@ class ZDB : public ZTechModule<ZDB>
     int eco_update_wires( ZArgs * in, ZArgs * out );
 };
 
-END_NAMESPACE_ADS
+} // namespace

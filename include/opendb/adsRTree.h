@@ -50,7 +50,7 @@
 #include "../zlib/adsRTreeCore.h"
 #endif
 
-BEGIN_NAMESPACE_ADS
+namespace odb {
 
 template <class T> class adsRTree;
 
@@ -473,6 +473,6 @@ inline bool adsRTreeIterator<T>::next( T & value )
 }
 
 
-END_NAMESPACE_ADS
+} // namespace
 
 #endif

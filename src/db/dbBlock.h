@@ -79,7 +79,7 @@
 #include "ISdb.h"
 #endif
 */
-BEGIN_NAMESPACE_ADS
+namespace odb {
 
 //class ISdb : public ZObject
 //{
@@ -299,6 +299,6 @@ class _dbBlock : public dbObject
 dbOStream & operator<<( dbOStream & stream, const _dbBlock & block );
 dbIStream & operator>>( dbIStream & stream, _dbBlock & block );
 
-END_NAMESPACE_ADS
+} // namespace
 
 #endif

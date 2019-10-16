@@ -40,7 +40,7 @@
 #include "dbDiff.hpp"
 #include "db.h"
 
-BEGIN_NAMESPACE_ADS
+namespace odb {
 
 template class dbTable<_dbTechViaRule>;
 
@@ -208,4 +208,4 @@ dbTechViaRule::getTechViaRule( dbTech * tech_, uint dbid_ )
     return (dbTechViaRule *) tech->_via_rule_tbl->getPtr( dbid_ );
 }
 
-END_NAMESPACE_ADS
+} // namespace

@@ -40,7 +40,7 @@
 #include "ads.h"
 #endif
 
-BEGIN_NAMESPACE_ADS
+namespace odb {
 
 class ZObject;
 class dbDatabase;
@@ -81,6 +81,6 @@ public:
     dbObject * resolveDB( const char * dbname );
 };
 
-END_NAMESPACE_ADS
+} // namespace
 
 #endif

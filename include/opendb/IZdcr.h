@@ -45,7 +45,7 @@
 #endif
 
 
-BEGIN_NAMESPACE_ADS
+namespace odb {
 
 class IZgui;
 
@@ -138,6 +138,6 @@ class IZdcr : public ZObject
 
 };
 
-END_NAMESPACE_ADS
+} // namespace
 
 #endif

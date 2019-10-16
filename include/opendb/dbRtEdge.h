@@ -44,7 +44,7 @@
 #include "dbTypes.h"
 #endif
 
-BEGIN_NAMESPACE_ADS
+namespace odb {
 
 class dbVia;
 class dbTechVia;
@@ -308,6 +308,6 @@ class dbRtVWire : public dbRtEdge
     friend class dbRtTree;
 };
 
-END_NAMESPACE_ADS
+} // namespace
 
 #endif

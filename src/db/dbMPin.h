@@ -44,7 +44,7 @@
 #include "dbObject.h"
 #endif
 
-BEGIN_NAMESPACE_ADS
+namespace odb {
 
 class _dbMTerm;
 class _dbBox;
@@ -74,6 +74,6 @@ class _dbMPin : public dbObject
 dbOStream & operator<<( dbOStream & stream, const _dbMPin & mpin );
 dbIStream & operator>>( dbIStream & stream, _dbMPin & mpin );
 
-END_NAMESPACE_ADS
+} // namespace
 
 #endif

@@ -32,7 +32,7 @@
 #include "dbStream.h"
 #include "db.h"
 
-BEGIN_NAMESPACE_ADS
+namespace odb {
 
 dbOStream & operator<<( dbOStream & stream, const adsRect & r )
 {
@@ -99,4 +99,4 @@ dbIStream::dbIStream( _dbDatabase * db, FILE * f )
     }
 }
 
-END_NAMESPACE_ADS
+} // namespace

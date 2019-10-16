@@ -42,7 +42,7 @@
 #include <map>
 #include <vector>
 
-BEGIN_NAMESPACE_ADS
+namespace odb {
 
 class dbObject;
 class dbInst;
@@ -152,6 +152,6 @@ class dbCreateNetUtil
 };
 
 
-END_NAMESPACE_ADS
+} // namespace
 
 #endif

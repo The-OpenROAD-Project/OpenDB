@@ -37,7 +37,7 @@
 #include "db.h"
 #include "dbShape.h"
 
-BEGIN_NAMESPACE_ADS
+namespace odb {
 
 definBlockage::definBlockage()
 {
@@ -218,4 +218,4 @@ void definBlockage::blockagePlacementEnd()
 {
 }
     
-END_NAMESPACE_ADS
+} // namespace

@@ -38,7 +38,7 @@
 #include "dbTable.h"
 #include "db.h"
 
-BEGIN_NAMESPACE_ADS
+namespace odb {
 
 #define DB_WIRE_DECODE_INVALID_OPCODE 0
 
@@ -330,4 +330,4 @@ int dbWireShapeItr::getShapeId()
     return _shape_id;
 }
 
-END_NAMESPACE_ADS
+} // namespace

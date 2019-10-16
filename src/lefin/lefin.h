@@ -63,7 +63,7 @@ class lefiObstruction;
 class lefiGeometries;
 class lefiGeomPolygon;
 
-BEGIN_NAMESPACE_ADS
+namespace odb {
 
 class dbObject;
 class dbTech;
@@ -236,6 +236,6 @@ class lefin
     bool updateTechAndLib( dbLib * lib, const char * lef_file );
 };
 
-END_NAMESPACE_ADS
+} // namespace
 
 #endif

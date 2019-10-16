@@ -48,7 +48,7 @@
 #include "definBase.h"
 #endif
 
-BEGIN_NAMESPACE_ADS
+namespace odb {
 
 class dbTechNonDefaultRule;
 class dbTechLayerRule;
@@ -80,6 +80,6 @@ class definNonDefaultRule : public definINonDefaultRule, public definBase
     void init();
 };
     
-END_NAMESPACE_ADS
+} // namespace
 
 #endif

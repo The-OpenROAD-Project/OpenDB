@@ -56,7 +56,7 @@
 #include "dbObject.h"
 #endif
 
-BEGIN_NAMESPACE_ADS
+namespace odb {
 
 class _dbTech;
 class _dbBlock;
@@ -109,6 +109,6 @@ class _dbTechNonDefaultRule : public dbObject
 dbOStream & operator<<( dbOStream & stream, const _dbTechNonDefaultRule & rule );
 dbIStream & operator>>( dbIStream & stream, _dbTechNonDefaultRule & rule );
 
-END_NAMESPACE_ADS
+} // namespace
 
 #endif

@@ -39,7 +39,7 @@
 #include "db.h"
 #include "lefout.h"
 
-BEGIN_NAMESPACE_ADS
+namespace odb {
 
 template class dbTable<_dbTechLayerAntennaRule>;
 template class dbTable<_dbTechAntennaPinModel>;
@@ -753,4 +753,4 @@ dbTechAntennaPinModel * dbTechAntennaPinModel::getAntennaPinModel( dbMaster * _m
     return (dbTechAntennaPinModel *) master->_antenna_pin_model_tbl->getPtr(dbid);
 }
 
-END_NAMESPACE_ADS
+} // namespace

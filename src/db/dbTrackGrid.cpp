@@ -42,7 +42,7 @@
 #include "db.h"
 #include <algorithm>
 
-BEGIN_NAMESPACE_ADS
+namespace odb {
 
 template class dbTable<_dbTrackGrid>;
 
@@ -265,4 +265,4 @@ dbTrackGrid::getTrackGrid( dbBlock * block_, uint dbid_ )
     return (dbTrackGrid *) block->_track_grid_tbl->getPtr(dbid_);
 }
 
-END_NAMESPACE_ADS
+} // namespace

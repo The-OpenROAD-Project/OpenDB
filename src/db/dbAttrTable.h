@@ -48,7 +48,7 @@
 #include "dbDiff.h"
 #endif
 
-BEGIN_NAMESPACE_ADS
+namespace odb {
 
 class dbDiff;
 
@@ -312,6 +312,6 @@ inline dbIStream & operator>>( dbIStream & stream, dbAttrTable<T> & t )
     return stream;
 }
 
-END_NAMESPACE_ADS
+} // namespace
 
 #endif

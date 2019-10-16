@@ -36,7 +36,7 @@
 #include "definRegion.h"
 #include "db.h"
 
-BEGIN_NAMESPACE_ADS
+namespace odb {
 
 definRegion::definRegion()
 {
@@ -184,4 +184,4 @@ void definRegion::end()
     }
 }
 
-END_NAMESPACE_ADS
+} // namespace

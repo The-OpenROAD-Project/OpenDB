@@ -37,7 +37,7 @@
 #include "tmg_conn.h"
 #include <logger.h>
 
-BEGIN_NAMESPACE_ADS
+namespace odb {
 
 struct tcg_edge;
 struct tcg_edge {
@@ -1188,4 +1188,4 @@ void tmg_conn::copyWireIdToVisitedShorts(int j)
   }
 }
 
-END_NAMESPACE_ADS
+} // namespace

@@ -36,7 +36,7 @@
 #include "../dbNameServer.h"
 #include "../dbStream.h"
 
-USING_NAMESPACE_ADS;
+using namespace odb
 
 int errors = 0;
 

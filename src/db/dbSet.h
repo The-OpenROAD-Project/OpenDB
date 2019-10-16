@@ -36,7 +36,7 @@
 #include "dbIterator.h"
 #endif
 
-BEGIN_NAMESPACE_ADS
+namespace odb {
 
 template <class T> class dbSet;
 
@@ -238,7 +238,7 @@ inline dbSetIterator<T> dbSetIterator<T>::operator++(int)
     return it;
 }
 
-END_NAMESPACE_ADS
+} // namespace
 
 // Specialization definitions
 #include "dbCCSegSet.h"

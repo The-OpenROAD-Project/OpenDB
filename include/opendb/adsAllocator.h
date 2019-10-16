@@ -42,7 +42,7 @@
 #define ADS_PURIFY_ALLOCATOR
 #endif
 
-BEGIN_NAMESPACE_ADS
+namespace odb {
 
 ///
 /// Simple memory pool.
@@ -241,6 +241,6 @@ inline void adsAllocator<T>::new_block()
 }
 
 
-END_NAMESPACE_ADS
+} // namespace
 
 #endif

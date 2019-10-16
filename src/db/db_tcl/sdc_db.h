@@ -47,7 +47,7 @@
 
 
 
-BEGIN_NAMESPACE_ADS
+namespace odb {
 
 
 class Sdc_db
@@ -77,6 +77,6 @@ public:
 	
 };
 
-END_NAMESPACE_ADS
+} // namespace
 
 #endif

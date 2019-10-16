@@ -58,7 +58,7 @@
 
 #include <string>
 
-BEGIN_NAMESPACE_ADS
+namespace odb {
 
 class dbBTerm;
 class dbTechLayer;
@@ -145,6 +145,6 @@ class definPin : public definIPin, public definBase
     void init();
 };
     
-END_NAMESPACE_ADS
+} // namespace
 
 #endif

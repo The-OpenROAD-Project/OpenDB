@@ -34,7 +34,7 @@
 
 #include "array1.h"
 
-BEGIN_NAMESPACE_ADS
+namespace odb {
     
 class dbNet;
 class dbInst;
@@ -61,6 +61,6 @@ class dbPrintControl
     uint getPrintCnt(dbPrintControl::Type ptype, dbInst *inst);
 };
 
-END_NAMESPACE_ADS
+} // namespace
 
 #endif

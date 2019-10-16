@@ -36,7 +36,7 @@
 #include "db.h"
 #include <string.h>
 
-BEGIN_NAMESPACE_ADS
+namespace odb {
 
 uint dbObject::getId() const
 {
@@ -680,4 +680,4 @@ const char * dbObject::getObjName( dbObjectType type )
     return name_tbl[type];
 }
 
-END_NAMESPACE_ADS
+} // namespace

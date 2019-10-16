@@ -35,7 +35,7 @@
 #include "dbBTerm.h"
 #include "dbTable.h"
 
-BEGIN_NAMESPACE_ADS
+namespace odb {
 
 ////////////////////////////////////////////////////////////////////
 //
@@ -123,4 +123,4 @@ dbObject * dbNetBTermItr::getObject( register uint id, ... )
     return _bterm_tbl->getPtr(id);
 }
 
-END_NAMESPACE_ADS
+} // namespace

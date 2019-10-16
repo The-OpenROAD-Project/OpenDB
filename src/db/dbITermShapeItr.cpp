@@ -33,7 +33,7 @@
 #include "db.h"
 #include "ZException.h"
 
-BEGIN_NAMESPACE_ADS
+namespace odb {
 
 dbITermShapeItr::dbITermShapeItr( bool expand_vias )
 {
@@ -164,4 +164,4 @@ void dbITermShapeItr::getViaBox( dbBox * box, dbShape & shape )
     shape.setViaBox( _via, box->getTechLayer(), r );
 }
 
-END_NAMESPACE_ADS
+} // namespace

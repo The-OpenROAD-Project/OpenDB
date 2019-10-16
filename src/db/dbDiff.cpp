@@ -31,7 +31,7 @@
 
 #include "dbDiff.h"
 
-BEGIN_NAMESPACE_ADS
+namespace odb {
 
 dbDiff::dbDiff( FILE * f )
 {
@@ -917,4 +917,4 @@ void dbDiff::out( char side, const char * field, TechMinCutRule::_RuleType value
     (*this) << "\n";
 }
 
-END_NAMESPACE_ADS
+} // namespace

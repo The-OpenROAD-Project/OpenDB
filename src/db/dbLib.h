@@ -44,7 +44,7 @@
 #include "dbHashTable.h"
 #endif
 
-BEGIN_NAMESPACE_ADS
+namespace odb {
 
 template <class T> class dbTable;
 class _dbProperty;
@@ -94,6 +94,6 @@ class _dbLib : public dbObject
 dbOStream & operator<<( dbOStream & stream, const _dbLib & lib );
 dbIStream & operator>>( dbIStream & stream, _dbLib & lib );
 
-END_NAMESPACE_ADS
+} // namespace
 
 #endif

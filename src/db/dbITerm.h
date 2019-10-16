@@ -48,7 +48,7 @@
 #include "dbDatabase.h"
 #endif
 
-BEGIN_NAMESPACE_ADS
+namespace odb {
 
 class _dbNet;
 class _dbTmg;
@@ -167,6 +167,6 @@ inline dbIStream & operator>>( dbIStream & stream, _dbITerm & iterm )
     return stream;
 }
 
-END_NAMESPACE_ADS
+} // namespace
 
 #endif

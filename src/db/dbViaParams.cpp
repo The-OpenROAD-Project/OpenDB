@@ -33,7 +33,7 @@
 #include "dbDiff.h"
 #include "db.h"
 
-BEGIN_NAMESPACE_ADS
+namespace odb {
 
 ////////////////////////////////////////////////////////////////////
 //
@@ -493,4 +493,4 @@ void dbViaParams::setBottomLayer( dbTechLayer * layer )
     _bot_layer = layer->getId();
 }
 
-END_NAMESPACE_ADS
+} // namespace

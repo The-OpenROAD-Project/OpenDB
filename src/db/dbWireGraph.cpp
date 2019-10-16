@@ -33,7 +33,7 @@
 #include "dbWire.h"
 #include "dbWireCodec.h"
 
-BEGIN_NAMESPACE_ADS
+namespace odb {
 
 static void addObject( dbWireEncoder & encoder, dbObject * obj )
 {
@@ -816,4 +816,4 @@ void dbWireGraph::encodePath( dbWireEncoder & encoder, std::vector<Edge *> & pat
     path.clear();
 }
 
-END_NAMESPACE_ADS
+} // namespace

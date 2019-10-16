@@ -44,7 +44,7 @@
 #include "dbObject.h"
 #endif
 
-BEGIN_NAMESPACE_ADS
+namespace odb {
 
 class _dbDatabase;
 class dbIStream;
@@ -79,6 +79,6 @@ class _dbName : public dbObject
 dbOStream & operator<<( dbOStream & stream, const _dbName & n );
 dbIStream & operator>>( dbIStream & stream, _dbName & n );
 
-END_NAMESPACE_ADS
+} // namespace
 
 #endif

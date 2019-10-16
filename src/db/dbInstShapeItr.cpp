@@ -33,7 +33,7 @@
 #include "ZException.h"
 #include "db.h"
 
-BEGIN_NAMESPACE_ADS
+namespace odb {
 
 dbInstShapeItr::dbInstShapeItr( bool expand_vias )
 {
@@ -248,4 +248,4 @@ bool dbInstShapeItr::next( dbShape & shape )
     return false;
 }
 
-END_NAMESPACE_ADS
+} // namespace

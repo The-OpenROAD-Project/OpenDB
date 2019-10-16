@@ -36,7 +36,7 @@
 #include "dbStream.h"
 #endif
 
-BEGIN_NAMESPACE_ADS
+namespace odb {
 
 class dbIdValidation {
    public:
@@ -85,6 +85,6 @@ class dbId
     }
 };
 
-END_NAMESPACE_ADS
+} // namespace
 
 #endif

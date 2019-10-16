@@ -35,7 +35,7 @@
 #include "dbTarget.h"
 #include "dbTable.h"
 
-BEGIN_NAMESPACE_ADS
+namespace odb {
 
 ////////////////////////////////////////////////////////////////////
 //
@@ -109,4 +109,4 @@ dbObject * dbTargetItr::getObject( register uint id, ... )
     return _target_tbl->getPtr(id);
 }
 
-END_NAMESPACE_ADS
+} // namespace

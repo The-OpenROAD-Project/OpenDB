@@ -39,7 +39,7 @@
 #include "dbTable.hpp"
 #include "db.h"
 
-BEGIN_NAMESPACE_ADS
+namespace odb {
 
 template class dbTable<_dbInstHdr>;
 
@@ -240,4 +240,4 @@ dbInstHdr::destroy( dbInstHdr * inst_hdr_ )
     block->_inst_hdr_tbl->destroy(inst_hdr);
 }
 
-END_NAMESPACE_ADS
+} // namespace

@@ -40,7 +40,7 @@
 #include "dbId.h"
 #endif
 
-BEGIN_NAMESPACE_ADS
+namespace odb {
 
 class _dbTechLayer;
 class _dbDatabase;
@@ -86,6 +86,6 @@ class _dbViaParams
 dbOStream & operator<<( dbOStream & stream, const _dbViaParams & v );
 dbIStream & operator>>( dbIStream & stream, _dbViaParams & v );
 
-END_NAMESPACE_ADS
+} // namespace
 
 #endif

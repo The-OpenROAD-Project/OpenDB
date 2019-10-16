@@ -54,7 +54,7 @@
 
 #include <map>
 
-BEGIN_NAMESPACE_ADS
+namespace odb {
 
 class dbBlock;
 class dbNet;
@@ -134,6 +134,6 @@ class dbFlatten
 };
 
 
-END_NAMESPACE_ADS
+} // namespace
 
 #endif

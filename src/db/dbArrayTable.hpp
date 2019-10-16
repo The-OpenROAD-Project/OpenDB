@@ -48,7 +48,7 @@
 #include "dbStream.h"
 #endif
 
-BEGIN_NAMESPACE_ADS
+namespace odb {
 template <class T>
 inline void dbArrayTable<T>::pushQ( uint & Q, _dbObject * e )
 {
@@ -627,4 +627,4 @@ void dbArrayTable<T>::getObjects( std::vector<T *> & objects )
     }
 }
 
-END_NAMESPACE_ADS
+} // namespace

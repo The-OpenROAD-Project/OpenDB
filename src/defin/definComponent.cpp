@@ -36,7 +36,7 @@
 #include "db.h"
 #include "dbTransform.h"
 
-BEGIN_NAMESPACE_ADS
+namespace odb {
 
 definComponent::definComponent()
 {
@@ -335,4 +335,4 @@ void definComponent::end()
 }
 
     
-END_NAMESPACE_ADS
+} // namespace

@@ -40,7 +40,7 @@
 #include "ZObject.h"
 #endif
 
-BEGIN_NAMESPACE_ADS
+namespace odb {
 
 class ZContext;
 class ZObject;
@@ -100,7 +100,7 @@ class ZFactoryImpl : public ZFactory
 
 
 #define DECLARE_ZFACTORY(IMPL,INFC) \
-    USING_NAMESPACE_ADS; \
+    using namespace odb; \
     void adsRegisterZFactory_##IMPL##INFC() \
     { \
         static ZFactoryImpl<IMPL,INFC> * factory = NULL; \
@@ -113,7 +113,7 @@ class ZFactoryImpl : public ZFactory
     } \
 
 #define DECLARE_ZFACTORY_CID(IMPL,INFC,CID) \
-    USING_NAMESPACE_ADS; \
+    using namespace odb; \
     void adsRegisterZFactory_##IMPL##INFC() \
     { \
         static ZFactoryImpl<IMPL,INFC> * factory = NULL; \
@@ -125,6 +125,6 @@ class ZFactoryImpl : public ZFactory
         } \
     } \
 
-END_NAMESPACE_ADS
+} // namespace
 
 #endif

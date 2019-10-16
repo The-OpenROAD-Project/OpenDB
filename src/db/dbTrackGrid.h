@@ -52,7 +52,7 @@
 #include "dbVector.h"
 #endif
 
-BEGIN_NAMESPACE_ADS
+namespace odb {
 
 class _dbTechLayer;
 class _dbDatabase;
@@ -140,6 +140,6 @@ inline dbIStream & operator>>( dbIStream & stream, _dbTrackGrid & grid )
     return stream;
 }
 
-END_NAMESPACE_ADS
+} // namespace
 
 #endif

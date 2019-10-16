@@ -52,7 +52,7 @@
 #include "dbVector.h"
 #endif
 
-BEGIN_NAMESPACE_ADS
+namespace odb {
 
 class _dbInst;
 class _dbBlock;
@@ -87,6 +87,6 @@ class _dbHier : public dbObject
 dbOStream & operator<<( dbOStream & stream, const _dbHier & inst_hdr );
 dbIStream & operator>>( dbIStream & stream, _dbHier & inst_hdr );
 
-END_NAMESPACE_ADS
+} // namespace
 
 #endif

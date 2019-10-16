@@ -35,7 +35,7 @@
 #include "dbRegion.h"
 #include "dbTable.h"
 
-BEGIN_NAMESPACE_ADS
+namespace odb {
 
 ////////////////////////////////////////////////////////////////////
 //
@@ -109,4 +109,4 @@ dbObject * dbRegionItr::getObject( register uint id, ... )
     return _region_tbl->getPtr(id);
 }
 
-END_NAMESPACE_ADS
+} // namespace

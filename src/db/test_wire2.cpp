@@ -39,7 +39,7 @@
 #include "db.h"
 #include "logger.h"
 
-USING_NAMESPACE_ADS;
+using namespace odb;
 
 #ifdef WIN32
 class Timer

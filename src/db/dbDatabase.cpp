@@ -59,7 +59,7 @@
 #include <algorithm>
 #include "logger.h"
 
-BEGIN_NAMESPACE_ADS
+namespace odb {
 
 //
 // Magic number is: ATHENADB 
@@ -1162,4 +1162,4 @@ bool dbDatabase::diff( dbDatabase * db0_, dbDatabase * db1_, FILE * file, int in
     return diff.hasDifferences();
 }
 
-END_NAMESPACE_ADS
+} // namespace

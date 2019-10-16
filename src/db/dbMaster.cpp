@@ -47,7 +47,7 @@
 #include "dbTable.hpp"
 #include "db.h"
 
-BEGIN_NAMESPACE_ADS
+namespace odb {
 
 template class dbHashTable<_dbMTerm>;
 template class dbTable<_dbMaster>;
@@ -299,7 +299,7 @@ _dbMaster::~_dbMaster()
     delete _box_tbl;
     delete _antenna_pin_model_tbl;
 /************************************ dimitri_fix ******************************
-dbMaster.cpp:270:12: warning: deleting object of polymorphic class type ‘ads::dbBoxItr’ which has non-virtual destructor might cause undefined behavior [-Wdelete-non-virtual-dtor]
+dbMaster.cpp:270:12: warning: deleting object of polymorphic class type ‘dbBoxItr’ which has non-virtual destructor might cause undefined behavior [-Wdelete-non-virtual-dtor]
      delete _box_itr;
 
     delete _box_itr;
@@ -800,4 +800,4 @@ bool dbMaster::isFiller()
 		return false;
 	}
 }
-END_NAMESPACE_ADS
+} // namespace

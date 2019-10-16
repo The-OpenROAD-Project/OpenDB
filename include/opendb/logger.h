@@ -40,7 +40,7 @@
 #include "tm.h"
 #include "ads.h"
 
-BEGIN_NAMESPACE_ADS
+namespace odb {
 
 #define _ATH_LOGBUFLEN 1024*8
 #define LAST_TIMER -1
@@ -86,6 +86,6 @@ void _reset_htimer(int idx);
 void _get_htimer(int idx, int& sdiff, int& ndiff);
 void _show_htimer(char *msg, char *mod, char *tag, int idx);
 
-END_NAMESPACE_ADS
+} // namespace
 
 #endif

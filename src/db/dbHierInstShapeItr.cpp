@@ -33,7 +33,7 @@
 #include "ZException.h"
 #include "db.h"
 
-BEGIN_NAMESPACE_ADS
+namespace odb {
 
 inline bool isFiltered( unsigned filter, unsigned mask )
 {
@@ -525,4 +525,4 @@ void dbHierInstShapeItr::getShape( dbBox * box, dbShape & shape )
     }
 }
 
-END_NAMESPACE_ADS
+} // namespace

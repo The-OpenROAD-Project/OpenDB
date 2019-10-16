@@ -32,7 +32,7 @@
 #include "db.h"
 #include <logger.h>
 
-BEGIN_NAMESPACE_ADS
+namespace odb {
 
 void
 db_report_regions(dbBlock *blk)
@@ -123,4 +123,4 @@ db_report_regions(dbBlock *blk)
   }
 }
 
-END_NAMESPACE_ADS
+} // namespace

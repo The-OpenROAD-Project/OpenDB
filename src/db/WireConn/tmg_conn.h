@@ -36,7 +36,7 @@
 #include "ads.h"
 #endif
 
-BEGIN_NAMESPACE_ADS
+namespace odb {
 
 class tmg_rc_sh {
  public:
@@ -238,7 +238,7 @@ class tmg_conn_search {
   void setYmax(int ymax);
 };
 
-END_NAMESPACE_ADS
+} // namespace
 
 #endif
 

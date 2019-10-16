@@ -46,7 +46,7 @@
 
 #include <vector>
 
-BEGIN_NAMESPACE_ADS
+namespace odb {
 class dbDiff;
 
 template <class T>
@@ -289,6 +289,6 @@ inline void dbMatrix<T>::out( dbDiff & diff, char side, const char * field ) con
     }
 }
 
-END_NAMESPACE_ADS
+} // namespace
 
 #endif

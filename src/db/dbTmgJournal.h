@@ -43,7 +43,7 @@
 #include <map>
 #include <list>
 
-BEGIN_NAMESPACE_ADS
+namespace odb {
 
 class dbIStream;
 class dbOStream;
@@ -219,7 +219,7 @@ class dbTmgJournal
 dbIStream & operator>>( dbIStream & stream, dbTmgJournal & jrnl );
 dbOStream & operator<<( dbOStream & stream, const dbTmgJournal & jrnl );
 
-END_NAMESPACE_ADS    
+} // namespace    
 
 
 #endif

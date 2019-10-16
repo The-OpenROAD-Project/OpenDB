@@ -38,7 +38,7 @@
 #include "dbTable.hpp"
 #include "db.h"
 
-BEGIN_NAMESPACE_ADS
+namespace odb {
 
 template class dbTable<_dbTechSameNetRule>;
 
@@ -188,4 +188,4 @@ dbTechSameNetRule::getTechSameNetRule( dbTech * tech_, uint dbid_ )
     return (dbTechSameNetRule *) tech->_samenet_rule_tbl->getPtr( dbid_ );
 }
 
-END_NAMESPACE_ADS
+} // namespace

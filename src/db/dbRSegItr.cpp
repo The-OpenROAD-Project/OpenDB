@@ -35,7 +35,7 @@
 #include "dbRSeg.h"
 #include "dbTable.h"
 
-BEGIN_NAMESPACE_ADS
+namespace odb {
 
 ////////////////////////////////////////////////////////////////////
 //
@@ -112,4 +112,4 @@ dbObject * dbRSegItr::getObject( register uint id, ... )
     return _seg_tbl->getPtr(id);
 }
 
-END_NAMESPACE_ADS
+} // namespace

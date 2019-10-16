@@ -36,7 +36,7 @@
 #include "db.h"
 #include "dbShape.h"
 
-BEGIN_NAMESPACE_ADS
+namespace odb {
 
 definTracks::definTracks()
 {
@@ -85,4 +85,4 @@ void definTracks::tracksEnd()
 {
 }
 
-END_NAMESPACE_ADS
+} // namespace

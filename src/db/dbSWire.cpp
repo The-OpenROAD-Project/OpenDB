@@ -40,7 +40,7 @@
 #include "dbDiff.hpp"
 #include "db.h"
 
-BEGIN_NAMESPACE_ADS
+namespace odb {
 
 template class dbTable<_dbSWire>;
 
@@ -285,4 +285,4 @@ dbSWire * dbSWire::getSWire( dbBlock * block_, uint dbid_ )
     return (dbSWire *) block->_swire_tbl->getPtr( dbid_ );
 }
 
-END_NAMESPACE_ADS
+} // namespace

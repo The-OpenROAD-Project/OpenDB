@@ -52,7 +52,7 @@
 #include "dbViaParams.h"
 #endif
 
-BEGIN_NAMESPACE_ADS
+namespace odb {
 
 class _dbBox;
 class _dbTechLayer;
@@ -100,6 +100,6 @@ class _dbTechVia : public dbObject
 dbOStream & operator<<( dbOStream & stream, const _dbTechVia & via );
 dbIStream & operator>>( dbIStream & stream, _dbTechVia & via );
 
-END_NAMESPACE_ADS
+} // namespace
 
 #endif

@@ -33,7 +33,7 @@
 #include "dbDatabase.h"
 #include "dbExtControl.h"
 
-BEGIN_NAMESPACE_ADS
+namespace odb {
 
 dbExtControl::dbExtControl()
 {
@@ -170,4 +170,4 @@ dbIStream & operator>>( dbIStream & stream, dbExtControl & extControl )
     return stream;
 }
 
-END_NAMESPACE_ADS
+} // namespace

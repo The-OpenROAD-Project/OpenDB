@@ -20,7 +20,7 @@
 
 #define CURRENT_VERSION 5.6
 
-extern int lefyyparse(void);  // do the parsing
+extern int yyparse(void);  // do the parsing
 extern void lef_lex_init(void);      // start the lexer
 extern void lef_lex_un_init(void);   // free up lexer space
 extern int lef_nlines;               // lexer line number
@@ -444,7 +444,7 @@ int lefrRead(FILE* f, const char* fName, lefiUserData uData) {
 
   /* Parse the file. */
   /* If there are any callbacks they will happen here. */
-  status = lefyyparse();
+  status = yyparse();
 
   // Clean up the vars.
   lef_lex_un_init();

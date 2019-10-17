@@ -5,17 +5,22 @@
 #include <stdio.h>
 #include <string.h>
 #include <iostream>
+
+#if defined(__MACH__)
+#include <stdlib.h>
+#else 
 #include <malloc.h>
+#endif
 
 #ifndef WIN32
 #   include <unistd.h>
 #else
 #   include <windows.h>
 #endif /* not WIN32 */
-#include "../lef/lefrReader.hpp"
-#include "../lef/lefwWriter.hpp"
-#include "../lef/lefiDebug.hpp"
-#include "../lef/lefiUtil.hpp"
+#include "lef/lefrReader.hpp"
+#include "lef/lefwWriter.hpp"
+#include "lef/lefiDebug.hpp"
+#include "lef/lefiUtil.hpp"
 
 char defaultName[128];
 char defaultOut[128];

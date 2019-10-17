@@ -32,11 +32,12 @@ target_include_directories(lef
     PUBLIC
         $<INSTALL_INTERFACE:include/cdslef56>
         $<BUILD_INTERFACE:${PROJECT_SOURCE_DIR}/include/cdslef56>
-    PRIVATE
         ${PROJECT_SOURCE_DIR}/src/cdslef56/lef
+    PRIVATE
         ${CMAKE_CURRENT_BINARY_DIR}
         .
 )
+
 
 BISON_TARGET(CLEFParser 
     ${CMAKE_CURRENT_SOURCE_DIR}/clef/lef.y 
@@ -70,8 +71,8 @@ target_include_directories(clef
     PUBLIC
         $<INSTALL_INTERFACE:include/cdslef56>
         $<BUILD_INTERFACE:${PROJECT_SOURCE_DIR}/include/cdslef56>
-    PRIVATE
         ${PROJECT_SOURCE_DIR}/src/cdslef56/clef
+    PRIVATE
         ${CMAKE_CURRENT_BINARY_DIR}
         .
 )
@@ -86,4 +87,34 @@ target_include_directories(clefzlib
         $<BUILD_INTERFACE:${PROJECT_SOURCE_DIR}/include/cdslef56>
     PRIVATE
         ${PROJECT_SOURCE_DIR}/src/cdslef56/clefzlib
+)
+
+add_library(lefzlib
+    lefzlib/lefzlib.cpp
+)
+
+target_include_directories(lefzlib
+    PUBLIC
+        $<INSTALL_INTERFACE:include/cdslef56>
+        $<BUILD_INTERFACE:${PROJECT_SOURCE_DIR}/include/cdslef56>
+    PRIVATE
+        ${PROJECT_SOURCE_DIR}/src/cdslef56/lefzlib
+)
+
+add_executable(lefrw
+    lefrw/lefrw.cpp
+)
+
+target_include_directories(lefrw
+    PUBLIC
+        $<INSTALL_INTERFACE:include/cdslef56>
+        $<BUILD_INTERFACE:${PROJECT_SOURCE_DIR}/include/cdslef56>
+    PRIVATE
+        ${PROJECT_SOURCE_DIR}/src/cdslef56/lefrw
+        ${PROJECT_SOURCE_DIR}/src/cdslef56
+)
+
+target_link_libraries(lefrw
+    PUBLIC
+        lef
 )

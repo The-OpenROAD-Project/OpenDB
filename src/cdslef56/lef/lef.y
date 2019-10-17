@@ -23,12 +23,12 @@
 /* # ifndef	WIN32 */
 /* # include <sys/param.h> */
 /* # endif */
-#include "lef/FEF_stringhash.h"
-#include "lef/lex.h"
-#include "lef/lefiDefs.hpp"
-#include "lef/lefiUser.hpp"
-#include "lef/lefiUtil.hpp"
-#include "lef/lefrCallBacks.hpp"
+#include "FEF_stringhash.h"
+#include "lex.h"
+#include "lefiDefs.hpp"
+#include "lefiUser.hpp"
+#include "lefiUtil.hpp"
+#include "lefrCallBacks.hpp"
 #ifdef WIN32
 #include <malloc.h>
 #endif

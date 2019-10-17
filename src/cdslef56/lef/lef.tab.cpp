@@ -4,9 +4,9 @@
 
 #define YYBISON 1  /* Identify Bison output.  */
 
-#define yyparse lefyyparse
-#define yylex lefyylex
-#define yyerror lefyyerror
+#define yyparse yyparse
+#define yylex yylex
+#define yyerror yyerror
 #define yylval lefyylval
 #define yychar lefyychar
 #define yydebug lefyydebug

@@ -490,9 +490,9 @@ void lef_init_symbol_table(void *Keyword_set)
     lef_add_to_stringtab_Int(Keyword_set, "SAMENET",      	K_SAMENET) ;
 }
 
-#define yyparse	lefyyparse
-#define yylex	lefyylex
-#define yyerror	lefyyerror
+#define yyparse	yyparse
+#define yylex	yylex
+#define yyerror	yyerror
 #define yylval	yylval
 #define yychar	lefyychar
 #define yydebug	lefyydebug

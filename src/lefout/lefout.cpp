@@ -35,7 +35,7 @@
 #include "lefout.h"
 #include "dbTransform.h"
 
-using namespace odb
+using namespace odb;
 
 void lefout::writeBoxes( void * boxes, const char * indent )
 {

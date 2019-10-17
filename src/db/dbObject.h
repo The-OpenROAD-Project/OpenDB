@@ -144,7 +144,7 @@ class dbObject
     dbObjectType getObjectType() const;
     dbDatabase * getDb() const;
     uint getId() const;
-    static constexpr int max_name_length = 256;
+    static const int max_name_length = 256;
     void getDbName( char name[max_name_length] ) const;
     const char * getObjName() const;
     static dbObject * resolveDbName( dbDatabase * db, const char * name );

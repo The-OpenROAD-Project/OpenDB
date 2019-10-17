@@ -34,9 +34,10 @@ add_subdirectory(src/defin)
 add_subdirectory(src/defout)
 
 # lefin
-add_subdirectory(src/cdslef56)
-
 add_subdirectory(src/lefin)
+
+# lefout
+add_subdirectory(src/lefout)
 
 # opendb
 add_library(opendb

@@ -39,11 +39,6 @@ add_subdirectory(src/lefin)
 # lefout
 add_subdirectory(src/lefout)
 
-# opendb
-add_library(opendb
-    src/main.cpp
-)
-
 
 target_compile_features(opendb PRIVATE cxx_auto_type)
 target_compile_options(opendb PRIVATE $<$<CXX_COMPILER_ID:GNU>:-Wall>)

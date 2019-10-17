@@ -1,4 +1,4 @@
-add_library(db
+add_library(opendb
     dbBTerm.cpp 
     dbStream.cpp 
     dbBTermItr.cpp 
@@ -89,7 +89,7 @@ add_library(db
     dbUtil.cpp 
 )
 
-target_include_directories(db
+target_include_directories(opendb
     PUBLIC
         $<INSTALL_INTERFACE:include/opendb>
         $<BUILD_INTERFACE:${PROJECT_SOURCE_DIR}/include/opendb>
@@ -97,5 +97,5 @@ target_include_directories(db
         ${PROJECT_SOURCE_DIR}/src/db
 )
 
-target_compile_features(db PRIVATE cxx_auto_type)
-target_compile_options(db PRIVATE $<$<CXX_COMPILER_ID:GNU>:-Wall>)
+target_compile_features(opendb PRIVATE cxx_auto_type)
+target_compile_options(opendb PRIVATE $<$<CXX_COMPILER_ID:GNU>:-Wall>)

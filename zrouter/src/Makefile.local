@@ -1,7 +1,0 @@
-#DEBUG=-O3
-MAKEZUI1=0               # : do not make the OLD zui
-BUILD_ARCH=64            # : use default build architecture (32 bit)
-# USEJPEG=0              # : use jpeg library for dpt
-# USEPNG=0               # : use png library for dpt
-MAKE_ZC_QT=0             # : disable ZUI QT canvas
-MAKEUI=0                 # : do not make the ui1?

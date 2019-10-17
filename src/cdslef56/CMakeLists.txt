@@ -135,3 +135,17 @@ target_link_libraries(lefwrite
     PUBLIC
         lef
 )
+
+add_library(lefdiff
+    lefdiff/diffLefRW.cpp
+    lefdiff/differLef.cpp
+    lefdiff/datestamp.cpp
+)
+
+target_include_directories(lefdiff
+    PUBLIC
+        $<INSTALL_INTERFACE:include/cdslef56>
+        $<BUILD_INTERFACE:${PROJECT_SOURCE_DIR}/include/cdslef56>
+    PRIVATE
+        ${PROJECT_SOURCE_DIR}/src/cdslef56/lefdiff
+)

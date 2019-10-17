@@ -118,3 +118,20 @@ target_link_libraries(lefrw
     PUBLIC
         lef
 )
+
+add_executable(lefwrite
+    lefwrite/lefwrite.cpp
+)
+
+target_include_directories(lefwrite
+    PUBLIC
+        $<INSTALL_INTERFACE:include/cdslef56>
+        $<BUILD_INTERFACE:${PROJECT_SOURCE_DIR}/include/cdslef56>
+    PRIVATE
+        ${PROJECT_SOURCE_DIR}/src/cdslef56
+)
+
+target_link_libraries(lefwrite
+    PUBLIC
+        lef
+)

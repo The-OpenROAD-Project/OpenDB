@@ -9,6 +9,7 @@ target_include_directories(lefin
         $<BUILD_INTERFACE:${PROJECT_SOURCE_DIR}/include/opendb>
     PRIVATE
         ${PROJECT_SOURCE_DIR}/src/lefin
+        ${PROJECT_SOURCE_DIR}/src/lef56
 )
 
 target_compile_features(lefin PRIVATE cxx_auto_type)

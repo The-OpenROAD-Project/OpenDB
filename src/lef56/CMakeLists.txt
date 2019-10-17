@@ -30,9 +30,9 @@ add_library(lef
 
 target_include_directories(lef
     PUBLIC
-        $<INSTALL_INTERFACE:include/cdslef56>
-        $<BUILD_INTERFACE:${PROJECT_SOURCE_DIR}/include/cdslef56>
-        ${PROJECT_SOURCE_DIR}/src/cdslef56/lef
+        $<INSTALL_INTERFACE:include/lef56>
+        $<BUILD_INTERFACE:${PROJECT_SOURCE_DIR}/include/lef56>
+        ${PROJECT_SOURCE_DIR}/src/lef56/lef
     PRIVATE
         ${CMAKE_CURRENT_BINARY_DIR}
         .
@@ -69,9 +69,9 @@ add_library(clef
 
 target_include_directories(clef
     PUBLIC
-        $<INSTALL_INTERFACE:include/cdslef56>
-        $<BUILD_INTERFACE:${PROJECT_SOURCE_DIR}/include/cdslef56>
-        ${PROJECT_SOURCE_DIR}/src/cdslef56/clef
+        $<INSTALL_INTERFACE:include/lef56>
+        $<BUILD_INTERFACE:${PROJECT_SOURCE_DIR}/include/lef56>
+        ${PROJECT_SOURCE_DIR}/src/lef56/clef
     PRIVATE
         ${CMAKE_CURRENT_BINARY_DIR}
         .
@@ -83,10 +83,10 @@ add_library(clefzlib
 
 target_include_directories(clefzlib
     PUBLIC
-        $<INSTALL_INTERFACE:include/cdslef56>
-        $<BUILD_INTERFACE:${PROJECT_SOURCE_DIR}/include/cdslef56>
+        $<INSTALL_INTERFACE:include/lef56>
+        $<BUILD_INTERFACE:${PROJECT_SOURCE_DIR}/include/lef56>
     PRIVATE
-        ${PROJECT_SOURCE_DIR}/src/cdslef56/clefzlib
+        ${PROJECT_SOURCE_DIR}/src/lef56/clefzlib
 )
 
 add_library(lefzlib
@@ -95,10 +95,10 @@ add_library(lefzlib
 
 target_include_directories(lefzlib
     PUBLIC
-        $<INSTALL_INTERFACE:include/cdslef56>
-        $<BUILD_INTERFACE:${PROJECT_SOURCE_DIR}/include/cdslef56>
+        $<INSTALL_INTERFACE:include/lef56>
+        $<BUILD_INTERFACE:${PROJECT_SOURCE_DIR}/include/lef56>
     PRIVATE
-        ${PROJECT_SOURCE_DIR}/src/cdslef56/lefzlib
+        ${PROJECT_SOURCE_DIR}/src/lef56/lefzlib
 )
 
 add_executable(lefrw
@@ -107,11 +107,11 @@ add_executable(lefrw
 
 target_include_directories(lefrw
     PUBLIC
-        $<INSTALL_INTERFACE:include/cdslef56>
-        $<BUILD_INTERFACE:${PROJECT_SOURCE_DIR}/include/cdslef56>
+        $<INSTALL_INTERFACE:include/lef56>
+        $<BUILD_INTERFACE:${PROJECT_SOURCE_DIR}/include/lef56>
     PRIVATE
-        ${PROJECT_SOURCE_DIR}/src/cdslef56/lefrw
-        ${PROJECT_SOURCE_DIR}/src/cdslef56
+        ${PROJECT_SOURCE_DIR}/src/lef56/lefrw
+        ${PROJECT_SOURCE_DIR}/src/lef56
 )
 
 target_link_libraries(lefrw
@@ -125,10 +125,10 @@ add_executable(lefwrite
 
 target_include_directories(lefwrite
     PUBLIC
-        $<INSTALL_INTERFACE:include/cdslef56>
-        $<BUILD_INTERFACE:${PROJECT_SOURCE_DIR}/include/cdslef56>
+        $<INSTALL_INTERFACE:include/lef56>
+        $<BUILD_INTERFACE:${PROJECT_SOURCE_DIR}/include/lef56>
     PRIVATE
-        ${PROJECT_SOURCE_DIR}/src/cdslef56
+        ${PROJECT_SOURCE_DIR}/src/lef56
 )
 
 target_link_libraries(lefwrite
@@ -144,8 +144,8 @@ add_library(lefdiff
 
 target_include_directories(lefdiff
     PUBLIC
-        $<INSTALL_INTERFACE:include/cdslef56>
-        $<BUILD_INTERFACE:${PROJECT_SOURCE_DIR}/include/cdslef56>
+        $<INSTALL_INTERFACE:include/lef56>
+        $<BUILD_INTERFACE:${PROJECT_SOURCE_DIR}/include/lef56>
     PRIVATE
-        ${PROJECT_SOURCE_DIR}/src/cdslef56/lefdiff
+        ${PROJECT_SOURCE_DIR}/src/lef56/lefdiff
 )

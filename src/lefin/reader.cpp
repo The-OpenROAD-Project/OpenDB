@@ -41,9 +41,9 @@
 #   include <windows.h>
 #endif
 
-#include "../cdslef56/lef/lefrReader.hpp"
-#include "../cdslef56/lef/lefiDebug.hpp"
-#include "../cdslef56/lef/lefiUtil.hpp"
+#include "lef/lefrReader.hpp"
+#include "lef/lefiDebug.hpp"
+#include "lef/lefiUtil.hpp"
 #include <string>
 #include <list>
 #include "lefin.h"

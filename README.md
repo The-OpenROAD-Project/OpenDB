@@ -38,34 +38,33 @@ src/lefin - LEF reader
 src/lefout - LEF writer
 src/defin - DEF reader
 src/defout - DEF writer
-zroute - original Athena code hierarchy
 ```
 
 #### Database API
 
-All public database classes are defined in db.h. These class
+All public database classes are defined in `db.h`. These class
 definitions provide all functions for examining and modifying the
 database objects. The database is an object itself so multiple
 database objects can exist simultaineously (no global state).
 
-dbTypes.h defines types returned by database class member functions.
+`dbTypes.h` defines types returned by database class member functions.
 
-All database objects are in the 'ads' namespace.
+All database objects are in the `odb` namespace.
 
-dbChip
-dbBlock
-dbTech
-dbLib
+`dbChip`
+`dbBlock`
+`dbTech`
+`dbLib`
 
 All database objects have a 32bit object identifier accessed with the
 dbObject::getOID base class member function that returns a
-'uint'. This identifier is preserved across save/restores of the
+`uint`. This identifier is preserved across save/restores of the
 database so it should be used to reference database object by data
 structures instead of pointers if the reference lifetime is across
 database save/restores. OIDs allow the database to have exactly the
 same layout across save/restores.
 
-The database distance units are nanometers and use the type 'uint'.
+The database distance units are **nanometers** and use the type `uint`.
 
 #### Database Internals
 
@@ -74,11 +73,11 @@ Ginneken by James Cherry.
 
 The database separates the implementation from the interface, and as a
 result, each class becomes two classes, a public one and a private
-one. For instance, dbInst has the public API functions, while class
-_dbInst has the private data fields.
+one. For instance, `dbInst` has the public API functions, while class
+`_dbInst` has the private data fields.
 
 The objects allocated in dynamically resizable tables the
-implementation of which is in dbTable.hpp. Each table consists of a
+implementation of which is in `dbTable.hpp`. Each table consists of a
 number of pages, each containing 128 objects. The table contains the
 body of the struct, not a set of pointers. This eliminates most of the
 pointer overhead while iteration is accomplished by stepping through
@@ -125,3 +124,8 @@ operations of that tool. For instance, the router, the extractor, and
 the DRC engine would each have to build their unique data
 structures. This encourages batch mode operation (route the whole
 chip, extract the whole chip, run DRC on the whole chip).
+
+
+# LICENSE
+
+BSD 3-Clause License. See [LICENSE](LICENSE) file

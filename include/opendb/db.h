@@ -4468,7 +4468,7 @@ class dbCapNode : public dbObject
     ///
     static dbCapNode * getCapNode( dbBlock * block, uint oid );
 
-    friend void test_eco();
+    // friend void test_eco();
 };
 ///////////////////////////////////////////////////////////////////////////////
 ///

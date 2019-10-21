@@ -44,7 +44,7 @@
 #include "ZNamespace.h"
 #endif
 
-BEGIN_NAMESPACE_ADS
+namespace odb {
 
 template <class CLASS, class INTERFACE>
 ZImplements<CLASS,INTERFACE>::~ZImplements()
@@ -94,6 +94,6 @@ int ZImplements<CLASS,INTERFACE>::QueryInterface( ZInterfaceID iid, void ** p )
     return Z_ERROR_NO_INTERFACE;
 }
 
-END_NAMESPACE_ADS
+}
 
 #endif

@@ -41,7 +41,7 @@
 #endif
 
 #ifndef ADS_DB_OBJECT_H
-#include "../db/dbObject.h"
+#include "dbObject.h"
 #endif
 
 #ifndef ADS_DCR_ISDB_H
@@ -49,11 +49,11 @@
 #endif
 
 #ifndef ADS_DB_SET_H
-#include "../db/dbSet.h"
+#include "dbSet.h"
 #endif
 
 #ifndef ADS_DB_VIA_PARAMS_H
-#include "../db/dbViaParams.h"
+#include "dbViaParams.h"
 #endif
 
 #ifndef ADS_DB_TYPES_H
@@ -453,7 +453,7 @@ class dbDatabase : public dbObject
     ///
     /// Translate a database-name to a database object.
     ///
-    dbObject * resolveDbName( const char * dbname );
+    // dbObject * resolveDbName( const char * dbname );
     
     ///
     /// Read a database from this stream.
@@ -1329,50 +1329,50 @@ class dbBlock : public dbObject
     /// 
     /// Build search database for fast area searches for insts
     ///
-	uint makeInstSearchDB();
+	// uint makeInstSearchDB();
 
     /// 
     /// Get search database object for fast area searches on physical objects
     ///
-	dbBlockSearch *getSearchDb();
+	/// dbBlockSearch *getSearchDb();
 	
     ///
     /// reset _netSdb
     ///
-    void resetNetSdb();
+    // void resetNetSdb();
 
     /// ^M
     /// Get search database module for fast area searches on signal nets
     ///^M
-        ZPtr<ISdb> getSignalNetSdb();
+    //    ZPtr<ISdb> getSignalNetSdb();
     /// ^M^M
     /// Get search database module for fast area searches on signal nets
     /// Generate netSdb if it does not exist
     /// ^M
-        ZPtr<ISdb> getSignalNetSdb(ZContext & context, dbTech *tech);
+    //    ZPtr<ISdb> getSignalNetSdb(ZContext & context, dbTech *tech);
 
     /// 
     /// Get search database module for fast area searches on physical objects
     ///
-	ZPtr<ISdb> getNetSdb();
+	// ZPtr<ISdb> getNetSdb();
     /// ^M
     /// Get search database module for fast area searches on physical objects^M
     /// Generate netSdb if it does not exist
     /// 
-	ZPtr<ISdb> getNetSdb(ZContext & context, dbTech *tech);
+	// ZPtr<ISdb> getNetSdb(ZContext & context, dbTech *tech);
     /// 
     /// Remove search database
     /// 
-	void removeSdb(std::vector<dbNet *> & nets);
+	// void removeSdb(std::vector<dbNet *> & nets);
     /// 
     /// Put insts/nets/tracks on Search DB
     ///
-	dbBlockSearch *initSearchBlock(dbTech *tech, bool nets, bool insts, ZContext & context, bool skipViaCuts=false);
+	// dbBlockSearch *initSearchBlock(dbTech *tech, bool nets, bool insts, ZContext & context, bool skipViaCuts=false);
 
     /// 
     /// Get insts from Search DB given a bbox to do area search
     ///
-	uint getInsts(int x1, int y1, int x2, int y2, std::vector<dbInst *> & result); 
+	// uint getInsts(int x1, int y1, int x2, int y2, std::vector<dbInst *> & result); 
 
 
 	void updateNetFlags(std::vector<dbNet *> & result);
@@ -1434,7 +1434,7 @@ class dbBlock : public dbObject
     ///
     /// merge rsegs before doing exttree
     ///
-    void preExttreeMergeRC(double max_cap, uint corner);
+    // void preExttreeMergeRC(double max_cap, uint corner);
 
     ///
     /// clear
@@ -1529,13 +1529,13 @@ public:
     /// 
     /// Get the Container class for Nets Search DB
     ///
-	ZPtr<ISdb> getSearchDbNets();
+	// ZPtr<ISdb> getSearchDbNets();
 
 
     /// 
     /// Get the Container class for Insts Search DB
     ///
-	ZPtr<ISdb> getSearchDbInsts();
+	// ZPtr<ISdb> getSearchDbInsts();
 
     ///
     /// Set the number of remote timing scenarios.
@@ -3715,7 +3715,7 @@ class dbWire : public dbObject
     ///
     uint equal(dbWire *target);
 
-    void match(dbWire *target);
+    // void match(dbWire *target);
 
     ///
     /// Get the shape of this shape-id.
@@ -4335,7 +4335,7 @@ class dbCapNode : public dbObject
 	bool isDangling();
 	bool isForeign();
 	bool isTreeNode(); // bterm, iterm, branch
-	bool isSourceNodeBterm();
+	// bool isSourceNodeBterm();
 	bool isSourceTerm(dbBlock *mblock=NULL);
 	bool isInoutTerm(dbBlock *mblock=NULL);
 
@@ -4532,7 +4532,7 @@ class dbRSeg : public dbObject
     ///
     /// do merge rsegs
     ///
-    void mergeRCs(std::vector<dbRSeg *> & mrsegs);
+    // void mergeRCs(std::vector<dbRSeg *> & mrsegs);
 
     ///
     /// Adjust the capacitance of this RC segment for this process corner.
@@ -4871,7 +4871,7 @@ class dbCCSeg : public dbObject
     ///
 
 
-    static dbCCSeg * relinkTgtCC (dbNet *net_, dbCCSeg *pseg_, uint src_cap_node, uint tgt_cap_node);
+    // static dbCCSeg * relinkTgtCC (dbNet *net_, dbCCSeg *pseg_, uint src_cap_node, uint tgt_cap_node);
 
     ///
     /// Returns NULL if not found

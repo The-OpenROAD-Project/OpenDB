@@ -50,7 +50,7 @@
 #include "ZException.h"
 #endif
 
-BEGIN_NAMESPACE_ADS
+namespace odb {
 
 template <class M>
 ZTechModule<M>::ZTechModule( ZArgs * in, ZArgs * out )
@@ -773,6 +773,6 @@ int ZTechModule<M>::cget( ZArgs * in, ZArgs * out )
     return TCL_OK;
 }
 
-END_NAMESPACE_ADS
+}
 
 #endif

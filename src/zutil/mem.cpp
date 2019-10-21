@@ -29,71 +29,46 @@
 // OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 // OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-#ifndef ADS_ZIMPLEMENTS_HPP
-#define ADS_ZIMPLEMENTS_HPP
+#include <stdlib.h>
+#include <stdio.h>
+#include <string.h>
 
-#ifndef ADS_H
-#include "ads.h"
-#endif
-
-#ifndef ADS_ZSESSION_H
-#include "ZSession.h"
-#endif
-
-#ifndef ADS_ZNAMESPACE_H
-#include "ZNamespace.h"
-#endif
-
-namespace odb {
-
-template <class CLASS, class INTERFACE>
-ZImplements<CLASS,INTERFACE>::~ZImplements()
+void ATH__failMessage(char *msg)
 {
+	fprintf(stderr, "%s\n", msg);
+	fprintf(stderr, "\nexiting ...\n");
+	exit(1);
 }
-
-template <class CLASS, class INTERFACE>
-uint ZImplements<CLASS,INTERFACE>::AddRef()
+void Ath__hashError(char *msg, int exitFlag)
 {
-    return _ref_cnt.inc();
-}
+	fprintf(stderr, "Cannot find %s in hash table\n", msg);
+	fprintf(stderr, "\nexiting ...\n");
 
-template <class CLASS, class INTERFACE>
-uint ZImplements<CLASS,INTERFACE>::Release()
+	if (exitFlag>0)
+		exit(1);
+}
+void Ath__allocFailure(char *msg)
 {
-    int cnt = _ref_cnt.dec();
-    
-    if ( cnt == 0 )
-    {
-        _context._session->_ns->removeZObject((ZObject *) this);
-        delete this;
-    }
-
-    return cnt;
+	fprintf(stderr, "Failed to allocate %s\n", msg);
+	perror("");
+	fprintf(stderr, "\nexiting ...\n");
 }
+char* ATH__allocCharWord(int n)
+{
+	if (n<=0)
+		ATH__failMessage("Cannot zero/negative number of chars");
 
-template <class CLASS, class INTERFACE>
-int ZImplements<CLASS,INTERFACE>::QueryInterface( ZInterfaceID iid, void ** p )
-{ 
-    if ( iid == (ZInterfaceID) ZObject::ZIID )
-    {
-        ZObject * o = (ZObject *) this;
-        o->AddRef();
-        *p = o; 
-        return Z_OK;
-    }
-    
-    else if ( iid == (ZInterfaceID) INTERFACE::ZIID )
-    {
-        INTERFACE * o = (INTERFACE *) this;
-        o->AddRef();
-        *p = o; 
-        return Z_OK;
-    }
-    
-    *p = NULL;
-    return Z_ERROR_NO_INTERFACE;
+	char* a= new char[n];
+	if (a==NULL) {
+		ATH__failMessage("Cannot allocate chars");
+	}
+	a[0] = '\0';
+	return a;
 }
-
+void ATH__deallocCharWord(char *a)
+{
+	if (a==NULL) {
+		ATH__failMessage("Cannot deallocate allocate chars");
+	}
+	delete [] a;
 }
-
-#endif

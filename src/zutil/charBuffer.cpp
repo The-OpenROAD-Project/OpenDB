@@ -29,71 +29,61 @@
 // OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 // OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-#ifndef ADS_ZIMPLEMENTS_HPP
-#define ADS_ZIMPLEMENTS_HPP
+#include "charBuffer.h"
+#include "logger.h"
 
-#ifndef ADS_H
-#include "ads.h"
-#endif
 
-#ifndef ADS_ZSESSION_H
-#include "ZSession.h"
-#endif
 
-#ifndef ADS_ZNAMESPACE_H
-#include "ZNamespace.h"
-#endif
-
-namespace odb {
-
-template <class CLASS, class INTERFACE>
-ZImplements<CLASS,INTERFACE>::~ZImplements()
+void charStore::resetLineCnt()
 {
+	_buf_cnt= 0;
 }
-
-template <class CLASS, class INTERFACE>
-uint ZImplements<CLASS,INTERFACE>::AddRef()
+void charStore::allocate(char **old, int start, int total)
 {
-    return _ref_cnt.inc();
-}
+	_buffer_storage= (char **) realloc(old, total*sizeof(char*));
+	if (_buffer_storage==NULL)
+		odb::error(0, "Cannot allocate charStore::allocate %d words\n", total);
 
-template <class CLASS, class INTERFACE>
-uint ZImplements<CLASS,INTERFACE>::Release()
+	for (int ii= start; ii<total; ii++)
+		_buffer_storage[ii]= new char[1024];
+}
+charStore::charStore(int n)
 {
-    int cnt = _ref_cnt.dec();
-    
-    if ( cnt == 0 )
-    {
-        _context._session->_ns->removeZObject((ZObject *) this);
-        delete this;
-    }
+	_buf_cnt= 0;
+	_bufAlloCnt= n;
+	allocate(NULL, 0, n);
+}
+charStore::~charStore()
+{
+	for (int ii= 0; ii<_buf_cnt; ii++)
+		delete [] _buffer_storage[ii];
 
-    return cnt;
+	free(_buffer_storage);
+}
+bool charStore::storeLine(char *buf)
+{
+	if (buf==NULL)
+		return true;
+
+	if (_buf_cnt==_bufAlloCnt) {
+		_bufAlloCnt *= 2;
+		allocate(_buffer_storage, _buf_cnt, _bufAlloCnt);
+	}
+	strcpy(_buffer_storage[_buf_cnt], buf);
+	_buf_cnt++;
+	return true;
+}
+int charStore::getLineCnt()
+{
+	return _buf_cnt;
+}
+char *charStore::getStoredLine(int ii)
+{
+	if (ii>=_buf_cnt) {
+		odb::error(0, "charStore::getStoredLine %d out-of-bound\n", ii);
+		return NULL;
+	}
+
+	return _buffer_storage[ii];
 }
 
-template <class CLASS, class INTERFACE>
-int ZImplements<CLASS,INTERFACE>::QueryInterface( ZInterfaceID iid, void ** p )
-{ 
-    if ( iid == (ZInterfaceID) ZObject::ZIID )
-    {
-        ZObject * o = (ZObject *) this;
-        o->AddRef();
-        *p = o; 
-        return Z_OK;
-    }
-    
-    else if ( iid == (ZInterfaceID) INTERFACE::ZIID )
-    {
-        INTERFACE * o = (INTERFACE *) this;
-        o->AddRef();
-        *p = o; 
-        return Z_OK;
-    }
-    
-    *p = NULL;
-    return Z_ERROR_NO_INTERFACE;
-}
-
-}
-
-#endif

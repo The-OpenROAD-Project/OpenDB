@@ -49,11 +49,11 @@
 #endif
 
 #ifndef ADS_DB_SET_H
-#include "../db/dbSet.h"
+#include "dbSet.h"
 #endif
 
 #ifndef ADS_DB_OBJECT_H
-#include "../db/dbObject.h"
+#include "dbObject.h"
 #endif
 
 #ifndef ADS_ZEXCEPTION_H

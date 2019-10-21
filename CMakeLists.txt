@@ -39,16 +39,28 @@ add_subdirectory(src/lefin)
 # lefout
 add_subdirectory(src/lefout)
 
+# zutil
+add_subdirectory(src/zutil)
 
-target_compile_features(opendb PRIVATE cxx_auto_type)
-target_compile_options(opendb PRIVATE $<$<CXX_COMPILER_ID:GNU>:-Wall>)
+# zlib
+add_subdirectory(src/zlib)
 
-target_include_directories(opendb
-    PUBLIC
-        $<INSTALL_INTERFACE:include>
-        $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
-    PRIVATE
-        ${CMAKE_CURRENT_SOURCE_DIR}/src
-        ${PROJECT_BINARY_DIR}/include
-)
+# tm
+add_subdirectory(src/tm)
 
+############################################################################
+################################# SWIG #####################################
+############################################################################
+
+find_package(SWIG REQUIRED)
+include(${SWIG_USE_FILE})
+
+option(BUILD_PYTHON "Build Python SWIG module" ON)
+if(BUILD_PYTHON)
+    add_subdirectory(src/swig/python)
+endif()
+
+option(BUILD_TCL "Build TCL SWIG module" ON)
+if(BUILD_TCL)
+    add_subdirectory(src/swig/tcl)
+endif()

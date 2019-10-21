@@ -13,3 +13,4 @@ target_include_directories(defout
 
 target_compile_features(defout PRIVATE cxx_auto_type)
 target_compile_options(defout PRIVATE $<$<CXX_COMPILER_ID:GNU>:-Wall>)
+set_property(TARGET defout PROPERTY POSITION_INDEPENDENT_CODE ON)

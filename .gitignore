@@ -53,6 +53,16 @@ core
 *.rej
 TAGS
 
+src/defin/def_parser.output
+src/defin/def_parser.cpp
+src/defin/def_parser.hpp
+src/defin/def_scanner.cpp
+sver/sver_token.cpp
+src/sylib/liberty_parser.cpp
+src/sylib/liberty_parser.h
+src/sylib/liberty_parser.output
+src/sylib/token.cpp
+
 zrouter/bin
 zrouter/src/ade.log
 zrouter/src/ldir

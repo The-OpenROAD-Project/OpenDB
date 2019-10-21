@@ -1,3 +1,13 @@
+FIND_PACKAGE(BISON REQUIRED)
+FIND_PACKAGE(FLEX REQUIRED)
+
+
+set(DEF_SCANNER ${PROJECT_SOURCE_DIR}/src/defin/def_scanner.cpp)
+set(DEF_PARSER ${PROJECT_SOURCE_DIR}/src/defin/def_parser.cpp)
+
+set(YACC_PREFIX def)
+set(LEX_PREFIX def)
+
 add_library(defin
     definNet.cpp 
     definSNet.cpp 
@@ -13,6 +23,8 @@ add_library(defin
     definNonDefaultRule.cpp 
     definReader.cpp 
     definBase.cpp 
+    ${DEF_PARSER}
+    ${DEF_SCANNER}
     create_box.cpp 
     defin.cpp 
     definPolygon.cpp 
@@ -30,3 +42,23 @@ target_include_directories(defin
 
 target_compile_features(defin PRIVATE cxx_auto_type)
 target_compile_options(defin PRIVATE $<$<CXX_COMPILER_ID:GNU>:-Wall>)
+
+
+add_custom_command(
+    OUTPUT ${DEF_PARSER}
+    COMMAND ${BISON_EXECUTABLE}
+            -v  -pdef -d
+            --output=${DEF_PARSER}
+            ${PROJECT_SOURCE_DIR}/src/defin/def.ypp
+    COMMENT "Generating parser.cpp"
+)
+
+add_custom_command(
+    OUTPUT ${DEF_SCANNER}
+    COMMAND ${FLEX_EXECUTABLE}
+            -B -Pdef -F -v
+            --outfile=${DEF_SCANNER}
+            ${PROJECT_SOURCE_DIR}/src/defin/def.l
+    COMMENT "Generating scanner.cpp"
+    DEPENDS ${DEF_PARSER}
+)

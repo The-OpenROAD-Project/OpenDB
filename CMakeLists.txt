@@ -33,6 +33,9 @@ add_subdirectory(src/defin)
 # defout
 add_subdirectory(src/defout)
 
+# lef56
+add_subdirectory(src/lef56)
+
 # lefin
 add_subdirectory(src/lefin)
 
@@ -47,6 +50,7 @@ add_subdirectory(src/zlib)
 
 # tm
 add_subdirectory(src/tm)
+
 
 ############################################################################
 ################################# SWIG #####################################

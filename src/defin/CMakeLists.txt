@@ -2,8 +2,15 @@ FIND_PACKAGE(BISON REQUIRED)
 FIND_PACKAGE(FLEX REQUIRED)
 
 
-set(DEF_SCANNER ${PROJECT_SOURCE_DIR}/src/defin/def_scanner.cpp)
-set(DEF_PARSER ${PROJECT_SOURCE_DIR}/src/defin/def_parser.cpp)
+
+set(DEF_SCANNER_BASE ${PROJECT_SOURCE_DIR}/src/defin/def_scanner)
+set(DEF_SCANNER ${DEF_SCANNER_BASE}.cpp)
+set(DEF_PARSER_BASE ${PROJECT_SOURCE_DIR}/src/defin/def_parser)
+set(DEF_PARSER ${DEF_PARSER_BASE}.cpp)
+set(DEF_PARSER_HEADER ${DEF_PARSER_BASE}.hpp)
+set(DEF_PARSER_OUTPUT_FILE ${DEF_PARSER_BASE}.output)
+
+
 
 set(YACC_PREFIX def)
 set(LEX_PREFIX def)
@@ -47,7 +54,7 @@ target_compile_options(defin PRIVATE $<$<CXX_COMPILER_ID:GNU>:-Wall>)
 add_custom_command(
     OUTPUT ${DEF_PARSER}
     COMMAND ${BISON_EXECUTABLE}
-            -v  -pdef -d
+            -v  -p${YACC_PREFIX} -d
             --output=${DEF_PARSER}
             ${PROJECT_SOURCE_DIR}/src/defin/def.ypp
     COMMENT "Generating parser.cpp"
@@ -56,9 +63,15 @@ add_custom_command(
 add_custom_command(
     OUTPUT ${DEF_SCANNER}
     COMMAND ${FLEX_EXECUTABLE}
-            -B -Pdef -F -v
+            -B -P${LEX_PREFIX} -F -v
             --outfile=${DEF_SCANNER}
             ${PROJECT_SOURCE_DIR}/src/defin/def.l
     COMMENT "Generating scanner.cpp"
     DEPENDS ${DEF_PARSER}
+)
+set_property(DIRECTORY APPEND PROPERTY ADDITIONAL_MAKE_CLEAN_FILES 
+        ${DEF_SCANNER}
+        ${DEF_PARSER}
+        ${DEF_PARSER_HEADER}
+        ${DEF_PARSER_OUTPUT_FILE}
 )

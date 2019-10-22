@@ -2,7 +2,8 @@
 
 using namespace std;
 
-extern "C" {
+extern "C" 
+{
 extern int Opendbtcl_Init(Tcl_Interp *interp);
 }
 

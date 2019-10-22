@@ -60,6 +60,7 @@ src/defin/def_scanner.cpp
 sver/sver_token.cpp
 src/sylib/liberty_parser.cpp
 src/sylib/liberty_parser.h
+src/sylib/liberty_parser.hpp
 src/sylib/liberty_parser.output
 src/sylib/token.cpp
 

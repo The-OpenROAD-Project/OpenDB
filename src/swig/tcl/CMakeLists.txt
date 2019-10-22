@@ -20,6 +20,11 @@ target_link_libraries(opendbtcl
         tcl
     PRIVATE
         opendb 
+        zutil 
+        zlib 
+        tm
+        defout
+        lefout
 )
 
 # enable swig compile

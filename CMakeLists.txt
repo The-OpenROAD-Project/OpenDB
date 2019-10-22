@@ -42,9 +42,6 @@ add_subdirectory(src/lefin)
 # lefout
 add_subdirectory(src/lefout)
 
-# sylib
-add_subdirectory(src/sylib)
-
 # zutil
 add_subdirectory(src/zutil)
 

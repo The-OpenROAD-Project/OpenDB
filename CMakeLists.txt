@@ -54,6 +54,27 @@ add_subdirectory(src/zlib)
 # tm
 add_subdirectory(src/tm)
 
+# add_library(sss INTERFACE)
+# target_link_libraries(sss INTERFACE db defin defout)
+
+
+# Create a dummy cpp to generate the combined library
+set(OPENDB_LIB_CPP ${CMAKE_CURRENT_BINARY_DIR}/opendb.cpp)
+file(WRITE ${OPENDB_LIB_CPP} "")
+
+# Link all to one library!
+add_library(opendb ${OPENDB_LIB_CPP})
+target_link_libraries(opendb
+    db
+    defin
+    lefin
+    lefout
+    lef
+    defout
+    zutil
+    zlib
+    tm
+)
 
 ############################################################################
 ################################# SWIG #####################################

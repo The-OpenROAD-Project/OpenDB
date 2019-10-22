@@ -23,7 +23,10 @@ target_link_libraries(opendbtcl
         zutil 
         zlib 
         tm
+        lef
+        defin
         defout
+        lefin
         lefout
 )
 

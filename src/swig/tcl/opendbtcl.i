@@ -3,6 +3,10 @@
 %{
 #define SWIG_FILE_WITH_INIT
 #include "db.h"
+#include "lefin.h"
+#include "lefout.h"
+#include "defin.h"
+#include "defout.h"
 #include "dbExtControl.h"
 #include "dbViaParams.h"
 #include "dbtable2.h"
@@ -33,6 +37,10 @@ using namespace odb;
 %include <std_pair.i>
 
 %include "db.h"
+%include "lefin.h"
+%include "lefout.h"
+%include "defin.h"
+%include "defout.h"
 %include "dbExtControl.h"
 %include "dbViaParams.h"
 %include "dbtable2.h"

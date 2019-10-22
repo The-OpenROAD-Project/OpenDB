@@ -17,7 +17,10 @@ swig_link_libraries(opendbpy
     zutil 
     zlib 
     tm
+    lef
+    defin
     defout
+    lefin
     lefout
     ${PYTHON_LIBRARIES}
 )

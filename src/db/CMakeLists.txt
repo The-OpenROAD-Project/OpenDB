@@ -86,7 +86,8 @@ add_library(opendb
     dbProperty.cpp 
     dbPropertyItr.cpp 
     dbFlatten.cpp 
-    dbUtil.cpp 
+    dbUtil.cpp
+    logger.cpp 
 )
 
 target_include_directories(opendb
@@ -99,3 +100,9 @@ target_include_directories(opendb
 
 target_compile_features(opendb PRIVATE cxx_auto_type)
 target_compile_options(opendb PRIVATE $<$<CXX_COMPILER_ID:GNU>:-Wall>)
+set_property(TARGET opendb PROPERTY POSITION_INDEPENDENT_CODE ON)
+
+target_link_libraries(opendb
+    PRIVATE
+        tcl
+)

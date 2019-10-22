@@ -29,71 +29,65 @@
 // OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 // OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-#ifndef ADS_ZIMPLEMENTS_HPP
-#define ADS_ZIMPLEMENTS_HPP
-
-#ifndef ADS_H
-#include "ads.h"
-#endif
-
-#ifndef ADS_ZSESSION_H
-#include "ZSession.h"
-#endif
-
-#ifndef ADS_ZNAMESPACE_H
-#include "ZNamespace.h"
-#endif
+#include <stdarg.h>
+#include <stdlib.h>
+#include <string.h>
+#include "ZException.h"
 
 namespace odb {
 
-template <class CLASS, class INTERFACE>
-ZImplements<CLASS,INTERFACE>::~ZImplements()
+ZException::ZException()
 {
+    _msg = NULL;
+    _free_msg = true;
 }
 
-template <class CLASS, class INTERFACE>
-uint ZImplements<CLASS,INTERFACE>::AddRef()
+ZException::ZException( const char * fmt, ... )
 {
-    return _ref_cnt.inc();
+    char buffer[8192];
+    va_list args;
+    va_start(args, fmt);
+    vsnprintf(buffer, 8192, fmt, args);
+    va_end(args);
+    _msg = strdup(buffer);
+    ZALLOCATED(_msg);
+    _free_msg = true;
 }
 
-template <class CLASS, class INTERFACE>
-uint ZImplements<CLASS,INTERFACE>::Release()
+ZException::ZException( const ZException & ex )
 {
-    int cnt = _ref_cnt.dec();
-    
-    if ( cnt == 0 )
-    {
-        _context._session->_ns->removeZObject((ZObject *) this);
-        delete this;
-    }
-
-    return cnt;
+    _msg = strdup(ex._msg);
+    ZALLOCATED(_msg);
+    _free_msg = true;
 }
 
-template <class CLASS, class INTERFACE>
-int ZImplements<CLASS,INTERFACE>::QueryInterface( ZInterfaceID iid, void ** p )
-{ 
-    if ( iid == (ZInterfaceID) ZObject::ZIID )
-    {
-        ZObject * o = (ZObject *) this;
-        o->AddRef();
-        *p = o; 
-        return Z_OK;
-    }
-    
-    else if ( iid == (ZInterfaceID) INTERFACE::ZIID )
-    {
-        INTERFACE * o = (INTERFACE *) this;
-        o->AddRef();
-        *p = o; 
-        return Z_OK;
-    }
-    
-    *p = NULL;
-    return Z_ERROR_NO_INTERFACE;
+ZException::~ZException()
+{
+    if ( _free_msg && _msg ) free( (void *) _msg );
+}
+
+ZIOError::ZIOError( int err )
+{
+    char buffer[8192];
+    snprintf(buffer, 8192, "system io error (%s).", strerror(err) );
+    _msg = strdup(buffer);
+    ZALLOCATED(_msg);
+}
+
+ZIOError::ZIOError( int err, const char * msg )
+{
+    char buffer[8192];
+    snprintf(buffer, 8192, "%s (%s).", msg,  strerror(err) );
+    _msg = strdup(buffer);
+    ZALLOCATED(_msg);
+}
+
+ZAssert::ZAssert( const char * expr, const char * file, int line )
+{
+    char buffer[8192];
+    snprintf(buffer, 8192, "assert(%s) in %s at %d", expr, file, line );
+    _msg = strdup(buffer);
+    ZALLOCATED(_msg);
 }
 
 }
-
-#endif

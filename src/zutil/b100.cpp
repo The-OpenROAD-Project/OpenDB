@@ -29,71 +29,61 @@
 // OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 // OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-#ifndef ADS_ZIMPLEMENTS_HPP
-#define ADS_ZIMPLEMENTS_HPP
+/* Utility to convert numbers to base-100 for efficient transfer across
+** the network (for zui)
+** Author: Mattias Hembruch
+*/
 
-#ifndef ADS_H
-#include "ads.h"
-#endif
+#include "b100.h"
 
-#ifndef ADS_ZSESSION_H
-#include "ZSession.h"
-#endif
-
-#ifndef ADS_ZNAMESPACE_H
-#include "ZNamespace.h"
-#endif
-
-namespace odb {
-
-template <class CLASS, class INTERFACE>
-ZImplements<CLASS,INTERFACE>::~ZImplements()
+void b100(int num, FILE *fp)
 {
-}
+    int st = num;
+    int d1;
 
-template <class CLASS, class INTERFACE>
-uint ZImplements<CLASS,INTERFACE>::AddRef()
-{
-    return _ref_cnt.inc();
-}
-
-template <class CLASS, class INTERFACE>
-uint ZImplements<CLASS,INTERFACE>::Release()
-{
-    int cnt = _ref_cnt.dec();
-    
-    if ( cnt == 0 )
+    if( num == INT_MIN )
     {
-        _context._session->_ns->removeZObject((ZObject *) this);
-        delete this;
+        fputs("L@LK1",fp);
+        return;
     }
 
-    return cnt;
-}
-
-template <class CLASS, class INTERFACE>
-int ZImplements<CLASS,INTERFACE>::QueryInterface( ZInterfaceID iid, void ** p )
-{ 
-    if ( iid == (ZInterfaceID) ZObject::ZIID )
+    if ( num < 0 )
     {
-        ZObject * o = (ZObject *) this;
-        o->AddRef();
-        *p = o; 
-        return Z_OK;
+        fputc(B100_MINUS,fp);
+        st = -num;
     }
-    
-    else if ( iid == (ZInterfaceID) INTERFACE::ZIID )
+
+    while(1)
     {
-        INTERFACE * o = (INTERFACE *) this;
-        o->AddRef();
-        *p = o; 
-        return Z_OK;
+        d1 =  st % 100;
+        fputc(B100_START+d1,fp);
+        if( (st /= 100) == 0) break;
+    } 
+}
+
+char *unb100(char *enc, int *resout)
+{
+    char *ptr = enc;
+    register int res = 0;
+    int flag = 0;
+    register int factor=1;
+    if ( *ptr == B100_MINUS )
+    {
+        flag = 1;
+        *ptr++;
     }
-    
-    *p = NULL;
-    return Z_ERROR_NO_INTERFACE;
+    while( *ptr >= B100_START )
+    {
+        res = res + (*ptr++-B100_START)*factor;
+        factor *= 100;
+    }
+    if( flag )
+    {
+        res = -res;
+    }
+    *resout = res;
+
+    // next position to read
+    return ptr;
 }
 
-}
-
-#endif

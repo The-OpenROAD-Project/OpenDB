@@ -29,71 +29,59 @@
 // OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 // OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-#ifndef ADS_ZIMPLEMENTS_HPP
-#define ADS_ZIMPLEMENTS_HPP
+#include <stdio.h>
+#include "xf.h"
 
-#ifndef ADS_H
-#include "ads.h"
-#endif
-
-#ifndef ADS_ZSESSION_H
-#include "ZSession.h"
-#endif
-
-#ifndef ADS_ZNAMESPACE_H
-#include "ZNamespace.h"
-#endif
-
-namespace odb {
-
-template <class CLASS, class INTERFACE>
-ZImplements<CLASS,INTERFACE>::~ZImplements()
+void x(unsigned char *ptr)
 {
+    if ( (*ptr != '\n') && (*ptr != 'u') && (*ptr != 245)  && (*ptr != 138))
+    {
+        *ptr = (*ptr ^ 255);
+        //*ptr = (*ptr ^ 42);
+    }
 }
 
-template <class CLASS, class INTERFACE>
-uint ZImplements<CLASS,INTERFACE>::AddRef()
+void swapBits(unsigned char *ptr)
 {
-    return _ref_cnt.inc();
+    unsigned char bottom = *ptr & 0x0F;
+    unsigned char top = *ptr & 0xF0;
+    *ptr = (bottom << 4) | (top >> 4);
 }
-
-template <class CLASS, class INTERFACE>
-uint ZImplements<CLASS,INTERFACE>::Release()
+void ec(unsigned char *ptr)
 {
-    int cnt = _ref_cnt.dec();
-    
-    if ( cnt == 0 )
-    {
-        _context._session->_ns->removeZObject((ZObject *) this);
-        delete this;
-    }
-
-    return cnt;
+    swapBits(ptr);
+    x(ptr);
 }
-
-template <class CLASS, class INTERFACE>
-int ZImplements<CLASS,INTERFACE>::QueryInterface( ZInterfaceID iid, void ** p )
-{ 
-    if ( iid == (ZInterfaceID) ZObject::ZIID )
-    {
-        ZObject * o = (ZObject *) this;
-        o->AddRef();
-        *p = o; 
-        return Z_OK;
-    }
-    
-    else if ( iid == (ZInterfaceID) INTERFACE::ZIID )
-    {
-        INTERFACE * o = (INTERFACE *) this;
-        o->AddRef();
-        *p = o; 
-        return Z_OK;
-    }
-    
-    *p = NULL;
-    return Z_ERROR_NO_INTERFACE;
+void dc(unsigned char *ptr)
+{
+    x(ptr);
+    swapBits(ptr);
 }
+void hide(char *buff, int len)
+{
+    //printf("Hide: %s,%d\n",buff,len);
+    //char *sptr = buff;;
+    char *eptr = (buff+len-1);
+    char *ptr = buff;
 
+    // preserve newlines
+    while( ptr <= eptr )
+    {
+        ec((unsigned char *)ptr);
+        ptr++;
+    }
 }
+void unhide(char *buff, int len)
+{
+    //printf("UnHide: %d, %s\n",len,buff);
+    //char *sptr = buff;;
+    char *eptr = (buff+len-1);
+    char *ptr = buff;
 
-#endif
+    // preserve newlines
+    while( ptr <= eptr )
+    {
+        dc((unsigned char *)ptr);
+        ptr++;
+    }
+}

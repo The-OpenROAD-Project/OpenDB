@@ -32,7 +32,7 @@
 #ifndef ADS_TM_BIND_HPP
 #define ADS_TM_BIND_HPP
 
-BEGIN_NAMESPACE_ADS
+namespace odb {
 template <class M>
 ZConfig<M>::ZConfig()
 {
@@ -326,6 +326,6 @@ ZConfig<M> * ZBindings<M>::findConfig( const char * name )
     return NULL;
 }
 
-END_NAMESPACE_ADS
+}
 
 #endif

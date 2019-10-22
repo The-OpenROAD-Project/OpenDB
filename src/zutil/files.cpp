@@ -29,71 +29,78 @@
 // OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 // OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-#ifndef ADS_ZIMPLEMENTS_HPP
-#define ADS_ZIMPLEMENTS_HPP
+#include <stdlib.h>
+#include <stdio.h>
+#include <string.h>
+#include "logger.h"
 
-#ifndef ADS_H
-#include "ads.h"
-#endif
 
-#ifndef ADS_ZSESSION_H
-#include "ZSession.h"
-#endif
+FILE* ATH__openFile(const char *name, const char* type)
+{
+	FILE* a= fopen(name, type);
+	
+	if (a==NULL) {
+		fprintf(stderr, "Cannot open file %s for \"%s\"\n", 
+			name, type);
+		fprintf(stdout, "\nExiting ...\n");
+		exit(0);
+	}
+	return a;
 
-#ifndef ADS_ZNAMESPACE_H
-#include "ZNamespace.h"
-#endif
+}
+void ATH__closeFile(FILE *fp)
+{
+	if (fp==NULL) {
+		return;
+	}
+	fclose(fp);
+}
+
 
 namespace odb {
+/*
+   replace_string - finds instances of the search char, replaces with 
+                    "replace" string
+*/
 
-template <class CLASS, class INTERFACE>
-ZImplements<CLASS,INTERFACE>::~ZImplements()
+char *replace_string(const char *start, char search, const char *replace)
 {
-}
+    static char *buffer;
+    static int buf_size=0;
 
-template <class CLASS, class INTERFACE>
-uint ZImplements<CLASS,INTERFACE>::AddRef()
-{
-    return _ref_cnt.inc();
-}
+    int len = strlen(start);
+    if ( len == 0 ) return (char*)start;
 
-template <class CLASS, class INTERFACE>
-uint ZImplements<CLASS,INTERFACE>::Release()
-{
-    int cnt = _ref_cnt.dec();
-    
-    if ( cnt == 0 )
+    if ( buf_size < 2 * len )
     {
-        _context._session->_ns->removeZObject((ZObject *) this);
-        delete this;
+        free(buffer);
+        // use 2* as a general approximation
+        buf_size = 2 * len;
+        buffer = (char*)malloc(buf_size);
     }
 
-    return cnt;
-}
+    char *sptr= (char *)start;
+    char *dptr= buffer;
+    char *cptr;
 
-template <class CLASS, class INTERFACE>
-int ZImplements<CLASS,INTERFACE>::QueryInterface( ZInterfaceID iid, void ** p )
-{ 
-    if ( iid == (ZInterfaceID) ZObject::ZIID )
+    while( *sptr )
     {
-        ZObject * o = (ZObject *) this;
-        o->AddRef();
-        *p = o; 
-        return Z_OK;
+        if( (*sptr) == search )
+        {
+            cptr = (char *)replace;
+            while( *cptr )
+            {
+                *dptr++ = *cptr++;
+            }
+        }
+        else
+        {
+            *dptr++ = *sptr;
+        }
+        sptr++;
     }
-    
-    else if ( iid == (ZInterfaceID) INTERFACE::ZIID )
-    {
-        INTERFACE * o = (INTERFACE *) this;
-        o->AddRef();
-        *p = o; 
-        return Z_OK;
-    }
-    
-    *p = NULL;
-    return Z_ERROR_NO_INTERFACE;
+    *dptr = '\0';
+    return buffer;
 }
 
 }
-
-#endif

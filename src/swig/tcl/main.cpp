@@ -2,15 +2,15 @@
 
 using namespace std;
 
-Tcl_Interp* _interp;
+extern "C" {
+extern int Opendbtcl_Init(Tcl_Interp *interp);
+}
 
 int 
 opendbTclAppInit(Tcl_Interp *interp) 
 {
-    _interp = interp;
-
-    if (Tcl_Init(interp) == TCL_ERROR) {
-        return TCL_ERROR;
+    if( Opendbtcl_Init(interp) == TCL_ERROR) {
+        return TCL_ERROR; 
     }
 
     

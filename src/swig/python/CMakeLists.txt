@@ -8,7 +8,10 @@ set_source_files_properties(${PROJECT_SOURCE_DIR}/src/swig/python/opendbpy.i
 include_directories(${PROJECT_SOURCE_DIR}/include/opendb)
 
 # Add swig module
-swig_add_module(opendbpy python ${PROJECT_SOURCE_DIR}/src/swig/python/opendbpy.i)
+swig_add_library(opendbpy 
+    LANGUAGE python 
+    SOURCES ${PROJECT_SOURCE_DIR}/src/swig/python/opendbpy.i
+)
 swig_link_libraries(opendbpy 
     opendb 
     zutil 

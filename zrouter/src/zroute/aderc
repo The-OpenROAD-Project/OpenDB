@@ -1,9 +1,0 @@
-# This is an example of ~/.aderc file
-# All of its settings overwrite the command line defaults
-
-port 9768 
-rje  lsf
-dmsh  notice:info
-dmds  notice:info
-cpath /tmp:.
-nproc  5

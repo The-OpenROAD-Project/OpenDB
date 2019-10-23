@@ -1,3 +1,42 @@
+# Prerequisites
+*.d
+
+# Compiled Object files
+*.slo
+*.lo
+*.o
+*.obj
+
+# Precompiled Headers
+*.gch
+*.pch
+
+# Compiled Dynamic libraries
+*.so
+*.dylib
+*.dll
+
+# Fortran module files
+*.mod
+*.smod
+
+# Compiled Static libraries
+*.lai
+*.la
+*.a
+*.lib
+
+# Executables
+*.exe
+*.out
+*.app
+
+# build
+build
+lbuild
+.DS_Store
+.vscode
+
 **/rpm/RPM-GPG-KEY-nefelus
 autom4te.cache
 .deps
@@ -13,6 +52,16 @@ core
 *.dSYM
 *.rej
 TAGS
+
+src/defin/def_parser.output
+src/defin/def_parser.cpp
+src/defin/def_parser.hpp
+src/defin/def_scanner.cpp
+sver/sver_token.cpp
+src/sylib/liberty_parser.cpp
+src/sylib/liberty_parser.h
+src/sylib/liberty_parser.output
+src/sylib/token.cpp
 
 zrouter/bin
 zrouter/src/ade.log

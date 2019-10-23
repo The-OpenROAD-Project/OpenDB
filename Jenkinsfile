@@ -7,8 +7,17 @@ pipeline {
       }
     }
     stage('Test') {
-      steps {
-        sh 'echo "Tests are not integrated yet!"'
+      parallel {
+        stage('Python Tests') {
+          steps {
+            sh './jenkins/test-py.sh'
+          }
+        }
+        stage('TCL Tests') {
+          steps {
+            sh './jenkins/test-tcl.sh'
+          }
+        }
       }
     }
   }

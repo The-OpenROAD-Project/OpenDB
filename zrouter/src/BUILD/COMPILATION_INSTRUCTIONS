@@ -1,9 +1,0 @@
-#tspyrou be sure ksh is installed
-
-at dir src:
-
-make clean -- claen all dirs for *.o and *.a files
-make       -- executes utils/mkconfig > Makefile.defs, Makefile.defs is used in all sub-di compilations
-make install -- builds libs from all sub-dirs, main and links into one exec.
-if any warning like --- mproxy-zrouter’: Permission denied -- rm that file and "make install"
-

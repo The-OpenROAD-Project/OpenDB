@@ -1,46 +1,33 @@
-FROM centos:centos7 AS builder
+FROM centos:centos7 AS base-dependencies
 LABEL maintainer "Abdelrahman Hosny <abdelrahman_hosny@brown.edu>"
 
 # Install Development Environment
 RUN yum group install -y "Development Tools"
 RUN yum install -y wget git
+RUN yum -y install centos-release-scl && \
+    yum -y install devtoolset-8 devtoolset-8-libatomic-devel
+RUN wget https://cmake.org/files/v3.14/cmake-3.14.0-Linux-x86_64.sh && \
+    chmod +x cmake-3.14.0-Linux-x86_64.sh  && \
+    ./cmake-3.14.0-Linux-x86_64.sh --skip-license --prefix=/usr/local
 
 # Install epel repo
 RUN wget https://dl.fedoraproject.org/pub/epel/epel-release-latest-7.noarch.rpm
 RUN yum install -y epel-release-latest-7.noarch.rpm
 
 # Install dev and runtime dependencies
-RUN yum install -y tcl-devel qt3-devel itcl-devel tcl tk ksh libstdc++ qt3 itcl iwidgets blt tcllib bwidget
+RUN yum install -y tcl-devel qt3-devel itcl-devel tcl tk ksh libstdc++ qt3 \
+    itcl iwidgets blt tcllib bwidget
+
+# Install python dev
+RUN yum install -y https://centos7.iuscommunity.org/ius-release.rpm && \
+    yum update -y && \
+    yum install -y python36u python36u-libs python36u-devel python36u-pip
+
+FROM base-dependencies AS builder
 
 COPY . /OpenDB
-WORKDIR /OpenDB/zrouter/src
+WORKDIR /OpenDB
 
 # Build
-RUN make clean
-RUN make
-RUN make install
-
-FROM centos:centos7 AS runner
-
-RUN yum update -y && yum install -y wget git
-
-# Install epel repo
-RUN wget https://dl.fedoraproject.org/pub/epel/epel-release-latest-7.noarch.rpm
-RUN yum install -y epel-release-latest-7.noarch.rpm
-
-RUN yum update -y && yum install -y ksh tcl tk libstdc++ qt3 iwidgets blt tcllib bwidget
-
-ENV RELEASE=/opt/OpenDB/zrouter
-ENV PATH=$RELEASE/bin:$RELEASE/x86-64-linux/zrouter/bin:$RELEASE/msh/dist/i386-linux/bin/:$PATH \
-    LD_LIBRARY_PATH=$RELEASE/msh/dist/i386-linux/lib:/lib64:/usr/lib64:/lib:/usr/lib:$LD_LIBRARY_PATH \
-    TCL_LIBRARY=/usr/lib64/tcl8.5 \
-    TK_LIBRARY=/usr/lib64/tk8.5 \
-    BLT_LIBRARY=/usr/share/tcl8.5/blt2.4 \
-    MPT_ARCH=64 \
-    ADS_LICENSE=ADS_2006 \
-    NO_LICENSE_TOKEN=dimitris_friend \
-    ADS_NO_LICENSE= \
-    MSHCONFIG=$RELEASE/msh.conf
-
-COPY --from=builder /OpenDB /opt/OpenDB
-RUN chmod -R ogu+r /opt/OpenDB
+RUN mkdir build
+RUN cd build && cmake .. && make

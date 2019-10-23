@@ -1,4 +1,0 @@
-This is the old ADE gui, that can still be used by calling
-zui -v 1.0
-
-it is installed in $TOP/lib/ui-1.0

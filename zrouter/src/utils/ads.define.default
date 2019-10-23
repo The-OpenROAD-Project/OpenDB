@@ -1,8 +1,0 @@
-#pt_shell:PrimeTime
-#pt_shell::setup-pass
-#nanoroute:Encounter_C Encounter_Wave_Viewer Multithread_Route_Option Nano_Encounter Nano_Encounter_DBS NanoRoute_Ultra SOC_Encounter SOC_Encounter_GPS SOC_Encounter_GXL
-#round_robin:
-#lsf:
-#wroute:Silicon_Ensemble_DSM Envisia_SE_ultra_place_route
-#raphael:hspice
-#raphael::setup-pass

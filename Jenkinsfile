@@ -8,7 +8,7 @@ pipeline {
     }
     stage('Test') {
       steps {
-        sh 'echo "Tests are not integrated yet!"'
+        sh './jenkins/test.sh'
       }
     }
   }

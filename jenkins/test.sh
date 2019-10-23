@@ -1,0 +1,1 @@
+docker run -v $(pwd):/OpenDB opendb bash -c "./OpenDB/tests/regression.sh"

@@ -520,7 +520,7 @@ Logger *Logger::getLogger()
 {
     if( _logger == NULL )
     {
-        fprintf(stderr,"Logger is NULL!\n");
+        // fprintf(stderr,"Logger is NULL!\n");
         return NULL;
     } 
     else 

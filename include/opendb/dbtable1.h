@@ -185,7 +185,7 @@ public:
 	}
 	T *getNewByTag(uint nameId, uint tag)
 	{		
-		_nameTable->addNewName(nameId, tag);
+		_nameTable->addNewName((char *)nameId, tag);
 
 		uint num; uint type= getTypeNum(tag, &num);
 

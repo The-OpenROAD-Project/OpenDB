@@ -38,6 +38,8 @@ target_include_directories(lef
         .
 )
 
+set_property(TARGET lef PROPERTY POSITION_INDEPENDENT_CODE ON)
+
 
 BISON_TARGET(CLEFParser 
     ${CMAKE_CURRENT_SOURCE_DIR}/clef/lef.y 
@@ -101,7 +103,7 @@ target_include_directories(lefzlib
         ${PROJECT_SOURCE_DIR}/src/lef56/lefzlib
 )
 
-add_executable(lefrw
+add_library(lefrw
     lefrw/lefrw.cpp
 )
 
@@ -119,7 +121,9 @@ target_link_libraries(lefrw
         lef
 )
 
-add_executable(lefwrite
+set_property(TARGET lefrw PROPERTY POSITION_INDEPENDENT_CODE ON)
+
+add_library(lefwrite
     lefwrite/lefwrite.cpp
 )
 

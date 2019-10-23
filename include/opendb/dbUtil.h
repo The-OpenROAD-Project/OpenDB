@@ -36,7 +36,7 @@
 #include "ads.h"
 #endif
 
-#include "../db/dbMatrix.h"
+#include "dbMatrix.h"
 #include "dbTypes.h"
 #include "geom.h"
 #include <map>

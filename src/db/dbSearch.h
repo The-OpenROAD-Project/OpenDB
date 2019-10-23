@@ -154,8 +154,8 @@ public:
 	void resetSignalNetSdb();
 
 	void resetNetSdb();
-	ZPtr<ISdb> getNetSdb(ZContext & context);
-	ZPtr<ISdb> getNetSdb();
+	// ZPtr<ISdb> getNetSdb(ZContext & context);
+	// ZPtr<ISdb> getNetSdb();
 
 	void setGui(ZPtr<IZgui> igui, ZPtr<IZdcr> dcr);
 	ZPtr<IZgui> createGuiPlug(ZPtr<IZdcr> dcr, ZContext & context);

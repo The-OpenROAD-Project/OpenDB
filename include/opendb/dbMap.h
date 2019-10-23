@@ -121,7 +121,7 @@ class dbMap
 } // namespace
 
 #ifndef ADS_DB_MAP_HPP
-#include "../db/dbMap.hpp"
+#include "dbMap.hpp"
 #endif
 
 #endif

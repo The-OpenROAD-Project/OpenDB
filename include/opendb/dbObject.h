@@ -152,6 +152,6 @@ class dbObject
     friend class dbObjectTable;
 };
 
-#endif
-
 } // namespace
+
+#endif 

@@ -15,7 +15,7 @@ The classes are designed to be fast enough to base an application
 on without having to copy them into application specific structures.
 
 
-#### Installation
+## Installation
 
 ```
 git clone https://github.com/The-OpenROAD-Project/OpenDB.git
@@ -29,7 +29,7 @@ make
 The original Athena code found in /zrouter is built using Makefiles.
 See zrouter/src/BUILD/compilation_package_dependencies.
 
-#### Directory structure
+## Directory structure
 
 ```
 include/opendb/db.h - public header for all database classes
@@ -40,7 +40,43 @@ src/defin - DEF reader
 src/defout - DEF writer
 ```
 
-#### Database API
+## Database API
+
+:bangbang: We are still working on documenting the APIs. 
+We have over 1,800 objects and functions that we are still documenting (for both TCL and Python). 
+**Contributions are very welcome in this effort**. Find starting points below.
+
+### TCL
+After building successfully, run OpenDB tcl shell using `./build/src/swig/tcl/opendbtcl`. An example usage:
+
+```
+set db [dbDatabase_create]
+set lef_parser [new_lefin $db true]
+set tech [lefin_createTech $lef_parser ./OpenDB/tests/data/gscl45nm.lef]
+```
+
+You can find examples on using the API from TCL under `tests/tcl/` directory.
+
+The full set of the tcl commands exposed can be found under `./build/src/swig/tcl/opendb_wrapper.cpp`. Search for `SWIG_prefix`.
+
+
+### Python
+After building successfully, run a Python shell using `python3`. Load `opendbpy module using:
+
+```
+import importlib.util
+spec = importlib.util.spec_from_file_location("opendbpy", "./build/src/swig/python/opendbpy.py")
+odb = importlib.util.module_from_spec(spec)
+spec.loader.exec_module(odb)
+
+# use it as following
+odb.[class_name]
+```
+You can find examples on using the API from Python under `tests/python/` directory.
+
+The full set of the Python classes exposed can be found under `./build/src/swig/python/opendbpy.py`.
+
+### C++
 
 All public database classes are defined in `db.h`. These class
 definitions provide all functions for examining and modifying the
@@ -66,7 +102,7 @@ same layout across save/restores.
 
 The database distance units are **nanometers** and use the type `uint`.
 
-#### Database Internals
+## Database Internals
 
 The internal description included here is paraphrased from Lukas van
 Ginneken by James Cherry.

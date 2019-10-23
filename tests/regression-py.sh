@@ -1,3 +1,5 @@
+set -e
+
 export PYTHONPATH=/OpenROAD/build/src/swig/python:$PYTHONPATH
 
 echo "Running tests .."

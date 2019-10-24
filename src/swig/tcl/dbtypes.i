@@ -18,7 +18,6 @@
     swig_type_info *tf = SWIG_TypeQuery("T" "*");
     for (dbSet< T >::iterator itr = $1.begin(); itr != $1.end(); ++itr)
     {
-        //Tcl_Obj *obj = SWIG_NewPointerObj(*itr, tf, 0);
         Tcl_Obj *obj = SWIG_NewInstanceObj(*itr, tf, 0);
         Tcl_ListObjAppendElement(interp, list, obj);
     }

@@ -36,6 +36,7 @@ target_link_libraries(opendbtcl
 # enable swig compile
 set (OPENDB_SWIG_FILES
     ${PROJECT_SOURCE_DIR}/src/swig/tcl/opendbtcl.i
+    ${PROJECT_SOURCE_DIR}/src/swig/tcl/dbtypes.i
 )
 
 add_custom_command(OUTPUT ${CMAKE_CURRENT_BINARY_DIR}/opendb_wrap.cpp

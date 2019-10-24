@@ -35,6 +35,9 @@ using namespace odb;
 %include <std_string.i>
 %include <std_vector.i>
 %include <std_pair.i>
+%typemap(cstype) unsigned long    "uint"
+%include "dbtypes.i"
+
 
 %include "db.h"
 %include "lefin.h"
@@ -59,5 +62,5 @@ using namespace odb;
 %include "dbgdefines.h"
 %include "dbCCSegSet.h"
 %include "dbObject.h"
-%include "dbSet.h"
 %include "dbtable1.h"
+

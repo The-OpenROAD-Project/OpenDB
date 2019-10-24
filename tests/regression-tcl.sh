@@ -17,3 +17,8 @@ echo "[3] Dump via rules"
 ./OpenDB/build/src/swig/tcl/opendbtcl < ./OpenDB/tests/tcl/dump_via_rules_test.tcl
 echo "SUCESS!"
 echo ""
+
+echo "[4] Dump vias"
+./OpenDB/build/src/swig/tcl/opendbtcl < ./OpenDB/tests/tcl/dump_vias.tcl
+echo "SUCESS!"
+echo ""

@@ -36,6 +36,7 @@ using namespace odb;
 %include <std_vector.i>
 %include <std_pair.i>
 %typemap(cstype) unsigned long    "uint"
+%typemap(cstype) int    "uint"
 %typemap(in) (uint) = (int);
 %include "dbtypes.i"
 

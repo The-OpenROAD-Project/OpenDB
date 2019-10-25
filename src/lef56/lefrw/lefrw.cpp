@@ -17,10 +17,10 @@
 #else
 #   include <windows.h>
 #endif /* not WIN32 */
-#include "lef/lefrReader.hpp"
-#include "lef/lefwWriter.hpp"
-#include "lef/lefiDebug.hpp"
-#include "lef/lefiUtil.hpp"
+#include "lefrReader.hpp"
+#include "lefwWriter.hpp"
+#include "lefiDebug.hpp"
+#include "lefiUtil.hpp"
 
 char defaultName[128];
 char defaultOut[128];

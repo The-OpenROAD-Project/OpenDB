@@ -11,9 +11,9 @@
 #ifndef WIN32
 #   include <unistd.h>
 #endif /* not WIN32 */
-#include "../lef/lefrReader.hpp"
-#include "../lef/lefwWriter.hpp"
-#include "../lef/lefiDebug.hpp"
+#include "lefrReader.hpp"
+#include "lefwWriter.hpp"
+#include "lefiDebug.hpp"
 
 char defaultName[128];
 char defaultOut[128];

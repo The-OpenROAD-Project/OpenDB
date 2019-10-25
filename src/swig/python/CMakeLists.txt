@@ -13,19 +13,10 @@ swig_add_library(opendbpy
     LANGUAGE python 
     SOURCES ${PROJECT_SOURCE_DIR}/src/swig/python/opendbpy.i
 )
-swig_link_libraries(opendbpy 
-    opendb 
-    zutil 
-    zlib 
-    tm
-    lef
-    lefrw
-    defin
-    defout
-    lefin
-    lefout
-    zutil
-    ${PYTHON_LIBRARIES}
+swig_link_libraries(opendbpy
+    PUBLIC
+        opendb 
+        ${PYTHON_LIBRARIES}
 )
 set_property(TARGET opendbpy PROPERTY POSITION_INDEPENDENT_CODE ON)
 

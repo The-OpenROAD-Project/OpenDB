@@ -9,28 +9,16 @@ target_compile_options(opendbtcl PRIVATE $<$<CXX_COMPILER_ID:GNU>:-Wall>)
 target_include_directories(opendbtcl
     PUBLIC
         $<INSTALL_INTERFACE:include/opendb>
-        $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include/opendb>
-        $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include/lef56>
-    PRIVATE
         ${PROJECT_SOURCE_DIR}/include/opendb
+        ${PROJECT_SOURCE_DIR}/include/lef56
+    PRIVATE
         ${CMAKE_CURRENT_SOURCE_DIR}/src/swig/tcl
 )
 
 target_link_libraries(opendbtcl
     PUBLIC
+        opendb
         tcl
-    PRIVATE
-        opendb 
-        zutil 
-        zlib 
-        tm
-        lef
-        lefrw
-        defin
-        defout
-        lefin
-        lefout
-        zutil
 )
 
 # enable swig compile

@@ -94,6 +94,7 @@ target_include_directories(opendb
     PUBLIC
         $<INSTALL_INTERFACE:include/opendb>
         $<BUILD_INTERFACE:${PROJECT_SOURCE_DIR}/include/opendb>
+        $<BUILD_INTERFACE:${PROJECT_SOURCE_DIR}/include/lef56>
     PRIVATE
         ${PROJECT_SOURCE_DIR}/src/db
 )
@@ -103,6 +104,17 @@ target_compile_options(opendb PRIVATE $<$<CXX_COMPILER_ID:GNU>:-Wall>)
 set_property(TARGET opendb PROPERTY POSITION_INDEPENDENT_CODE ON)
 
 target_link_libraries(opendb
+    PUBLIC
+        zutil 
+        zlib 
+        tm
+        lef
+        lefrw
+        defin
+        defout
+        lefout
+        zutil
+        lefin
     PRIVATE
         tcl
 )

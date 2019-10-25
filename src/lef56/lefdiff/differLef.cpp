@@ -25,7 +25,7 @@
 #ifndef WIN32
 #   include <unistd.h>
 #endif /* not WIN32 */
-#include "../lef/lefrReader.hpp"
+#include "lefrReader.hpp"
 #include "diffLefRW.hpp"
 
 extern char VersionIdent[];

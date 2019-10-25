@@ -1,16 +1,12 @@
 FIND_PACKAGE(BISON REQUIRED)
 FIND_PACKAGE(FLEX REQUIRED)
 
-
-
 set(DEF_SCANNER_BASE ${PROJECT_SOURCE_DIR}/src/defin/def_scanner)
 set(DEF_SCANNER ${DEF_SCANNER_BASE}.cpp)
 set(DEF_PARSER_BASE ${PROJECT_SOURCE_DIR}/src/defin/def_parser)
 set(DEF_PARSER ${DEF_PARSER_BASE}.cpp)
 set(DEF_PARSER_HEADER ${DEF_PARSER_BASE}.hpp)
 set(DEF_PARSER_OUTPUT_FILE ${DEF_PARSER_BASE}.output)
-
-
 
 set(YACC_PREFIX def)
 set(LEX_PREFIX def)
@@ -45,6 +41,11 @@ target_include_directories(defin
         $<BUILD_INTERFACE:${PROJECT_SOURCE_DIR}/include/opendb>
     PRIVATE
         ${PROJECT_SOURCE_DIR}/src/defin
+)
+
+target_link_libraries(defin
+    PUBLIC
+        zutil
 )
 
 target_compile_features(defin PRIVATE cxx_auto_type)

@@ -4,7 +4,7 @@
 #ifndef WIN32
 #   include <unistd.h>
 #endif /* not WIN32 */
-#include "../lef/lefwWriter.hpp"
+#include "lefwWriter.hpp"
 
 char defaultOut[128];
 

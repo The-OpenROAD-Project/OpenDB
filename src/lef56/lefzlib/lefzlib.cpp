@@ -6,7 +6,7 @@
 #include <sys/stat.h>
 #include "zlib.h"
 #include "lefzlib.hpp"
-#include "../lef/lefrReader.hpp"
+#include "lefrReader.hpp"
 
 /*
  * Private functions:

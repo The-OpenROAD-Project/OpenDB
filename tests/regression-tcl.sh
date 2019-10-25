@@ -22,3 +22,8 @@ echo "[4] Dump vias"
 ./OpenDB/build/src/swig/tcl/opendbtcl < ./OpenDB/tests/tcl/dump_vias.tcl
 echo "SUCCESS!"
 echo ""
+
+echo "[5] Database access tests"
+./OpenDB/build/src/swig/tcl/opendbtcl < ./OpenDB/tests/tcl/lef_data_access_test.tcl
+echo "SUCCESS!"
+echo ""

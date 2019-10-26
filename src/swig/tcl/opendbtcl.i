@@ -27,6 +27,8 @@
 #include "dbObject.h"
 #include "dbSet.h"
 #include "dbtable1.h"
+#include "dbTypes.h"
+#include "geom.h"
 using namespace odb;
 %}
 
@@ -35,11 +37,13 @@ using namespace odb;
 %include <std_string.i>
 %include <std_vector.i>
 %include <std_pair.i>
-%typemap(cstype) unsigned long    "uint"
 %typemap(in) (uint) = (int);
+%typemap(out) (uint) = (int);
+%typemap(out) (uint64) = (long);
 %include "dbtypes.i"
 
 
+%include "geom.h"
 %include "db.h"
 %include "lefin.h"
 %include "lefout.h"

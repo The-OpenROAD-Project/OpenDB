@@ -90,7 +90,10 @@ check "cut has spacing"     {$cut_rule hasSpacing} 1
 
 check "lower enclosure" {$lower_rule getEnclosure} [lmap x "0 0.035" {expr round($x * $units)}]
 check "upper enclosure" {$upper_rule getEnclosure} [lmap x "0 0.035" {expr round($x * $units)}]
-check "cut rect"        {$cut_rule getRect}        [lmap x "-0.0325 -0.0325 0.0325 0.0325" {expr round($x * $units)}]
+
+set cut_rect [$cut_rule getRect]
+
+check "cut rect"        {list [$cut_rect xMin] [$cut_rect yMin] [$cut_rect xMax] [$cut_rect yMax]}      [lmap x "-0.0325 -0.0325 0.0325 0.0325" {expr round($x * $units)}]
 check "cut spacing"     {$cut_rule getSpacing}     [lmap x "0.14 0.14" {expr round($x * $units)}]
 
 set layers [$tech getLayers]

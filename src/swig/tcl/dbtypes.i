@@ -67,7 +67,7 @@
 
 // Wrapper for dbSet, dbVector...etc
 %define WRAP_DB_CONTAINER(T) 
-%typemap(out) dbSet< T >, dbVector< T >{
+%typemap(out) dbSet< T >, dbVector< T > {
     Tcl_Obj *list = Tcl_NewListObj(0, nullptr);
     swig_type_info *tf = SWIG_TypeQuery("T" "*");
     for (dbSet< T >::iterator itr = $1.begin(); itr != $1.end(); ++itr)
@@ -76,6 +76,36 @@
         Tcl_ListObjAppendElement(interp, list, obj);
     }
     Tcl_SetObjResult(interp, list);
+}
+
+%typemap(in) std::vector< T* >* (std::vector< T* > *v, std::vector< T* > w),
+             std::vector< T* >& (std::vector< T* > *v, std::vector< T* > w) {
+        Tcl_Obj **listobjv;
+        int       nitems;
+        int       i;
+        T*        temp;
+
+        if(SWIG_ConvertPtr($input, (void **) &v, \
+                            $&1_descriptor, 0) == 0) {
+            $1 = v;
+        } else {
+            // It isn't a vector< T > so it should be a list of T's
+            if(Tcl_ListObjGetElements(interp, $input, 
+                                        &nitems, &listobjv) == TCL_ERROR)
+                return TCL_ERROR;
+            w = std::vector< T *>();
+            for (i = 0; i < nitems; i++) {
+                if ((SWIG_ConvertPtr(listobjv[i],(void **) &temp,
+                                        $descriptor(T *),0)) != 0) {
+                    char message[] = 
+                        "list of " #T " expected";
+                    Tcl_SetResult(interp, message, TCL_VOLATILE);
+                    return TCL_ERROR;
+                }
+                w.push_back(temp);
+            } 
+            $1 = &w;
+        }
 }
 %enddef
 

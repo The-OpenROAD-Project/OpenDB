@@ -23,7 +23,22 @@ echo "[4] Dump vias"
 echo "SUCCESS!"
 echo ""
 
-echo "[5] Database access tests"
+echo "[5] Read def"
+./OpenDB/build/src/swig/tcl/opendbtcl < ./OpenDB/tests/tcl/read_def_test.tcl
+echo "SUCCESS!"
+echo ""
+
+echo "[6] Dump nets"
+./OpenDB/build/src/swig/tcl/opendbtcl < ./OpenDB/tests/tcl/dump_nets.tcl
+echo "SUCCESS!"
+echo ""
+
+echo "[7] Write def file"
+./OpenDB/build/src/swig/tcl/opendbtcl < ./OpenDB/tests/tcl/dump_nets.tcl
+echo "SUCCESS!"
+echo ""
+
+echo "[8] Database access tests"
 ./OpenDB/build/src/swig/tcl/opendbtcl < ./OpenDB/tests/tcl/lef_data_access_test.tcl
 echo "SUCCESS!"
 echo ""

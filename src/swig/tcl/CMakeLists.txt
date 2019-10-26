@@ -28,7 +28,7 @@ set (OPENDB_SWIG_FILES
 )
 
 add_custom_command(OUTPUT ${CMAKE_CURRENT_BINARY_DIR}/opendb_wrap.cpp
-  COMMAND ${SWIG_EXECUTABLE}  -debug-tmsearch -debug-tmused -tcl8 -c++ -Iinclude/opendb -o ${CMAKE_CURRENT_BINARY_DIR}/opendb_wrap.cpp ${PROJECT_SOURCE_DIR}/src/swig/tcl/opendbtcl.i
+  COMMAND ${SWIG_EXECUTABLE} -tcl8 -c++ -Iinclude/opendb -o ${CMAKE_CURRENT_BINARY_DIR}/opendb_wrap.cpp ${PROJECT_SOURCE_DIR}/src/swig/tcl/opendbtcl.i
   WORKING_DIRECTORY ${PROJECT_SOURCE_DIR}
   DEPENDS ${OPENDB_SWIG_FILES}
 )

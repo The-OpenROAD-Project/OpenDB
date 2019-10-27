@@ -5,3 +5,5 @@ set vias [dbTech_getVias $tech]
 foreach via $vias {
     puts [dbTechVia_getName $via]
 }
+
+exit [expr [llength $vias] != 14]

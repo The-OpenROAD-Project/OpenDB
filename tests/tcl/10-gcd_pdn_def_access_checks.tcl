@@ -41,7 +41,8 @@ check "bbox" {list [$bbox xMin] [$bbox yMin] [$bbox xMax] [$bbox yMax]} "20140 2
 
 check "block gcell grid" {$block getGCellGrid} NULL
 
-check "block die area" {$block getDieArea} "0 0 200260 201600"
+set die_area_rect [$block getDieArea]
+check "block die area" {list [$die_area_rect xMin] [$die_area_rect yMin] [$die_area_rect xMax] [$die_area_rect yMax]} "0 0 200260 201600"
 check "number of regions" {llength [set regions [$block getRegions]]} 0
 check "number of nondefault rules" {llength [set non_default_rules [$block getNonDefaultRules]]} 0
 check "number of scenarios" {$block getNumberOfScenarios} 0
@@ -53,11 +54,11 @@ set row [lindex $rows 0]
 check "row name" {$row getName} ROW_1
 check "row site" {[$row getSite] getName} FreePDK45_38x28_10R_NP_162NW_34O
 check "row origin" {$row getOrigin} "20140 22400"
-check "row orientation" {$row getOrient} "FS"
+check "row orientation" {$row getOrient} "MX"
 check "row direction" {$row getDirection} HORIZONTAL; # Not sure about the expected value here
 check "row site count" {$row getSiteCount} 421
 check "row site spacing" {$row getSpacing} 380
-check "row bbox" {list [[$row getBBox] xMin] [[$row getBBox] yMin] [[$row getBBox] xMax] [[$row getBBox] yMax]} "20140 22400 180500 25200" ; # Guess at the xMax value
+check "row bbox" {list [[$row getBBox] xMin] [[$row getBBox] yMin] [[$row getBBox] xMax] [[$row getBBox] yMax]} "20140 22400 180120 25200" ; # Guess at the xMax value
 
 # Net checks
 
@@ -71,9 +72,9 @@ check "net iterm count" {$net getITermCount} 0
 check "net bterm count" {$net getBTermCount} 0
 
 check "net sigType" {$net getSigType} "POWER"
-check "net num wires" {llength [set wires [$net getWire]]} 0
+check "net num wires" {llength [set wires [$net getWire]]} 1
 check "net num swires" {llength [set swires [$net getSWires]]} 1
-check "net num global wire" {llength [set gwires [$net getGlobalWire]]} 0
+check "net num global wire" {llength [set gwires [$net getGlobalWire]]} 1
 check "net non default rule" {$net getNonDefaultRule} NULL
 
 # Special wire checks
@@ -81,14 +82,14 @@ set swire [lindex $swires 0]
 
 check "swire block" {[$swire getBlock] getName} gcd
 check "swire net" {[$swire getNet] getName} VDD
-check "swire wire type" {$swire getWireType} POWER
+check "swire wire type" {$swire getWireType} ROUTED
 check "swire shield" {$swire getShield} NULL
 
 check "swire num wires" {llength [set wires [$swire getWires]]} 219
 
 set wire [lindex $wires 0]
 check "wire layer name" {[$wire getTechLayer] getName} metal1
-check "wire isVia" {[$wire isVia] getName} 0
+check "wire isVia" {$wire isVia} 0
 check "wire width" {$wire getWidth} 340
 check "wire length" {$wire getLength} 159980
 check "wire shape" {$wire getWireShapeType} FOLLOWPIN
@@ -104,10 +105,10 @@ check "wire direction" {$wire getDir} 0 ; # 0 = VERTICAL
 
 set wire [lindex $wires 34]
 check "wire isVia" {$wire isVia} 1
-check "wire techVia" {$wire getTechVia} "" ; # Return value is currently NULL, better to be an empty list
+check "wire techVia" {$wire getTechVia} "NULL" ; # Return value is currently NULL, better to be an empty list
 check "wire block via" {[$wire getBlockVia] getName} via2_960x340
 check "wire via xy" {$wire getViaXY} "24140 22400"
-check "wire num via boxes" {llength [$wire getViaBoxes]} 5 ; 3 cut shapes + upper and lower metal
+check "wire num via boxes" {llength [$wire getViaBoxes 0]} 5; # 3 cut shapes + upper and lower metal
 check "wire direction" {$wire getDir} 1 ; # A via doesnt really have a direction, so any vaue is okay here I think
 
 set via [lindex $vias 0]
@@ -115,13 +116,13 @@ set via [lindex $vias 0]
 check "via name" {$via getName} via1_960x340
 check "via pattern" {$via getPattern} ""
 check "via generate rule" {[$via getViaGenerateRule] getName} Via1Array-0
-check "via tech via" {$via getTechVia}  "" ; # Return value is currently NULL, better to be an empty list
-check "via block via" {$via getBlockVia}  "" ; # Return value is currently NULL, better to be an empty list
-check "via num params" {llength [$via getViaParams]} 4
+check "via tech via" {$via getTechVia}  "NULL" ; # Return value is currently NULL, better to be an empty list
+check "via block via" {$via getBlockVia}  "NULL" ; # Return value is currently NULL, better to be an empty list
+check "via num params" {[$via getViaParams] getXCutSize} 140
 check "via num shapes" {llength [$via getBoxes]} 5
 check "via top layer name" {[$via getTopLayer] getName} metal2
 check "via bottom layer name" {[$via getBottomLayer] getName} metal1
 check "via rotated" {$via isViaRotated} 0
-check "via orientation" {$via getOrient} N
+check "via orientation" {$via getOrient} "R0"
 
 exit_summary

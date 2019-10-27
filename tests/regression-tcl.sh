@@ -38,7 +38,17 @@ echo "[7] Write def file"
 echo "SUCCESS!"
 echo ""
 
-echo "[8] Database access tests"
+echo "[8] Database LEF access tests"
 ./OpenDB/build/src/swig/tcl/opendbtcl ./OpenDB/tests/tcl/08-lef_data_access_test.tcl
+echo "SUCCESS!"
+echo ""
+
+echo "[9] Database DEF access tests (1)"
+./OpenDB/build/src/swig/tcl/opendbtcl ./OpenDB/tests/tcl/09-gcd_def_access_checks.tcl
+echo "SUCCESS!"
+echo ""
+
+echo "[10] Database DEF access tests (2)"
+./OpenDB/build/src/swig/tcl/opendbtcl ./OpenDB/tests/tcl/10-gcd_pdn_def_access_checks.tcl
 echo "SUCCESS!"
 echo ""

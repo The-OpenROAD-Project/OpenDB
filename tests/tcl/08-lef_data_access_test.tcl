@@ -10,7 +10,7 @@ check "lef version" {$tech getLefVersion} "5.5"
 check "lef version string" {$tech getLefVersionStr} "5.5"
 
 check "manufacturing grid size" {$tech getManufacturingGrid} 5
-check "case sensitive" {$tech getNamesCaseSensitive} true
+check "case sensitive" {$tech getNamesCaseSensitive} ON
 check "num routing layers" {$tech getRoutingLayerCount} 10 
 check "num vias" {$tech getViaCount} 14
 check "num layers" {$tech getLayerCount} 22
@@ -57,7 +57,6 @@ check "lower enclosure" {$lower_rule getEnclosure} [lmap x "0 0.035" {expr round
 check "upper enclosure" {$upper_rule getEnclosure} [lmap x "0 0.035" {expr round($x * $units)}]
 
 set cut_rect [$cut_rule getRect]
-
 check "cut rect"        {list [$cut_rect xMin] [$cut_rect yMin] [$cut_rect xMax] [$cut_rect yMax]}      [lmap x "-0.0325 -0.0325 0.0325 0.0325" {expr round($x * $units)}]
 check "cut spacing"     {$cut_rule getSpacing}     [lmap x "0.14 0.14" {expr round($x * $units)}]
 

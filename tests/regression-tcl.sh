@@ -19,7 +19,7 @@ echo "SUCCESS!"
 echo ""
 
 echo "[4] Dump vias"
-./OpenDB/build/src/swig/tcl/opendbtcl ./OpenDB/tests/tcl/04-dump_vias.tcl
+./OpenDB/build/src/swig/tcl/opendbtcl ./OpenDB/tests/tcl/04-dump_vias_test.tcl
 echo "SUCCESS!"
 echo ""
 
@@ -29,7 +29,7 @@ echo "SUCCESS!"
 echo ""
 
 echo "[6] Dump nets"
-./OpenDB/build/src/swig/tcl/opendbtcl ./OpenDB/tests/tcl/06-dump_nets.tcl
+./OpenDB/build/src/swig/tcl/opendbtcl ./OpenDB/tests/tcl/06-dump_nets_test.tcl
 echo "SUCCESS!"
 echo ""
 
@@ -44,11 +44,16 @@ echo "SUCCESS!"
 echo ""
 
 echo "[9] Database DEF access tests (1)"
-./OpenDB/build/src/swig/tcl/opendbtcl ./OpenDB/tests/tcl/09-gcd_def_access_checks.tcl
+./OpenDB/build/src/swig/tcl/opendbtcl ./OpenDB/tests/tcl/09-gcd_def_access_test.tcl
 echo "SUCCESS!"
 echo ""
 
 echo "[10] Database DEF access tests (2)"
-./OpenDB/build/src/swig/tcl/opendbtcl ./OpenDB/tests/tcl/10-gcd_pdn_def_access_checks.tcl
+./OpenDB/build/src/swig/tcl/opendbtcl ./OpenDB/tests/tcl/10-gcd_pdn_def_access_test.tcl
+echo "SUCCESS!"
+echo ""
+
+echo "[11] Database edit DEF tests"
+./OpenDB/build/src/swig/tcl/opendbtcl ./OpenDB/tests/tcl/11-edit_def_test.tcl
 echo "SUCCESS!"
 echo ""

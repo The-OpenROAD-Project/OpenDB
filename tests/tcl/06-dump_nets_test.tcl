@@ -8,3 +8,4 @@ set nets [$block getNets]
 foreach net $nets {
     puts "Net: [$net getName]"
 }
+exit [expr [llength $nets] != 24]

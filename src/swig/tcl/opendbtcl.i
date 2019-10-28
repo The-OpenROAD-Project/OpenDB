@@ -3,6 +3,7 @@
 %{
 #define SWIG_FILE_WITH_INIT
 #include "db.h"
+#include "dbShape.h"
 #include "lefin.h"
 #include "lefout.h"
 #include "defin.h"
@@ -40,11 +41,15 @@ using namespace odb;
 %typemap(in) (uint) = (int);
 %typemap(out) (uint) = (int);
 %typemap(out) (uint64) = (long);
+%include "dbenums.i"
 %include "dbtypes.i"
 
 
 %include "geom.h"
+
 %include "db.h"
+
+
 %include "lefin.h"
 %include "lefout.h"
 %include "defin.h"

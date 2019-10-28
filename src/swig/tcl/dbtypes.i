@@ -15,46 +15,6 @@
     Tcl_SetObjResult(interp, obj);
 }
 
-%typemap(out) odb::dbOnOffType, dbOnOffType {
-    Tcl_Obj *obj;
-    if ($1.getValue() == odb::dbOnOffType::Value::ON) {
-        obj = Tcl_NewStringObj("true", -1);
-    } else if ($1.getValue() == odb::dbOnOffType::Value::OFF) {
-        obj = Tcl_NewStringObj("false", -1);
-    }
-    Tcl_SetObjResult(interp, obj);
-}
-
-%typemap(out) odb::dbTechLayerType, dbTechLayerType {
-    Tcl_Obj *obj;
-    if ($1.getValue() == odb::dbTechLayerType::Value::ROUTING) {
-        obj = Tcl_NewStringObj("ROUTING", -1);
-    } else if ($1.getValue() == odb::dbTechLayerType::Value::CUT) {
-        obj = Tcl_NewStringObj("CUT", -1);
-    } else if ($1.getValue() == odb::dbTechLayerType::Value::MASTERSLICE) {
-        obj = Tcl_NewStringObj("MASTERSLICE", -1);
-    } else if ($1.getValue() == odb::dbTechLayerType::Value::OVERLAP) {
-        obj = Tcl_NewStringObj("OVERLAP", -1);
-    } else if ($1.getValue() == odb::dbTechLayerType::Value::IMPLANT) {
-        obj = Tcl_NewStringObj("IMPLANT", -1);
-    } else if ($1.getValue() == odb::dbTechLayerType::Value::NONE) {
-        obj = Tcl_NewStringObj("NONE", -1);
-    }
-    Tcl_SetObjResult(interp, obj);
-}
-
-%typemap(out) odb::dbTechLayerDir, dbTechLayerDir {
-    Tcl_Obj *obj;
-    if ($1.getValue() == odb::dbTechLayerDir::Value::NONE) {
-        obj = Tcl_NewStringObj("NONE", -1);
-    } else if ($1.getValue() == odb::dbTechLayerDir::Value::HORIZONTAL) {
-        obj = Tcl_NewStringObj("HORIZONTAL", -1);
-    } else if ($1.getValue() == odb::dbTechLayerDir::Value::VERTICAL) {
-        obj = Tcl_NewStringObj("VERTICAL", -1);
-    }
-    Tcl_SetObjResult(interp, obj);
-}
-
 %typemap(out) odb::adsPoint, adsPoint {
     Tcl_Obj *list = Tcl_NewListObj(0, nullptr);
     Tcl_Obj *x = Tcl_NewIntObj($1.getX());
@@ -109,7 +69,7 @@
 }
 %enddef
 
-%define WRAP_OBJECT_RETURN_REF(T, A) 
+%define WRAP_OBJECT_RETURN_REF(T, A)
 %typemap(in, numinputs=0) T &OUTPUT (T temp) {
    $1 = new T(temp);
 }
@@ -130,8 +90,27 @@
 
 // Handle return by ref.
 %apply int &OUTPUT { int & overhang1, int & overhang2 };
+%apply int &OUTPUT { int & x, int & y };
 %apply int &OUTPUT { int & x_spacing, int & y_spacing };
 WRAP_OBJECT_RETURN_REF(odb::adsRect, r)
+WRAP_OBJECT_RETURN_REF(odb::adsRect, rect)
+WRAP_OBJECT_RETURN_REF(odb::adsRect, bbox)
+WRAP_OBJECT_RETURN_REF(odb::dbViaParams, params)
+
+
+
+// Some special cases for return by ref
+%typemap(in, numinputs=1) std::vector<odb::dbShape> &OUTPUT (std::vector<odb::dbShape> temp) {
+   $1 = new std::vector<odb::dbShape>(temp);
+}
+%typemap(argout) std::vector<odb::dbShape> &OUTPUT {
+  swig_type_info *tf = SWIG_TypeQuery("odb::dbShape" "*");
+  for(auto it = $1->begin(); it != $1->end(); it++) {
+    Tcl_Obj *obj = SWIG_NewInstanceObj(&(*it), tf, 0);
+    Tcl_ListObjAppendElement(interp, Tcl_GetObjResult(interp), obj);
+  }
+}
+%apply std::vector<odb::dbShape> &OUTPUT { std::vector<odb::dbShape> & boxes };
 
 
 // Wrap containers

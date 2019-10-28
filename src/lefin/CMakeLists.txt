@@ -19,5 +19,5 @@ set_property(TARGET lefin PROPERTY POSITION_INDEPENDENT_CODE ON)
 target_link_libraries(lefin
     PUBLIC
         zutil
-        lef
+        opendblef
 )

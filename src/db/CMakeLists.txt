@@ -108,8 +108,8 @@ target_link_libraries(opendb
         zutil 
         zlib 
         tm
-        lef
-        lefrw
+        opendblef
+        opendblefrw
         defin
         defout
         lefout

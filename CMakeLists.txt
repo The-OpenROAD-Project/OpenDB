@@ -25,31 +25,44 @@ configure_file (
 ############################################################################
 
 # db
-add_subdirectory(src/db)
+if(NOT TARGET opendb)
+    add_subdirectory(src/db)
+endif()
 
 # defin
-add_subdirectory(src/defin)
+if(NOT TARGET defin)
+    add_subdirectory(src/defin)
+endif()
 
 # defout
-add_subdirectory(src/defout)
+if(NOT TARGET defout)
+    add_subdirectory(src/defout)
+endif()
 
 # lef56
-add_subdirectory(src/lef56)
+if(NOT TARGET opendblef)
+    add_subdirectory(src/lef56)
+endif()
 
 # lefin
-add_subdirectory(src/lefin)
+if(NOT TARGET lefin)
+    add_subdirectory(src/lefin)
+endif()
 
 # lefout
-add_subdirectory(src/lefout)
+if(NOT TARGET lefout)
+    add_subdirectory(src/lefout)
+endif()
 
 # zutil
-add_subdirectory(src/zutil)
+if(NOT TARGET zutil)
+    add_subdirectory(src/zutil)
+endif()
 
 # zlib
-add_subdirectory(src/zlib)
-
-# tm
-add_subdirectory(src/tm)
+if(NOT TARGET zlib)
+    add_subdirectory(src/zlib)
+endif()
 
 
 ############################################################################

@@ -4,7 +4,7 @@ BISON_TARGET(LEFParser
     ${CMAKE_CURRENT_BINARY_DIR}/lef_parser.cpp
 )
 
-add_library(lef
+add_library(opendblef
     ${BISON_LEFParser_OUTPUTS}
     lef/FEF_malloc.cpp 
     lef/FEF_stringhash.cpp 
@@ -28,7 +28,7 @@ add_library(lef
     lef/lefwWriterCalls.cpp 
 )
 
-target_include_directories(lef
+target_include_directories(opendblef
     PUBLIC
         $<INSTALL_INTERFACE:include/lef56>
         $<BUILD_INTERFACE:${PROJECT_SOURCE_DIR}/include/lef56>
@@ -38,14 +38,14 @@ target_include_directories(lef
         .
 )
 
-set_property(TARGET lef PROPERTY POSITION_INDEPENDENT_CODE ON)
+set_property(TARGET opendblef PROPERTY POSITION_INDEPENDENT_CODE ON)
 
 
 BISON_TARGET(CLEFParser 
     ${CMAKE_CURRENT_SOURCE_DIR}/clef/lef.y 
     ${CMAKE_CURRENT_BINARY_DIR}/lef.tab.c
 )
-add_library(clef
+add_library(opendbclef
     ${BISON_CLEFParser_OUTPUTS}
     clef/FEF_malloc.c 
     clef/FEF_stringhash.c 
@@ -69,7 +69,7 @@ add_library(clef
     clef/lefwWriterCalls.c
 )
 
-target_include_directories(clef
+target_include_directories(opendbclef
     PUBLIC
         $<INSTALL_INTERFACE:include/lef56>
         $<BUILD_INTERFACE:${PROJECT_SOURCE_DIR}/include/lef56>
@@ -79,11 +79,11 @@ target_include_directories(clef
         .
 )
 
-add_library(clefzlib
+add_library(opendbclefzlib
     clefzlib/lefzlib.c 
 )
 
-target_include_directories(clefzlib
+target_include_directories(opendbclefzlib
     PUBLIC
         $<INSTALL_INTERFACE:include/lef56>
         $<BUILD_INTERFACE:${PROJECT_SOURCE_DIR}/include/lef56>
@@ -91,11 +91,11 @@ target_include_directories(clefzlib
         ${PROJECT_SOURCE_DIR}/src/lef56/clefzlib
 )
 
-add_library(lefzlib
+add_library(opendblefzlib
     lefzlib/lefzlib.cpp
 )
 
-target_include_directories(lefzlib
+target_include_directories(opendblefzlib
     PUBLIC
         $<INSTALL_INTERFACE:include/lef56>
         $<BUILD_INTERFACE:${PROJECT_SOURCE_DIR}/include/lef56>
@@ -103,11 +103,11 @@ target_include_directories(lefzlib
         ${PROJECT_SOURCE_DIR}/src/lef56/lefzlib
 )
 
-add_library(lefrw
+add_library(opendblefrw
     lefrw/lefrw.cpp
 )
 
-target_include_directories(lefrw
+target_include_directories(opendblefrw
     PUBLIC
         $<INSTALL_INTERFACE:include/lef56>
         $<BUILD_INTERFACE:${PROJECT_SOURCE_DIR}/include/lef56>
@@ -116,18 +116,18 @@ target_include_directories(lefrw
         ${PROJECT_SOURCE_DIR}/src/lef56
 )
 
-target_link_libraries(lefrw
+target_link_libraries(opendblefrw
     PUBLIC
-        lef
+        opendblef
 )
 
-set_property(TARGET lefrw PROPERTY POSITION_INDEPENDENT_CODE ON)
+set_property(TARGET opendblefrw PROPERTY POSITION_INDEPENDENT_CODE ON)
 
-add_library(lefwrite
+add_library(opendblefwrite
     lefwrite/lefwrite.cpp
 )
 
-target_include_directories(lefwrite
+target_include_directories(opendblefwrite
     PUBLIC
         $<INSTALL_INTERFACE:include/lef56>
         $<BUILD_INTERFACE:${PROJECT_SOURCE_DIR}/include/lef56>
@@ -135,18 +135,18 @@ target_include_directories(lefwrite
         ${PROJECT_SOURCE_DIR}/src/lef56
 )
 
-target_link_libraries(lefwrite
+target_link_libraries(opendblefwrite
     PUBLIC
-        lef
+        opendblef
 )
 
-add_library(lefdiff
+add_library(opendblefdiff
     lefdiff/diffLefRW.cpp
     lefdiff/differLef.cpp
     lefdiff/datestamp.cpp
 )
 
-target_include_directories(lefdiff
+target_include_directories(opendblefdiff
     PUBLIC
         $<INSTALL_INTERFACE:include/lef56>
         $<BUILD_INTERFACE:${PROJECT_SOURCE_DIR}/include/lef56>

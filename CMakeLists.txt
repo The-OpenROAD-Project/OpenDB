@@ -64,6 +64,10 @@ if(NOT TARGET zlib)
     add_subdirectory(src/zlib)
 endif()
 
+# tm
+if(NOT TARGET tm)
+    add_subdirectory(src/tm)
+endif()
 
 ############################################################################
 ################################# SWIG #####################################

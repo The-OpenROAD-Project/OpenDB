@@ -3582,7 +3582,7 @@ class dbVia : public dbObject
     ///
     /// Get the via params used to generate this via.
     ///
-    void getViaParams( dbViaParams & params );
+    void getViaParams( dbViaParams & params_return );
 
     ///
     /// Get the block this via belongs too.
@@ -6242,7 +6242,7 @@ class dbTechVia : public dbObject
     ///
     /// Get the via params used to generate this via.
     ///
-    void getViaParams( dbViaParams & params );
+    void getViaParams( dbViaParams & params_return );
 
     ///
     /// Get the technology this via belongs too.

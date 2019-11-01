@@ -73,3 +73,8 @@ echo "[14] Database row create test"
 ./OpenDB/build/src/swig/tcl/opendbtcl ./OpenDB/tests/tcl/14-opendb_row_settings_test.tcl
 echo "SUCCESS!"
 echo ""
+
+echo "[15] Wrtie def versions test"
+./OpenDB/build/src/swig/tcl/opendbtcl ./OpenDB/tests/tcl/15-write_def_versions.tcl
+echo "SUCCESS!"
+echo ""

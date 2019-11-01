@@ -41,7 +41,10 @@ using namespace odb;
 %typemap(in) (uint) = (int);
 %typemap(out) (uint) = (int);
 %typemap(out) (uint64) = (long);
+
 %include "dbenums.i"
+%include "parserenums.i"
+
 %include "dbtypes.i"
 
 

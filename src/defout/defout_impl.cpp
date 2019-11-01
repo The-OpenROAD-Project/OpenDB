@@ -133,8 +133,15 @@ bool defout_impl::writeBlock( dbBlock * block, const char * def_file )
         return false;
     }
 
-        //fprintf( _out, "VERSION 5.5 ;\n");
-    fprintf( _out, "VERSION 5.3 ;\n");
+    if (_version == defout::DEF_5_3) {
+        fprintf( _out, "VERSION 5.3 ;\n");
+    } else if (_version == defout::DEF_5_4) {
+        fprintf( _out, "VERSION 5.4 ;\n");
+    } else if (_version == defout::DEF_5_5) {
+        fprintf( _out, "VERSION 5.5 ;\n");
+    } else if (_version == defout::DEF_5_6) {
+        fprintf( _out, "VERSION 5.6 ;\n");
+    }
     fprintf( _out, "NAMESCASESENSITIVE ON ;\n");
     char hd = block->getHierarchyDelimeter();
 

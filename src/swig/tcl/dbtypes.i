@@ -81,11 +81,7 @@
 }
 
 %apply T &OUTPUT { T & A };
-
 %enddef
-
-
-
 
 
 // Handle return by ref.
@@ -95,7 +91,8 @@
 WRAP_OBJECT_RETURN_REF(odb::adsRect, r)
 WRAP_OBJECT_RETURN_REF(odb::adsRect, rect)
 WRAP_OBJECT_RETURN_REF(odb::adsRect, bbox)
-WRAP_OBJECT_RETURN_REF(odb::dbViaParams, params)
+
+WRAP_OBJECT_RETURN_REF(odb::dbViaParams, params_return)
 
 
 

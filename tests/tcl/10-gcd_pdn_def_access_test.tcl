@@ -1,15 +1,4 @@
 source [file join [file dirname [info script]] "test_helpers.tcl"]
-
-proc exit_summary {} {
-    set total_checks [expr $::passing_checks + $::failing_checks]
-    if {$total_checks > 0} {
-        puts "Summary $::passing_checks / $total_checks ([expr round(100.0 * $::passing_checks / $total_checks)]% pass)"
-    } else { 
-        puts "Summary 0 checks run"
-    }
-    exit $::failing_checks
-}
-
 # Open database, load lef and design
 
 set db [dbDatabase_create]

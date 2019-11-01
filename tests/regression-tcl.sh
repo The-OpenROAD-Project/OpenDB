@@ -64,12 +64,12 @@ echo "SUCCESS!"
 echo ""
 
 # Test 13 is disabled until issue #25 is fixed
-# echo "[13] Edit via params test"
-# ./OpenDB/build/src/swig/tcl/opendbtcl ./OpenDB/tests/tcl/13-edit_via_params.tcl
-# echo "SUCCESS!"
-# echo ""
+echo "[13] Edit via params test"
+./OpenDB/build/src/swig/tcl/opendbtcl ./OpenDB/tests/tcl/13-edit_via_params.tcl
+echo "SUCCESS!"
+echo ""
 
-echo "[14] Database create test"
+echo "[14] Database row create test"
 ./OpenDB/build/src/swig/tcl/opendbtcl ./OpenDB/tests/tcl/14-opendb_row_settings_test.tcl
 echo "SUCCESS!"
 echo ""

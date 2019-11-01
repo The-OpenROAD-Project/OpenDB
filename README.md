@@ -3,7 +3,7 @@
 OpenDB is a design database to support tools for physical chip
 design. It was originally developed by Athena Design Systems. Nefelus,
 Inc acquired the rights to the code and open sourced it in 2019 to
-support the DARPA OpenRoad project.
+support the DARPA OpenROAD project.
 
 The structure of OpenDB is based on the Cadence Design Systems text
 file formats LEF (library) and DEF (design) formats version 5.6.

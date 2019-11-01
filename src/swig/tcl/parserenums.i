@@ -1,4 +1,4 @@
-%typemap(out) odb::defout::Version, ::defout::Version {
+%typemap(out) odb::defout::Version, defout::Version {
 	Tcl_Obj *obj;
 	if ($1 == odb::defout::Version::DEF_5_3) {
 		obj = Tcl_NewStringObj("DEF_5_3", -1);
@@ -11,7 +11,7 @@
 	}
     Tcl_SetObjResult(interp, obj);
 }
-%typemap(in) odb::defout::Version, ::defout::Version {
+%typemap(in) odb::defout::Version, defout::Version {
 	char *str = Tcl_GetStringFromObj($input, 0);
 	if (strcasecmp(str, "DEF_5_3") == 0 || strcasecmp(str, "5.3") == 0) {
 		$1 = odb::defout::Version::DEF_5_3;
@@ -23,7 +23,7 @@
 		$1 = odb::defout::Version::DEF_5_6;
 	}
 }
-%typemap(typecheck) odb::defout::Version, ::defout::Version {
+%typemap(typecheck) odb::defout::Version, defout::Version {
 	char *str = Tcl_GetStringFromObj($input, 0);
 	bool found = false;
 	if (str) {

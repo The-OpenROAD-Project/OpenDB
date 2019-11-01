@@ -22,21 +22,21 @@
 }
 %typemap(in) odb::dbOrientType, dbOrientType {
 	char *str = Tcl_GetStringFromObj($input, 0);
-	if (!strcasecmp(str, "R0") == 0) {
+	if (strcasecmp(str, "R0") == 0) {
 		$1 = odb::dbOrientType::Value::R0;
-	} else if (!strcasecmp(str, "R90") == 0) {
+	} else if (strcasecmp(str, "R90") == 0) {
 		$1 = odb::dbOrientType::Value::R90;
-	} else if (!strcasecmp(str, "R180") == 0) {
+	} else if (strcasecmp(str, "R180") == 0) {
 		$1 = odb::dbOrientType::Value::R180;
-	} else if (!strcasecmp(str, "R270") == 0) {
+	} else if (strcasecmp(str, "R270") == 0) {
 		$1 = odb::dbOrientType::Value::R270;
-	} else if (!strcasecmp(str, "MY") == 0) {
+	} else if (strcasecmp(str, "MY") == 0) {
 		$1 = odb::dbOrientType::Value::MY;
-	} else if (!strcasecmp(str, "MYR90") == 0) {
+	} else if (strcasecmp(str, "MYR90") == 0) {
 		$1 = odb::dbOrientType::Value::MYR90;
-	} else if (!strcasecmp(str, "MX") == 0) {
+	} else if (strcasecmp(str, "MX") == 0) {
 		$1 = odb::dbOrientType::Value::MX;
-	} else if (!strcasecmp(str, "MXR90") == 0) {
+	} else if (strcasecmp(str, "MXR90") == 0) {
 		$1 = odb::dbOrientType::Value::MXR90;
 	}
 }
@@ -44,21 +44,21 @@
 	char *str = Tcl_GetStringFromObj($input, 0);
 	bool found = false;
 	if (str) {
-		if (!strcasecmp(str, "R0") == 0) {
+		if (strcasecmp(str, "R0") == 0) {
 			found = true;
-		} 	else if (!strcasecmp(str, "R90") == 0) {
+		} 	else if (strcasecmp(str, "R90") == 0) {
 			found = true;
-		} 	else if (!strcasecmp(str, "R180") == 0) {
+		} 	else if (strcasecmp(str, "R180") == 0) {
 			found = true;
-		} 	else if (!strcasecmp(str, "R270") == 0) {
+		} 	else if (strcasecmp(str, "R270") == 0) {
 			found = true;
-		} 	else if (!strcasecmp(str, "MY") == 0) {
+		} 	else if (strcasecmp(str, "MY") == 0) {
 			found = true;
-		} 	else if (!strcasecmp(str, "MYR90") == 0) {
+		} 	else if (strcasecmp(str, "MYR90") == 0) {
 			found = true;
-		} 	else if (!strcasecmp(str, "MX") == 0) {
+		} 	else if (strcasecmp(str, "MX") == 0) {
 			found = true;
-		} 	else if (!strcasecmp(str, "MXR90") == 0) {
+		} 	else if (strcasecmp(str, "MXR90") == 0) {
 			found = true;
 		}
 	}
@@ -91,21 +91,21 @@
 }
 %typemap(in) odb::dbSigType, dbSigType {
 	char *str = Tcl_GetStringFromObj($input, 0);
-	if (!strcasecmp(str, "SIGNAL") == 0) {
+	if (strcasecmp(str, "SIGNAL") == 0) {
 		$1 = odb::dbSigType::Value::SIGNAL;
-	} else if (!strcasecmp(str, "POWER") == 0) {
+	} else if (strcasecmp(str, "POWER") == 0) {
 		$1 = odb::dbSigType::Value::POWER;
-	} else if (!strcasecmp(str, "GROUND") == 0) {
+	} else if (strcasecmp(str, "GROUND") == 0) {
 		$1 = odb::dbSigType::Value::GROUND;
-	} else if (!strcasecmp(str, "CLOCK") == 0) {
+	} else if (strcasecmp(str, "CLOCK") == 0) {
 		$1 = odb::dbSigType::Value::CLOCK;
-	} else if (!strcasecmp(str, "ANALOG") == 0) {
+	} else if (strcasecmp(str, "ANALOG") == 0) {
 		$1 = odb::dbSigType::Value::ANALOG;
-	} else if (!strcasecmp(str, "RESET") == 0) {
+	} else if (strcasecmp(str, "RESET") == 0) {
 		$1 = odb::dbSigType::Value::RESET;
-	} else if (!strcasecmp(str, "SCAN") == 0) {
+	} else if (strcasecmp(str, "SCAN") == 0) {
 		$1 = odb::dbSigType::Value::SCAN;
-	} else if (!strcasecmp(str, "TIEOFF") == 0) {
+	} else if (strcasecmp(str, "TIEOFF") == 0) {
 		$1 = odb::dbSigType::Value::TIEOFF;
 	}
 }
@@ -113,21 +113,21 @@
 	char *str = Tcl_GetStringFromObj($input, 0);
 	bool found = false;
 	if (str) {
-		if (!strcasecmp(str, "SIGNAL") == 0) {
+		if (strcasecmp(str, "SIGNAL") == 0) {
 			found = true;
-		} 	else if (!strcasecmp(str, "POWER") == 0) {
+		} 	else if (strcasecmp(str, "POWER") == 0) {
 			found = true;
-		} 	else if (!strcasecmp(str, "GROUND") == 0) {
+		} 	else if (strcasecmp(str, "GROUND") == 0) {
 			found = true;
-		} 	else if (!strcasecmp(str, "CLOCK") == 0) {
+		} 	else if (strcasecmp(str, "CLOCK") == 0) {
 			found = true;
-		} 	else if (!strcasecmp(str, "ANALOG") == 0) {
+		} 	else if (strcasecmp(str, "ANALOG") == 0) {
 			found = true;
-		} 	else if (!strcasecmp(str, "RESET") == 0) {
+		} 	else if (strcasecmp(str, "RESET") == 0) {
 			found = true;
-		} 	else if (!strcasecmp(str, "SCAN") == 0) {
+		} 	else if (strcasecmp(str, "SCAN") == 0) {
 			found = true;
-		} 	else if (!strcasecmp(str, "TIEOFF") == 0) {
+		} 	else if (strcasecmp(str, "TIEOFF") == 0) {
 			found = true;
 		}
 	}
@@ -152,13 +152,13 @@
 }
 %typemap(in) odb::dbIoType, dbIoType {
 	char *str = Tcl_GetStringFromObj($input, 0);
-	if (!strcasecmp(str, "INPUT") == 0) {
+	if (strcasecmp(str, "INPUT") == 0) {
 		$1 = odb::dbIoType::Value::INPUT;
-	} else if (!strcasecmp(str, "OUTPUT") == 0) {
+	} else if (strcasecmp(str, "OUTPUT") == 0) {
 		$1 = odb::dbIoType::Value::OUTPUT;
-	} else if (!strcasecmp(str, "INOUT") == 0) {
+	} else if (strcasecmp(str, "INOUT") == 0) {
 		$1 = odb::dbIoType::Value::INOUT;
-	} else if (!strcasecmp(str, "FEEDTHRU") == 0) {
+	} else if (strcasecmp(str, "FEEDTHRU") == 0) {
 		$1 = odb::dbIoType::Value::FEEDTHRU;
 	}
 }
@@ -166,13 +166,13 @@
 	char *str = Tcl_GetStringFromObj($input, 0);
 	bool found = false;
 	if (str) {
-		if (!strcasecmp(str, "INPUT") == 0) {
+		if (strcasecmp(str, "INPUT") == 0) {
 			found = true;
-		} 	else if (!strcasecmp(str, "OUTPUT") == 0) {
+		} 	else if (strcasecmp(str, "OUTPUT") == 0) {
 			found = true;
-		} 	else if (!strcasecmp(str, "INOUT") == 0) {
+		} 	else if (strcasecmp(str, "INOUT") == 0) {
 			found = true;
-		} 	else if (!strcasecmp(str, "FEEDTHRU") == 0) {
+		} 	else if (strcasecmp(str, "FEEDTHRU") == 0) {
 			found = true;
 		}
 	}
@@ -203,19 +203,19 @@
 }
 %typemap(in) odb::dbPlacementStatus, dbPlacementStatus {
 	char *str = Tcl_GetStringFromObj($input, 0);
-	if (!strcasecmp(str, "NONE") == 0) {
+	if (strcasecmp(str, "NONE") == 0) {
 		$1 = odb::dbPlacementStatus::Value::NONE;
-	} else if (!strcasecmp(str, "UNPLACED") == 0) {
+	} else if (strcasecmp(str, "UNPLACED") == 0) {
 		$1 = odb::dbPlacementStatus::Value::UNPLACED;
-	} else if (!strcasecmp(str, "SUGGESTED") == 0) {
+	} else if (strcasecmp(str, "SUGGESTED") == 0) {
 		$1 = odb::dbPlacementStatus::Value::SUGGESTED;
-	} else if (!strcasecmp(str, "PLACED") == 0) {
+	} else if (strcasecmp(str, "PLACED") == 0) {
 		$1 = odb::dbPlacementStatus::Value::PLACED;
-	} else if (!strcasecmp(str, "LOCKED") == 0) {
+	} else if (strcasecmp(str, "LOCKED") == 0) {
 		$1 = odb::dbPlacementStatus::Value::LOCKED;
-	} else if (!strcasecmp(str, "FIRM") == 0) {
+	} else if (strcasecmp(str, "FIRM") == 0) {
 		$1 = odb::dbPlacementStatus::Value::FIRM;
-	} else if (!strcasecmp(str, "COVER") == 0) {
+	} else if (strcasecmp(str, "COVER") == 0) {
 		$1 = odb::dbPlacementStatus::Value::COVER;
 	}
 }
@@ -223,19 +223,19 @@
 	char *str = Tcl_GetStringFromObj($input, 0);
 	bool found = false;
 	if (str) {
-		if (!strcasecmp(str, "NONE") == 0) {
+		if (strcasecmp(str, "NONE") == 0) {
 			found = true;
-		} 	else if (!strcasecmp(str, "UNPLACED") == 0) {
+		} 	else if (strcasecmp(str, "UNPLACED") == 0) {
 			found = true;
-		} 	else if (!strcasecmp(str, "SUGGESTED") == 0) {
+		} 	else if (strcasecmp(str, "SUGGESTED") == 0) {
 			found = true;
-		} 	else if (!strcasecmp(str, "PLACED") == 0) {
+		} 	else if (strcasecmp(str, "PLACED") == 0) {
 			found = true;
-		} 	else if (!strcasecmp(str, "LOCKED") == 0) {
+		} 	else if (strcasecmp(str, "LOCKED") == 0) {
 			found = true;
-		} 	else if (!strcasecmp(str, "FIRM") == 0) {
+		} 	else if (strcasecmp(str, "FIRM") == 0) {
 			found = true;
-		} 	else if (!strcasecmp(str, "COVER") == 0) {
+		} 	else if (strcasecmp(str, "COVER") == 0) {
 			found = true;
 		}
 	}
@@ -296,49 +296,49 @@
 }
 %typemap(in) odb::dbMasterType, dbMasterType {
 	char *str = Tcl_GetStringFromObj($input, 0);
-	if (!strcasecmp(str, "NONE") == 0) {
+	if (strcasecmp(str, "NONE") == 0) {
 		$1 = odb::dbMasterType::Value::NONE;
-	} else if (!strcasecmp(str, "COVER") == 0) {
+	} else if (strcasecmp(str, "COVER") == 0) {
 		$1 = odb::dbMasterType::Value::COVER;
-	} else if (!strcasecmp(str, "RING") == 0) {
+	} else if (strcasecmp(str, "RING") == 0) {
 		$1 = odb::dbMasterType::Value::RING;
-	} else if (!strcasecmp(str, "BLOCK") == 0) {
+	} else if (strcasecmp(str, "BLOCK") == 0) {
 		$1 = odb::dbMasterType::Value::BLOCK;
-	} else if (!strcasecmp(str, "PAD") == 0) {
+	} else if (strcasecmp(str, "PAD") == 0) {
 		$1 = odb::dbMasterType::Value::PAD;
-	} else if (!strcasecmp(str, "PAD_INPUT") == 0) {
+	} else if (strcasecmp(str, "PAD_INPUT") == 0) {
 		$1 = odb::dbMasterType::Value::PAD_INPUT;
-	} else if (!strcasecmp(str, "PAD_OUTPUT") == 0) {
+	} else if (strcasecmp(str, "PAD_OUTPUT") == 0) {
 		$1 = odb::dbMasterType::Value::PAD_OUTPUT;
-	} else if (!strcasecmp(str, "PAD_INOUT") == 0) {
+	} else if (strcasecmp(str, "PAD_INOUT") == 0) {
 		$1 = odb::dbMasterType::Value::PAD_INOUT;
-	} else if (!strcasecmp(str, "PAD_POWER") == 0) {
+	} else if (strcasecmp(str, "PAD_POWER") == 0) {
 		$1 = odb::dbMasterType::Value::PAD_POWER;
-	} else if (!strcasecmp(str, "PAD_SPACER") == 0) {
+	} else if (strcasecmp(str, "PAD_SPACER") == 0) {
 		$1 = odb::dbMasterType::Value::PAD_SPACER;
-	} else if (!strcasecmp(str, "CORE") == 0) {
+	} else if (strcasecmp(str, "CORE") == 0) {
 		$1 = odb::dbMasterType::Value::CORE;
-	} else if (!strcasecmp(str, "CORE_FEEDTHRU") == 0) {
+	} else if (strcasecmp(str, "CORE_FEEDTHRU") == 0) {
 		$1 = odb::dbMasterType::Value::CORE_FEEDTHRU;
-	} else if (!strcasecmp(str, "CORE_TIEHIGH") == 0) {
+	} else if (strcasecmp(str, "CORE_TIEHIGH") == 0) {
 		$1 = odb::dbMasterType::Value::CORE_TIEHIGH;
-	} else if (!strcasecmp(str, "CORE_TIELOW") == 0) {
+	} else if (strcasecmp(str, "CORE_TIELOW") == 0) {
 		$1 = odb::dbMasterType::Value::CORE_TIELOW;
-	} else if (!strcasecmp(str, "CORE_SPACER") == 0) {
+	} else if (strcasecmp(str, "CORE_SPACER") == 0) {
 		$1 = odb::dbMasterType::Value::CORE_SPACER;
-	} else if (!strcasecmp(str, "ENDCAP") == 0) {
+	} else if (strcasecmp(str, "ENDCAP") == 0) {
 		$1 = odb::dbMasterType::Value::ENDCAP;
-	} else if (!strcasecmp(str, "ENDCAP_PRE") == 0) {
+	} else if (strcasecmp(str, "ENDCAP_PRE") == 0) {
 		$1 = odb::dbMasterType::Value::ENDCAP_PRE;
-	} else if (!strcasecmp(str, "ENDCAP_POST") == 0) {
+	} else if (strcasecmp(str, "ENDCAP_POST") == 0) {
 		$1 = odb::dbMasterType::Value::ENDCAP_POST;
-	} else if (!strcasecmp(str, "ENDCAP_TOPLEFT") == 0) {
+	} else if (strcasecmp(str, "ENDCAP_TOPLEFT") == 0) {
 		$1 = odb::dbMasterType::Value::ENDCAP_TOPLEFT;
-	} else if (!strcasecmp(str, "ENDCAP_TOPRIGHT") == 0) {
+	} else if (strcasecmp(str, "ENDCAP_TOPRIGHT") == 0) {
 		$1 = odb::dbMasterType::Value::ENDCAP_TOPRIGHT;
-	} else if (!strcasecmp(str, "ENDCAP_BOTTOMLEFT") == 0) {
+	} else if (strcasecmp(str, "ENDCAP_BOTTOMLEFT") == 0) {
 		$1 = odb::dbMasterType::Value::ENDCAP_BOTTOMLEFT;
-	} else if (!strcasecmp(str, "ENDCAP_BOTTOMRIGHT") == 0) {
+	} else if (strcasecmp(str, "ENDCAP_BOTTOMRIGHT") == 0) {
 		$1 = odb::dbMasterType::Value::ENDCAP_BOTTOMRIGHT;
 	}
 }
@@ -346,49 +346,49 @@
 	char *str = Tcl_GetStringFromObj($input, 0);
 	bool found = false;
 	if (str) {
-		if (!strcasecmp(str, "NONE") == 0) {
+		if (strcasecmp(str, "NONE") == 0) {
 			found = true;
-		} 	else if (!strcasecmp(str, "COVER") == 0) {
+		} 	else if (strcasecmp(str, "COVER") == 0) {
 			found = true;
-		} 	else if (!strcasecmp(str, "RING") == 0) {
+		} 	else if (strcasecmp(str, "RING") == 0) {
 			found = true;
-		} 	else if (!strcasecmp(str, "BLOCK") == 0) {
+		} 	else if (strcasecmp(str, "BLOCK") == 0) {
 			found = true;
-		} 	else if (!strcasecmp(str, "PAD") == 0) {
+		} 	else if (strcasecmp(str, "PAD") == 0) {
 			found = true;
-		} 	else if (!strcasecmp(str, "PAD_INPUT") == 0) {
+		} 	else if (strcasecmp(str, "PAD_INPUT") == 0) {
 			found = true;
-		} 	else if (!strcasecmp(str, "PAD_OUTPUT") == 0) {
+		} 	else if (strcasecmp(str, "PAD_OUTPUT") == 0) {
 			found = true;
-		} 	else if (!strcasecmp(str, "PAD_INOUT") == 0) {
+		} 	else if (strcasecmp(str, "PAD_INOUT") == 0) {
 			found = true;
-		} 	else if (!strcasecmp(str, "PAD_POWER") == 0) {
+		} 	else if (strcasecmp(str, "PAD_POWER") == 0) {
 			found = true;
-		} 	else if (!strcasecmp(str, "PAD_SPACER") == 0) {
+		} 	else if (strcasecmp(str, "PAD_SPACER") == 0) {
 			found = true;
-		} 	else if (!strcasecmp(str, "CORE") == 0) {
+		} 	else if (strcasecmp(str, "CORE") == 0) {
 			found = true;
-		} 	else if (!strcasecmp(str, "CORE_FEEDTHRU") == 0) {
+		} 	else if (strcasecmp(str, "CORE_FEEDTHRU") == 0) {
 			found = true;
-		} 	else if (!strcasecmp(str, "CORE_TIEHIGH") == 0) {
+		} 	else if (strcasecmp(str, "CORE_TIEHIGH") == 0) {
 			found = true;
-		} 	else if (!strcasecmp(str, "CORE_TIELOW") == 0) {
+		} 	else if (strcasecmp(str, "CORE_TIELOW") == 0) {
 			found = true;
-		} 	else if (!strcasecmp(str, "CORE_SPACER") == 0) {
+		} 	else if (strcasecmp(str, "CORE_SPACER") == 0) {
 			found = true;
-		} 	else if (!strcasecmp(str, "ENDCAP") == 0) {
+		} 	else if (strcasecmp(str, "ENDCAP") == 0) {
 			found = true;
-		} 	else if (!strcasecmp(str, "ENDCAP_PRE") == 0) {
+		} 	else if (strcasecmp(str, "ENDCAP_PRE") == 0) {
 			found = true;
-		} 	else if (!strcasecmp(str, "ENDCAP_POST") == 0) {
+		} 	else if (strcasecmp(str, "ENDCAP_POST") == 0) {
 			found = true;
-		} 	else if (!strcasecmp(str, "ENDCAP_TOPLEFT") == 0) {
+		} 	else if (strcasecmp(str, "ENDCAP_TOPLEFT") == 0) {
 			found = true;
-		} 	else if (!strcasecmp(str, "ENDCAP_TOPRIGHT") == 0) {
+		} 	else if (strcasecmp(str, "ENDCAP_TOPRIGHT") == 0) {
 			found = true;
-		} 	else if (!strcasecmp(str, "ENDCAP_BOTTOMLEFT") == 0) {
+		} 	else if (strcasecmp(str, "ENDCAP_BOTTOMLEFT") == 0) {
 			found = true;
-		} 	else if (!strcasecmp(str, "ENDCAP_BOTTOMRIGHT") == 0) {
+		} 	else if (strcasecmp(str, "ENDCAP_BOTTOMRIGHT") == 0) {
 			found = true;
 		}
 	}
@@ -417,17 +417,17 @@
 }
 %typemap(in) odb::dbTechLayerType, dbTechLayerType {
 	char *str = Tcl_GetStringFromObj($input, 0);
-	if (!strcasecmp(str, "ROUTING") == 0) {
+	if (strcasecmp(str, "ROUTING") == 0) {
 		$1 = odb::dbTechLayerType::Value::ROUTING;
-	} else if (!strcasecmp(str, "CUT") == 0) {
+	} else if (strcasecmp(str, "CUT") == 0) {
 		$1 = odb::dbTechLayerType::Value::CUT;
-	} else if (!strcasecmp(str, "MASTERSLICE") == 0) {
+	} else if (strcasecmp(str, "MASTERSLICE") == 0) {
 		$1 = odb::dbTechLayerType::Value::MASTERSLICE;
-	} else if (!strcasecmp(str, "OVERLAP") == 0) {
+	} else if (strcasecmp(str, "OVERLAP") == 0) {
 		$1 = odb::dbTechLayerType::Value::OVERLAP;
-	} else if (!strcasecmp(str, "IMPLANT") == 0) {
+	} else if (strcasecmp(str, "IMPLANT") == 0) {
 		$1 = odb::dbTechLayerType::Value::IMPLANT;
-	} else if (!strcasecmp(str, "NONE") == 0) {
+	} else if (strcasecmp(str, "NONE") == 0) {
 		$1 = odb::dbTechLayerType::Value::NONE;
 	}
 }
@@ -435,17 +435,17 @@
 	char *str = Tcl_GetStringFromObj($input, 0);
 	bool found = false;
 	if (str) {
-		if (!strcasecmp(str, "ROUTING") == 0) {
+		if (strcasecmp(str, "ROUTING") == 0) {
 			found = true;
-		} 	else if (!strcasecmp(str, "CUT") == 0) {
+		} 	else if (strcasecmp(str, "CUT") == 0) {
 			found = true;
-		} 	else if (!strcasecmp(str, "MASTERSLICE") == 0) {
+		} 	else if (strcasecmp(str, "MASTERSLICE") == 0) {
 			found = true;
-		} 	else if (!strcasecmp(str, "OVERLAP") == 0) {
+		} 	else if (strcasecmp(str, "OVERLAP") == 0) {
 			found = true;
-		} 	else if (!strcasecmp(str, "IMPLANT") == 0) {
+		} 	else if (strcasecmp(str, "IMPLANT") == 0) {
 			found = true;
-		} 	else if (!strcasecmp(str, "NONE") == 0) {
+		} 	else if (strcasecmp(str, "NONE") == 0) {
 			found = true;
 		}
 	}
@@ -468,11 +468,11 @@
 }
 %typemap(in) odb::dbTechLayerDir, dbTechLayerDir {
 	char *str = Tcl_GetStringFromObj($input, 0);
-	if (!strcasecmp(str, "NONE") == 0) {
+	if (strcasecmp(str, "NONE") == 0) {
 		$1 = odb::dbTechLayerDir::Value::NONE;
-	} else if (!strcasecmp(str, "HORIZONTAL") == 0) {
+	} else if (strcasecmp(str, "HORIZONTAL") == 0) {
 		$1 = odb::dbTechLayerDir::Value::HORIZONTAL;
-	} else if (!strcasecmp(str, "VERTICAL") == 0) {
+	} else if (strcasecmp(str, "VERTICAL") == 0) {
 		$1 = odb::dbTechLayerDir::Value::VERTICAL;
 	}
 }
@@ -480,11 +480,11 @@
 	char *str = Tcl_GetStringFromObj($input, 0);
 	bool found = false;
 	if (str) {
-		if (!strcasecmp(str, "NONE") == 0) {
+		if (strcasecmp(str, "NONE") == 0) {
 			found = true;
-		} 	else if (!strcasecmp(str, "HORIZONTAL") == 0) {
+		} 	else if (strcasecmp(str, "HORIZONTAL") == 0) {
 			found = true;
-		} 	else if (!strcasecmp(str, "VERTICAL") == 0) {
+		} 	else if (strcasecmp(str, "VERTICAL") == 0) {
 			found = true;
 		}
 	}
@@ -505,9 +505,9 @@
 }
 %typemap(in) odb::dbRowDir, dbRowDir {
 	char *str = Tcl_GetStringFromObj($input, 0);
-	if (!strcasecmp(str, "HORIZONTAL") == 0) {
+	if (strcasecmp(str, "HORIZONTAL") == 0) {
 		$1 = odb::dbRowDir::Value::HORIZONTAL;
-	} else if (!strcasecmp(str, "VERTICAL") == 0) {
+	} else if (strcasecmp(str, "VERTICAL") == 0) {
 		$1 = odb::dbRowDir::Value::VERTICAL;
 	}
 }
@@ -515,9 +515,9 @@
 	char *str = Tcl_GetStringFromObj($input, 0);
 	bool found = false;
 	if (str) {
-		if (!strcasecmp(str, "HORIZONTAL") == 0) {
+		if (strcasecmp(str, "HORIZONTAL") == 0) {
 			found = true;
-		} 	else if (!strcasecmp(str, "VERTICAL") == 0) {
+		} 	else if (strcasecmp(str, "VERTICAL") == 0) {
 			found = true;
 		}
 	}
@@ -560,31 +560,31 @@
 }
 %typemap(in) odb::dbBoxOwner, dbBoxOwner {
 	char *str = Tcl_GetStringFromObj($input, 0);
-	if (!strcasecmp(str, "UNKNOWN") == 0) {
+	if (strcasecmp(str, "UNKNOWN") == 0) {
 		$1 = odb::dbBoxOwner::Value::UNKNOWN;
-	} else if (!strcasecmp(str, "BLOCK") == 0) {
+	} else if (strcasecmp(str, "BLOCK") == 0) {
 		$1 = odb::dbBoxOwner::Value::BLOCK;
-	} else if (!strcasecmp(str, "INST") == 0) {
+	} else if (strcasecmp(str, "INST") == 0) {
 		$1 = odb::dbBoxOwner::Value::INST;
-	} else if (!strcasecmp(str, "BTERM") == 0) {
+	} else if (strcasecmp(str, "BTERM") == 0) {
 		$1 = odb::dbBoxOwner::Value::BTERM;
-	} else if (!strcasecmp(str, "VIA") == 0) {
+	} else if (strcasecmp(str, "VIA") == 0) {
 		$1 = odb::dbBoxOwner::Value::VIA;
-	} else if (!strcasecmp(str, "OBSTRUCTION") == 0) {
+	} else if (strcasecmp(str, "OBSTRUCTION") == 0) {
 		$1 = odb::dbBoxOwner::Value::OBSTRUCTION;
-	} else if (!strcasecmp(str, "SWIRE") == 0) {
+	} else if (strcasecmp(str, "SWIRE") == 0) {
 		$1 = odb::dbBoxOwner::Value::SWIRE;
-	} else if (!strcasecmp(str, "BLOCKAGE") == 0) {
+	} else if (strcasecmp(str, "BLOCKAGE") == 0) {
 		$1 = odb::dbBoxOwner::Value::BLOCKAGE;
-	} else if (!strcasecmp(str, "MASTER") == 0) {
+	} else if (strcasecmp(str, "MASTER") == 0) {
 		$1 = odb::dbBoxOwner::Value::MASTER;
-	} else if (!strcasecmp(str, "MPIN") == 0) {
+	} else if (strcasecmp(str, "MPIN") == 0) {
 		$1 = odb::dbBoxOwner::Value::MPIN;
-	} else if (!strcasecmp(str, "TECH_VIA") == 0) {
+	} else if (strcasecmp(str, "TECH_VIA") == 0) {
 		$1 = odb::dbBoxOwner::Value::TECH_VIA;
-	} else if (!strcasecmp(str, "REGION") == 0) {
+	} else if (strcasecmp(str, "REGION") == 0) {
 		$1 = odb::dbBoxOwner::Value::REGION;
-	} else if (!strcasecmp(str, "BPIN") == 0) {
+	} else if (strcasecmp(str, "BPIN") == 0) {
 		$1 = odb::dbBoxOwner::Value::BPIN;
 	}
 }
@@ -592,31 +592,31 @@
 	char *str = Tcl_GetStringFromObj($input, 0);
 	bool found = false;
 	if (str) {
-		if (!strcasecmp(str, "UNKNOWN") == 0) {
+		if (strcasecmp(str, "UNKNOWN") == 0) {
 			found = true;
-		} 	else if (!strcasecmp(str, "BLOCK") == 0) {
+		} 	else if (strcasecmp(str, "BLOCK") == 0) {
 			found = true;
-		} 	else if (!strcasecmp(str, "INST") == 0) {
+		} 	else if (strcasecmp(str, "INST") == 0) {
 			found = true;
-		} 	else if (!strcasecmp(str, "BTERM") == 0) {
+		} 	else if (strcasecmp(str, "BTERM") == 0) {
 			found = true;
-		} 	else if (!strcasecmp(str, "VIA") == 0) {
+		} 	else if (strcasecmp(str, "VIA") == 0) {
 			found = true;
-		} 	else if (!strcasecmp(str, "OBSTRUCTION") == 0) {
+		} 	else if (strcasecmp(str, "OBSTRUCTION") == 0) {
 			found = true;
-		} 	else if (!strcasecmp(str, "SWIRE") == 0) {
+		} 	else if (strcasecmp(str, "SWIRE") == 0) {
 			found = true;
-		} 	else if (!strcasecmp(str, "BLOCKAGE") == 0) {
+		} 	else if (strcasecmp(str, "BLOCKAGE") == 0) {
 			found = true;
-		} 	else if (!strcasecmp(str, "MASTER") == 0) {
+		} 	else if (strcasecmp(str, "MASTER") == 0) {
 			found = true;
-		} 	else if (!strcasecmp(str, "MPIN") == 0) {
+		} 	else if (strcasecmp(str, "MPIN") == 0) {
 			found = true;
-		} 	else if (!strcasecmp(str, "TECH_VIA") == 0) {
+		} 	else if (strcasecmp(str, "TECH_VIA") == 0) {
 			found = true;
-		} 	else if (!strcasecmp(str, "REGION") == 0) {
+		} 	else if (strcasecmp(str, "REGION") == 0) {
 			found = true;
-		} 	else if (!strcasecmp(str, "BPIN") == 0) {
+		} 	else if (strcasecmp(str, "BPIN") == 0) {
 			found = true;
 		}
 	}
@@ -641,13 +641,13 @@
 }
 %typemap(in) odb::dbPolygonOwner, dbPolygonOwner {
 	char *str = Tcl_GetStringFromObj($input, 0);
-	if (!strcasecmp(str, "UNKNOWN") == 0) {
+	if (strcasecmp(str, "UNKNOWN") == 0) {
 		$1 = odb::dbPolygonOwner::Value::UNKNOWN;
-	} else if (!strcasecmp(str, "BPIN") == 0) {
+	} else if (strcasecmp(str, "BPIN") == 0) {
 		$1 = odb::dbPolygonOwner::Value::BPIN;
-	} else if (!strcasecmp(str, "OBSTRUCTION") == 0) {
+	} else if (strcasecmp(str, "OBSTRUCTION") == 0) {
 		$1 = odb::dbPolygonOwner::Value::OBSTRUCTION;
-	} else if (!strcasecmp(str, "SWIRE") == 0) {
+	} else if (strcasecmp(str, "SWIRE") == 0) {
 		$1 = odb::dbPolygonOwner::Value::SWIRE;
 	}
 }
@@ -655,13 +655,13 @@
 	char *str = Tcl_GetStringFromObj($input, 0);
 	bool found = false;
 	if (str) {
-		if (!strcasecmp(str, "UNKNOWN") == 0) {
+		if (strcasecmp(str, "UNKNOWN") == 0) {
 			found = true;
-		} 	else if (!strcasecmp(str, "BPIN") == 0) {
+		} 	else if (strcasecmp(str, "BPIN") == 0) {
 			found = true;
-		} 	else if (!strcasecmp(str, "OBSTRUCTION") == 0) {
+		} 	else if (strcasecmp(str, "OBSTRUCTION") == 0) {
 			found = true;
-		} 	else if (!strcasecmp(str, "SWIRE") == 0) {
+		} 	else if (strcasecmp(str, "SWIRE") == 0) {
 			found = true;
 		}
 	}
@@ -690,17 +690,17 @@
 }
 %typemap(in) odb::dbWireType, dbWireType {
 	char *str = Tcl_GetStringFromObj($input, 0);
-	if (!strcasecmp(str, "NONE") == 0) {
+	if (strcasecmp(str, "NONE") == 0) {
 		$1 = odb::dbWireType::Value::NONE;
-	} else if (!strcasecmp(str, "COVER") == 0) {
+	} else if (strcasecmp(str, "COVER") == 0) {
 		$1 = odb::dbWireType::Value::COVER;
-	} else if (!strcasecmp(str, "FIXED") == 0) {
+	} else if (strcasecmp(str, "FIXED") == 0) {
 		$1 = odb::dbWireType::Value::FIXED;
-	} else if (!strcasecmp(str, "ROUTED") == 0) {
+	} else if (strcasecmp(str, "ROUTED") == 0) {
 		$1 = odb::dbWireType::Value::ROUTED;
-	} else if (!strcasecmp(str, "SHIELD") == 0) {
+	} else if (strcasecmp(str, "SHIELD") == 0) {
 		$1 = odb::dbWireType::Value::SHIELD;
-	} else if (!strcasecmp(str, "NOSHIELD") == 0) {
+	} else if (strcasecmp(str, "NOSHIELD") == 0) {
 		$1 = odb::dbWireType::Value::NOSHIELD;
 	}
 }
@@ -708,17 +708,17 @@
 	char *str = Tcl_GetStringFromObj($input, 0);
 	bool found = false;
 	if (str) {
-		if (!strcasecmp(str, "NONE") == 0) {
+		if (strcasecmp(str, "NONE") == 0) {
 			found = true;
-		} 	else if (!strcasecmp(str, "COVER") == 0) {
+		} 	else if (strcasecmp(str, "COVER") == 0) {
 			found = true;
-		} 	else if (!strcasecmp(str, "FIXED") == 0) {
+		} 	else if (strcasecmp(str, "FIXED") == 0) {
 			found = true;
-		} 	else if (!strcasecmp(str, "ROUTED") == 0) {
+		} 	else if (strcasecmp(str, "ROUTED") == 0) {
 			found = true;
-		} 	else if (!strcasecmp(str, "SHIELD") == 0) {
+		} 	else if (strcasecmp(str, "SHIELD") == 0) {
 			found = true;
-		} 	else if (!strcasecmp(str, "NOSHIELD") == 0) {
+		} 	else if (strcasecmp(str, "NOSHIELD") == 0) {
 			found = true;
 		}
 	}
@@ -759,29 +759,29 @@
 }
 %typemap(in) odb::dbWireShapeType, dbWireShapeType {
 	char *str = Tcl_GetStringFromObj($input, 0);
-	if (!strcasecmp(str, "NONE") == 0) {
+	if (strcasecmp(str, "NONE") == 0) {
 		$1 = odb::dbWireShapeType::Value::NONE;
-	} else if (!strcasecmp(str, "RING") == 0) {
+	} else if (strcasecmp(str, "RING") == 0) {
 		$1 = odb::dbWireShapeType::Value::RING;
-	} else if (!strcasecmp(str, "PADRING") == 0) {
+	} else if (strcasecmp(str, "PADRING") == 0) {
 		$1 = odb::dbWireShapeType::Value::PADRING;
-	} else if (!strcasecmp(str, "BLOCKRING") == 0) {
+	} else if (strcasecmp(str, "BLOCKRING") == 0) {
 		$1 = odb::dbWireShapeType::Value::BLOCKRING;
-	} else if (!strcasecmp(str, "STRIPE") == 0) {
+	} else if (strcasecmp(str, "STRIPE") == 0) {
 		$1 = odb::dbWireShapeType::Value::STRIPE;
-	} else if (!strcasecmp(str, "FOLLOWPIN") == 0) {
+	} else if (strcasecmp(str, "FOLLOWPIN") == 0) {
 		$1 = odb::dbWireShapeType::Value::FOLLOWPIN;
-	} else if (!strcasecmp(str, "IOWIRE") == 0) {
+	} else if (strcasecmp(str, "IOWIRE") == 0) {
 		$1 = odb::dbWireShapeType::Value::IOWIRE;
-	} else if (!strcasecmp(str, "COREWIRE") == 0) {
+	} else if (strcasecmp(str, "COREWIRE") == 0) {
 		$1 = odb::dbWireShapeType::Value::COREWIRE;
-	} else if (!strcasecmp(str, "BLOCKWIRE") == 0) {
+	} else if (strcasecmp(str, "BLOCKWIRE") == 0) {
 		$1 = odb::dbWireShapeType::Value::BLOCKWIRE;
-	} else if (!strcasecmp(str, "BLOCKAGEWIRE") == 0) {
+	} else if (strcasecmp(str, "BLOCKAGEWIRE") == 0) {
 		$1 = odb::dbWireShapeType::Value::BLOCKAGEWIRE;
-	} else if (!strcasecmp(str, "FILLWIRE") == 0) {
+	} else if (strcasecmp(str, "FILLWIRE") == 0) {
 		$1 = odb::dbWireShapeType::Value::FILLWIRE;
-	} else if (!strcasecmp(str, "DRCFILL") == 0) {
+	} else if (strcasecmp(str, "DRCFILL") == 0) {
 		$1 = odb::dbWireShapeType::Value::DRCFILL;
 	}
 }
@@ -789,29 +789,29 @@
 	char *str = Tcl_GetStringFromObj($input, 0);
 	bool found = false;
 	if (str) {
-		if (!strcasecmp(str, "NONE") == 0) {
+		if (strcasecmp(str, "NONE") == 0) {
 			found = true;
-		} 	else if (!strcasecmp(str, "RING") == 0) {
+		} 	else if (strcasecmp(str, "RING") == 0) {
 			found = true;
-		} 	else if (!strcasecmp(str, "PADRING") == 0) {
+		} 	else if (strcasecmp(str, "PADRING") == 0) {
 			found = true;
-		} 	else if (!strcasecmp(str, "BLOCKRING") == 0) {
+		} 	else if (strcasecmp(str, "BLOCKRING") == 0) {
 			found = true;
-		} 	else if (!strcasecmp(str, "STRIPE") == 0) {
+		} 	else if (strcasecmp(str, "STRIPE") == 0) {
 			found = true;
-		} 	else if (!strcasecmp(str, "FOLLOWPIN") == 0) {
+		} 	else if (strcasecmp(str, "FOLLOWPIN") == 0) {
 			found = true;
-		} 	else if (!strcasecmp(str, "IOWIRE") == 0) {
+		} 	else if (strcasecmp(str, "IOWIRE") == 0) {
 			found = true;
-		} 	else if (!strcasecmp(str, "COREWIRE") == 0) {
+		} 	else if (strcasecmp(str, "COREWIRE") == 0) {
 			found = true;
-		} 	else if (!strcasecmp(str, "BLOCKWIRE") == 0) {
+		} 	else if (strcasecmp(str, "BLOCKWIRE") == 0) {
 			found = true;
-		} 	else if (!strcasecmp(str, "BLOCKAGEWIRE") == 0) {
+		} 	else if (strcasecmp(str, "BLOCKAGEWIRE") == 0) {
 			found = true;
-		} 	else if (!strcasecmp(str, "FILLWIRE") == 0) {
+		} 	else if (strcasecmp(str, "FILLWIRE") == 0) {
 			found = true;
-		} 	else if (!strcasecmp(str, "DRCFILL") == 0) {
+		} 	else if (strcasecmp(str, "DRCFILL") == 0) {
 			found = true;
 		}
 	}
@@ -834,11 +834,11 @@
 }
 %typemap(in) odb::dbSiteClass, dbSiteClass {
 	char *str = Tcl_GetStringFromObj($input, 0);
-	if (!strcasecmp(str, "NONE") == 0) {
+	if (strcasecmp(str, "NONE") == 0) {
 		$1 = odb::dbSiteClass::Value::NONE;
-	} else if (!strcasecmp(str, "PAD") == 0) {
+	} else if (strcasecmp(str, "PAD") == 0) {
 		$1 = odb::dbSiteClass::Value::PAD;
-	} else if (!strcasecmp(str, "CORE") == 0) {
+	} else if (strcasecmp(str, "CORE") == 0) {
 		$1 = odb::dbSiteClass::Value::CORE;
 	}
 }
@@ -846,11 +846,11 @@
 	char *str = Tcl_GetStringFromObj($input, 0);
 	bool found = false;
 	if (str) {
-		if (!strcasecmp(str, "NONE") == 0) {
+		if (strcasecmp(str, "NONE") == 0) {
 			found = true;
-		} 	else if (!strcasecmp(str, "PAD") == 0) {
+		} 	else if (strcasecmp(str, "PAD") == 0) {
 			found = true;
-		} 	else if (!strcasecmp(str, "CORE") == 0) {
+		} 	else if (strcasecmp(str, "CORE") == 0) {
 			found = true;
 		}
 	}
@@ -871,9 +871,9 @@
 }
 %typemap(in) odb::dbOnOffType, dbOnOffType {
 	char *str = Tcl_GetStringFromObj($input, 0);
-	if (!strcasecmp(str, "OFF") == 0) {
+	if (strcasecmp(str, "OFF") == 0) {
 		$1 = odb::dbOnOffType::Value::OFF;
-	} else if (!strcasecmp(str, "ON") == 0) {
+	} else if (strcasecmp(str, "ON") == 0) {
 		$1 = odb::dbOnOffType::Value::ON;
 	}
 }
@@ -881,9 +881,9 @@
 	char *str = Tcl_GetStringFromObj($input, 0);
 	bool found = false;
 	if (str) {
-		if (!strcasecmp(str, "OFF") == 0) {
+		if (strcasecmp(str, "OFF") == 0) {
 			found = true;
-		} 	else if (!strcasecmp(str, "ON") == 0) {
+		} 	else if (strcasecmp(str, "ON") == 0) {
 			found = true;
 		}
 	}
@@ -904,9 +904,9 @@
 }
 %typemap(in) odb::dbClMeasureType, dbClMeasureType {
 	char *str = Tcl_GetStringFromObj($input, 0);
-	if (!strcasecmp(str, "EUCLIDEAN") == 0) {
+	if (strcasecmp(str, "EUCLIDEAN") == 0) {
 		$1 = odb::dbClMeasureType::Value::EUCLIDEAN;
-	} else if (!strcasecmp(str, "MAXXY") == 0) {
+	} else if (strcasecmp(str, "MAXXY") == 0) {
 		$1 = odb::dbClMeasureType::Value::MAXXY;
 	}
 }
@@ -914,9 +914,9 @@
 	char *str = Tcl_GetStringFromObj($input, 0);
 	bool found = false;
 	if (str) {
-		if (!strcasecmp(str, "EUCLIDEAN") == 0) {
+		if (strcasecmp(str, "EUCLIDEAN") == 0) {
 			found = true;
-		} 	else if (!strcasecmp(str, "MAXXY") == 0) {
+		} 	else if (strcasecmp(str, "MAXXY") == 0) {
 			found = true;
 		}
 	}
@@ -941,13 +941,13 @@
 }
 %typemap(in) odb::dbJournalEntryType, dbJournalEntryType {
 	char *str = Tcl_GetStringFromObj($input, 0);
-	if (!strcasecmp(str, "NONE") == 0) {
+	if (strcasecmp(str, "NONE") == 0) {
 		$1 = odb::dbJournalEntryType::Value::NONE;
-	} else if (!strcasecmp(str, "OWNER") == 0) {
+	} else if (strcasecmp(str, "OWNER") == 0) {
 		$1 = odb::dbJournalEntryType::Value::OWNER;
-	} else if (!strcasecmp(str, "ADD") == 0) {
+	} else if (strcasecmp(str, "ADD") == 0) {
 		$1 = odb::dbJournalEntryType::Value::ADD;
-	} else if (!strcasecmp(str, "DESTROY") == 0) {
+	} else if (strcasecmp(str, "DESTROY") == 0) {
 		$1 = odb::dbJournalEntryType::Value::DESTROY;
 	}
 }
@@ -955,13 +955,13 @@
 	char *str = Tcl_GetStringFromObj($input, 0);
 	bool found = false;
 	if (str) {
-		if (!strcasecmp(str, "NONE") == 0) {
+		if (strcasecmp(str, "NONE") == 0) {
 			found = true;
-		} 	else if (!strcasecmp(str, "OWNER") == 0) {
+		} 	else if (strcasecmp(str, "OWNER") == 0) {
 			found = true;
-		} 	else if (!strcasecmp(str, "ADD") == 0) {
+		} 	else if (strcasecmp(str, "ADD") == 0) {
 			found = true;
-		} 	else if (!strcasecmp(str, "DESTROY") == 0) {
+		} 	else if (strcasecmp(str, "DESTROY") == 0) {
 			found = true;
 		}
 	}
@@ -988,15 +988,15 @@
 }
 %typemap(in) odb::dbDirection, dbDirection {
 	char *str = Tcl_GetStringFromObj($input, 0);
-	if (!strcasecmp(str, "NONE") == 0) {
+	if (strcasecmp(str, "NONE") == 0) {
 		$1 = odb::dbDirection::Value::NONE;
-	} else if (!strcasecmp(str, "NORTH") == 0) {
+	} else if (strcasecmp(str, "NORTH") == 0) {
 		$1 = odb::dbDirection::Value::NORTH;
-	} else if (!strcasecmp(str, "EAST") == 0) {
+	} else if (strcasecmp(str, "EAST") == 0) {
 		$1 = odb::dbDirection::Value::EAST;
-	} else if (!strcasecmp(str, "SOUTH") == 0) {
+	} else if (strcasecmp(str, "SOUTH") == 0) {
 		$1 = odb::dbDirection::Value::SOUTH;
-	} else if (!strcasecmp(str, "WEST") == 0) {
+	} else if (strcasecmp(str, "WEST") == 0) {
 		$1 = odb::dbDirection::Value::WEST;
 	}
 }
@@ -1004,15 +1004,15 @@
 	char *str = Tcl_GetStringFromObj($input, 0);
 	bool found = false;
 	if (str) {
-		if (!strcasecmp(str, "NONE") == 0) {
+		if (strcasecmp(str, "NONE") == 0) {
 			found = true;
-		} 	else if (!strcasecmp(str, "NORTH") == 0) {
+		} 	else if (strcasecmp(str, "NORTH") == 0) {
 			found = true;
-		} 	else if (!strcasecmp(str, "EAST") == 0) {
+		} 	else if (strcasecmp(str, "EAST") == 0) {
 			found = true;
-		} 	else if (!strcasecmp(str, "SOUTH") == 0) {
+		} 	else if (strcasecmp(str, "SOUTH") == 0) {
 			found = true;
-		} 	else if (!strcasecmp(str, "WEST") == 0) {
+		} 	else if (strcasecmp(str, "WEST") == 0) {
 			found = true;
 		}
 	}
@@ -1035,11 +1035,11 @@
 }
 %typemap(in) odb::dbRegionType, dbRegionType {
 	char *str = Tcl_GetStringFromObj($input, 0);
-	if (!strcasecmp(str, "INCLUSIVE") == 0) {
+	if (strcasecmp(str, "INCLUSIVE") == 0) {
 		$1 = odb::dbRegionType::Value::INCLUSIVE;
-	} else if (!strcasecmp(str, "EXCLUSIVE") == 0) {
+	} else if (strcasecmp(str, "EXCLUSIVE") == 0) {
 		$1 = odb::dbRegionType::Value::EXCLUSIVE;
-	} else if (!strcasecmp(str, "SUGGESTED") == 0) {
+	} else if (strcasecmp(str, "SUGGESTED") == 0) {
 		$1 = odb::dbRegionType::Value::SUGGESTED;
 	}
 }
@@ -1047,11 +1047,11 @@
 	char *str = Tcl_GetStringFromObj($input, 0);
 	bool found = false;
 	if (str) {
-		if (!strcasecmp(str, "INCLUSIVE") == 0) {
+		if (strcasecmp(str, "INCLUSIVE") == 0) {
 			found = true;
-		} 	else if (!strcasecmp(str, "EXCLUSIVE") == 0) {
+		} 	else if (strcasecmp(str, "EXCLUSIVE") == 0) {
 			found = true;
-		} 	else if (!strcasecmp(str, "SUGGESTED") == 0) {
+		} 	else if (strcasecmp(str, "SUGGESTED") == 0) {
 			found = true;
 		}
 	}
@@ -1080,17 +1080,17 @@
 }
 %typemap(in) odb::dbSourceType, dbSourceType {
 	char *str = Tcl_GetStringFromObj($input, 0);
-	if (!strcasecmp(str, "NONE") == 0) {
+	if (strcasecmp(str, "NONE") == 0) {
 		$1 = odb::dbSourceType::Value::NONE;
-	} else if (!strcasecmp(str, "NETLIST") == 0) {
+	} else if (strcasecmp(str, "NETLIST") == 0) {
 		$1 = odb::dbSourceType::Value::NETLIST;
-	} else if (!strcasecmp(str, "DIST") == 0) {
+	} else if (strcasecmp(str, "DIST") == 0) {
 		$1 = odb::dbSourceType::Value::DIST;
-	} else if (!strcasecmp(str, "USER") == 0) {
+	} else if (strcasecmp(str, "USER") == 0) {
 		$1 = odb::dbSourceType::Value::USER;
-	} else if (!strcasecmp(str, "TIMING") == 0) {
+	} else if (strcasecmp(str, "TIMING") == 0) {
 		$1 = odb::dbSourceType::Value::TIMING;
-	} else if (!strcasecmp(str, "TEST") == 0) {
+	} else if (strcasecmp(str, "TEST") == 0) {
 		$1 = odb::dbSourceType::Value::TEST;
 	}
 }
@@ -1098,17 +1098,17 @@
 	char *str = Tcl_GetStringFromObj($input, 0);
 	bool found = false;
 	if (str) {
-		if (!strcasecmp(str, "NONE") == 0) {
+		if (strcasecmp(str, "NONE") == 0) {
 			found = true;
-		} 	else if (!strcasecmp(str, "NETLIST") == 0) {
+		} 	else if (strcasecmp(str, "NETLIST") == 0) {
 			found = true;
-		} 	else if (!strcasecmp(str, "DIST") == 0) {
+		} 	else if (strcasecmp(str, "DIST") == 0) {
 			found = true;
-		} 	else if (!strcasecmp(str, "USER") == 0) {
+		} 	else if (strcasecmp(str, "USER") == 0) {
 			found = true;
-		} 	else if (!strcasecmp(str, "TIMING") == 0) {
+		} 	else if (strcasecmp(str, "TIMING") == 0) {
 			found = true;
-		} 	else if (!strcasecmp(str, "TEST") == 0) {
+		} 	else if (strcasecmp(str, "TEST") == 0) {
 			found = true;
 		}
 	}

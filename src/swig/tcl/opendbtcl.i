@@ -41,7 +41,10 @@ using namespace odb;
 %typemap(in) (uint) = (int);
 %typemap(out) (uint) = (int);
 %typemap(out) (uint64) = (long);
+
 %include "dbenums.i"
+%include "parserenums.i"
+
 %include "dbtypes.i"
 
 
@@ -49,13 +52,13 @@ using namespace odb;
 
 %include "db.h"
 
-
 %include "lefin.h"
 %include "lefout.h"
 %include "defin.h"
 %include "defout.h"
 %include "dbExtControl.h"
 %include "dbViaParams.h"
+
 %include "dbtable2.h"
 %include "dbId.h"
 %include "dbRtEdge.h"

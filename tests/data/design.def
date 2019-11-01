@@ -39,9 +39,9 @@ PINS 12 ;
 END PINS
 
 NETS 24 ;
-- _w0_ ( _g0_ ZN ) ( _d1_ D ) ( _d0_ D ) ( _d2_ D ) ;
-- _w1_ ( _d5_ D ) ( _g1_ ZN ) ( _d3_ D ) ( _d4_ D ) ;
-- _w2_ ( _g2_ ZN ) ( _d6_ D ) ( _d8_ D ) ( _d7_ D ) ;
+- _w0_ ( _g0_ Y ) ( _d1_ D ) ( _d0_ D ) ( _d2_ D ) ;
+- _w1_ ( _d5_ D ) ( _g1_ Y ) ( _d3_ D ) ( _d4_ D ) ;
+- _w2_ ( _g2_ Y ) ( _d6_ D ) ( _d8_ D ) ( _d7_ D ) ;
 - _xout0 ( _d0_ Q ) ;
 - _xout1 ( _d1_ Q ) ;
 - _xout2 ( _d2_ Q ) ;

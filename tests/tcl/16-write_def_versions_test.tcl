@@ -1,13 +1,8 @@
 set db [dbDatabase_create]
-set lef_parser [new_lefin $db true]
-set def_parser [new_defin $db]
-set def_writer [new_defout]
-set lib [lefin_createTechAndLib $lef_parser gscl45nm ./OpenDB/tests/data/gscl45nm.lef]
-set chip [$def_parser createChip {$lib} ./OpenDB/tests/data/design.def]
+set chip [read_design $db ./OpenDB/tests/data/gscl45nm.lef ./OpenDB/tests/data/design.def]
 set block [$chip getBlock]
 foreach version "DEF_5_3 DEF_5_4 DEF_5_5 DEF_5_6" {
-    $def_writer setVersion $version
-    set result [$def_writer writeBlock $block ./OpenDB/build/test.def]
+    set result [write_def $block ./OpenDB/build/test.def $version]
     if {[expr $result != 1]} {
         exit 1
     }
@@ -30,8 +25,7 @@ foreach version "DEF_5_3 DEF_5_4 DEF_5_5 DEF_5_6" {
 }
 # Test different syntax
 foreach version "5.3 5.4 5.5 5.6" {
-    $def_writer setVersion $version
-    set result [$def_writer writeBlock $block ./OpenDB/build/test.def]
+    set result [write_def $block ./OpenDB/build/test.def $version]
     if {[expr $result != 1]} {
         exit 1
     }

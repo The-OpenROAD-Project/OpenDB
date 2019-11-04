@@ -1,10 +1,7 @@
 set db [dbDatabase_create]
-set lef_parser [new_lefin $db true]
-set def_parser [new_defin $db]
-set def_writer [new_defout]
-set lib [$lef_parser createTechAndLib gscl45nm ./OpenDB/tests/data/gscl45nm.lef]
+set chip [read_design $db ./OpenDB/tests/data/gscl45nm.lef ./OpenDB/tests/data/design.def]
+set lib [lindex [$db getLibs] 0]
 set tech [$db getTech]
-set chip [$def_parser createChip {$lib} ./OpenDB/tests/data/design.def]
 if {$chip == "NULL"} {
     puts "Read DEF Failed"
     exit 1
@@ -37,5 +34,5 @@ $wire_encoder newPath $jid2
 set jid3 [$wire_encoder addTechVia $via2]
 $wire_encoder end
 
-set result [$def_writer writeBlock $block ./OpenDB/build/wire_encoder.def]
+set result [write_def $block ./OpenDB/build/wire_encoder.def]
 exit [expr $result != 1]

@@ -31,7 +31,7 @@
             found = true;
         } else if (strcasecmp(str, "DEF_5_4") == 0 || strcasecmp(str, "5.4") == 0) {
             found = true;
-        } else if (strcasecmp(str, "DEF_5_5") == 0 || strcasecmp(str, "5.5") == 0) == 0) {
+        } else if (strcasecmp(str, "DEF_5_5") == 0 || strcasecmp(str, "5.5") == 0) {
             found = true;
         } else if (strcasecmp(str, "DEF_5_6") == 0 || strcasecmp(str, "5.6") == 0) {
             found = true;

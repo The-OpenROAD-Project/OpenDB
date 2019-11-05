@@ -1,8 +1,11 @@
 set db [dbDatabase_create]
-set lef_parser [new_lefin $db true]
-set tech [lefin_createTech $lef_parser ./OpenDB/tests/data/gscl45nm.lef]
+set lib [read_lef $db ./OpenDB/tests/data/gscl45nm.lef]
+if {$lib == "NULL"} {
+    exit 1
+}
+set tech [$lib getTech]
 if {$tech == "NULL"} {
     exit 1
 }
-set via_rules [dbTech_getViaRules $tech]
+set via_rules [$tech getViaRules]
 exit 0

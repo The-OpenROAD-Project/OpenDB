@@ -67,9 +67,9 @@ void adsRTreeCore::clear()
 //
 inline adsRTreeNode * adsRTreeCore::chooseChild( const adsRect & ir, adsRTreeBranch * parent, bool & is_contained )
 {
-    register adsRTreeNode * child;
-    register adsRTreeNode * min_child = NULL;
-    register uint64 min_area = ~0;
+    adsRTreeNode * child;
+    adsRTreeNode * min_child = NULL;
+    uint64 min_area = ~0;
 
 
     // Optimization to speed up insertion
@@ -79,7 +79,7 @@ inline adsRTreeNode * adsRTreeCore::chooseChild( const adsRect & ir, adsRTreeBra
         {
             if ( child->_bbox.contains(ir) )
             {
-                register uint64 child_area = child->_bbox.area();
+                uint64 child_area = child->_bbox.area();
     
                 if ( child_area < min_area )
                 {
@@ -95,16 +95,16 @@ inline adsRTreeNode * adsRTreeCore::chooseChild( const adsRect & ir, adsRTreeBra
     
     is_contained = false;
     
-    register uint64 min_cost = ~0;
+    uint64 min_cost = ~0;
 
     for( child = parent->_children; child != NULL; child = child->_next )
     {
         adsRect r = child->_bbox;
         r.merge(ir);
         
-        register uint64 child_area = child->_bbox.area();
-        register uint64 merged_area = r.area();
-        register uint64 cost = merged_area - child_area;
+        uint64 child_area = child->_bbox.area();
+        uint64 merged_area = r.area();
+        uint64 cost = merged_area - child_area;
 
         // take solution with least area-enlargement
         if ( cost < min_cost )
@@ -129,7 +129,7 @@ inline adsRTreeNode * adsRTreeCore::chooseChild( const adsRect & ir, adsRTreeBra
 inline adsRTreeNode * adsRTreeCore::chooseSubTree( const adsRect & ir, int level, adsRTreeNode * path[] )
 {
     assert(level != 0);
-    register adsRTreeNode * node = _root;
+    adsRTreeNode * node = _root;
     path[node->_level] = node;
     bool is_contained = _root->_bbox.contains(ir);
 
@@ -305,7 +305,7 @@ struct adsRTreeNodeSplitCmpY
 uint64 adsRTreeCore::chooseSplitYAxis( adsRTreeBranch * parent, adsRTreeNode * children[] )
 {
     adsRTreeNodeSplitCmpX cmp;
-    register int count = parent->_count;
+    int count = parent->_count;
     adsRTreeNode ** s = children;
     adsRTreeNode ** e = &children[count];
     cmp._sort_min = true;
@@ -313,9 +313,9 @@ uint64 adsRTreeCore::chooseSplitYAxis( adsRTreeBranch * parent, adsRTreeNode * c
     cmp._sort_min = false;
     std::stable_sort( s, e, cmp );
 
-    register uint64 margin_sum = 0;
-    register int k;
-    register int n = _MAX - 2*_MIN + 2;
+    uint64 margin_sum = 0;
+    int k;
+    int n = _MAX - 2*_MIN + 2;
 
     for( k = 1; k <= n; ++k )
     {
@@ -348,7 +348,7 @@ uint64 adsRTreeCore::chooseSplitYAxis( adsRTreeBranch * parent, adsRTreeNode * c
 uint64 adsRTreeCore::chooseSplitXAxis( adsRTreeBranch * parent, adsRTreeNode * children[] )
 {
     adsRTreeNodeSplitCmpY cmp;
-    register int count = parent->_count;
+    int count = parent->_count;
     adsRTreeNode ** s = children;
     adsRTreeNode ** e = &children[count];
     cmp._sort_min = true;
@@ -356,9 +356,9 @@ uint64 adsRTreeCore::chooseSplitXAxis( adsRTreeBranch * parent, adsRTreeNode * c
     cmp._sort_min = false;
     std::stable_sort( s, e, cmp );
 
-    register uint64 margin_sum = 0;
-    register int k;
-    register int n = _MAX - 2*_MIN + 2;
+    uint64 margin_sum = 0;
+    int k;
+    int n = _MAX - 2*_MIN + 2;
 
     for( k = 1; k <= n; ++k )
     {
@@ -386,12 +386,12 @@ uint64 adsRTreeCore::chooseSplitXAxis( adsRTreeBranch * parent, adsRTreeNode * c
 
 int adsRTreeCore::chooseSplitDistribution( adsRTreeBranch * parent, adsRTreeNode * children[] )
 {
-    register int count = parent->_count;
-    register uint64 min_overlap = ~0;
-    register uint64 min_area = ~0;
-    register uint64 min_dist = 0;
-    register int k;
-    register int n = _MAX - 2*_MIN + 2;
+    int count = parent->_count;
+    uint64 min_overlap = ~0;
+    uint64 min_area = ~0;
+    uint64 min_dist = 0;
+    int k;
+    int n = _MAX - 2*_MIN + 2;
 
     for( k = 1; k <= n; ++k )
     {

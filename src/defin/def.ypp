@@ -819,11 +819,6 @@ defPinOpt
     |    '+' PLACED_K point defOrient  { pinR->pinPlacement( DEF_PLACEMENT_PLACED, $3._x, $3._y, (defOrient) $4 ); }
     ;
 
-defPortSection
-    : /* nothing */
-    | '+' PORT_K 
-    ;
-
 defPinGeomOpt
     : /* nothing */
     | SPACING_K NUM_INT { pinR->pinMinSpacing($2); }

@@ -37,10 +37,10 @@
 void Ath__allocFailure(char *msg);
 void Ath__hashError(char *msg, int exitFlag);
 
-void ATH__failMessage(char *msg);
+void ATH__failMessage(const char *msg);
 
 char* ATH__allocCharWord(int n);
-void ATH__deallocCharWord(char *a);
+void ATH__deallocCharWord(const char *a);
 
 FILE* ATH__openFile(const char *name, const char* type);
 

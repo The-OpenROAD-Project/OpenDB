@@ -33,13 +33,13 @@
 #include <stdio.h>
 #include <string.h>
 
-void ATH__failMessage(char *msg)
+void ATH__failMessage(const char *msg)
 {
 	fprintf(stderr, "%s\n", msg);
 	fprintf(stderr, "\nexiting ...\n");
 	exit(1);
 }
-void Ath__hashError(char *msg, int exitFlag)
+void Ath__hashError(const char *msg, int exitFlag)
 {
 	fprintf(stderr, "Cannot find %s in hash table\n", msg);
 	fprintf(stderr, "\nexiting ...\n");
@@ -47,7 +47,7 @@ void Ath__hashError(char *msg, int exitFlag)
 	if (exitFlag>0)
 		exit(1);
 }
-void Ath__allocFailure(char *msg)
+void Ath__allocFailure(const char *msg)
 {
 	fprintf(stderr, "Failed to allocate %s\n", msg);
 	perror("");
@@ -65,7 +65,7 @@ char* ATH__allocCharWord(int n)
 	a[0] = '\0';
 	return a;
 }
-void ATH__deallocCharWord(char *a)
+void ATH__deallocCharWord(const char *a)
 {
 	if (a==NULL) {
 		ATH__failMessage("Cannot deallocate allocate chars");

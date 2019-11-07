@@ -191,7 +191,7 @@ class lefin
     void warning(const char * msg );
     void lineNumber(int lineNo );
 
-    lefin( dbDatabase * db, bool flag );
+    lefin( dbDatabase * db, bool ignore_non_routing_layers );
     ~lefin();
 
     // Skip macro-obstructions in the lef file.

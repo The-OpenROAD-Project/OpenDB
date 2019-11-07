@@ -19,7 +19,7 @@ char defaultName[128];
 char defaultOut[128];
 FILE* fout;
 int printing = 0;     // Printing the output.
-int userData;
+long userData;
 
 // TX_DIR:TRANSLATION ON
  
@@ -89,7 +89,7 @@ void lefVia(lefiVia* via, char* inName) {
              via->xCutSpacing(), via->yCutSpacing(), via->xBotEnc(),
              via->yBotEnc(), via->xTopEnc(), via->yTopEnc());
      if (via->hasRowCol())
-        fprintf(fout, " %g %g", via->numCutRows(), via->numCutCols());
+        fprintf(fout, " %d %d", via->numCutRows(), via->numCutCols());
      if (via->hasOrigin())
         fprintf(fout, " %g %g", via->xOffset(), via->yOffset());
      if (via->hasOffset())
@@ -382,7 +382,7 @@ int arrayCB(lefrCallbackType_e c, lefiArray* a, lefiUserData ud) {
         for (j = 0; j < a->numSites(i); j++) {
            pattern = a->site(i, j);
            fprintf(fout,
-               "ARRAY %s FLOORPLAN %s %s %s %g %g %s DO %d BY %d STEP %g %g\n",
+               "ARRAY %s FLOORPLAN %s %s %s %g %g %s DO %g BY %g STEP %g %g\n",
                a->name(), a->floorPlanName(i), a->siteType(i, j),
                pattern->name(), chkNum(pattern->x()), chkNum(pattern->y()),
                lefiOrientStr(pattern->orient()), pattern->xStart(),
@@ -604,7 +604,7 @@ int layerCB(lefrCallbackType_e c, lefiLayer* layer, lefiUserData ud) {
      fprintf(fout, "LAYER %s AREA %g\n", layer->name(),
              chkNum(layer->area()));
   if (layer->numMinSize()) {
-     fprintf(fout, "LAYER %s MINSIZE");
+     fprintf(fout, "LAYER %s MINSIZE", layer->name());
      for (i = 0; i < layer->numMinSize(); i++)
         fprintf(fout, " %g %g", layer->minSizeWidth(i),
                                 layer->minSizeLength(i));

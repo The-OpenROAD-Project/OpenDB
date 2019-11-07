@@ -52,13 +52,13 @@ using namespace odb;
 
 %include "geom.h"
 %include "db.h"
-%include "dbhelpers.i"  
 
 
 %include "lefin.h"
 %include "lefout.h"
 %include "defin.h"
 %include "defout.h"
+%include "dbhelpers.i"  
 %include "dbExtControl.h"
 %include "dbViaParams.h"
 

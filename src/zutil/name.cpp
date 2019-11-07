@@ -51,7 +51,7 @@ Ath__nameTable::~Ath__nameTable()
 Ath__nameTable::Ath__nameTable(uint n, char *zero)
 {
 	if (zero==NULL)
-		zero= "zeroName";
+	  zero= strdup("zeroName");
 	
 	int n1= 0;
 	if (n>100)
@@ -162,6 +162,3 @@ uint Ath__nameTable::getTagId(char *name)
 
 	return 0;
 }
-
-		
-	

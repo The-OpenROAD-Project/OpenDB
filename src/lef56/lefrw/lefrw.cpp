@@ -26,7 +26,7 @@ char defaultName[128];
 char defaultOut[128];
 FILE* fout;
 int printing = 0;     // Printing the output.
-int userData;
+long userData;
 
 // TX_DIR:TRANSLATION ON
  
@@ -2241,7 +2241,7 @@ main(int argc, char** argv) {
     res = lefrRead(f, inFile[fileCt], (void*)userData);
 
     if (res)
-       fprintf(stderr, "Reader returns bad status.\n", inFile[fileCt]);
+       fprintf(stderr, "Reader returns bad status.\n");
 
     (void)lefrPrintUnusedCallbacks(fout);
 

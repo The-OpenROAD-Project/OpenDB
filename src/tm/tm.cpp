@@ -1444,7 +1444,7 @@ void ZInterface::error( int code, const char * msg, ... )
     //snprintf(error_id, 128, "%s:%d", getModuleName(), code );
     //event( "error", error_id, buffer, 0 );
     //debug("ERROR","A","error contents: %s\n",buffer);
-    throw( ZException( (const char *)buffer ) );
+    throw( ZException("%s", buffer ) );
 }
 
 }

@@ -327,7 +327,8 @@ int Graph::_bellman_ford(Darr<Edge*> *edg, long *dist, int *pred, int *vis, int 
     }
     if(no_change(dist, predist, n))
       break;
-    if(val=_negative_cycle(dist, pred, vis, rightd, k))
+    val=_negative_cycle(dist, pred, vis, rightd, k);
+    if(val)
       break;
   }
   free(predist);

@@ -8,27 +8,71 @@ read_lef(odb::dbDatabase* db, const char* path)
     }
     lefin lefParser(db, false);
     const char *libname = basename(const_cast<char*>(path));
-    return lefParser.createTechAndLib(libname, path);
+    if (!db->getTech()) {
+        return lefParser.createTechAndLib(libname, path);
+    } else {
+        return lefParser.createLib(libname, path);
+    }
 }
 
-odb::dbChip*
-read_def(odb::dbLib* lib, const char* path)
-{
-    std::vector<odb::dbLib *> libs;
-    libs.push_back(lib);
-    dbDatabase *db = lib->getDb();
-    defin defParser(db);
-    return defParser.createChip(libs, path);
-}
-
-odb::dbChip*
-read_design(odb::dbDatabase* db, const char* lef_path, const char* def_path)
+std::vector<odb::dbLib*>
+read_lef(odb::dbDatabase* db, std::vector<std::string> paths)
 {
     if (db == NULL) {
         db = dbDatabase::create();
     }
-    dbLib *lib = read_lef(db, lef_path);
-    dbChip *chip = read_def(lib, def_path);
+    std::vector<odb::dbLib*> libs;
+
+    for (std::string &path: paths) {
+        libs.push_back(read_lef(db, path.c_str()));
+    }
+    return libs;
+}
+
+odb::dbChip*
+read_def(std::vector<odb::dbLib*>& libs, std::vector<std::string> paths)
+{
+    if (paths.size() != 1) {
+        fprintf(stderr, "Only one DEF file should be provided.\n");
+        return NULL;
+    }
+    if (!libs.size()) {
+        fprintf(stderr, "No library file(s) provided.\n");
+        return NULL;
+    }
+    dbDatabase *db = libs[0]->getDb();
+    defin defParser(db);
+    return defParser.createChip(libs, paths[0].c_str());
+}
+
+odb::dbChip*
+read_def(odb::dbDatabase* db, std::vector<std::string> paths)
+{
+    std::vector<odb::dbLib *> libs;
+    for (auto it = db->getLibs().begin(); it != db->getLibs().end(); it++) {
+        libs.push_back(*it);
+    }
+    return read_def(libs, paths);
+}
+
+odb::dbChip*
+read_design(odb::dbDatabase* db, std::vector<std::string> &lef_path, std::vector<std::string> def_path)
+{
+    if (db == NULL) {
+        db = dbDatabase::create();
+    }
+    auto libs = read_lef(db, lef_path);
+    dbChip *chip = read_def(libs, def_path);
+    return chip;
+}
+
+odb::dbChip*
+read_design(odb::dbDatabase* db, std::vector<std::string> def_path)
+{
+    if (db == NULL) {
+        db = dbDatabase::create();
+    }
+    dbChip *chip = read_def(db, def_path);
     return chip;
 }
 
@@ -75,9 +119,11 @@ export_db(odb::dbDatabase* db, const char* db_path)
     return 1;
 }
 %}
-odb::dbLib*      read_lef(odb::dbDatabase* db, const char* path);
-odb::dbChip*     read_def(odb::dbLib* lib, const char* path);
-odb::dbChip*     read_design(odb::dbDatabase* db, const char* lef_path, const char* def_path);
+std::vector<odb::dbLib*>     read_lef(odb::dbDatabase* db, std::vector<std::string> path);
+odb::dbChip*     read_def(odb::dbDatabase* db, std::vector<std::string> paths);
+odb::dbChip*     read_def(std::vector<odb::dbLib*>& libs, std::vector<std::string> paths);
+odb::dbChip*     read_design(odb::dbDatabase* db, std::vector<std::string> def_path);
+odb::dbChip*     read_design(odb::dbDatabase* db, std::vector<std::string> lef_path, std::vector<std::string> def_path);
 int     write_def(odb::dbBlock* block, const char* path, odb::defout::Version version = odb::defout::Version::DEF_5_5);
 int     write_lef(odb::dbLib* lib, const char* path);
 odb::dbDatabase* import_db(odb::dbDatabase* db, const char* db_path);

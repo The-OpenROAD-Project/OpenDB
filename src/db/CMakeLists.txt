@@ -117,4 +117,5 @@ target_link_libraries(opendb
         lefin
     PRIVATE
         tcl
+        rt
 )

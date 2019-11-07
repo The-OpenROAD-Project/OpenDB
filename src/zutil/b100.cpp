@@ -64,13 +64,13 @@ void b100(int num, FILE *fp)
 char *unb100(char *enc, int *resout)
 {
     char *ptr = enc;
-    register int res = 0;
+    int res = 0;
     int flag = 0;
-    register int factor=1;
+    int factor=1;
     if ( *ptr == B100_MINUS )
     {
         flag = 1;
-        *ptr++;
+        ptr++;
     }
     while( *ptr >= B100_START )
     {

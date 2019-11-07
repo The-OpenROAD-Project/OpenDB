@@ -177,7 +177,7 @@ public:
     //    z->event("foo", "x", Z_INT, x, "y", Z_INT, y, 0 );
     //
     // Throws ZException
-    int event( const char * name, const char * attr1, ZValueType type, ... );
+    int event( const char * name, const char * attr1, int type, ... );
 
     //
     // Post an event. This method specifies the event as a series of attribute value pairs. There

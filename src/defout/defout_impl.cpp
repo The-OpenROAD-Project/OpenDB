@@ -1935,12 +1935,10 @@ void defout_impl::writePropertyDefinitions(dbBlock * block)
         {
             dbProperty * prop = *pitr;
             dbString name = prop->getName();
-            bool is_string = false;
             defs_map[std::string(name.c_str())] = true;
             switch( prop->getType() )
             {
                 case dbProperty::STRING_PROP:
-                    is_string = true;
                     fprintf(_out, "%s %s STRING ", objType.c_str(), name.c_str() );
                     break;
                     

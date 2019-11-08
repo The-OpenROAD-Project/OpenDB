@@ -266,7 +266,6 @@ bool Dgraph::has_cycle() {
     residues.insert(res);
     printf("The residue is %g\n", res); 
     k = val-1;
-    double curs=0;
     while(_pred[k] != val-1) {
       if(!(_prede[k]->preserve)) {
         double w = _prede[k]->cwt+res;
@@ -278,7 +277,6 @@ bool Dgraph::has_cycle() {
     double w = _prede[k]->cwt+res;
     if(!_prede[k]->preserve && w<_prede[k]->wt)
       _prede[k]->wt = w; 
-    curs = 0;
     return true;
   }
   return false;

@@ -53,11 +53,6 @@ Ath__nameTable::Ath__nameTable(uint n, char *zero)
 	if (zero==NULL)
 	  zero= strdup("zeroName");
 	
-	int n1= 0;
-	if (n>100)
-		n1= 1024;
-	
-//	_nameArray= new AthArray<Ath__nameBucket*>(n1);
 	_hashTable= new AthHash<int>(n, 0);
 	_bucketPool= new AthPool<Ath__nameBucket>(false, 0);
 	

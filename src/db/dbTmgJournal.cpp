@@ -440,13 +440,6 @@ void dbTmgJournal::getBTermMissingScenarios( std::vector<MissingScenarios> & mis
 
 void dbTmgJournal::commit()
 {
-    uint64 scenario_mask;
-
-    if ( _number_of_scenarios == 64 )
-        scenario_mask = ~0;
-    else
-        scenario_mask = (1U << _number_of_scenarios) - 1U;
-
     std::map<uint, Tmg>::iterator itr;
 
     //int cnt=0;

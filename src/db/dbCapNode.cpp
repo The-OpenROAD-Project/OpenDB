@@ -320,7 +320,6 @@ dbCapNode::accAllCcCap(double *totalcap, double MillerMult)
         return;
     dbSet<dbCCSeg> ccSegs = getCCSegs();
     dbSet<dbCCSeg>::iterator ccitr;
-    uint cid;
     for( ccitr = ccSegs.begin(); ccitr != ccSegs.end(); ++ccitr)
     {
         double ccmult = MillerMult;

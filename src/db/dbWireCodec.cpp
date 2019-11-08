@@ -1155,7 +1155,6 @@ dumpDecoder4Net(dbNet *innet)
   int x,y,ext;
   decoder.begin(wire0);
   notice(0,"%s begin decoder for net %s\n", prfx, innet->getName().c_str());
-  int did;
 
   dbTechLayer *layer;
   dbWireType wtype;
@@ -1169,7 +1168,6 @@ dumpDecoder4Net(dbNet *innet)
 	  break;
 	}
 
-      did = decoder.getJunctionId();  // debug
       switch( opcode )	{
 
       case dbWireDecoder::PATH:

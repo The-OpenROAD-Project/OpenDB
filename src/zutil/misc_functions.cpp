@@ -54,10 +54,6 @@
 
 using namespace std;
 
-static unsigned int gListOfPrimes [] = {49978783 , 18409199 , 1299827
-, 981493 , 779377 , 530279 , 1176221 , 143567 , 30389 , 6869 , 1049 ,
-149, 11, 3,2,1 };
-
 int Ath__double2int (double v)
 {
   int iv = (int) v;
@@ -74,15 +70,6 @@ int Ath__double2int (double v)
   return iv;
 }
 namespace odb {
-
-static unsigned int l_find_largest_prime_below_number(unsigned int
-number) {
-	assert(number>3);
-	int i=0;
-	while (gListOfPrimes[i] > number) 
-		i++;
-	return gListOfPrimes[i];
-}
 
 unsigned int AthHashFunction(char *key, unsigned int len,
 unsigned int prime)

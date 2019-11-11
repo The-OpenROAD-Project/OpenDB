@@ -1,18 +1,18 @@
 set db [dbDatabase_create]
-set chip [read_design $db ./OpenDB/tests/data/gscl45nm.lef ./OpenDB/tests/data/design.def]
+set chip [odb_read_design $db ./OpenDB/tests/data/gscl45nm.lef ./OpenDB/tests/data/design.def]
 if {$chip == "NULL"} {
     puts "Read DEF Failed"
     exit 1
 }
 
-set export_result [export_db $db ./OpenDB/build/export.db]
+set export_result [odb_export_db $db ./OpenDB/build/export.db]
 if {$export_result != 1} {
     puts "Export DB failed"
     exit 1
 }
 
 set new_db [dbDatabase_create]
-import_db $new_db ./OpenDB/build/export.db
+odb_import_db $new_db ./OpenDB/build/export.db
 if {$new_db == "NULL"} {
     puts "Import DB Failed"
     exit 1

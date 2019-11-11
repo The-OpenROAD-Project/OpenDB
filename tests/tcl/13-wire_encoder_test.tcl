@@ -1,5 +1,5 @@
 set db [dbDatabase_create]
-set chip [read_design $db ./OpenDB/tests/data/gscl45nm.lef ./OpenDB/tests/data/design.def]
+set chip [odb_read_design $db ./OpenDB/tests/data/gscl45nm.lef ./OpenDB/tests/data/design.def]
 set lib [lindex [$db getLibs] 0]
 set tech [$db getTech]
 if {$chip == "NULL"} {
@@ -34,5 +34,5 @@ $wire_encoder newPath $jid2
 set jid3 [$wire_encoder addTechVia $via2]
 $wire_encoder end
 
-set result [write_def $block ./OpenDB/build/wire_encoder.def]
+set result [odb_write_def $block ./OpenDB/build/wire_encoder.def]
 exit [expr $result != 1]

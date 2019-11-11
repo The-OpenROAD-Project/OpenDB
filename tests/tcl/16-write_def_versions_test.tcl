@@ -1,8 +1,8 @@
 set db [dbDatabase_create]
-set chip [read_design $db ./OpenDB/tests/data/gscl45nm.lef ./OpenDB/tests/data/design.def]
+set chip [odb_read_design $db ./OpenDB/tests/data/gscl45nm.lef ./OpenDB/tests/data/design.def]
 set block [$chip getBlock]
 foreach version "DEF_5_3 DEF_5_4 DEF_5_5 DEF_5_6" {
-    set result [write_def $block ./OpenDB/build/test.def $version]
+    set result [odb_write_def $block ./OpenDB/build/test.def $version]
     if {[expr $result != 1]} {
         exit 1
     }
@@ -25,7 +25,7 @@ foreach version "DEF_5_3 DEF_5_4 DEF_5_5 DEF_5_6" {
 }
 # Test different syntax
 foreach version "5.3 5.4 5.5 5.6" {
-    set result [write_def $block ./OpenDB/build/test.def $version]
+    set result [odb_write_def $block ./OpenDB/build/test.def $version]
     if {[expr $result != 1]} {
         exit 1
     }

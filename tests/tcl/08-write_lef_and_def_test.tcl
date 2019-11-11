@@ -1,5 +1,5 @@
 set db [dbDatabase_create]
-set chip [read_design $db ./OpenDB/tests/data/gscl45nm.lef ./OpenDB/tests/data/design.def]
+set chip [odb_read_design $db ./OpenDB/tests/data/gscl45nm.lef ./OpenDB/tests/data/design.def]
 set lib [lindex [$db getLibs] 0]
 set block [$chip getBlock]
 set lef_write_result [write_lef $lib ./OpenDB/build/test.lef]

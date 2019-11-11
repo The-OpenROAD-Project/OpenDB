@@ -1,5 +1,5 @@
 set db [dbDatabase_create]
-set chip [read_design $db  ./OpenDB/tests/data/Nangate45/NangateOpenCellLibrary.mod.lef ./OpenDB/tests/data/gcd/floorplan.def]
+set chip [odb_read_design $db  ./OpenDB/tests/data/Nangate45/NangateOpenCellLibrary.mod.lef ./OpenDB/tests/data/gcd/floorplan.def]
 set lib [lindex [$db getLibs] 0]
 
 

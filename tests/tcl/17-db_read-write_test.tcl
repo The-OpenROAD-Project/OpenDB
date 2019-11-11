@@ -5,14 +5,14 @@ if {$chip == "NULL"} {
     exit 1
 }
 
-set export_result [export_db $db ./OpenDB/build/export.db]
+set export_result [odb_export_db $db ./OpenDB/build/export.db]
 if {$export_result != 1} {
     puts "Export DB failed"
     exit 1
 }
 
 set new_db [dbDatabase_create]
-import_db $new_db ./OpenDB/build/export.db
+odb_import_db $new_db ./OpenDB/build/export.db
 if {$new_db == "NULL"} {
     puts "Import DB Failed"
     exit 1

@@ -76,18 +76,18 @@ odb_read_design(odb::dbDatabase* db, std::vector<std::string> def_path)
     return chip;
 }
 
-int     write_def(odb::dbBlock* block, const char* path, odb::defout::Version version = odb::defout::Version::DEF_5_5) {
+int     odb_write_def(odb::dbBlock* block, const char* path, odb::defout::Version version = odb::defout::Version::DEF_5_5) {
     defout writer;
     writer.setVersion(version);
     return writer.writeBlock(block, path);
 }
-int     write_lef(odb::dbLib* lib, const char* path) {
+int     odb_write_lef(odb::dbLib* lib, const char* path) {
     lefout writer;
     return writer.writeTechAndLib(lib, path);
 }
 
 odb::dbDatabase*
-import_db(odb::dbDatabase* db, const char* db_path)
+odb_import_db(odb::dbDatabase* db, const char* db_path)
 {
     if (db == NULL) {
         db = odb::dbDatabase::create();
@@ -105,7 +105,7 @@ import_db(odb::dbDatabase* db, const char* db_path)
 }
 
 int
-export_db(odb::dbDatabase* db, const char* db_path)
+odb_export_db(odb::dbDatabase* db, const char* db_path)
 {
     FILE *fp = fopen(db_path, "wb");
     if (!fp) {
@@ -124,7 +124,7 @@ odb::dbChip*     odb_read_def(odb::dbDatabase* db, std::vector<std::string> path
 odb::dbChip*     odb_read_def(std::vector<odb::dbLib*>& libs, std::vector<std::string> paths);
 odb::dbChip*     odb_read_design(odb::dbDatabase* db, std::vector<std::string> def_path);
 odb::dbChip*     odb_read_design(odb::dbDatabase* db, std::vector<std::string> lef_path, std::vector<std::string> def_path);
-int     write_def(odb::dbBlock* block, const char* path, odb::defout::Version version = odb::defout::Version::DEF_5_5);
-int     write_lef(odb::dbLib* lib, const char* path);
-odb::dbDatabase* import_db(odb::dbDatabase* db, const char* db_path);
-int         export_db(odb::dbDatabase* db, const char* db_path);
+int     odb_write_def(odb::dbBlock* block, const char* path, odb::defout::Version version = odb::defout::Version::DEF_5_5);
+int     odb_write_lef(odb::dbLib* lib, const char* path);
+odb::dbDatabase* odb_import_db(odb::dbDatabase* db, const char* db_path);
+int         odb_export_db(odb::dbDatabase* db, const char* db_path);

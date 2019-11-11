@@ -34,5 +34,5 @@ $wire_encoder newPath $jid2
 set jid3 [$wire_encoder addTechVia $via2]
 $wire_encoder end
 
-set result [write_def $block ./OpenDB/build/wire_encoder.def]
+set result [odb_write_def $block ./OpenDB/build/wire_encoder.def]
 exit [expr $result != 1]

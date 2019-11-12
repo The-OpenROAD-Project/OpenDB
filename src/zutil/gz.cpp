@@ -351,9 +351,9 @@ int ATH__feof(AFILE* fp)
 }
 
 /* INPUT methods */
-int ATH__fread(void *ptr, size_t size, size_t nmemb, AFILE* fp)
+size_t ATH__fread(void *ptr, size_t size, size_t nmemb, AFILE* fp)
 {
-    int rc = ATH__check_fp(fp);
+    size_t rc = ATH__check_fp(fp);
     if( rc ) return rc;
 
     switch(fp->type)

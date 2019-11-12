@@ -556,13 +556,15 @@ dbRSeg::printCcSegs()
     std::vector<dbCCSeg *> ccsegs;
     getCcSegs (ccsegs);
     notice(0,"\nCC segs of RSeg %d-%d\n", getSourceNode(), getTargetNode());
+#if 0
     uint j;
     dbCCSeg *seg;
     for (j=0;j<ccsegs.size();j++)
     {
         seg = ccsegs[j];
-        //notice(0,"           CC%d : %d-%d\n", j, seg->getSourceNode(), seg->getTargetNode()); 
+        notice(0,"           CC%d : %d-%d\n", j, seg->getSourceNode(), seg->getTargetNode()); 
     }
+#endif
 }
 
 void

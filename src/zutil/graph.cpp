@@ -615,8 +615,6 @@ int Graph::find_matching(Matchkind kind) {
     odb::notice(0,"%d %d\n", i, _match[i]); */
   for(i = 0; i<ed.n(); i++)
     delete ed.get(i); 
-  double mw = matchwt()/_num_left;
-  //odb::notice(0,"Average movement is %f\n", mw);
   free(visited);
   free(pred);
   free(dist);

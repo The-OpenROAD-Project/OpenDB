@@ -89,7 +89,7 @@ int ATH__fputs(const char *s, AFILE *fp);
 int ATH__fflush(AFILE* fp);
 
 /* input methods */
-int ATH__fread(void *ptr, size_t size, size_t nmemb, AFILE *fp);
+size_t ATH__fread(void *ptr, size_t size, size_t nmemb, AFILE *fp);
 int ATH__fgetc(AFILE *fp);
 char *ATH__fgets(char *s, int size, AFILE *fp);
 int ATH__getc(AFILE *fp);

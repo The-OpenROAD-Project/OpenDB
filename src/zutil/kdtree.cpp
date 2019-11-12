@@ -172,8 +172,6 @@ void Kdtree::testTreeDbg() {
   int i;
   Rect *rect;
   Darr<Rect *> *arr = new Darr<Rect *>;
-  int num;
-  double m;
   int minx= LARGE, miny=LARGE, maxx=-LARGE, maxy = -LARGE;
   
   _node = (Node *) malloc(sizeof(Node));
@@ -181,8 +179,8 @@ void Kdtree::testTreeDbg() {
 #if 0
   for(i=0;i<30;i++) {
     rect = new Rect;
-    m = (double)rand() /RAND_MAX;
-    num =  m*55000;
+    double m = (double)rand() /RAND_MAX;
+    int num =  m*55000;
     rect->left[0] = num;
     odb::notice(0,"rect->left[0]%d\n",rect->left[0]);
 
@@ -351,9 +349,7 @@ Kdtree::create_tree_rec(Node *nd, Darr<Rect*> *rectar, int num) {
 		(nd->data).rectar = rectar;
 		return; 
 	} 
-	int j = 0;
 	(nd->data).data = (Idata *) malloc(sizeof(Idata));
-	Cuttype typ;
 	Darr<Rect*> *arl = new Darr<Rect*>;
 	Darr<Rect*> *arr = new Darr<Rect*>;
 	bobx = *bbx;
@@ -557,19 +553,9 @@ Node* Kdtree::find_parent_node_rec(Rect *r, Node *nd,Darr<Node*> *ndArr) {
               ndArr->insert(nd);
 		return nd;
 	}
-	Cuttype typ = nd->typ;
-	int lo, hi;
-	if(typ == X) {
-		lo = r->left[0];
-		hi = r->right[0];
-	} else {
-		lo = r->left[1];
-		hi = r->right[1];
-	}
 #if 0
   odb::notice(0," node's bbx is (%d,%d),(%d,%d)\n",nd->bbx.left[0],nd->bbx.left[1],nd->bbx.right[0],nd->bbx.right[1]);
 #endif
-	int cut = ((nd->data).data)->cut;
   Node *ret = NULL;
 #if 0
     odb::notice(0,"rectangle is on the left side\n");

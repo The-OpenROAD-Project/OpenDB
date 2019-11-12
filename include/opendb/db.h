@@ -164,7 +164,7 @@ class dbString
 
     void assign( const char * str )
     {
-        if ( _str ) free((void *)_str);
+      if ( _str ) free(reinterpret_cast<void*>(const_cast<char*>(_str)));
         _str = strdup(str);
         assert(_str);
     }
@@ -184,7 +184,7 @@ class dbString
             char * s = (char *) malloc(len+1);
             strcpy(s,_str);
             strcat(s,str);
-            free((void *) _str);
+            free(reinterpret_cast<void*>(const_cast<char*>(_str)));
             _str = s;
         }
 
@@ -195,7 +195,7 @@ class dbString
     dbString()                       { _str = NULL; }
     dbString( const char * str )     { _str = strdup(str); }
     dbString( const dbString & str ) { _str = NULL; copy(str); }
-    ~dbString()                      { if(_str) free((void *)_str); }
+    ~dbString()                      { free(reinterpret_cast<void*>(const_cast<char*>(_str))); }
 
     bool operator==(const char * str) { return strcmp( _str, str ) == 0; }
     bool operator!=(const char * str) { return strcmp( _str, str ) != 0; }

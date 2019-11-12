@@ -61,4 +61,7 @@ const char  *
 debugMsgFilter::getModuleName()
 {  return _module_name;  }
 
+debugMsgFilter::~debugMsgFilter()
+{
+}
 }

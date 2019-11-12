@@ -50,6 +50,8 @@ class debugMsgFilter {
   const char  *getModuleName();
   virtual bool  pred() { return false; }
 
+  virtual ~debugMsgFilter();
+
  protected:
   char                _module_name[20];
 };

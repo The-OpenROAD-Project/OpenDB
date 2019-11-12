@@ -51,7 +51,6 @@
 namespace odb {
 
 class _dbNet;
-class _dbTmg;
 class _dbMTerm;
 class _dbInst;
 class _dbITerm;
@@ -66,10 +65,6 @@ struct dbITermFlags
     uint _mterm_idx  : 20;  // index into inst-hdr-mterm-vector
     uint _spare_bits_3 : 3;
     uint _clocked    : 1;
-    uint _tmgTmpA    : 1;
-    uint _tmgTmpB    : 1;
-    uint _tmgTmpC    : 1;   // payam
-    uint _tmgTmpD    : 1;   // payam
     uint _mark       : 1;
     uint _spef       : 1;   // Spef flag
     uint _special    : 1;   // Special net connection.
@@ -88,7 +83,6 @@ class _dbITerm : public dbObject
     uint            _ext_id;
     dbId<_dbNet>    _net;
     dbId<_dbInst>   _inst;
-    dbId<_dbTmg>    _tmg;
     dbId<_dbITerm>  _next_net_iterm;
     dbId<_dbITerm>  _prev_net_iterm;
 
@@ -110,10 +104,6 @@ inline _dbITerm::_dbITerm( _dbDatabase * )
     _flags._mterm_idx = 0;
     _flags._spare_bits_3 = 0;
     _flags._clocked= 0;
-    _flags._tmgTmpA = 0;
-    _flags._tmgTmpB = 0;
-    _flags._tmgTmpC = 0; // payam
-    _flags._tmgTmpD = 0; // payam
     _flags._mark = 0;
     _flags._spef = 0;
     _flags._special = 0;
@@ -126,7 +116,6 @@ inline _dbITerm::_dbITerm( _dbDatabase *, const _dbITerm & i )
           _ext_id(i._ext_id),
           _net(i._net),
           _inst(i._inst),
-          _tmg(i._tmg),
           _next_net_iterm(i._next_net_iterm),
           _prev_net_iterm(i._prev_net_iterm)
 {
@@ -143,7 +132,6 @@ inline dbOStream & operator<<( dbOStream & stream, const _dbITerm & iterm )
     stream << iterm._ext_id;
     stream << iterm._net;
     stream << iterm._inst;
-    stream << iterm._tmg;
     stream << iterm._next_net_iterm;
     stream << iterm._prev_net_iterm;
     return stream;
@@ -153,15 +141,9 @@ inline dbIStream & operator>>( dbIStream & stream, _dbITerm & iterm )
 {
     uint * bit_field = (uint *) &iterm._flags;
     stream >> *bit_field;
-    if ( !stream.getDatabase()->isSchema(ADS_DB_ITERM_tmgTmpD) )
-    {
-        iterm._flags._special = iterm._flags._connected;
-        iterm._flags._connected = 0;
-    }
     stream >> iterm._ext_id;
     stream >> iterm._net;
     stream >> iterm._inst;
-    stream >> iterm._tmg;
     stream >> iterm._next_net_iterm;
     stream >> iterm._prev_net_iterm;
     return stream;

@@ -111,7 +111,6 @@ class _dbRSeg;
 class _dbCCSeg;
 class _dbDatabase;
 class _dbRow;
-class _dbTmg;
 class _dbMetrics;
 class _dbRegion;
 class _dbHier;
@@ -141,7 +140,6 @@ class dbOStream;
 class dbDiff;
 class dbBlockSearch;
 class dbBlockCallBackObj;
-class dbTmgJournal;
 
 struct _dbBTermPin
 {
@@ -203,7 +201,6 @@ class _dbBlock : public dbObject
     uint                        _maxCCSegId;
     int                         _minExtModelIndex;
     int                         _maxExtModelIndex;
-    int                         _number_of_scenarios;
     dbVector<dbId<_dbMetrics> > _metrics;
     dbVector<dbId<_dbBlock> >   _children_v1;
     uint                        _currentCcAdjOrder;
@@ -224,7 +221,6 @@ class _dbBlock : public dbObject
     dbTable<_dbSWire> *        _swire_tbl;
     dbTable<_dbSBox> *         _sbox_tbl;
     dbTable<_dbRow> *          _row_tbl;
-    dbArrayTable<_dbTmg> *     _tmg_tbl;
     dbTable<_dbMetrics> *      _metrics_tbl;
     dbTable<_dbRegion> *       _region_tbl;
     dbTable<_dbHier> *         _hier_tbl;
@@ -259,8 +255,6 @@ class _dbBlock : public dbObject
     dbPropertyItr *            _prop_itr;
     dbBlockSearch *	           _searchDb;
 
-    int                        _tmgUpdateCnt;
-    uint                        _scenario[2];
     float                      _WNS[2];
     float                      _TNS[2];
     unsigned char              _num_ext_dbs;
@@ -271,8 +265,6 @@ class _dbBlock : public dbObject
 
     dbJournal *                      _journal;
     dbJournal *                      _journal_pending;
-    dbTmgJournal *                   _tmg_journal;
-    dbTmgJournal *                   _tmg_journal_pending;
 
     // This is a temporary vector to fix bterm pins pre dbBPin...
     std::vector<_dbBTermPin> *       _bterm_pins;

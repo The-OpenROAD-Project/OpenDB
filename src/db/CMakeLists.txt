@@ -63,10 +63,8 @@ add_library(opendb
     dbShape.cpp 
     dbWireGraph.cpp 
     dbJournal.cpp 
-    dbTmgJournal.cpp 
     dbJournalLog.cpp 
     dbBlockCallBackObj.cpp 
-    dbTmg.cpp 
     dbMetrics.cpp 
     dbRtTree.cpp 
     dbRegion.cpp 

@@ -30,7 +30,6 @@
 // OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 #include "dbInst.h"
-#include "dbTmg.h"
 #include "dbHier.h"
 #include "dbChip.h"
 #include "dbDatabase.h"
@@ -1349,9 +1348,6 @@ dbInst::destroy( dbInst * inst_ )
         std::list<dbBlockCallBackObj *>::iterator  cbitr;
         for (cbitr = block->_callbacks.begin(); cbitr !=  block->_callbacks.end(); ++cbitr)
            (**cbitr)().inDbITermDestroy((dbITerm *) it); // client ECO optimization - payam
-
-        if ( it->_tmg )
-            block->_tmg_tbl->destroyArray( it->_tmg );
 
         dbProperty::destroyProperties(it);
         block->_iterm_tbl->destroy(it);

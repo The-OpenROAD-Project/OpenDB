@@ -75,14 +75,12 @@
 #include "dbRSegItr.h"
 #include "dbCCSegItr.h"
 #include "dbBPinItr.h"
-#include "dbTmg.h"
 #include "dbMetrics.h"
 #include "dbRegion.h"
 #include "dbHier.h"
 #include "dbTechNonDefaultRule.h"
 #include "dbTechLayerRule.h"
 #include "dbJournal.h"
-#include "dbTmgJournal.h"
 #include "dbBlockCallBackObj.h"
 #include "dbHashTable.hpp"
 #include "dbIntHashTable.hpp"
@@ -153,7 +151,6 @@ _dbBlock::_dbBlock( _dbDatabase * db )
     _maxCCSegId = 0;
     _minExtModelIndex = -1;
     _maxExtModelIndex = -1;
-    _number_of_scenarios = 0;
 
     _bterm_tbl = new dbTable<_dbBTerm>(db, this, (GetObjTbl_t) &_dbBlock::getObjectTable, dbBTermObj);
     ZALLOCATED(_bterm_tbl);
@@ -199,9 +196,6 @@ _dbBlock::_dbBlock( _dbDatabase * db )
 
     _row_tbl = new dbTable<_dbRow>(db, this, (GetObjTbl_t) &_dbBlock::getObjectTable, dbRowObj);
     ZALLOCATED(_row_tbl);
-
-    _tmg_tbl = new dbArrayTable<_dbTmg>(db, this, (GetObjTbl_t) &_dbBlock::getObjectTable, dbTmgObj, 2);
-    ZALLOCATED(_tmg_tbl);
 
     _metrics_tbl = new dbTable<_dbMetrics>(db, this, (GetObjTbl_t) &_dbBlock::getObjectTable, dbMetricsObj, 16, 4);
     ZALLOCATED(_metrics_tbl);
@@ -299,15 +293,12 @@ _dbBlock::_dbBlock( _dbDatabase * db )
     _prop_itr = new dbPropertyItr(_prop_tbl);
     ZALLOCATED(_prop_itr);
 
-    _tmgUpdateCnt= -1;
     _num_ext_dbs = 1;
     _searchDb = NULL;
     _extmi = NULL;
     _ptFile = NULL;
     _journal = NULL;
     _journal_pending = NULL;
-    _tmg_journal = NULL;
-    _tmg_journal_pending = NULL;
 
     _printControl = new dbPrintControl();
 }
@@ -342,7 +333,6 @@ _dbBlock::_dbBlock( _dbDatabase * db, const _dbBlock & block )
       _maxCCSegId( block._maxCCSegId ),
       _minExtModelIndex( block._minExtModelIndex ),
       _maxExtModelIndex( block._maxExtModelIndex ),
-      _number_of_scenarios( block._number_of_scenarios ),
       _metrics( block._metrics ),
       _children_v1( block._children_v1 ),
       _currentCcAdjOrder( block._currentCcAdjOrder)
@@ -397,9 +387,6 @@ _dbBlock::_dbBlock( _dbDatabase * db, const _dbBlock & block )
 
     _row_tbl = new dbTable<_dbRow>(db, this, *block._row_tbl);
     ZALLOCATED(_row_tbl);
-
-    _tmg_tbl = new dbArrayTable<_dbTmg>(db, this, *block._tmg_tbl);
-    ZALLOCATED(_tmg_tbl);
 
     _metrics_tbl = new dbTable<_dbMetrics>(db, this, *block._metrics_tbl);
     ZALLOCATED(_metrics_tbl);
@@ -501,8 +488,6 @@ _dbBlock::_dbBlock( _dbDatabase * db, const _dbBlock & block )
     _extmi = block._extmi;
     _journal = NULL;
     _journal_pending = NULL;
-    _tmg_journal = NULL;
-    _tmg_journal_pending = NULL;
 }
 
 _dbBlock::~_dbBlock()
@@ -525,7 +510,6 @@ _dbBlock::~_dbBlock()
     delete _swire_tbl;
     delete _sbox_tbl;
     delete _row_tbl;
-    delete _tmg_tbl;
     delete _metrics_tbl;
     delete _region_tbl;
     delete _hier_tbl;
@@ -576,12 +560,6 @@ dbBlock.cpp:513:12: warning: deleting object of polymorphic class type ‘dbNetB
 
     if ( _journal_pending )
         delete _journal_pending;
-
-    if ( _tmg_journal )
-        delete _tmg_journal;
-
-    if ( _tmg_journal_pending )
-        delete _tmg_journal_pending;
 }
 
 void dbBlock::clear()
@@ -633,17 +611,6 @@ void dbBlock::clear()
        block->_journal_pending = NULL;
    }
 
-   if ( block->_tmg_journal )
-   {
-       delete block->_tmg_journal;
-       block->_tmg_journal = NULL;
-   }
-
-   if ( block->_tmg_journal_pending )
-   {
-       delete block->_tmg_journal_pending;
-       block->_tmg_journal_pending = NULL;
-   }
 }
 
 void _dbBlock::initialize( _dbChip * chip, _dbBlock * parent, const char * name, char delimeter )
@@ -728,9 +695,6 @@ dbObjectTable * _dbBlock::getObjectTable( dbObjectType type )
         case dbRowObj:
             return _row_tbl;
 
-        case dbTmgObj:
-            return _tmg_tbl;
-
         case dbMetricsObj:
             return _metrics_tbl;
 
@@ -797,7 +761,6 @@ dbOStream & operator<<( dbOStream & stream, const _dbBlock & block )
     stream << block._maxCCSegId;
     stream << block._minExtModelIndex;
     stream << block._maxExtModelIndex;
-    stream << block._number_of_scenarios;
     stream << block._metrics;
     if (block._flags._skip_hier_stream) {
 	notice(0, "\nHierarchical block information is lost\n");
@@ -822,7 +785,6 @@ dbOStream & operator<<( dbOStream & stream, const _dbBlock & block )
     stream << *block._swire_tbl;
     stream << *block._sbox_tbl;
     stream << *block._row_tbl;
-    stream << *block._tmg_tbl;
     stream << *block._metrics_tbl;
     stream << *block._region_tbl;
     stream << *block._hier_tbl;
@@ -901,7 +863,6 @@ dbIStream & operator>>( dbIStream & stream, _dbBlock & block )
     stream >> block._maxCCSegId;
     stream >> block._minExtModelIndex;
     stream >> block._maxExtModelIndex;
-    stream >> block._number_of_scenarios;
     stream >> block._metrics;
 
     if ( stream.getDatabase()->isSchema(ADS_DB_BLOCK_CHILDREN_V1) )
@@ -951,7 +912,6 @@ dbIStream & operator>>( dbIStream & stream, _dbBlock & block )
     stream >> *block._swire_tbl;
     stream >> *block._sbox_tbl;
     stream >> *block._row_tbl;
-    stream >> *block._tmg_tbl;
     stream >> *block._metrics_tbl;
 
     if ( stream.getDatabase()->isSchema(ADS_DB_REGION_SCHEMA) )
@@ -1152,9 +1112,6 @@ bool _dbBlock::operator==( const _dbBlock & rhs ) const
     if ( _maxExtModelIndex != rhs._maxExtModelIndex )
         return false;
 
-    if ( _number_of_scenarios != rhs._number_of_scenarios )
-        return false;
-
     if ( _metrics != rhs._metrics )
         return false;
 
@@ -1207,9 +1164,6 @@ bool _dbBlock::operator==( const _dbBlock & rhs ) const
         return false;
     
     if ( *_row_tbl != *rhs._row_tbl )
-        return false;
-
-    if ( *_tmg_tbl != *rhs._tmg_tbl )
         return false;
 
     if ( *_metrics_tbl != *rhs._metrics_tbl )
@@ -1293,7 +1247,6 @@ void _dbBlock::differences( dbDiff & diff, const char * field, const _dbBlock & 
     DIFF_FIELD(_maxCCSegId);
     DIFF_FIELD(_minExtModelIndex);
     DIFF_FIELD(_maxExtModelIndex);
-    DIFF_FIELD(_number_of_scenarios);
     DIFF_VECTOR(_metrics);
     DIFF_VECTOR(_children_v1);
     DIFF_FIELD(_currentCcAdjOrder);
@@ -1312,7 +1265,6 @@ void _dbBlock::differences( dbDiff & diff, const char * field, const _dbBlock & 
     DIFF_TABLE_NO_DEEP(_swire_tbl);
     DIFF_TABLE_NO_DEEP(_sbox_tbl);
     DIFF_TABLE(_row_tbl);
-    DIFF_TABLE(_tmg_tbl);
     DIFF_TABLE(_metrics_tbl);
     DIFF_TABLE(_region_tbl);
     DIFF_TABLE_NO_DEEP(_hier_tbl);
@@ -1373,7 +1325,6 @@ void _dbBlock::out( dbDiff & diff, char side, const char * field  ) const
     DIFF_OUT_FIELD(_maxCCSegId);
     DIFF_OUT_FIELD(_minExtModelIndex);
     DIFF_OUT_FIELD(_maxExtModelIndex);
-    DIFF_OUT_FIELD(_number_of_scenarios);
     DIFF_OUT_VECTOR(_metrics);
     DIFF_OUT_VECTOR(_children_v1);
     DIFF_OUT_FIELD(_currentCcAdjOrder);
@@ -1392,7 +1343,6 @@ void _dbBlock::out( dbDiff & diff, char side, const char * field  ) const
     DIFF_OUT_TABLE_NO_DEEP(_swire_tbl);
     DIFF_OUT_TABLE_NO_DEEP(_sbox_tbl);
     DIFF_OUT_TABLE(_row_tbl);
-    DIFF_OUT_TABLE(_tmg_tbl);
     DIFF_OUT_TABLE(_metrics_tbl);
     DIFF_OUT_TABLE(_region_tbl);
     DIFF_OUT_TABLE_NO_DEEP(_hier_tbl);
@@ -1666,22 +1616,6 @@ dbNet * dbBlock::findNet( const char * name )
 {
     _dbBlock * block = (_dbBlock *) this;
     return (dbNet *) block->_net_hash.find(name);
-}
-dbNet* dbBlock::findNet_tmg(const char* net_name)
-{
-	dbNet* net = NULL;
-	if (!net_name) return NULL;
-	const char* pc;
-	int netId = -1;
-	for (pc = net_name; *pc; pc++) if (*pc<'0' || *pc>'9') break;
-	if (!*pc) {
-		netId = atoi(net_name);
-		net = dbNet::getNet(this, netId);
-	}
-	else {
-		net =findNet(net_name);
-	}
-	return net;
 }
 
 bool dbBlock::findSomeMaster( const char * names, std::vector<dbMaster *> & masters)
@@ -2004,10 +1938,6 @@ dbSet<dbTechNonDefaultRule> dbBlock::getNonDefaultRules()
 {
     _dbBlock * block = (_dbBlock *) this;
     return dbSet<dbTechNonDefaultRule>( block, block->_non_default_rule_tbl );
-}
-
-void dbBlock::addOptStats( const char * identifier, uint addedCells, uint resizedCells, uint removedCells, double slack[2] )
-{
 }
 
 void dbBlock::copyExtDb(uint fr, uint to, uint extDbCnt, double resFactor, double ccFactor, double gndcFactor)
@@ -2411,127 +2341,6 @@ void dbBlock::setCornerCount(int cnt)
     setCornerCount(cnt, cnt, NULL);
 }
 
-void dbBlock::initTiming()
-{
-    _dbBlock * block = (_dbBlock *) this;
-
-    dbSet<dbITerm> iterms = getITerms();
-    dbSet<dbITerm>::iterator iitr;
-    for( iitr = iterms.begin(); iitr != iterms.end(); ++iitr )
-    {
-        _dbITerm * it = (_dbITerm *) *iitr;
-        it->_tmg = 0;
-
-        if ( it->_net == 0 )
-            ((dbITerm *) it)->initTiming();
-        else
-        {
-            _dbNet * net = block->_net_tbl->getPtr(it->_net);
-
-            if ( net->_flags._sig_type == dbSigType::POWER
-                 || net->_flags._sig_type == dbSigType::GROUND )
-                continue;
-
-            ((dbITerm *) it)->initTiming();
-        }
-    }
-    
-    dbSet<dbBTerm> bterms = getBTerms();
-    dbSet<dbBTerm>::iterator bitr;
-    for( bitr = bterms.begin(); bitr != bterms.end(); ++bitr )
-    {
-        _dbBTerm * bt = (_dbBTerm *) *bitr;
-        bt->_tmg = 0;
-
-        if ( bt->_net == 0 )
-            ((dbBTerm *) bt)->initTiming();
-        else
-        {
-            _dbNet * net = block->_net_tbl->getPtr(bt->_net);
-
-            if ( net->_flags._sig_type == dbSigType::POWER
-                 || net->_flags._sig_type == dbSigType::GROUND )
-                continue;
-
-            ((dbBTerm *) bt)->initTiming();
-        }
-    }
-}
-
-void dbBlock::initTmbTbl()
-{
-    _dbBlock * block = (_dbBlock *) this;
-    int scns = block->_number_of_scenarios;
-    if (block->_tmg_tbl->arraySize() == (uint)((scns+1)*2))
-        return;
-    clearTiming();
-    delete block->_tmg_tbl;
-    block->_tmg_tbl = new dbArrayTable<_dbTmg>(getDatabase(), this, (GetObjTbl_t) &_dbBlock::getObjectTable, dbTmgObj, 2*(scns+1));
-    ZALLOCATED(block->_tmg_tbl);
-}
-
-void dbBlock::clearTiming()
-{
-    _dbBlock * block = (_dbBlock *) this;
-
-    if (block->_tmg_tbl)
-        block->_tmg_tbl->clear();
-
-    dbSet<dbBTerm> bterms = getBTerms();
-    dbSet<dbBTerm>::iterator bitr;
-
-    for( bitr = bterms.begin(); bitr != bterms.end(); ++bitr )
-    {
-        _dbBTerm * bterm = (_dbBTerm *) *bitr;
-        bterm->_tmg = 0;
-    }
-    
-    dbSet<dbITerm> iterms = getITerms();
-    dbSet<dbITerm>::iterator iitr;
-
-    for( iitr = iterms.begin(); iitr != iterms.end(); ++iitr )
-    {
-        _dbITerm * iterm = (_dbITerm *) *iitr;
-        iterm->_tmg = 0;
-    }
-}
-
-void dbBlock::setNumberOfScenarios(int n)
-{
-    debug("TMG_ECO","A","SNOS: %d\n",n);
-    _dbBlock * block = (_dbBlock *) this;
-    block->_metrics_tbl->clear();
-    block->_metrics.clear();
-    block->_number_of_scenarios = n;
-    if (block->_tmg_tbl->arraySize() != (uint)((n+1)*2))
-        initTmbTbl();
-
-    int i;
-    ++n; // add 1 for the (0) entry
-
-    for( i = 0; i < n; ++i )
-    {
-        _dbMetrics * m = block->_metrics_tbl->create();
-        dbId<_dbMetrics> id = m->getOID();
-        block->_metrics.push_back(id);
-    }
-}
-
-int dbBlock::getNumberOfScenarios()
-{
-    _dbBlock * block = (_dbBlock *) this;
-    debug("TMG_ECO","A","GNOS: %d\n",block->_number_of_scenarios);
-    return block->_number_of_scenarios;
-}
-
-dbMetrics * dbBlock::getScenario( int s )
-{
-    _dbBlock * block = (_dbBlock *) this;
-    debug("TMG_ECO","A","GetS: %d\n",s);
-    assert( (s >= 0) && (s < (block->_number_of_scenarios+1)));
-    return (dbMetrics *) block->_metrics_tbl->getPtr( block->_metrics[s] );
-}
-
 void dbBlock::copyViaTable( dbBlock * dst_, dbBlock * src_ )
 {
     _dbBlock * dst = (_dbBlock *) dst_;
@@ -2673,16 +2482,6 @@ void dbBlock::set_skip_hier_stream(bool value)
 {
 	_dbBlock * block = (_dbBlock *) this;
     block->_flags._skip_hier_stream = value ? 1 : 0;
-}
-bool dbBlock::is_mme_update()
-{
-	_dbBlock * block = (_dbBlock *) this;
-    return block->_flags._mme == 1;
-}
-void dbBlock::set_mme_update(bool value)
-{
-	_dbBlock * block = (_dbBlock *) this;
-    block->_flags._mme = value ? 1 : 0;
 }
 bool dbBlock::isBufferAltered()
 {
@@ -3444,20 +3243,6 @@ void dbBlock::writeDb(char *filename, int allNode)
 
 }
 
-void dbBlock::ecoInvalidateTiming()
-{
-  _dbBlock * block = (_dbBlock *)this;
-  if ( block->_journal )
-  {
-    debug("DB_ECO","A","ECO: dbBlock %d, invalidateTiming", block->getId());
-    block->_journal->beginAction( dbJournal::UPDATE_FIELD );
-    block->_journal->pushParam( dbBlockObj );
-    block->_journal->pushParam( block->getId() );
-    block->_journal->pushParam( _dbBlock::INVALIDATETIMING );
-    block->_journal->endAction();
-  }
-}
-
 bool dbBlock::differences( dbBlock * block1, dbBlock * block2, FILE * out,
                            int indent)
 {
@@ -3470,237 +3255,7 @@ bool dbBlock::differences( dbBlock * block1, dbBlock * block2, FILE * out,
     b1->differences( diff, NULL, *b2 );
     return diff.hasDifferences();
 }
-int dbBlock::getTmgUpdateIndex()
-{ 
-    _dbBlock * block = (_dbBlock *) this; 
-    return block->_tmgUpdateCnt; 
-}
-void dbBlock::setTmgUpdateIndex(int v)
-{ 
-    _dbBlock * block = (_dbBlock *) this; 
-    block->_tmgUpdateCnt= v; 
-}
-int dbBlock::beginTmgUpdate(bool mme, bool noActivePins)
-{ 
-    _dbBlock * block = (_dbBlock *) this; 
 
-    if (block->_tmgUpdateCnt<0) {
-        //warning(0, "Cannot beginTmgUpdate : _tmgUpdateCnt is %d\n", 
-                //block->_tmgUpdateCnt);
-        return block->_tmgUpdateCnt;
-    }
-    block->_tmgUpdateCnt ++; 
-
-    set_mme_update(mme);
-    block->_flags._active_pins= (noActivePins) ? 0 : 1;
-
-    block->_WNS[0]= 0.0;
-    block->_TNS[0]= 0.0;
-    block->_WNS[1]= 0.0;
-    block->_TNS[1]= 0.0;
-    block->_scenario[0]= 0;
-    block->_scenario[1]= 0;
-
-    if (block->_flags._active_pins==0)
-        makeSlackProperty(false); 
-
-    return block->_tmgUpdateCnt;
-}
-void dbBlock::setSlacks(float wns[2], float tns[2], uint scenario[2])
-{
-    _dbBlock * block = (_dbBlock *) this; 
-    if (block->_tmgUpdateCnt<0)
-        return;
-
-    block->_WNS[0]= wns[0];
-    block->_TNS[0]= tns[0];
-    block->_WNS[1]= wns[1];
-    block->_TNS[1]= tns[1];
-    block->_scenario[0]= scenario[0];
-    block->_scenario[1]= scenario[1];
-}
-uint dbBlock::endTmgUpdate()
-{ 
-    _dbBlock * block = (_dbBlock *) this; 
-    if (block->_tmgUpdateCnt<0)
-        return 0;
-
-    if (block->_flags._active_pins>0) {
-        makeSlackProperty(true); 
-        printSlackProperties(true);
-    }
-
-    dbSet<dbBTerm> bterms = getBTerms();
-    dbSet<dbBTerm>::iterator bitr; 
-    for( bitr = bterms.begin(); bitr != bterms.end(); ++bitr ) { 
-        dbBTerm * bterm = (dbBTerm *) *bitr; 
-        //bool isWorstTerm= bterm->getWorstSlack(block->_WNS, block->_TNS); 
-        bterm->getWorstSlack(block->_WNS, block->_TNS, block->_scenario); 
-    } 
-   
-    dbSet<dbITerm> iterms = getITerms(); 
-    dbSet<dbITerm>::iterator iitr; 
-    for( iitr = iterms.begin(); iitr != iterms.end(); ++iitr ) { 
-        dbITerm * iterm = (dbITerm *) *iitr; 
-        //bool isWorstTerm= iterm->getWorstSlack(block->_WNS, block->_TNS); 
-        iterm->getWorstSlack(block->_WNS, block->_TNS, block->_scenario); 
-    } 
-    makeSlackProperty(false);
-
-    return (uint) block->_tmgUpdateCnt;
-                                    // create property
-}
-void dbBlock::makeSlackProperty(bool activePins, int tmgIndex)
-{ 
-    bool mme= is_mme_update();
-
-    _dbBlock * block = (_dbBlock *) this; 
-    if (block->_tmgUpdateCnt<0)
-        return;
-
-    if (tmgIndex<0)
-        tmgIndex= block->_tmgUpdateCnt;
-
-    const char *mode= "mme";
-    if (!mme)
-        mode= "sta";
-
-    const char *P= "";
-    if (activePins)
-        P= "_P";
-
-    char buff_w[64];
-    char buff_s[64];
-    char buff_t[64];
-
-    for (uint ii= 0; ii<2; ii++) { 
-        sprintf(buff_w, "%s:_WNS[%d][%d]%s", mode, ii, tmgIndex, P); 
-        sprintf(buff_s, "%s:_SCENARIO[%d][%d]%s", mode, ii, tmgIndex, P); 
-        sprintf(buff_t, "%s:_TNS[%d][%d]%s", mode, ii, tmgIndex, P);
-
-        dbDoubleProperty::create(this, buff_w, block->_WNS[ii]); 
-        dbIntProperty::create(this, buff_s, block->_scenario[ii]); 
-        dbDoubleProperty::create(this, buff_t, block->_TNS[ii]);
-    }
-}
-void dbBlock::printSlackProperties(bool activePins, int tmgIndex, FILE *fp)
-{
-    bool mme= is_mme_update();
-
-    _dbBlock * block = (_dbBlock *) this; 
-    if (block->_tmgUpdateCnt<0)
-        return;
-
-    if (tmgIndex<0)
-        tmgIndex= block->_tmgUpdateCnt;
-
-    const char *mode= "mme";
-    if (!mme)
-        mode= "sta";
-
-    const char *P= "";
-    if (activePins)
-        P= "_P";
-
-    float wns[2];
-    float tns[2];
-    uint scenario[2];
-
-    char buff_w[64];
-    char buff_s[64]; 
-    char buff_t[64]; 
-    for (uint ii= 0; ii<2; ii++) { 
-        sprintf(buff_w, "%s:_WNS[%d][%d]%s", mode, ii, tmgIndex, P); 
-        sprintf(buff_t, "%s:_TNS[%d][%d]%s", mode, ii, tmgIndex, P); 
-        sprintf(buff_s, "%s:_SCENARIO[%d][%d]%s", mode, ii, tmgIndex, P); 
-        
-        dbDoubleProperty *wp= dbDoubleProperty::find( this, buff_w); 
-        dbDoubleProperty *tp= dbDoubleProperty::find( this, buff_t); 
-        dbIntProperty *sp= dbIntProperty::find( this, buff_s); 
-        
-        if ((wp==NULL)||(tp==NULL)||(sp==NULL))  {
-            warning(0, "Cannot find any of the properties:\n\t%s\n\t%s\n\t%s\n",
-                    buff_w, buff_s, buff_t);
-            return; 
-        }
-        wns[ii]= wp->getValue()*1.0E9; 
-        tns[ii]= tp->getValue()*1.0E9;
-        scenario[ii]= (uint) sp->getValue();
-    }
-
-    if (fp==NULL) { 
-        notice(0, "\t\t#TMG_DB_%s:%d   WNS= %7.3f[%d] %7.3f[%d]   TNS= %7.3f %7.3f %s\n", 
-                mode, tmgIndex, wns[1], scenario[1], wns[0], scenario[0], tns[1], tns[0], P);
-    }
-    else {
-        fprintf(fp,"\t\t#TMG_DB_%s:%d   WNS= %7.3f[%d] %7.3f[%d]   TNS= %7.3f %7.3f %s\n", 
-                mode, tmgIndex, wns[1], scenario[1], wns[0], scenario[0], tns[1], tns[0], P);
-    }
-}
-void dbBlock::getSlackPropertyName(bool actPins, bool max, const char *slack, int tmgIndex, char *buf)
-{
-    bool mme= is_mme_update();
-    const char *P[2]= {"", "_P"};
-    const char *mode[2]= {"sta", "mme"}; 
-    
-    sprintf(buf,"%s:%s[%d][%d]%s", mode[mme], slack, max, tmgIndex, P[actPins]);
-}
-uint dbBlock::printSlackTrace(bool max, bool wns, FILE *fp)
-{
-    _dbBlock * block = (_dbBlock *) this; 
-    if (block->_tmgUpdateCnt<0)
-        return 0;
-
-    const char *slack[2]= {"_TNS", "_WNS"};
-
-    uint cnt= 0;
-
-    for (int ii= 1; ii<=block->_tmgUpdateCnt; ii++) { 
-        char buf[64]; 
-        getSlackPropertyName(false, max, slack[wns], ii, buf);
-        
-        dbDoubleProperty *wp= dbDoubleProperty::find( this, buf); 
-        
-        if (wp==NULL)
-            continue; 
-
-        fprintf(fp, "%d %g\n", ii, wp->getValue()*1.0E9); 
-        cnt ++;
-    }
-    return cnt;
-}
-/*
-uint dbBlock::clearPropertySlacks()
-{
-    _dbBlock * block = (_dbBlock *) this; 
-    if (block->_tmgUpdateCnt<0)
-        return 0;
-
-    const char *slack[2]= {"_TNS", "_WNS"};
-
-    uint cnt= 0;
-
-    for (uint pins= 0; pins<2; pins++ ) { 
-        for (uint s= 0; s<2; s++ ) { 
-            for (int ii= 1; ii<=block->_tmgUpdateCnt; ii++) { 
-                char buf[64]; 
-                getSlackPropertyName(pins, max, slack[s], ii, buf); 
-                dbDoubleProperty *wp= dbDoubleProperty::find( this, buf); 
-                if (wp==NULL) {
-                    warning(0, "Cannot find property %s\n", buf);
-                    continue;
-                }
-        
-                //sprintf(buff_s, "%s:_SCENARIO[%d][%d]%s", mode, ii, tmgIndex, P); 
-
-                fprintf(fp, "%d %g\n", ii, wp->getValue()*1.0E9); 
-                cnt ++;
-            }
-        }
-    }
-    return cnt;
-}
-*/
 
 uint dbBlock::levelize(std::vector<dbInst *> & startingInsts, std::vector<dbInst *> & instsToBeLeveled)
 {

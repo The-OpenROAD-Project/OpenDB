@@ -117,5 +117,11 @@ target_link_libraries(opendb
         lefin
     PRIVATE
         tcl
+)
+# Conditional -lrt
+if(UNIX AND NOT APPLE)
+target_link_libraries(opendb
+    PRIVATE
         rt
 )
+endif()

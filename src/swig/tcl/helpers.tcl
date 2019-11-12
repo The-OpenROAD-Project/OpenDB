@@ -1,6 +1,6 @@
 #include "rawstring_begin.txt"
 
-set db [dbDatabase_create]
+set db [odb::dbDatabase_create]
 
 namespace eval odb {
     proc read_lef args {

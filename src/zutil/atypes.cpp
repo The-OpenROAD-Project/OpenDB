@@ -311,16 +311,20 @@ bool Ath__associateArray::getFlag(uint n)
 void Ath__associateArray::printAll(char *buff)
 {
     buff[0] = 0;
+	char *buff_alias = buff;
+
 	for (uint ii=1; ii<_cnt; ii++) {
 		sprintf(buff, "%s %s \"%s\" ",
-			buff, _nameTable[ii], _wordTable[ii]);
+			buff_alias, _nameTable[ii], _wordTable[ii]);
 	}
 }
 void Ath__associateArray::getNameList(char *buff)
 {
     buff[0] = 0;
+	char *buff_alias = buff;
+
 	for (uint ii= 0; ii<_cnt; ii++) {		
-		sprintf(buff, "%s %s %s ", buff, _nameTable[ii], _nameTable[ii]);
+		sprintf(buff, "%s %s %s ", buff_alias, _nameTable[ii], _nameTable[ii]);
 	}
 	//sprintf(buff, "%s %s", buff, "\0");
 }

@@ -1010,10 +1010,11 @@ void dbJournal::redo_updateCCSegField()
             double ttcap[ADS_MAX_CORNER];
             char ccCaps[400];
             ccCaps[0] = '\0';
+            char * ccCapsAlias = ccCaps;
             for (uint ii = 0; ii < cornerCnt; ii++)
             {
                 _log.pop(ttcap[ii]);
-                sprintf(&ccCaps[0],"%s %f ", &ccCaps[0], ttcap[ii]);
+                sprintf(&ccCaps[0],"%s %f ", &ccCapsAlias[0], ttcap[ii]);
             }
             debug("DB_ECO","R","REDO ECO: dbCCSeg %d, setAllCcCap, caps: %s\n",seg_id, &ccCaps[0]);
             ((dbCCSeg*)seg)->setAllCcCap(&ttcap[0]);

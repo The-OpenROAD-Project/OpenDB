@@ -577,9 +577,10 @@ void lefin::layer( lefiLayer * layer )
 
     dbTechLayerType type( dbTechLayerType::ROUTING );
 
-    if (layer->hasType())
+    if (layer->hasType()) {
         type = dbTechLayerType( layer->type() );
-	
+    }
+    
 	if (_ignore_non_routing_layers && (
 		(type!=dbTechLayerType::ROUTING) &&
 		(type!=dbTechLayerType::CUT) &&

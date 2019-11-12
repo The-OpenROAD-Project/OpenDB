@@ -1,5 +1,4 @@
-set db [dbDatabase_create]
-set chip [odb_read_design $db ./OpenDB/tests/data/gscl45nm.lef ./OpenDB/tests/data/design.def]
+set chip [read_design $db ./OpenDB/tests/data/gscl45nm.lef ./OpenDB/tests/data/design.def]
 set lib [lindex [$db getLibs] 0]
 if {$chip == "NULL"} {
     puts "Read DEF Failed"

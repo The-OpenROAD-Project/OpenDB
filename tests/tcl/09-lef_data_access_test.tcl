@@ -1,8 +1,7 @@
 source [file join [file dirname [info script]] "test_helpers.tcl"]
 
 # Open database and load LEF
-set db [dbDatabase_create]
-set lib [odb_read_lef $db ./OpenDB/tests/data/gscl45nm.lef]
+set lib [read_lef $db ./OpenDB/tests/data/gscl45nm.lef]
 set tech [$lib getTech]
 # Basic LEF checks"
 check "lef version" {$tech getLefVersion} "5.5"

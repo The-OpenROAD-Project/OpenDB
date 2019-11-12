@@ -14,8 +14,12 @@ opendbTclAppInit(Tcl_Interp* interp)
     {
         return TCL_ERROR;
     }
-
-    return TCL_OK;
+    const char *tcl_helper_cmds =
+#include "helpers.tcl"
+    ;
+    
+    Tcl_Eval(interp, tcl_helper_cmds);
+    return  Tcl_Eval(interp, "namespace import odb::*");
 }
 
 int

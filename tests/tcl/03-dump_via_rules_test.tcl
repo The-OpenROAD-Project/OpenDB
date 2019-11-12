@@ -1,5 +1,4 @@
-set db [dbDatabase_create]
-set lib [odb_read_lef $db ./OpenDB/tests/data/gscl45nm.lef]
+set lib [read_lef $db ./OpenDB/tests/data/gscl45nm.lef]
 if {$lib == "NULL"} {
     exit 1
 }

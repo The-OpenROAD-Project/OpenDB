@@ -18,8 +18,11 @@ opendbTclAppInit(Tcl_Interp* interp)
 #include "helpers.tcl"
     ;
     
-    Tcl_Eval(interp, tcl_helper_cmds);
-    return  Tcl_Eval(interp, "namespace import odb::*");
+    if (Tcl_Eval(interp, tcl_helper_cmds) == TCL_OK && 
+        Tcl_Eval(interp, "namespace import odb::*") == TCL_OK) {
+        return TCL_OK;
+    }
+    return  TCL_ERROR;
 }
 
 int

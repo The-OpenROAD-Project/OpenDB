@@ -54,7 +54,7 @@ private:
 
 public:
 
-	Ath__dbtable(uint cnt, bool use2darray, bool memDbg=false)
+	Ath__dbtable(uint cnt, bool, bool memDbg=false)
 	{
 		/*
 		_array= NULL;
@@ -285,7 +285,7 @@ public:
 		
 		return cnt;
 	}
-	uint readDBheader(FILE *fp, char *keyword, char* obj_type, uint format)
+	uint readDBheader(FILE *fp, char *keyword, char* obj_type, uint)
 	{
 		int cnt;
 		

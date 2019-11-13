@@ -158,7 +158,7 @@ public:
 	
 		return true;
 	}
-	uint readDBheader(FILE *fp, char *keyword, char* obj_type, uint format)
+	uint readDBheader(FILE *fp, char *keyword, char* obj_type, uint)
 	{
 		int cnt;
 		

@@ -50,9 +50,12 @@ We have over 1,800 objects and functions that we are still documenting (for both
 After building successfully, run OpenDB tcl shell using `./build/src/swig/tcl/opendbtcl`. An example usage:
 
 ```
-set db [dbDatabase_create]
-set lef_parser [new_lefin $db true]
-set tech [lefin_createTech $lef_parser ./OpenDB/tests/data/gscl45nm.lef]
+set lib [read_lef $db ./OpenDB/tests/data/gscl45nm.lef]
+set tech [$lib getTech]
+set vias [$tech getVias]
+foreach via $vias {
+    puts [$via getName]
+}
 ```
 
 You can find examples on using the API from TCL under `tests/tcl/` directory.
@@ -61,7 +64,7 @@ The full set of the tcl commands exposed can be found under `./build/src/swig/tc
 
 
 ### Python
-After building successfully, run a Python shell using `python3`. Load `opendbpy module using:
+After building successfully, run a Python shell using `python3`. Load `opendbpy` module using:
 
 ```
 import importlib.util

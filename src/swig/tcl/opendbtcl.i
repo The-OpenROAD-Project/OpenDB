@@ -11,7 +11,6 @@
 #include "defout.h"
 #include "dbExtControl.h"
 #include "dbViaParams.h"
-#include "dbtable2.h"
 #include "dbId.h"
 #include "dbRtEdge.h"
 #include "dbStream.h"
@@ -26,9 +25,7 @@
 #include "dbRtTree.h"
 #include "dbgdefines.h"
 #include "dbCCSegSet.h"
-#include "dbObject.h"
 #include "dbSet.h"
-#include "dbtable1.h"
 #include "dbTypes.h"
 #include "geom.h"
 using namespace odb;
@@ -77,11 +74,7 @@ using namespace odb;
 %include "dbRtTree.h"
 %include "dbgdefines.h"
 %include "dbCCSegSet.h"
-%include "dbObject.h"
-%include "dbtable1.h"
 // Support file operations
 FILE *fopen(const char *name, const char *mode);
 int fclose(FILE *);
 int fgetc(FILE *);
-
-

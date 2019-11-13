@@ -79,10 +79,8 @@ namespace odb {
 #define ADS_DB_PROPERTIES                   41
 #define ADS_DB_TRANSFORM_FIX                42
 #define ADS_DB_TRANSFORM_FIX2               43
-#define ADS_DB_ITERM_tmgTmpD                44
 #define ADS_DB_BLOCK_STREAM_PROPERTIES      45
 #define ADS_DB_BLOCK_CHILDREN_V1            46
-#define ADS_DB_TMG_SCENARIO                 47
 #define ADS_DB_INDEPENDENT_EXT_CORNERS      48
 #define ADS_DB_ADJUSTCC                     49
 #define ADS_DB_5BITCAPNODECHILDRENCNT       50

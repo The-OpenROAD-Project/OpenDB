@@ -91,61 +91,7 @@ void dbCreateNetUtil::checkAndSet(uint id)
 	}
 	_currentNet= _mapArray[id];
 }
-int dbCreateNetUtil::createIntTmgProperty(dbObject* obj)
-{
-    _ecoCnt ++;
-    dbIntProperty::create(obj, "ECO", _ecoCnt);
 
-    int tmgUpdateIndex= _block->getParent()->getTmgUpdateIndex();
-    if (tmgUpdateIndex<0)
-        return -1; 
-    
-    if (_block->getParent()->is_mme_update())
-        dbIntProperty::create(obj, "TMG_mme", tmgUpdateIndex);
-    else
-        dbIntProperty::create(obj, "TMG_sta", tmgUpdateIndex);
-
-    //char *time= ade(0, "$::apps::milos::mycf runtime");
-    //dbStringProperty::create(obj, "RUN_TIME", time);
-
-    return tmgUpdateIndex;
-}
-bool dbCreateNetUtil::printTimeAndSlackProperties(dbObject* obj, FILE *fp)
-{
-    dbStringProperty *p_time= dbStringProperty::find(obj, "RUN_TIME");
-
-    dbIntProperty *p= dbIntProperty::find(obj, "ECO");
-    if ((p==NULL)&&(p_time==NULL))
-        return false;
-
-    if (p!=NULL)
-        fprintf(fp, "\t\t#eco %d ", p->getValue());
-    if (p_time!=NULL)
-        fprintf(fp, "runtime %s ", p_time->getValue().c_str()); 
-    
-    return true;
-    //fprintf(fp, "\n");
-}
-bool dbCreateNetUtil::annotateSlack(FILE *fp, dbObject* obj)
-{ 
-    printTimeAndSlackProperties(obj, fp);
-
-    dbIntProperty *p= NULL;
-    if (_block->getParent()->is_mme_update()) 
-        p= dbIntProperty::find(obj, "TMG_mme");
-    else
-        p= dbIntProperty::find(obj, "TMG_sta");
-
-    if (p==NULL)
-        return false;
-
-    int tmgIndex= p->getValue();
-    _block->getParent()->printSlackProperties(false, tmgIndex, fp);
-    if (tmgIndex<_block->getParent()->getTmgUpdateIndex())
-        tmgIndex++;
-    _block->getParent()->printSlackProperties(false, tmgIndex, fp);
-    return true;
-}
 dbInst *dbCreateNetUtil::createInst(dbInst *inst0)
 {
 	char instName[64];
@@ -160,8 +106,6 @@ dbInst *dbCreateNetUtil::createInst(dbInst *inst0)
 	inst0->getOrigin(x,y);
 	inst->setOrigin(x,y);
 	inst->setPlacementStatus(inst0->getPlacementStatus());
-
-    createIntTmgProperty(inst);
 
 	return inst;
 }
@@ -208,8 +152,6 @@ dbInst *dbCreateNetUtil::createInst(dbInst *inst0, bool createInstance, bool des
 		inst0->getOrigin(x,y);
 		inst->setOrigin(x,y);
 		inst->setPlacementStatus(inst0->getPlacementStatus()); 
-
-        createIntTmgProperty(inst);
 
 		if (createInstance)
 			inst->setEcoCreate(true);
@@ -665,7 +607,6 @@ uint dbCreateNetUtil::printModifiedNets(dbBlock *ecoBlock, bool connectTerm, dbB
 dbNet *dbCreateNetUtil::createNet(dbNet *nn, bool create, bool destroy)
 {
 	dbNet *net= dbNet::create(_block, nn->getConstName());
-    createIntTmgProperty(net);
 	
 	dbSigType ty= nn->getSigType();
     if ((ty==dbSigType::POWER)&&(ty==dbSigType::GROUND))
@@ -843,42 +784,6 @@ void dbCreateNetUtil::writeDetailedEco(dbBlock *ecoBlock, dbBlock *srcBlock, con
         uint n= p->getValue();
         transactionArray.set(n, net);
     }
-    int prevTmgIndex= -1;
-    for (ii= 0; ii<=maxSize; ii++) 
-    {
-        dbObject *obj= transactionArray.geti(ii);
-        if (obj==NULL)
-            continue; 
-       
-        dbIntProperty *p= NULL; 
-        if (_block->getParent()->is_mme_update()) 
-            p= dbIntProperty::find(obj, "TMG_mme"); 
-        else 
-            p= dbIntProperty::find(obj, "TMG_sta");
-
-        if (p!=NULL) { 
-            int tmgIndex= p->getValue(); 
-            if (tmgIndex!=prevTmgIndex) { 
-                _block->getParent()->printSlackProperties(false, tmgIndex, fp); 
-                prevTmgIndex= tmgIndex;
-            }
-        }
-
-        uint ecoNetCnt= 0; 
-        uint ecoInstCnt= 0; 
-        
-        switch( obj->getObjectType() ) { 
-            case dbNetObj: 
-                ecoNetCnt +=  printEcoNet((dbNet *)obj, srcBlock, fp); 
-                break; 
-            case dbInstObj: 
-                ecoInstCnt += printEcoInst((dbInst *)obj, srcBlock, fp);
-                break;
-            default:
-                break;
-        }
-    } 
-    _block->getParent()->printSlackProperties(false, prevTmgIndex+1, fp); 
 }
 void dbCreateNetUtil::setBlock( dbBlock * block, bool skipInit )
 {

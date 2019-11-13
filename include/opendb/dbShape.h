@@ -467,38 +467,38 @@ class dbShapeItrCallback
 {
 public:
     // Overide the following methods of interest...
-    virtual void beginInst( dbInst * inst, int level ) {}
+    virtual void beginInst( dbInst *, int ) {}
     virtual void endInst() {}
 
-    virtual void beginObstruction(dbObstruction * obs) {}
+    virtual void beginObstruction(dbObstruction *) {}
     virtual void endObstruction() {}
 
-    virtual void beginBPin(dbBPin * BPin) {}
+    virtual void beginBPin(dbBPin *) {}
     virtual void endBPin() {}
 
-    virtual void beginNet( dbNet * net ) {}
+    virtual void beginNet( dbNet * ) {}
     virtual void endNet() {}
 
-    virtual void beginWire( dbWire * wire ) {}
+    virtual void beginWire( dbWire * ) {}
     virtual void endWire() {}
 
-    virtual void beginSWire( dbSWire * swire ) {}
+    virtual void beginSWire( dbSWire * ) {}
     virtual void endSWire() {}
 
-    virtual void beginObstructions(dbMaster * master) {}
+    virtual void beginObstructions(dbMaster *) {}
     virtual void endObstructions() {}
 
-    virtual void beginMTerm( dbMTerm * mterm ) {}
+    virtual void beginMTerm( dbMTerm * ) {}
     virtual void endMTerm() {}
 
-    virtual void beginMPin( dbMPin * pin ) {}
+    virtual void beginMPin( dbMPin * ) {}
     virtual void endMPin() {}
 
     // Called for all shapes except dbWire shapes.
-    virtual bool nextBoxShape( dbBox * box, dbShape & shape ) { return true; }
+    virtual bool nextBoxShape( dbBox *, dbShape & ) { return true; }
 
     // Called only for dbWireShapes.
-    virtual bool nextWireShape( dbWire * wire, int shape_id, dbShape & shape ) { return true; }
+    virtual bool nextWireShape( dbWire *, int, dbShape & ) { return true; }
 };
 
 class dbHierInstShapeItr

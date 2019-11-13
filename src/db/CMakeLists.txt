@@ -119,7 +119,8 @@ target_link_libraries(opendb
         tcl
 )
 # Conditional -lrt
-if(UNIX AND NOT APPLE)
+option(LINK_RT "Link Posix Realtime Extensions library" OFF)
+if(LINK_RT)
 target_link_libraries(opendb
     PRIVATE
         rt

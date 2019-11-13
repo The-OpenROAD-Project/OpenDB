@@ -32,7 +32,7 @@ set (OPENDB_TCL_FILES
 )
 
 add_custom_command(OUTPUT ${CMAKE_CURRENT_BINARY_DIR}/opendb_wrap.cpp
-  COMMAND ${SWIG_EXECUTABLE} -w509,503,501,472,467,401,317,325,378,383,389,365,362,314,258,240,203,201 -namespace -prefix odb -tcl8 -c++ -Iinclude/opendb -o ${CMAKE_CURRENT_BINARY_DIR}/opendb_wrap.cpp ${PROJECT_SOURCE_DIR}/src/swig/tcl/opendbtcl.i
+  COMMAND ${SWIG_EXECUTABLE} -w509,503,501,472,467,402,401,317,325,378,383,389,365,362,314,258,240,203,201 -namespace -prefix odb -tcl8 -c++ -Iinclude/opendb -o ${CMAKE_CURRENT_BINARY_DIR}/opendb_wrap.cpp ${PROJECT_SOURCE_DIR}/src/swig/tcl/opendbtcl.i
   WORKING_DIRECTORY ${PROJECT_SOURCE_DIR}
   DEPENDS ${OPENDB_SWIG_FILES} ${OPENDB_TCL_FILES}
 )

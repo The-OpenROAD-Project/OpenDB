@@ -3,12 +3,9 @@ source [file join [file dirname [info script]] "test_helpers.tcl"]
 # Open database, load lef and design
 
 set db [dbDatabase_create]
-set lef_parser [new_lefin $db true]
-set def_parser [new_defin $db]
+set chip [odb_read_design $db  ./OpenDB/tests/data/Nangate45/NangateOpenCellLibrary.mod.lef ./OpenDB/tests/data/gcd/floorplan.def]
+set lib [lindex [$db getLibs] 0]
 
-$lef_parser createTechAndLib nangate45 ./OpenDB/tests/data/Nangate45/NangateOpenCellLibrary.mod.lef 
-
-set chip [$def_parser createChip [$db getLibs] ./OpenDB/tests/data/gcd/floorplan.def]
 
 # Block checks
 
@@ -74,7 +71,7 @@ check "master logically equiv" {$master getLEQ} "NULL" ; # Return value is curre
 check "master electrially equiv" {$master getEEQ} "NULL" ; # Return value is currently NULL, better to be an empty list
 check "master symmetry" {list [$master getSymmetryX] [$master getSymmetryY] [$master getSymmetryR90]} "1 1 0"
 check "master number of terms" {llength [$master getMTerms]} 4
-check "master library" {[$master getLib] getName} nangate45
+check "master library" {[$master getLib] getName} NangateOpenCellLibrary.mod.lef
 check "master num obstructions" {llength [$master getObstructions]} 0
 check "master placement boundary" {set rect [$master getPlacementBoundary]; list [$rect xMin] [$rect yMin] [$rect xMax] [$rect yMax]} "0 0 760 2800"
 check "master term count" {$master getMTermCount} 4

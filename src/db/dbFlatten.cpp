@@ -48,8 +48,8 @@ dbFlatten::dbFlatten()
           _copy_shields(true),
           _create_boundary_regions(false),
           _create_bterm_map(false),
-          _next_bterm_map_id(0),
-          _copy_parasitics(false)
+          _copy_parasitics(false),
+          _next_bterm_map_id(0)
 {
 }
 
@@ -445,8 +445,6 @@ void dbFlatten::printShapes(FILE *fp, dbWire *wire, bool skip_rcSegs)
 	if (skip_rcSegs)
 		return;
 
-        uint cnt= 1;
-
 	fprintf(fp, "\nRSEGS\n");
         for( rcitr = rSet.begin(); rcitr != rSet.end(); ++rcitr )
         {
@@ -657,10 +655,8 @@ void dbFlatten::copyWires( dbNet * dst_, dbNet * src_, int level, dbProperty * b
 	    if (copyParasitics)
 		setOldShapeIds(src_->getWire());
 
-	    bool noDstWires= true;
             if ( dst_->getWire() )
-            {
-	        noDstWires= false;
+            {	
                 dbVector<unsigned char> opcodes;
                 dbVector<int> data;
                 opcodes.reserve( src_wire->_opcodes.size() );
@@ -683,8 +679,6 @@ void dbFlatten::copyWires( dbNet * dst_, dbNet * src_, int level, dbProperty * b
 		dbSet<dbRSeg> rSet= dst_->getRSegs(); 
 		rSet.reverse();
 
-		uint gCnt= createCapNodes(src_, dst_, noDstWires);
-		uint rCnt= createRSegs(src_, dst_);
 		rSet= dst_->getRSegs(); 
 		rSet.reverse();
 	    }
@@ -1137,7 +1131,6 @@ dbTechNonDefaultRule * dbFlatten::copyNonDefaultRule( dbBlock * parent,
 bool dbFlatten::createParentCapNode(dbCapNode *node, dbNet *dstNet)
 {
         bool foreign= false;
-        char buf[1024];
 
         debug("FLATTEN", "C", "\n\tCap %d num %d\n", node->getId(), node->getNode());
 		
@@ -1282,8 +1275,6 @@ uint dbFlatten::createCapNodes(dbNet *src, dbNet *dst, bool noDstWires)
         debug("FLATTEN", "C", "\n\tCapNodes: %s %s\n", src->getConstName(), dst->getConstName());
 
         uint gCnt= 0;
-        bool foreign= false;
-        char buf[1024];
         dbSet<dbCapNode> capNodes= src->getCapNodes();
         dbSet<dbCapNode>::iterator cap_node_itr= capNodes.begin();
         for( ; cap_node_itr != capNodes.end(); ++cap_node_itr ) {
@@ -1299,7 +1290,6 @@ uint dbFlatten::setCorrectRsegIds(dbNet *dst)
 	dbWire *wire= dst->getWire();
 
         dbSet<dbRSeg> rsegs= dst->getRSegs();
-        uint rsize= rsegs.size();
 
         uint rCnt= 0;
         dbSet<dbRSeg>::iterator rseg_itr= rsegs.begin();
@@ -1334,7 +1324,6 @@ uint dbFlatten::createRSegs(dbNet *src, dbNet *dst)
         //extMain::printRSegs(parentNet);
 
         dbSet<dbRSeg> rsegs= src->getRSegs();
-        uint rsize= rsegs.size();
 
         uint rCnt= 0;
         dbSet<dbRSeg>::iterator rseg_itr= rsegs.begin();
@@ -1352,7 +1341,7 @@ uint dbFlatten::createRSegs(dbNet *src, dbNet *dst)
                 rc->setSourceNode(_node_map[srcId]);
                 rc->setTargetNode(_node_map[tgtId]);
 
-                for (uint corner= 0; corner<block->getCornerCount(); corner++) {
+                for (int corner= 0; corner<block->getCornerCount(); corner++) {
                         double res= rseg->getResistance(corner);
                         double cap= rseg->getCapacitance(corner);
 
@@ -1375,7 +1364,6 @@ uint dbFlatten::printRSegs(FILE *fp, dbNet *net)
         	fprintf(fp, "\t\t\tprintRSegs: %s\n", net->getConstName());
 
         dbSet<dbRSeg> rsegs= net->getRSegs();
-        uint rsize= rsegs.size();
 
         uint rCnt= 0;
         dbSet<dbRSeg>::iterator rseg_itr= rsegs.begin();

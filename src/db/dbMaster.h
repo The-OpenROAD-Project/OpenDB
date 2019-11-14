@@ -106,7 +106,7 @@ class _dbMaster : public dbObject
     dbTable<_dbBox> *      _box_tbl;
     dbTable<_dbTechAntennaPinModel> * _antenna_pin_model_tbl;
     
-    void *		   _sy_cell;
+    void *		   _sta_cell; // not saved
      
     // NON-PERSISTANT-MEMBERS
     dbBoxItr *          _box_itr;

@@ -1733,6 +1733,9 @@ class dbBTerm : public dbObject
     /// Translate a database-id back to a pointer.
     ///
     static dbBTerm * getBTerm( dbBlock * block, uint oid );
+
+    uint32_t staVertexId();
+    void staSetVertexId(uint32_t id);
 };
 
 
@@ -2531,11 +2534,6 @@ class dbNet : public dbObject
     void destroySWires();
 
     ///
-    /// Invalidate timing of remote nodes
-    ///
-    void ecoInvalidateTiming();
-
-    ///
     /// Create a new net.
     /// Returns NULL if a net with this name already exists
     ///
@@ -3024,11 +3022,6 @@ class dbInst : public dbObject
     bool swapMaster( dbMaster * master );
 
     ///
-    /// Invalidate timing of remote nodes
-    ///
-    void ecoInvalidateTiming();
-
-    ///
     /// Level of instance; if negative belongs to Primary Input Logic cone, 0 invalid.
     ///
 	int getLevel();
@@ -3264,6 +3257,9 @@ class dbITerm : public dbObject
     /// Translate a database-id back to a pointer.
     ///
     static dbITerm * getITerm( dbBlock * block, uint oid );
+
+    uint32_t staVertexId();
+    void staSetVertexId(uint32_t id);
 };
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -5264,8 +5260,9 @@ class dbMaster : public dbObject
     /// Translate a database-id back to a pointer.
     ///
     static dbMaster * getMaster( dbLib * lib, uint oid );
-    void *getTimingData();
-    void setTimingData(void * ptr);
+
+    void *staCell();
+    void staSetCell( void * cell );
 };
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -5328,16 +5325,6 @@ class dbMTerm : public dbObject
     dbSet<dbTarget> getTargets();
 
     ///
-    /// Set the timing data. This pointer is not saved.
-    ///
-    void setTimingData( void * ptr );
-
-    ///
-    /// Get the timing data.
-    ///
-    void * getTimingData();
-    
-    ///
     /// Add antenna info that is not specific to an oxide model.
     ///
     void addPartialMetalAreaEntry( double inval, dbTechLayer *refly = NULL );
@@ -5360,6 +5347,9 @@ class dbMTerm : public dbObject
     dbTechAntennaPinModel *getDefaultAntennaModel() const;
     dbTechAntennaPinModel *getOxide2AntennaModel() const;
     void writeAntennaLef(lefout & writer) const;
+
+    void *staPort();
+    void staSetPort( void * port );
 
     ///
     /// Return the index of this mterm on this master.

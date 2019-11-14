@@ -634,4 +634,16 @@ dbBTerm::getBTerm( dbBlock * block_, uint dbid_ )
     return (dbBTerm *) block->_bterm_tbl->getPtr( dbid_ );
 }
 
+uint32_t dbBTerm::staVertexId()
+{
+  _dbBTerm * iterm = (_dbBTerm *) this;
+  return iterm->_sta_vertex_id;
+}
+
+void dbBTerm::staSetVertexId(uint32_t id)
+{
+  _dbBTerm * iterm = (_dbBTerm *) this;
+  iterm->_sta_vertex_id = id;
+}
+
 } // namespace

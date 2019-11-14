@@ -63,7 +63,7 @@ struct dbITermFlags
 {
     // note: number of bits must add up to 32 !!!
     uint _mterm_idx  : 20;  // index into inst-hdr-mterm-vector
-    uint _spare_bits_3 : 3;
+    uint _spare_bits : 7;
     uint _clocked    : 1;
     uint _mark       : 1;
     uint _spef       : 1;   // Spef flag
@@ -85,6 +85,7 @@ class _dbITerm : public dbObject
     dbId<_dbInst>   _inst;
     dbId<_dbITerm>  _next_net_iterm;
     dbId<_dbITerm>  _prev_net_iterm;
+    uint32_t _sta_vertex_id; // not saved
 
     _dbITerm( _dbDatabase * );
     _dbITerm( _dbDatabase *, const _dbITerm & i );
@@ -102,7 +103,7 @@ class _dbITerm : public dbObject
 inline _dbITerm::_dbITerm( _dbDatabase * )
 {
     _flags._mterm_idx = 0;
-    _flags._spare_bits_3 = 0;
+    _flags._spare_bits = 0;
     _flags._clocked= 0;
     _flags._mark = 0;
     _flags._spef = 0;

@@ -661,4 +661,17 @@ void dbITerm::print(FILE *fp, const char *trail)
 			getMTerm()->getMaster()->getConstName(),getInst()->getConstName(), trail);
 	}
 }
+
+uint32_t dbITerm::staVertexId()
+{
+  _dbITerm * iterm = (_dbITerm *) this;
+  return iterm->_sta_vertex_id;
+}
+
+void dbITerm::staSetVertexId(uint32_t id)
+{
+  _dbITerm * iterm = (_dbITerm *) this;
+  iterm->_sta_vertex_id = id;
+}
+
 } // namespace

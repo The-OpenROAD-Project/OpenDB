@@ -607,19 +607,6 @@ void dbInst::getHierTransform( dbTransform & t )
     return;
 }
 
-void dbInst::ecoInvalidateTiming()
-{
-  _dbBlock * block = (_dbBlock *) getOwner();
-  if ( block->_journal )
-  {
-    debug("DB_ECO","A","ECO: dbInst %d, invalidateTiming", getId());
-    block->_journal->beginAction( dbJournal::UPDATE_FIELD );
-    block->_journal->pushParam( dbInstObj );
-    block->_journal->pushParam( getId() );
-    block->_journal->pushParam( _dbInst::INVALIDATETIMING );
-    block->_journal->endAction();
-  }
-}
 int dbInst::getLevel()
 {
     _dbInst * inst = (_dbInst *) this;

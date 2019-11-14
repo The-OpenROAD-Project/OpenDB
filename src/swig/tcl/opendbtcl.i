@@ -77,5 +77,3 @@ using namespace odb;
 FILE *fopen(const char *name, const char *mode);
 int fclose(FILE *);
 int fgetc(FILE *);
-
-

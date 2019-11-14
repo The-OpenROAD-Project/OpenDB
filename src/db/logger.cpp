@@ -670,7 +670,7 @@ int debug(const char *mod, const char *tag, const char *msg, ...)
         if( logptr != NULL )
             return logptr->notice(0,_ath_logbuffer,0);
         else
-            return fprintf(stderr,"No Logger: debug %s:%s %s\n",mod,tag,_ath_logbuffer);
+            return fprintf(stderr,"Debug %s:%s %s",mod,tag,_ath_logbuffer);
     }
     else
     {
@@ -764,7 +764,7 @@ int milos(int code, const char *msg, ...)
         return logptr->event("milos",milos_id,_ath_logbuffer,0);
     }
     else
-        return fprintf(stderr,"No Logger: milos %d: %s\n",code,_ath_logbuffer);
+        return fprintf(stderr,"Milos %d: %s",code,_ath_logbuffer);
 }
 
 int ade(int code, const char *msg, ...)
@@ -784,7 +784,7 @@ int ade(int code, const char *msg, ...)
     }
     else
     {
-        if ( fprintf(stderr,"No Logger: ade %d: %s\n",code,_ath_logbuffer) >= 0)
+        if ( fprintf(stderr,"ADE %d: %s",code,_ath_logbuffer) >= 0)
             return TCL_OK;
         else
             return TCL_ERROR;
@@ -808,7 +808,7 @@ int notice(int code, const char *msg, ...)
     }
     else
     {
-        if(fprintf(stderr,"No Logger: notice %d: %s\n",code,_ath_logbuffer) >=0)
+        if(fprintf(stderr,"Notice %d: %s",code,_ath_logbuffer) >=0)
             return TCL_OK;
         else
             return TCL_ERROR;
@@ -835,7 +835,7 @@ int verbose(int code, const char *msg, ...)
     }
     else
     {
-        if(fprintf(stderr,"No Logger: verbose %d: %s\n",code,_ath_logbuffer)>=0)
+        if(fprintf(stderr,"Verbose %d: %s",code,_ath_logbuffer)>=0)
             return TCL_OK;
         else
             return TCL_ERROR;
@@ -862,7 +862,7 @@ int info(int code, const char *msg, ...)
     }
     else
     {
-        if(fprintf(stderr,"No Logger: info %d: %s\n",code,_ath_logbuffer) >= 0)
+        if(fprintf(stderr,"Info %d: %s",code,_ath_logbuffer) >= 0)
             return TCL_OK;
         else
             return TCL_ERROR;
@@ -891,7 +891,7 @@ int warning( int code, const char * msg, ... )
     }
     else
     {
-        if(fprintf(stderr,"No Logger: warning %d: %s\n",code,_ath_logbuffer)>=0)
+        if(fprintf(stderr,"Warning %d: %s",code,_ath_logbuffer)>=0)
             return TCL_OK;
         else
             return TCL_ERROR;
@@ -915,7 +915,7 @@ void error(int code, const char *msg, ...)
         logptr->event("error",error_id,_ath_logbuffer,0);
     }
     else
-        fprintf(stderr,"No Logger: error %d: %s\n",code,_ath_logbuffer);
+        fprintf(stderr,"Error %d: %s",code,_ath_logbuffer);
 }
 
 // Added reporting into a file - payam 02/01/2006

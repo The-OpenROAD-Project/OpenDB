@@ -87,3 +87,8 @@ echo "[17] Database read/write test"
 ./OpenDB/build/src/swig/tcl/opendbtcl ./OpenDB/tests/tcl/17-db_read-write_test.tcl
 echo "SUCCESS!"
 echo ""
+
+echo "[18] Check routing tracks test"
+./OpenDB/build/src/swig/tcl/opendbtcl ./OpenDB/tests/tcl/18-check_routing_tracks.tcl
+echo "SUCCESS!"
+echo ""

@@ -3,8 +3,7 @@ spec = importlib.util.spec_from_file_location("opendbpy", "./OpenDB/build/src/sw
 odb = importlib.util.module_from_spec(spec)
 spec.loader.exec_module(odb)
 db = odb.dbDatabase.create()
-chip =
-odb.odb_read_design(db,["./OpenDB/tests/data/Nangate45/NangateOpenCellLibrary.mod.lef"],
+chip = odb.odb_read_design(db,["./OpenDB/tests/data/Nangate45/NangateOpenCellLibrary.mod.lef"],
 ["./OpenDB/tests/data/gcd/floorplan.def"])
 tech = db.getTech()
 libs = db.getLibs()

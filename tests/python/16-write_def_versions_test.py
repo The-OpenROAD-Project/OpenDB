@@ -1,11 +1,11 @@
 import importlib.util
 import os
 import re
-spec = importlib.util.spec_from_file_location("opendbpy", "../../build/src/swig/python/opendbpy.py")
+spec = importlib.util.spec_from_file_location("opendbpy", "./OpenDB/build/src/swig/python/opendbpy.py")
 odb = importlib.util.module_from_spec(spec)
 spec.loader.exec_module(odb)
 db = odb.dbDatabase.create()
-chip = odb.odb_read_design(db, ["../data/gscl45nm.lef"], ["../data/design.def"])
+chip = odb.odb_read_design(db, ["./OpenDB/tests/data/gscl45nm.lef"], ["./OpenDB/tests/data/design.def"])
 tech = db.getTech()
 block = chip.getBlock()
 
@@ -22,7 +22,8 @@ for i,version in enumerate(versions):
     db= odb.dbDatabase.create()
     def_parser = odb.defin(db)
     lef_parser = odb.lefin(db, True)
-    tech_lib = lef_parser.createTechAndLib("../data/gscl45nm.lib", "../data/gscl45nm.lef")
+    tech_lib = lef_parser.createTechAndLib("./OpenDB/tests/data/gscl45nm.lib",
+    "./OpenDB/tests/data/gscl45nm.lef")
     libs = db.getLibs()
     chip = def_parser.createChip(libs,"test_out.def")
     if chip == None:

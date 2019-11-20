@@ -23,7 +23,7 @@
 		$1 = odb::defout::Version::DEF_5_6;
 	}
 }
-%typemap(typecheck,precedence=SWIG_TYPECHECK_INTEGER) odb::defout::Version, defout::Version {
+%typemap(typecheck) odb::defout::Version, defout::Version {
 	char *str = PyString_AsString($input);
 	bool found = false;
 	if (str) {

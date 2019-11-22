@@ -1126,32 +1126,6 @@ uint dbBlockSearch::addWireViaCoords(uint menuId, uint subMenuId, bool wireVia, 
 		uint flag= _dcr->addBox(net->getId(), subMenuId, menuId, level,
 				x1, y1, x2, y2, shapeId);
 
-		//int rsegId= 0;
-/*		
-		if ((flag>0) && w->getProperty(shapeId, rsegId) && rsegId != 0) {
-			dbRSeg *rseg= dbRSeg::getRSeg(_block, rsegId);
-
-			_labelVal[0]= 1.0
-		_dcr->addArrow(true, subMenuId, subMenuId, 0, labelCnt, _labelName, val, x1, y1, x2, y2, 0);
-=======
-			_labelVal[0]= 1.0;
-			_labelVal[1]= 2.0;
-		// TO FIX _dcr->addArrow(true, subMenuId, _inst_bb_id, 0, labelCnt, _labelName, _labelVal, x1, y1, x2, y2, 0);
-
-		uint dx= x2-x1;
-		uint dy= y2-y1;
-		if (dx>dy) 
-			_dcr->addArrow(true, _inst_bb_id, _instMenuId, 0, labelCnt, _labelName, _labelVal, x1, (y1+y2)/2, x2, (y1+y2)/2, 0);
-		else
-			_dcr->addArrow(true, _inst_bb_id, _instMenuId, 0, labelCnt, _labelName, _labelVal, (x1+x2)/2, y1,(x1+x2)/2, y2, 0);
-
-	_labelVal[0]= _tmg->getSlack(iterm1, _tmg->max());
-		cnt += _block->getSearchDb()->addArrow(prevInst, inst, labelCnt, _labelName, _labelVal);
-
-		_dcr->addArrow(true, subMenuId, subMenuId, 0,
-		labelCnt, label, val, x1, y1, x2, y2, 0);
-		}
-		*/	
 		return flag;
 	}
 	else 

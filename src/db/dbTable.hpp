@@ -282,8 +282,8 @@ T * dbTable<T>::create()
         newPage();
     
     _dbObject * o = popQ(_free_list);
-    o->_oid |= DB_ALLOC_BIT;
     new(o) T(_db);
+    o->_oid |= DB_ALLOC_BIT;
     T * t = (T *) o;
 
     dbTablePage * page = (dbTablePage *) t->getObjectPage();

@@ -256,7 +256,7 @@ _dbMaster::_dbMaster( _dbDatabase * db, const _dbMaster & m )
           _obstructions( m._obstructions ),
           _site( m._site ),
           _mterm_hash( m._mterm_hash ),
-          _sy_cell(m._sy_cell)
+          _sta_cell(m._sta_cell)
 {
     if( m._name )
     {
@@ -417,13 +417,17 @@ void dbMaster::setOrigin( int x, int y )
     master->_x = x;
     master->_y = y;
 }
-void dbMaster::setTimingData(void * ptr) {
+
+void *dbMaster::staCell()
+{
     _dbMaster * master = (_dbMaster *) this;
-    master->_sy_cell = ptr;
+    return master->_sta_cell;
 }
-void *dbMaster::getTimingData() {
+
+void dbMaster::staSetCell( void * cell )
+{
     _dbMaster * master = (_dbMaster *) this;
-    return master->_sy_cell;
+    master->_sta_cell = cell;
 }
 
 uint dbMaster::getWidth()

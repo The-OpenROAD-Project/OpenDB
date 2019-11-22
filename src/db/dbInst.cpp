@@ -30,7 +30,6 @@
 // OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 #include "dbInst.h"
-#include "dbTmg.h"
 #include "dbHier.h"
 #include "dbChip.h"
 #include "dbDatabase.h"
@@ -608,19 +607,6 @@ void dbInst::getHierTransform( dbTransform & t )
     return;
 }
 
-void dbInst::ecoInvalidateTiming()
-{
-  _dbBlock * block = (_dbBlock *) getOwner();
-  if ( block->_journal )
-  {
-    debug("DB_ECO","A","ECO: dbInst %d, invalidateTiming", getId());
-    block->_journal->beginAction( dbJournal::UPDATE_FIELD );
-    block->_journal->pushParam( dbInstObj );
-    block->_journal->pushParam( getId() );
-    block->_journal->pushParam( _dbInst::INVALIDATETIMING );
-    block->_journal->endAction();
-  }
-}
 int dbInst::getLevel()
 {
     _dbInst * inst = (_dbInst *) this;
@@ -1349,9 +1335,6 @@ dbInst::destroy( dbInst * inst_ )
         std::list<dbBlockCallBackObj *>::iterator  cbitr;
         for (cbitr = block->_callbacks.begin(); cbitr !=  block->_callbacks.end(); ++cbitr)
            (**cbitr)().inDbITermDestroy((dbITerm *) it); // client ECO optimization - payam
-
-        if ( it->_tmg )
-            block->_tmg_tbl->destroyArray( it->_tmg );
 
         dbProperty::destroyProperties(it);
         block->_iterm_tbl->destroy(it);

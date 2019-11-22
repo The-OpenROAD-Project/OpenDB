@@ -90,7 +90,7 @@ class _dbMTerm : public dbObject
     dbVector<_dbTechAntennaAreaElement *>  _par_cut_area;
     dbVector<_dbTechAntennaAreaElement *>  _diffarea;
 
-    void *           _timing_data;
+    void *           _sta_port; // not saved
 
     friend dbOStream & operator<<( dbOStream & stream, const _dbMTerm & mterm );
     friend dbIStream & operator>>( dbIStream & stream, _dbMTerm & mterm );
@@ -116,7 +116,7 @@ inline _dbMTerm::_dbMTerm( _dbDatabase * )
     _par_met_sidearea.clear();
     _par_cut_area.clear();
     _diffarea.clear();
-    _timing_data = 0;
+    _sta_port = nullptr;
 }
 inline _dbMTerm::~_dbMTerm()
 {

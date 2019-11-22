@@ -54,22 +54,22 @@ class dbWire;
 class dbBlockCallBackObj
 {
  public:
-  virtual void inDbInstCreate(dbInst *brand_new) {}
-  virtual void inDbInstCreate(dbInst *brand_new, dbRegion * region) {}
-  virtual void inDbInstDestroy(dbInst *gonna_die) {}
-  virtual void inDbInstSwapMasterBefore(dbInst *shell, dbMaster *brand_new) {}
-  virtual void inDbInstSwapMasterAfter(dbInst *inst) {}
-  virtual void inDbNetCreate(dbNet *brand_new) {}
-  virtual void inDbNetDestroy(dbNet *gonna_die) {}
-  virtual void inDbITermCreate(dbITerm *brand_new) {}
-  virtual void inDbITermDestroy(dbITerm *gonna_die) {} // Bugzilla #7 - payam
-  virtual void inDbITermDisconnect(dbITerm *soon_detached) {}
-  virtual void inDbITermConnect(dbITerm *just_attached) {}
-  virtual void inDbBlockStreamOutBefore(dbBlock *block) {}
-  virtual void inDbBlockStreamOutAfter(dbBlock *block) {}
-  virtual void inDbBlockReadNetsBefore(dbBlock *block) {}
-  virtual void inDbMoveInst(dbInst *inst) {}
-  virtual void inDbWireUpdate( dbWire * wire ) { }
+  virtual void inDbInstCreate(dbInst *) {}
+  virtual void inDbInstCreate(dbInst *, dbRegion *) {}
+  virtual void inDbInstDestroy(dbInst *) {}
+  virtual void inDbInstSwapMasterBefore(dbInst *, dbMaster *) {}
+  virtual void inDbInstSwapMasterAfter(dbInst *) {}
+  virtual void inDbNetCreate(dbNet *) {}
+  virtual void inDbNetDestroy(dbNet *) {}
+  virtual void inDbITermCreate(dbITerm *) {}
+  virtual void inDbITermDestroy(dbITerm *) {} // Bugzilla #7 - payam
+  virtual void inDbITermDisconnect(dbITerm *) {}
+  virtual void inDbITermConnect(dbITerm *) {}
+  virtual void inDbBlockStreamOutBefore(dbBlock *) {}
+  virtual void inDbBlockStreamOutAfter(dbBlock *) {}
+  virtual void inDbBlockReadNetsBefore(dbBlock *) {}
+  virtual void inDbMoveInst(dbInst *) {}
+  virtual void inDbWireUpdate( dbWire * ) { }
 
   // allow ECO client initialization - payam
   virtual dbBlockCallBackObj &operator()() { return *this; }

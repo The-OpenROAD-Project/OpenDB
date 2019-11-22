@@ -78,7 +78,7 @@ public:
 		_current= 0;
 		_doIteratorAll= false;
 	}
-	Ath__array2d(int bCnt, bool mediumSize) // for max 1024 and 128, for quad
+	Ath__array2d(int bCnt, bool) // for max 1024 and 128, for quad
 	{
 		_bankCnt= 32;
 		if (bCnt>0)

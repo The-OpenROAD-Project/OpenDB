@@ -38,8 +38,6 @@
 #include "dbBTerm.h"
 #include "dbBox.h"
 #include "dbShape.h"
-#include "dbTmg.h"
-#include "dbTmgJournal.h"
 #include "dbTransform.h"
 #include "dbBoxItr.h"
 #include "dbBPinItr.h"
@@ -62,10 +60,6 @@ _dbBTerm::_dbBTerm( _dbDatabase * )
     _flags._spef = 0;
     _flags._special = 0;
     _flags._mark = 0;
-    _flags._tmgTmpA = 0;
-    _flags._tmgTmpB = 0;
-    _flags._tmgTmpC = 0; // payam
-    _flags._tmgTmpD = 0; // payam
     _flags._spare_bits = 0;
     _ext_id = 0;
     _name = 0;
@@ -77,7 +71,6 @@ _dbBTerm::_dbBTerm( _dbDatabase *, const _dbBTerm & b )
           _name( NULL ),
           _next_entry( b._next_entry ),
           _net( b._net ),
-          _tmg( b._tmg ),
           _next_bterm( b._next_bterm ),
           _prev_bterm( b._prev_bterm ),
           _parent_block( b._parent_block ),
@@ -135,9 +128,6 @@ bool _dbBTerm::operator==( const _dbBTerm & rhs ) const
     if( _net != rhs._net )
         return false;
     
-    if( _tmg != rhs._tmg )
-        return false;
-    
     if( _next_bterm != rhs._next_bterm )
         return false;
     
@@ -192,7 +182,6 @@ void _dbBTerm::differences( dbDiff & diff, const char * field, const _dbBTerm & 
         }
     }
 
-    DIFF_OBJECT(_tmg, lhs_blk->_tmg_tbl, rhs_blk->_tmg_tbl);
     DIFF_FIELD_NO_DEEP(_next_bterm);
     DIFF_FIELD_NO_DEEP(_prev_bterm);
     DIFF_FIELD_NO_DEEP(_parent_block);
@@ -226,7 +215,6 @@ void _dbBTerm::out( dbDiff & diff, char side, const char * field  ) const
         diff.report("%c _net %s\n", side, net->_name );
     }
 
-    DIFF_OUT_OBJECT(_tmg, blk->_tmg_tbl);
     DIFF_OUT_FIELD_NO_DEEP(_next_bterm);
     DIFF_OUT_FIELD_NO_DEEP(_prev_bterm);
     DIFF_OUT_FIELD_NO_DEEP(_parent_block);
@@ -245,7 +233,6 @@ dbOStream & operator<<( dbOStream & stream, const _dbBTerm & bterm )
     stream << bterm._name;
     stream << bterm._next_entry;
     stream << bterm._net;
-    stream << bterm._tmg;
     stream << bterm._next_bterm;
     stream << bterm._prev_bterm;
     stream << bterm._parent_block;
@@ -284,7 +271,6 @@ dbIStream & operator>>( dbIStream & stream, _dbBTerm & bterm )
         stream >> bp._pin;
     }
     
-    stream >> bterm._tmg;
     stream >> bterm._next_bterm;
     stream >> bterm._prev_bterm;
 
@@ -412,55 +398,6 @@ uint dbBTerm::getExtId()
     _dbBTerm * bterm = (_dbBTerm *) this;
     return bterm->_ext_id;
 }
-// added TmgTmpC, which says whether a term is an endpoint or not - payam
-void dbBTerm::setTmgTmpC(bool v)
-{
-    _dbBTerm * bterm = (_dbBTerm *) this;
-    bterm->_flags._tmgTmpC = v;
-}
-
-bool dbBTerm::isSetTmgTmpC()
-{
-    _dbBTerm * bterm = (_dbBTerm *) this;
-    return (bterm->_flags._tmgTmpC==1) ? true : false;
-}
-// added TmgTmpD, which says whether a term is a new pin - payam
-void dbBTerm::setTmgTmpD(bool v)
-{
-    _dbBTerm * bterm = (_dbBTerm *) this;
-    bterm->_flags._tmgTmpD = v;
-}
-
-bool dbBTerm::isSetTmgTmpD()
-{
-    _dbBTerm * bterm = (_dbBTerm *) this;
-    return (bterm->_flags._tmgTmpD==1) ? true : false;
-}
-
-
-void dbBTerm::setTmgTmpB(bool v)
-{
-    _dbBTerm * bterm = (_dbBTerm *) this;
-    bterm->_flags._tmgTmpB = v;
-}
-
-bool dbBTerm::isSetTmgTmpB()
-{
-    _dbBTerm * bterm = (_dbBTerm *) this;
-    return (bterm->_flags._tmgTmpB==1) ? true : false;
-}
-
-void dbBTerm::setTmgTmpA(bool v)
-{
-    _dbBTerm * bterm = (_dbBTerm *) this;
-    bterm->_flags._tmgTmpA = v;
-}
-
-bool dbBTerm::isSetTmgTmpA()
-{
-    _dbBTerm * bterm = (_dbBTerm *) this;
-    return (bterm->_flags._tmgTmpA==1) ? true : false;
-}
 
 dbNet *
 dbBTerm::getNet()
@@ -479,280 +416,6 @@ dbBTerm::getBPins()
     dbSet<dbBPin> bpins( this, block->_bpin_itr );
     return bpins;
 }
-
-void dbBTerm::initTiming()
-{
-    _dbBTerm * bterm = (_dbBTerm *) this;
-    _dbBlock * block = (_dbBlock *) getOwner();
-    ((dbBlock*)block)->initTmbTbl();  //  ex: "Tmg tmg" after "db read"
-
-    if ( bterm->_tmg == 0 )
-        bterm->_tmg = block->_tmg_tbl->createArray();
-
-    uint scns = (uint)block->_number_of_scenarios;
-    for (uint ks = 0; ks <= scns; ks++) {
-        _dbTmg * tmg_min = block->_tmg_tbl->getPtr(bterm->_tmg + TMG_MIN + ks*2);
-        _dbTmg * tmg_max = block->_tmg_tbl->getPtr(bterm->_tmg + TMG_MAX + ks*2);
-
-        // payam: changes MAX/MIN_INT to MAX/MINFLOAT
-        tmg_min->_slew_rise = FLT_MAX;
-        tmg_min->_slew_fall = FLT_MAX;
-        tmg_min->_slack_rise = FLT_MAX;
-        tmg_min->_slack_fall = FLT_MAX;
-        ///tmg_min->_scenario._slew_rise = 0;
-        ///tmg_min->_scenario._slew_fall = 0;
-        ///tmg_min->_scenario._slack_rise = 0;
-        ///tmg_min->_scenario._slack_fall = 0;
-
-        tmg_max->_slew_rise = FLT_MIN;
-        tmg_max->_slew_fall = FLT_MIN;
-        tmg_max->_slack_rise = FLT_MAX;
-        tmg_max->_slack_fall = FLT_MAX;
-        ///tmg_max->_scenario._slew_rise = 0;
-        ///tmg_max->_scenario._slew_fall = 0;
-        ///tmg_max->_scenario._slack_rise = 0;
-        ///tmg_max->_scenario._slack_fall = 0;
-    }
-}
-bool dbBTerm::getWorstSlack(float wns[2], float tns[2], uint scenario[2])
-{ 
-    _dbBTerm * bterm = (_dbBTerm *) this; 
-    _dbBlock * block = (_dbBlock *) getOwner(); 
-    
-    if ( bterm->_tmg == 0 ) 
-        return false; 
-    
-    //_dbTmg * tmg_min = block->_tmg_tbl->getPtr(bterm->_tmg); 
-    //_dbTmg * tmg_max = block->_tmg_tbl->getPtr(bterm->_tmg+1U); 
-    
-    //bool worstTerm= tmg_min->updateSlacks(wns, tns, scenario, TMG_MIN); 
-    //worstTerm= tmg_max->updateSlacks(wns, tns, scenario, TMG_MAX) || worstTerm; 
-
-    uint scns = (uint)block->_number_of_scenarios;
-    _dbTmg * tmg_min;
-    _dbTmg * tmg_max;
-    bool worstTermMin = false;
-    bool worstTermMax = false;
-    for (uint ks = 0; ks <= scns; ks++) {
-        tmg_min = block->_tmg_tbl->getPtr(bterm->_tmg + TMG_MIN + ks*2);
-        tmg_max = block->_tmg_tbl->getPtr(bterm->_tmg + TMG_MAX + ks*2);
-        if (tmg_min->updateSlacks(wns, tns, TMG_MIN)) {
-            scenario[TMG_MIN] = ks;
-            worstTermMin = true;
-        }
-        if (tmg_max->updateSlacks(wns, tns, TMG_MAX)) {
-            scenario[TMG_MAX] = ks;
-            worstTermMax = true;
-        }
-    }
-    if (worstTermMin)
-        tns[TMG_MIN] += wns[TMG_MIN];
-    if (worstTermMax)
-        tns[TMG_MAX] += wns[TMG_MAX];
-    
-    return (worstTermMin || worstTermMax);
-}
-// payam: type from int to float
-float dbBTerm::getSlewRise( dbTimingMode mode )
-{ 
-    uint scenario = 0; 
-    return getSlewRise( mode, scenario );
-}
-float dbBTerm::getSlewRise( dbTimingMode mode, uint scenario )
-{
-    _dbBTerm * bterm = (_dbBTerm *) this;
-
-    if ( bterm->_tmg == 0 )
-        initTiming();
-
-    _dbBlock * block = (_dbBlock *) getOwner();
-    float slew = block->_tmg_tbl->getPtr(bterm->_tmg + (uint) mode + scenario*2)->_slew_rise;
-    return slew;
-}
-
-// payam: type from int to float
-float dbBTerm::getSlewFall( dbTimingMode mode )
-{
-    uint scenario = 0; 
-    return getSlewFall( mode, scenario );
-}
-float dbBTerm::getSlewFall( dbTimingMode mode , uint scenario)
-{
-    _dbBTerm * bterm = (_dbBTerm *) this;
-    
-    if ( bterm->_tmg == 0 )
-        initTiming();
-
-    _dbBlock * block = (_dbBlock *) getOwner();
-    float slew = block->_tmg_tbl->getPtr(bterm->_tmg + (uint) mode + scenario*2)->_slew_fall;
-    return slew;
-}
-
-// payam: type from int to float
-float dbBTerm::getSlackRise( dbTimingMode mode )
-{
-    uint scenario = 0; 
-    return getSlackRise( mode, scenario );
-}
-float dbBTerm::getSlackRise( dbTimingMode mode, uint scenario )
-{
-    _dbBTerm * bterm = (_dbBTerm *) this;
-   
-    if ( bterm->_tmg == 0 )
-        initTiming();
-
-    _dbBlock * block = (_dbBlock *) getOwner();
-    float slack = block->_tmg_tbl->getPtr(bterm->_tmg + (uint) mode + scenario*2)->_slack_rise;
-    return slack;
-}
-
-// payam: type from int to float
-float dbBTerm::getSlackFall( dbTimingMode mode )
-{
-    uint scenario = 0; 
-    return getSlackFall( mode, scenario );
-}
-float dbBTerm::getSlackFall( dbTimingMode mode, uint scenario )
-{
-    _dbBTerm * bterm = (_dbBTerm *) this;
-  
-    if ( bterm->_tmg == 0 )
-        initTiming();
-
-    _dbBlock * block = (_dbBlock *) getOwner();
-    float slack = block->_tmg_tbl->getPtr(bterm->_tmg + (uint) mode + scenario*2)->_slack_fall;
-    return slack;
-}
-
-// payam: type from int to float
-void dbBTerm::setSlewRise( dbTimingMode mode, float value, uint scenario )
-{
-    _dbBTerm * bterm = (_dbBTerm *) this;
- 
-    if ( bterm->_tmg == 0 )
-        initTiming();
-
-    _dbBlock * block = (_dbBlock *) getOwner();
-    block->_tmg_tbl->getPtr(bterm->_tmg + (uint) mode + scenario*2)->_slew_rise = value;
-    if (scenario == 0)
-        return;
-    float wslew = value;
-    float nslew;
-    for (uint ks = 1; ks <= (uint)block->_number_of_scenarios && ks != scenario; ks++) {
-        nslew = block->_tmg_tbl->getPtr(bterm->_tmg + (uint) mode + ks*2)->_slew_rise;
-        if ((mode == TMG_MIN && nslew < wslew) || (mode == TMG_MAX && nslew > wslew)) {
-            wslew = nslew;
-        }
-    }
-    block->_tmg_tbl->getPtr(bterm->_tmg + (uint) mode)->_slew_rise = wslew;
-}
-
-// payam: type from int to float
-void dbBTerm::setSlewFall( dbTimingMode mode, float value, uint scenario )
-{
-    _dbBTerm * bterm = (_dbBTerm *) this;
-
-    if ( bterm->_tmg == 0 )
-        initTiming();
-
-    _dbBlock * block = (_dbBlock *) getOwner();
-    block->_tmg_tbl->getPtr(bterm->_tmg + (uint) mode + scenario*2)->_slew_fall = value;
-    if (scenario == 0)
-        return;
-    float wslew = value;
-    float nslew;
-    for (uint ks = 1; ks <= (uint)block->_number_of_scenarios && ks != scenario; ks++) {
-        nslew = block->_tmg_tbl->getPtr(bterm->_tmg + (uint) mode + ks*2)->_slew_fall;
-        if ((mode == TMG_MIN && nslew < wslew) || (mode == TMG_MAX && nslew > wslew)) {
-            wslew = nslew;
-        }
-    }
-    block->_tmg_tbl->getPtr(bterm->_tmg + (uint) mode)->_slew_fall = wslew;
-}
-
-// payam: type from int to float
-void dbBTerm::setSlackRise( dbTimingMode mode, float value, uint scenario )
-{
-    _dbBTerm * bterm = (_dbBTerm *) this;
-
-    if ( bterm->_tmg == 0 )
-        initTiming();
-
-    _dbBlock * block = (_dbBlock *) getOwner();
-    block->_tmg_tbl->getPtr(bterm->_tmg + (uint) mode + scenario*2)->_slack_rise = value;
-    if (scenario == 0)
-        return;
-    float wslack = value;
-    float nslack;
-    for (uint ks = 1; ks <= (uint)block->_number_of_scenarios && ks != scenario; ks++) {
-        nslack = block->_tmg_tbl->getPtr(bterm->_tmg + (uint) mode + ks*2)->_slack_rise;
-        if (nslack < wslack) {
-            wslack = nslack;
-        }
-    }
-    block->_tmg_tbl->getPtr(bterm->_tmg + (uint) mode)->_slack_rise = wslack;
-
-    uint ii= (uint) mode;
-    if ((block->_flags._active_pins>0) && (value<0.0) ){ 
-        block->_WNS[ii]= MIN(block->_WNS[ii], value); 
-        block->_TNS[ii] += value; 
-    }
-}
-
-// payam: type from int to float
-void dbBTerm::setSlackFall( dbTimingMode mode, float value, uint scenario )
-{
-    _dbBTerm * bterm = (_dbBTerm *) this;
-
-    if ( bterm->_tmg == 0 )
-        initTiming();
-
-    _dbBlock * block = (_dbBlock *) getOwner();
-    block->_tmg_tbl->getPtr(bterm->_tmg + (uint) mode + scenario*2)->_slack_fall = value;
-    if (scenario == 0)
-        return;
-    float wslack = value;
-    float nslack;
-    for (uint ks = 1; ks <= (uint)block->_number_of_scenarios && ks != scenario; ks++) {
-        nslack = block->_tmg_tbl->getPtr(bterm->_tmg + (uint) mode + ks*2)->_slack_fall;
-        if (nslack < wslack) {
-            wslack = nslack;
-        }
-    }
-    block->_tmg_tbl->getPtr(bterm->_tmg + (uint) mode)->_slack_fall = wslack;
-
-    uint ii= (uint) mode;
-    if ((block->_flags._active_pins>0) && (value<0.0) ){ 
-        block->_WNS[ii]= MIN(block->_WNS[ii], value); 
-        block->_TNS[ii] += value; 
-    }
-}
-
-//void dbBTerm::ecoTiming()
-//{
-//    _dbBTerm * bterm = (_dbBTerm *) this;
-//    _dbBlock * block = (_dbBlock *) getOwner();
-//
-//    if ( bterm->_tmg == 0 )
-//        initTiming();
-//
-//    if ( block->_tmg_journal )
-//    {
-//        _dbTmg * min_tmg = block->_tmg_tbl->getPtr(bterm->_tmg + (uint) TMG_MIN);
-//        _dbTmg * max_tmg = block->_tmg_tbl->getPtr(bterm->_tmg + (uint) TMG_MAX);
-//        block->_tmg_journal->beginAction( dbTmgJournal::UPDATE_ITERM_TMG );
-//        block->_tmg_journal->pushParam( bterm->getId() );
-//        block->_tmg_journal->pushParam( min_tmg->_slew_rise );
-//        block->_tmg_journal->pushParam( max_tmg->_slew_rise );
-//        block->_tmg_journal->pushParam( min_tmg->_slew_fall );
-//        block->_tmg_journal->pushParam( max_tmg->_slew_fall );
-//        block->_tmg_journal->pushParam( min_tmg->_slack_rise );
-//        block->_tmg_journal->pushParam( max_tmg->_slack_rise );
-//        block->_tmg_journal->pushParam( min_tmg->_slack_fall );
-//        block->_tmg_journal->pushParam( max_tmg->_slack_fall );
-//        block->_tmg_journal->endAction();
-//    }
-//}
 
 dbITerm *
 dbBTerm::getITerm()
@@ -952,9 +615,6 @@ void dbBTerm::destroy( dbBTerm * bterm_ )
         }
     }
 
-    if ( bterm->_tmg )
-        block->_tmg_tbl->destroyArray( bterm->_tmg );
-
     dbProperty::destroyProperties(bterm);
     block->_bterm_tbl->destroy(bterm);
 }
@@ -972,6 +632,18 @@ dbBTerm::getBTerm( dbBlock * block_, uint dbid_ )
 {
     _dbBlock * block = (_dbBlock *) block_;
     return (dbBTerm *) block->_bterm_tbl->getPtr( dbid_ );
+}
+
+uint32_t dbBTerm::staVertexId()
+{
+  _dbBTerm * iterm = (_dbBTerm *) this;
+  return iterm->_sta_vertex_id;
+}
+
+void dbBTerm::staSetVertexId(uint32_t id)
+{
+  _dbBTerm * iterm = (_dbBTerm *) this;
+  iterm->_sta_vertex_id = id;
 }
 
 } // namespace

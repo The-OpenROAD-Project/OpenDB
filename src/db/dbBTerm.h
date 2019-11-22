@@ -56,7 +56,6 @@ namespace odb {
 
 class _dbNet;
 class _dbBox;
-class _dbTmg;
 class _dbBlock;
 class _dbBPin;
 class _dbITerm;
@@ -74,10 +73,6 @@ struct _dbBTermFlags
     uint                       _spef       : 1;
     uint                       _special    : 1;
     uint                       _mark       : 1;
-    uint                       _tmgTmpA    : 1;
-    uint                       _tmgTmpB    : 1;
-    uint                       _tmgTmpC    : 1; // payam
-    uint                       _tmgTmpD    : 1; // payam
     uint                       _spare_bits : 11;
 };
 
@@ -93,7 +88,6 @@ class _dbBTerm : public dbObject
     char *                     _name;
     dbId<_dbBTerm>             _next_entry;
     dbId<_dbNet>               _net;
-    dbId<_dbTmg>               _tmg;
     dbId<_dbBTerm>             _next_bterm;
     dbId<_dbBTerm>             _prev_bterm;
     dbId<_dbBlock>             _parent_block; // Up hierarchy: TWG
@@ -101,6 +95,7 @@ class _dbBTerm : public dbObject
     dbId<_dbBPin>              _bpins;        // Up hierarchy: TWG
     dbId<_dbBPin>              _ground_pin;
     dbId<_dbBPin>              _supply_pin;
+    uint32_t _sta_vertex_id; // not saved
 
     _dbBTerm( _dbDatabase * );
     _dbBTerm( _dbDatabase *, const _dbBTerm & b );

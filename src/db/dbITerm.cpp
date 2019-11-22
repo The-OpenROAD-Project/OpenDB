@@ -35,7 +35,6 @@
 #include "dbBTerm.h"
 #include "dbChip.h"
 #include "dbInst.h"
-#include "dbTmg.h"
 #include "dbInstHdr.h"
 #include "dbNet.h"
 #include "dbLib.h"
@@ -48,7 +47,6 @@
 #include "dbTable.hpp"
 #include "dbShape.h"
 #include "dbJournal.h"
-#include "dbTmgJournal.h"
 #include "db.h"
 #include "dbDiff.hpp"
 #include "logger.h"
@@ -88,9 +86,6 @@ bool _dbITerm::operator==( const _dbITerm & rhs ) const
     if( _inst != rhs._inst )
         return false;
 
-    if( _tmg != rhs._tmg )
-        return false;
-    
     if( _next_net_iterm != rhs._next_net_iterm )
         return false;
     
@@ -127,7 +122,6 @@ void _dbITerm::differences( dbDiff & diff, const char * field, const _dbITerm & 
         DIFF_BEGIN
         DIFF_FIELD( _net);
         DIFF_FIELD( _inst);
-        DIFF_FIELD( _tmg);
         DIFF_FIELD( _flags._mterm_idx);
         DIFF_FIELD( _flags._spef);
         DIFF_FIELD( _flags._special);
@@ -167,7 +161,6 @@ void _dbITerm::differences( dbDiff & diff, const char * field, const _dbITerm & 
             diff.out( dbDiff::RIGHT, "_net", rhs_net->_name );
         }
 
-        DIFF_OBJECT( _tmg, lhs_blk->_tmg_tbl, rhs_blk->_tmg_tbl );
         DIFF_FIELD( _flags._spef);
         DIFF_FIELD( _flags._special);
         DIFF_FIELD( _flags._connected);
@@ -183,7 +176,6 @@ void _dbITerm::out( dbDiff & diff, char side, const char * field  ) const
         DIFF_OUT_BEGIN
         DIFF_OUT_FIELD( _net);
         DIFF_OUT_FIELD( _inst);
-        DIFF_OUT_FIELD( _tmg);
         DIFF_OUT_FIELD( _flags._mterm_idx);
         DIFF_OUT_FIELD( _flags._spef);
         DIFF_OUT_FIELD( _flags._special);
@@ -205,7 +197,6 @@ void _dbITerm::out( dbDiff & diff, char side, const char * field  ) const
             diff.out( side, "_net", net->_name );
         }
 
-        DIFF_OUT_OBJECT( _tmg, blk->_tmg_tbl );
         DIFF_OUT_FIELD( _flags._spef);
         DIFF_OUT_FIELD( _flags._special);
         DIFF_OUT_FIELD( _flags._connected);
@@ -294,326 +285,6 @@ dbITerm::getBTerm()
     dbId<_dbBTerm> bterm = hier->_child_bterms[iterm->_flags._mterm_idx];
     return (dbBTerm *) child->_bterm_tbl->getPtr(bterm);
 }
-
-void dbITerm::initTiming()
-{
-    _dbITerm * iterm = (_dbITerm *) this;
-    _dbBlock * block = (_dbBlock *) getOwner();
-    ((dbBlock*)block)->initTmbTbl();  //  ex: "Tmg tmg" after "db read"
-
-    if ( iterm->_tmg == 0 )
-        iterm->_tmg = block->_tmg_tbl->createArray();
-
-    uint scns = (uint)block->_number_of_scenarios;
-    for (uint ks = 0; ks <= scns; ks++) {
-        _dbTmg * tmg_min = block->_tmg_tbl->getPtr(iterm->_tmg + TMG_MIN + ks*2);
-        _dbTmg * tmg_max = block->_tmg_tbl->getPtr(iterm->_tmg + TMG_MAX + ks*2);
-
-        // payam: changes MAX/MIN_INT to MAX/MINFLOAT
-        tmg_min->_slew_rise = FLT_MAX;
-        tmg_min->_slew_fall = FLT_MAX;
-        tmg_min->_slack_rise = FLT_MAX;
-        tmg_min->_slack_fall = FLT_MAX;
-        ///tmg_min->_scenario._slew_rise = 0;
-        ///tmg_min->_scenario._slew_fall = 0;
-        ///tmg_min->_scenario._slack_rise = 0;
-        ///tmg_min->_scenario._slack_fall = 0;
-
-        tmg_max->_slew_rise = FLT_MIN;
-        tmg_max->_slew_fall = FLT_MIN;
-        tmg_max->_slack_rise = FLT_MAX;
-        tmg_max->_slack_fall = FLT_MAX;
-        ///tmg_max->_scenario._slew_rise = 0;
-        ///tmg_max->_scenario._slew_fall = 0;
-        ///tmg_max->_scenario._slack_rise = 0;
-        ///tmg_max->_scenario._slack_fall = 0;
-    }
-}
-bool dbITerm::getWorstSlack(float wns[2], float tns[2], uint scenario[2])
-{ 
-    _dbITerm * iterm = (_dbITerm *) this; 
-    _dbBlock * block = (_dbBlock *) getOwner(); 
-   
-    if ( iterm->_tmg == 0 ) 
-        return false; 
-    
-    //_dbTmg * tmg_min = block->_tmg_tbl->getPtr(iterm->_tmg); 
-    //_dbTmg * tmg_max = block->_tmg_tbl->getPtr(iterm->_tmg+1U); 
-    
-    //bool worstTerm= tmg_min->updateSlacks(wns, tns, scenario, TMG_MIN); 
-    //worstTerm= tmg_max->updateSlacks(wns, tns, scenario, TMG_MAX) || worstTerm; 
-
-    uint scns = (uint)block->_number_of_scenarios;
-    _dbTmg * tmg_min;
-    _dbTmg * tmg_max;
-    bool worstTermMin = false;
-    bool worstTermMax = false;
-    for (uint ks = 1; ks <= scns; ks++) {
-        tmg_min = block->_tmg_tbl->getPtr(iterm->_tmg + TMG_MIN + ks*2);
-        tmg_max = block->_tmg_tbl->getPtr(iterm->_tmg + TMG_MAX + ks*2);
-        if (tmg_min->updateSlacks(wns, tns, TMG_MIN)) {
-            scenario[TMG_MIN] = ks;
-            worstTermMin = true;
-        }
-        if (tmg_max->updateSlacks(wns, tns, TMG_MAX)) {
-            scenario[TMG_MAX] = ks;
-            worstTermMax = true;
-        }
-    }
-    if (worstTermMin)
-        tns[TMG_MIN] += wns[TMG_MIN];
-    if (worstTermMax)
-        tns[TMG_MAX] += wns[TMG_MAX];
-    
-    return (worstTermMin || worstTermMax);
-}
-// payam: return type from int to float
-float dbITerm::getSlewRise( dbTimingMode mode )
-{ 
-    uint scenario = 0; 
-    return getSlewRise( mode, scenario );
-}
-float dbITerm::getSlewRise( dbTimingMode mode, uint scenario )
-{
-    _dbITerm * iterm = (_dbITerm *) this;
-
-    if ( iterm->_tmg == 0 )
-        initTiming();
-    
-    _dbBlock * block = (_dbBlock *) getOwner();
-    float slew = block->_tmg_tbl->getPtr(iterm->_tmg + (uint) mode + scenario*2)->_slew_rise;
-    if(isDebug("TMG_DB", "L")) {
-	const char* iname= getInst()->getConstName();
-	const char* mname= getMTerm()->getConstName();
-	debug("TMG_DB","L","#%d SlewRise[%d]-[S%d]: %g %s/%s\n", 
-		getId(), mode, scenario, slew, iname, mname);
-    }
-    return slew;
-}
-
-// payam: return type from int to float
-float dbITerm::getSlewFall( dbTimingMode mode )
-{
-    uint scenario = 0; 
-    return getSlewFall( mode, scenario );
-}
-float dbITerm::getSlewFall( dbTimingMode mode, uint scenario )
-{
-    _dbITerm * iterm = (_dbITerm *) this;
-
-    if ( iterm->_tmg == 0 )
-        initTiming();
-
-    _dbBlock * block = (_dbBlock *) getOwner();
-    float slew = block->_tmg_tbl->getPtr(iterm->_tmg + (uint) mode + scenario*2)->_slew_fall;
-    if(isDebug("TMG_DB", "L")) {
-	const char* iname= getInst()->getConstName();
-	const char* mname= getMTerm()->getConstName();
-	debug("TMG_DB","L","#%d SlewFall[%d]-[S%d]: %g %s/%s\n", 
-		getId(), mode, scenario, slew, iname, mname);
-    }
-    return slew;
-}
-
-// payam: return type from int to float
-float dbITerm::getSlackRise( dbTimingMode mode )
-{
-    uint scenario = 0; 
-    return getSlackRise( mode, scenario );
-}
-float dbITerm::getSlackRise( dbTimingMode mode, uint scenario )
-{
-    _dbITerm * iterm = (_dbITerm *) this;
-
-    if ( iterm->_tmg == 0 )
-        initTiming();
-
-    _dbBlock * block = (_dbBlock *) getOwner();
-    float slack = block->_tmg_tbl->getPtr(iterm->_tmg + (uint) mode + scenario*2)->_slack_rise;
-
-    if(isDebug("TMG_DB", "I")) {
-	const char* iname= getInst()->getConstName();
-	const char* mname= getMTerm()->getConstName();
-	debug("TMG_DB","I","#%d SlackRise[%d]-[S%d]: %g %s/%s\n", 
-		getId(), mode, scenario, slack, iname, mname);
-
-    	_dbBlock * block = (_dbBlock *) getOwner();
-    	uint scns = (uint)block->_number_of_scenarios;
-	for (uint ii= 0; ii<=scns; ii++) {
-    		float v = block->_tmg_tbl->getPtr(iterm->_tmg + (uint) mode + ii*2)->_slack_rise;
-		debug("TMG_DB","I","\t%d %g\n", ii, v);
-	}
-
-    }
-    return slack;
-}
-
-// payam: return type from int to float
-float dbITerm::getSlackFall( dbTimingMode mode )
-{
-    uint scenario = 0; 
-    return getSlackFall( mode, scenario );
-}
-float dbITerm::getSlackFall( dbTimingMode mode, uint scenario )
-{
-    _dbITerm * iterm = (_dbITerm *) this;
-
-    if ( iterm->_tmg == 0 )
-        initTiming();
-
-    _dbBlock * block = (_dbBlock *) getOwner();
-    float slack = block->_tmg_tbl->getPtr(iterm->_tmg + (uint) mode + scenario*2)->_slack_fall;
-    if(isDebug("TMG_DB", "I")) {
-	const char* iname= getInst()->getConstName();
-	const char* mname= getMTerm()->getConstName();
-	debug("TMG_DB","I","#%d SlackFall[%d]-[S%d]: %g %s/%s\n", 
-		getId(), mode, scenario, slack, iname, mname);
-
-    	_dbBlock * block = (_dbBlock *) getOwner();
-    	uint scns = (uint)block->_number_of_scenarios;
-	for (uint ii= 0; ii<=scns; ii++) {
-    		float v = block->_tmg_tbl->getPtr(iterm->_tmg + (uint) mode + ii*2)->_slack_fall;
-		debug("TMG_DB","I","\t%d %g\n", ii, v);
-	}
-    }
-    return slack;
-}
-
-// payam: type from int to float
-void dbITerm::setSlewRise( dbTimingMode mode, float value, uint scenario )
-{
-    _dbITerm * iterm = (_dbITerm *) this;
-
-    if ( iterm->_tmg == 0 )
-        initTiming();
-
-    _dbBlock * block = (_dbBlock *) getOwner();
-    block->_tmg_tbl->getPtr(iterm->_tmg + (uint) mode + scenario*2)->_slew_rise = value;
-    if (scenario == 0)
-        return;
-    float wslew = value;
-    float nslew;
-    // dimitri_fix uint ws = scenario;
-    for (uint ks = 1; ks <= (uint)block->_number_of_scenarios && ks != scenario; ks++) {
-        nslew = block->_tmg_tbl->getPtr(iterm->_tmg + (uint) mode + ks*2)->_slew_rise;
-        if ((mode == TMG_MIN && nslew < wslew) || (mode == TMG_MAX && nslew > wslew)) {
-            wslew = nslew;
-            // dimitri_fix ws = ks;
-        }
-    }
-    block->_tmg_tbl->getPtr(iterm->_tmg + (uint) mode)->_slew_rise = wslew;
-}
-
-// payam: type from int to float
-void dbITerm::setSlewFall( dbTimingMode mode, float value, uint scenario )
-{
-    _dbITerm * iterm = (_dbITerm *) this;
-
-    if ( iterm->_tmg == 0 )
-        initTiming();
-
-    _dbBlock * block = (_dbBlock *) getOwner();
-    block->_tmg_tbl->getPtr(iterm->_tmg + (uint) mode + scenario*2)->_slew_fall = value;
-    if (scenario == 0)
-        return;
-    float wslew = value;
-    float nslew;
-    // dimitri_fix uint ws = scenario;
-    for (uint ks = 1; ks <= (uint)block->_number_of_scenarios && ks != scenario; ks++) {
-        nslew = block->_tmg_tbl->getPtr(iterm->_tmg + (uint) mode + ks*2)->_slew_fall;
-        if ((mode == TMG_MIN && nslew < wslew) || (mode == TMG_MAX && nslew > wslew)) {
-            wslew = nslew;
-            // dimitri_fix ws = ks;
-        }
-    }
-    block->_tmg_tbl->getPtr(iterm->_tmg + (uint) mode)->_slew_fall = wslew;
-}
-void dbITerm::setSlackRise( dbTimingMode mode, float value, uint scenario )
-{
-    _dbITerm * iterm = (_dbITerm *) this;
-
-    if ( iterm->_tmg == 0 )
-        initTiming();
-
-    _dbBlock * block = (_dbBlock *) getOwner();
-    block->_tmg_tbl->getPtr(iterm->_tmg + (uint) mode + scenario*2)->_slack_rise = value;
-    if (scenario == 0)
-        return;
-    float wslack = value;
-    float nslack;
-    // dimitri_fix uint ws = scenario;
-    for (uint ks = 1; ks <= (uint)block->_number_of_scenarios && ks != scenario; ks++) {
-        nslack = block->_tmg_tbl->getPtr(iterm->_tmg + (uint) mode + ks*2)->_slack_rise;
-        if (nslack < wslack) {
-            wslack = nslack;
-            // dimitri_fix ws = ks;
-        }
-    }
-    block->_tmg_tbl->getPtr(iterm->_tmg + (uint) mode)->_slack_rise = wslack;
-
-    uint ii= (uint) mode;
-    if ((block->_flags._active_pins>0) && (value<0.0) ) { 
-        block->_WNS[ii]= MIN(block->_WNS[ii], value); 
-        block->_TNS[ii] += value;
-    }
-}
-
-// payam: type from int to float
-void dbITerm::setSlackFall( dbTimingMode mode, float value, uint scenario )
-{
-    _dbITerm * iterm = (_dbITerm *) this;
-
-    if ( iterm->_tmg == 0 )
-        initTiming();
-
-    _dbBlock * block = (_dbBlock *) getOwner();
-    block->_tmg_tbl->getPtr(iterm->_tmg + (uint) mode + scenario*2)->_slack_fall = value;
-    if (scenario == 0)
-        return;
-    float wslack = value;
-    float nslack;
-// dimitri_fix     uint ws = scenario;
-    for (uint ks = 1; ks <= (uint)block->_number_of_scenarios && ks != scenario; ks++) {
-        nslack = block->_tmg_tbl->getPtr(iterm->_tmg + (uint) mode + ks*2)->_slack_fall;
-        if (nslack < wslack) {
-            wslack = nslack;
-            // dimitri_fix ws = ks;
-        }
-    }
-    block->_tmg_tbl->getPtr(iterm->_tmg + (uint) mode)->_slack_fall = wslack;
-
-    uint ii= (uint) mode;
-    if ((block->_flags._active_pins>0) && (value<0.0) ) { 
-        block->_WNS[ii]= MIN(block->_WNS[ii], value); 
-        block->_TNS[ii] += value;
-    }
-}
-
-//void dbITerm::ecoTiming()
-//{
-//    _dbITerm * iterm = (_dbITerm *) this;
-//    _dbBlock * block = (_dbBlock *) getOwner();
-//
-//    if ( iterm->_tmg == 0 )
-//        initTiming();
-//
-//    if ( block->_tmg_journal )
-//    {
-//        _dbTmg * min_tmg = block->_tmg_tbl->getPtr(iterm->_tmg + (uint) TMG_MIN);
-//        _dbTmg * max_tmg = block->_tmg_tbl->getPtr(iterm->_tmg + (uint) TMG_MAX);
-//        block->_tmg_journal->beginAction( dbTmgJournal::UPDATE_ITERM_TMG );
-//        block->_tmg_journal->pushParam( iterm->getId() );
-//        block->_tmg_journal->pushParam( min_tmg->_slew_rise );
-//        block->_tmg_journal->pushParam( max_tmg->_slew_rise );
-//        block->_tmg_journal->pushParam( min_tmg->_slew_fall );
-//        block->_tmg_journal->pushParam( max_tmg->_slew_fall );
-//        block->_tmg_journal->pushParam( min_tmg->_slack_rise );
-//        block->_tmg_journal->pushParam( max_tmg->_slack_rise );
-//        block->_tmg_journal->pushParam( min_tmg->_slack_fall );
-//        block->_tmg_journal->pushParam( max_tmg->_slack_fall );
-//        block->_tmg_journal->endAction();
-//    }
-//}
 
 dbBlock *
 dbITerm::getBlock()
@@ -706,56 +377,6 @@ void dbITerm::setSpef(uint v)
         block->_journal->updateField( this, _dbNet::FLAGS, prev_flags, FLAGS(iterm) );
     }
 #endif
-}
-
-// added TmgTmpD, which says whether a term is an new pin or not - payam
-void dbITerm::setTmgTmpD(bool v)
-{
-    _dbITerm * iterm = (_dbITerm *) this;
-    iterm->_flags._tmgTmpD = v;
-}
-
-bool dbITerm::isSetTmgTmpD()
-{
-    _dbITerm * iterm = (_dbITerm *) this;
-    return (iterm->_flags._tmgTmpD==1) ? true : false;
-}
-
-// added TmgTmpC, which says whether a term is an endpoint or not - payam
-void dbITerm::setTmgTmpC(bool v)
-{
-    _dbITerm * iterm = (_dbITerm *) this;
-    iterm->_flags._tmgTmpC = v;
-}
-
-bool dbITerm::isSetTmgTmpC()
-{
-    _dbITerm * iterm = (_dbITerm *) this;
-    return (iterm->_flags._tmgTmpC==1) ? true : false;
-}
-
-void dbITerm::setTmgTmpB(bool v)
-{
-    _dbITerm * iterm = (_dbITerm *) this;
-    iterm->_flags._tmgTmpB = v;
-}
-
-bool dbITerm::isSetTmgTmpB()
-{
-    _dbITerm * iterm = (_dbITerm *) this;
-    return (iterm->_flags._tmgTmpB==1) ? true : false;
-}
-
-void dbITerm::setTmgTmpA(bool v)
-{
-    _dbITerm * iterm = (_dbITerm *) this;
-    iterm->_flags._tmgTmpA = v;
-}
-
-bool dbITerm::isSetTmgTmpA()
-{
-    _dbITerm * iterm = (_dbITerm *) this;
-    return (iterm->_flags._tmgTmpA==1) ? true : false;
 }
 
 bool dbITerm::isSpef()
@@ -927,9 +548,6 @@ dbITerm::disconnect( dbITerm * iterm_ )
     }
 
     iterm->_net = 0;
-
-    if ( iterm->_tmg )
-        iterm_->initTiming();
 }
 
 dbSet<dbITerm>::iterator dbITerm::disconnect( dbSet<dbITerm>::iterator & itr )
@@ -1043,4 +661,17 @@ void dbITerm::print(FILE *fp, const char *trail)
 			getMTerm()->getMaster()->getConstName(),getInst()->getConstName(), trail);
 	}
 }
+
+uint32_t dbITerm::staVertexId()
+{
+  _dbITerm * iterm = (_dbITerm *) this;
+  return iterm->_sta_vertex_id;
+}
+
+void dbITerm::staSetVertexId(uint32_t id)
+{
+  _dbITerm * iterm = (_dbITerm *) this;
+  iterm->_sta_vertex_id = id;
+}
+
 } // namespace

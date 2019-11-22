@@ -2925,20 +2925,6 @@ uint dbNet::setLevelAtFanout(uint level, bool fromPI, std::vector<dbInst *> &ins
 	return cnt;
 }
 
-void dbNet::ecoInvalidateTiming()
-{
-  _dbBlock * block = (_dbBlock *)getOwner();
-  if ( block->_journal )
-  {
-    debug("DB_ECO","A","ECO: dbNet %d, invalidateTiming", getId());
-    block->_journal->beginAction( dbJournal::UPDATE_FIELD );
-    block->_journal->pushParam( dbNetObj );
-    block->_journal->pushParam( getId() );
-    block->_journal->pushParam( _dbNet::INVALIDATETIMING );
-    block->_journal->endAction();
-  }
-}
-
 #if 0
 //
 // Helper fn: given a net create two terms at endpoints (x1,y1) and (x2,y2)

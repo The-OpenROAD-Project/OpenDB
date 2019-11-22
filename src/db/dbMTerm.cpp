@@ -153,7 +153,7 @@ _dbMTerm::_dbMTerm( _dbDatabase *, const _dbMTerm & m )
           _targets(m._targets),
           _oxide1(m._oxide1),
           _oxide2(m._oxide2),
-          _timing_data(m._timing_data)
+          _sta_port(m._sta_port)
 {
     if ( m._name )
     {
@@ -348,13 +348,6 @@ dbMTerm::getMPins()
     return dbSet<dbMPin>( mterm, master->_mpin_itr );
 }
 
-void
-dbMTerm::setTimingData(void *ptr) 
-{
-    _dbMTerm * mterm = (_dbMTerm *) this;
-    mterm->_timing_data = ptr;
-}
-
 dbSet<dbTarget>
 dbMTerm::getTargets()
 {
@@ -363,10 +356,16 @@ dbMTerm::getTargets()
     return dbSet<dbTarget>( mterm, master->_target_itr );
 }
 
-void * dbMTerm::getTimingData()
+void * dbMTerm::staPort()
 {
     _dbMTerm * mterm = (_dbMTerm *) this;
-    return mterm->_timing_data;
+    return mterm->_sta_port;
+}
+
+void dbMTerm::staSetPort( void *port )
+{
+    _dbMTerm * mterm = (_dbMTerm *) this;
+    mterm->_sta_port = port;
 }
 
 int dbMTerm::getIndex()

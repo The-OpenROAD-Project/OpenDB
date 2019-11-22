@@ -148,8 +148,6 @@ class dbViaParams;
 // Extraction Objects
 class dbExtControl;
 
-enum dbTimingMode { TMG_MIN=0, TMG_MAX=1 };
-
 ///////////////////////////////////////////////////////////////////////////////
 ///
 /// C-string wrapper classe. Strings returned from the database are returned
@@ -477,8 +475,6 @@ class dbDatabase : public dbObject
     void writeWires( FILE * file, dbBlock * block );
     void writeNets( FILE * file, dbBlock * block );
     void writeParasitics( FILE * file, dbBlock * block );
-    void writeTiming( FILE * file, dbBlock * block );
-    void writeTiming( FILE * file, dbBlock * block, dbTimingMode mode );
     void readTech( FILE * file );
     void readLib( FILE * file, dbLib * );
     void readLibs( FILE * file );
@@ -487,16 +483,6 @@ class dbDatabase : public dbObject
     void readNets( FILE * file, dbBlock * block );
     void readParasitics( FILE * file, dbBlock * block );
     void readChip( FILE * file );
-
-    enum TimingReadOp
-    {
-        TMG_OVERWRITE,
-        TMG_MERGE_MIN,
-        TMG_MERGE_MAX,
-    };
-    
-    void readTiming( FILE * file, dbBlock * block, TimingReadOp slew_op[2], TimingReadOp slack_op[2] );
-    void readTiming( FILE * file, dbBlock * block, dbTimingMode mode, TimingReadOp slew_op, TimingReadOp slack_op );
 
     ///
     /// ECO - The following methods implement a simple ECO mechanism for capturing
@@ -543,41 +529,6 @@ class dbDatabase : public dbObject
     /// Commit any pending netlist changes.
     ///
     static void commitEco( dbBlock * block );
-
-    ///
-    /// Begin collecting timing changes on specified block.
-    /// 
-    /// NOTE: Eco changes can not be nested at this time.
-    ///
-    static void beginTmgEco( dbBlock * block, int scenario );
-
-    ///
-    /// End collecting timing changes on specified block.
-    /// 
-    static void endTmgEco( dbBlock * block );
-
-    ///
-    /// Returns true of the pending eco is empty
-    /// 
-    static bool ecoTmgEmpty( dbBlock * block );
-
-    ///
-    /// Merge the scenario changes from the specified stream to be applied to the specified
-    /// block.
-    ///
-    static void mergeTmgEco( dbBlock * block, FILE * stream, int scenario );
-
-    ///
-    /// Write the eco netlist changes to the specified stream.
-    ///
-    static void writeTmgEco( dbBlock * block,  FILE * stream );
-
-    static int checkTmgEco( dbBlock * block);
-
-    ///
-    /// Commit any pending timing changes.
-    ///
-    static void commitTmgEco( dbBlock * block );
 
     ///
     /// Initializes the database to nothing.
@@ -1028,7 +979,6 @@ class dbBlock : public dbObject
     /// Returns NULL if the object was not found.
     ///
     dbNet * findNet( const char * name );
-	dbNet* findNet_tmg(const char* net_name); // tmg: bNet *tmg_findNet(dbBlock *block, const char *net_name)
 
     ///
     /// Find a set of nets. Each name can be real name, or Nxxx, or xxx,
@@ -1206,40 +1156,6 @@ class dbBlock : public dbObject
     /// get extraction data block for one extraction corner
     ///^M
     dbBlock *getExtCornerBlock(uint corner);
-
-    ///
-    /// Initialize timing information from all iterms and all bterms,
-    /// expect power and ground terminals.
-    ///
-    void initTiming();
-
-    ///^M
-    /// Initialize timing data table. set array size to 2*numberOfScenario
-    ///^M
-    void initTmbTbl();
-
-    ///
-    /// Invalidate timing of remote nodes
-    ///
-    void ecoInvalidateTiming();
-
-    ///
-    /// Clears timing information from all iterms and all bterms.
-    ///
-    void clearTiming();
-    int beginTmgUpdate(bool mme, bool noActivePins);
-    uint endTmgUpdate();
-    void makeSlackProperty(bool activePins=false, int tmgIndex=-1);
-    void printSlackProperties(bool activePins=false, int tmgIndex=-1, FILE *fp=NULL);
-    void getSlackPropertyName(bool actPins, bool max, const char *slack, int tmgIndex, char *buf);
-    uint printSlackTrace(bool max, bool wns, FILE *fp);
-
-    void setSlacks(float wns[2], float tns[2], uint scenario[2]);
-    void setTmgUpdateIndex(int v);
-    int getTmgUpdateIndex();
-    bool is_mme_update();
-    void set_mme_update(bool value);
-
 
     ///
     /// when stream out a hier. block it will not stream references to children
@@ -1467,11 +1383,6 @@ class dbBlock : public dbObject
     dbSet<dbTechNonDefaultRule> getNonDefaultRules();
 
     ///
-    ///  add opt statitiscs
-    ///
-    void addOptStats( const char * identifier, uint addedCells, uint resizedCells, uint removedCells, double slack[2] );
-
-    ///
     ///  Levelelize from set of insts
     ///
 	uint levelize(std::vector<dbInst *> & startingInsts, std::vector<dbInst *> & instsToBeLeveled);
@@ -1536,25 +1447,6 @@ public:
     /// Get the Container class for Insts Search DB
     ///
 	// ZPtr<ISdb> getSearchDbInsts();
-
-    ///
-    /// Set the number of remote timing scenarios.
-    /// The scenarios are labled 1..N
-    /// This method will destroy the current set of dbMetrics.
-    ///
-    void setNumberOfScenarios(int n);
-
-    ///
-    /// Get the number of remote timing scenarios.
-    /// 
-    int getNumberOfScenarios();
-
-    ///
-    /// Return the timing metrics for the given scenario.
-    /// The remote scenarios are labled 1..N,
-    /// getScenario(0) returns the metrics for the main node.
-    ///
-    dbMetrics * getScenario( int s );
 
     /// 
     /// This method copies the via-table from the src block to the destination block.
@@ -1735,46 +1627,6 @@ class dbBTerm : public dbObject
     ///
 	void setSpecial();
 
-    ///
-    /// Set the tmg-tmp-D flag. - payam
-    ///
-    void setTmgTmpD( bool v ); // payam
-
-    ///
-    /// returns true if the tmg-tmp-D flag is set. - payam
-    ///
-    bool isSetTmgTmpD(); // payam
-
-    ///
-    /// Set the tmg-tmp-C flag. - payam
-    ///
-    void setTmgTmpC( bool v ); // payam
-
-    ///
-    /// returns true if the tmg-tmp-C flag is set. - payam
-    ///
-    bool isSetTmgTmpC(); // payam
-
-    ///
-    /// Set the tmg-tmp-B flag.
-    ///
-    void setTmgTmpB( bool v );
-
-    ///
-    /// returns true if the tmg-tmp-B flag is set.
-    ///
-    bool isSetTmgTmpB();
-
-    ///
-    /// Set the tmg-tmp-A flag.
-    ///
-    void setTmgTmpA( bool v );
-
-    ///
-    /// returns true if the tmg-tmp-A flag is set.
-    ///
-    bool isSetTmgTmpA();
-
     /// Get the net of this block-terminal.
     ///
     dbNet * getNet();
@@ -1816,42 +1668,6 @@ class dbBTerm : public dbObject
     /// I = dbIterm
     ///
     dbITerm * getITerm();
-
-    ///
-    /// Initialize timing.
-    ///
-    ///    slewRise[MIN] = infinity
-    ///    slewFall[MIN] = infinity
-    ///    slackRise[MIN] = infinity
-    ///    slackFall[MIN] = infinity
-    ///    slewRise[MAX] = -infinity
-    ///    slewFall[MAX] = -infinity
-    ///    slackRise[MAX] = infinity
-    ///    slackFall[MAX] = infinity
-    ///
-    ///  where:
-    ///
-    ///    infinity = INT_MAX
-    ///    -infinity = INT_MIN
-    ///
-    void initTiming();
-
-    // payam: changed int to float
-    float getSlewRise( dbTimingMode mode );
-    float getSlewFall( dbTimingMode mode );
-    float getSlackRise( dbTimingMode mode );
-    float getSlackFall( dbTimingMode mode );
-    float getSlewRise( dbTimingMode mode, uint scenario );
-    float getSlewFall( dbTimingMode mode, uint scenario );
-    float getSlackRise( dbTimingMode mode, uint scenario );
-    float getSlackFall( dbTimingMode mode, uint scenario );
-    void setSlewRise( dbTimingMode mode, float value, uint scenario=0 );
-    void setSlewFall( dbTimingMode mode, float value, uint scenario=0 );
-    void setSlackRise( dbTimingMode mode, float value, uint scenario=0 );
-    void setSlackFall( dbTimingMode mode, float value, uint scenario=0 );
-    bool getWorstSlack(float wns[2], float tns[2], uint scenario[2]);
-
-    //cc void ecoTiming();
 
     ///
     /// Get the bpins of this bterm.
@@ -1917,6 +1733,9 @@ class dbBTerm : public dbObject
     /// Translate a database-id back to a pointer.
     ///
     static dbBTerm * getBTerm( dbBlock * block, uint oid );
+
+    uint32_t staVertexId();
+    void staSetVertexId(uint32_t id);
 };
 
 
@@ -2715,11 +2534,6 @@ class dbNet : public dbObject
     void destroySWires();
 
     ///
-    /// Invalidate timing of remote nodes
-    ///
-    void ecoInvalidateTiming();
-
-    ///
     /// Create a new net.
     /// Returns NULL if a net with this name already exists
     ///
@@ -3208,11 +3022,6 @@ class dbInst : public dbObject
     bool swapMaster( dbMaster * master );
 
     ///
-    /// Invalidate timing of remote nodes
-    ///
-    void ecoInvalidateTiming();
-
-    ///
     /// Level of instance; if negative belongs to Primary Input Logic cone, 0 invalid.
     ///
 	int getLevel();
@@ -3416,83 +3225,6 @@ class dbITerm : public dbObject
     dbBTerm * getBTerm();
 
     ///
-    /// Set the tmg-tmp-D flag. - payam
-    ///
-    void setTmgTmpD( bool v );
-
-    ///
-    /// returns true if the tmg-tmp-D flag is set. - payam
-    ///
-    bool isSetTmgTmpD();
-
-    ///
-    /// Set the tmg-tmp-C flag. - payam
-    ///
-    void setTmgTmpC( bool v );
-
-    ///
-    /// returns true if the tmg-tmp-C flag is set. - payam
-    ///
-    bool isSetTmgTmpC();
-
-    ///
-    /// Set the tmg-tmp-B flag.
-    ///
-    void setTmgTmpB( bool v );
-
-    ///
-    /// returns true if the tmg-tmp-B flag is set.
-    ///
-    bool isSetTmgTmpB();
-
-    ///
-    /// Set temporary timing flag.
-    ///
-    void setTmgTmpA( bool value );
-
-    ///
-    ///  Returns true if flag is set.
-    ///
-    bool isSetTmgTmpA();
-
-    ///
-    /// Initialize timing.
-    ///
-    ///    slewRise[MIN] = infinity
-    ///    slewFall[MIN] = infinity
-    ///    slackRise[MIN] = infinity
-    ///    slackFall[MIN] = infinity
-    ///    slewRise[MAX] = -infinity
-    ///    slewFall[MAX] = -infinity
-    ///    slackRise[MAX] = infinity
-    ///    slackFall[MAX] = infinity
-    ///
-    ///  where:
-    ///
-    ///    infinity = INT_MAX
-    ///    -infinity = INT_MIN
-    ///
-    void initTiming();
-
-    // payam: changed int to float
-    float getSlewRise( dbTimingMode mode );
-    float getSlewFall( dbTimingMode mode );
-    float getSlackRise( dbTimingMode mode );
-    float getSlackFall( dbTimingMode mode );
-    float getSlewRise( dbTimingMode mode, uint scenario );
-    float getSlewFall( dbTimingMode mode, uint scenario );
-    float getSlackRise( dbTimingMode mode, uint scenario );
-    float getSlackFall( dbTimingMode mode, uint scenario );
-    void setSlewRise( dbTimingMode mode, float value, uint scenario=0 );
-    void setSlewFall( dbTimingMode mode, float value, uint scenario=0 );
-    void setSlackRise( dbTimingMode mode, float value, uint scenario=0 );
-    void setSlackFall( dbTimingMode mode, float value, uint scenario=0 );
-    bool getWorstSlack(float wns[2], float tns[2], uint scenario[2]);
-
-    // Write the current timing information to the timing journal.
-    //cc void ecoTiming();
-    
-    ///
     /// Create a connection between a instance and a net using a specific
     /// master-terminal. The dbITerm representing the connection is returned.
     /// Returns NULL if that specific master-terminal of that instance is
@@ -3525,6 +3257,9 @@ class dbITerm : public dbObject
     /// Translate a database-id back to a pointer.
     ///
     static dbITerm * getITerm( dbBlock * block, uint oid );
+
+    uint32_t staVertexId();
+    void staSetVertexId(uint32_t id);
 };
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -5525,8 +5260,9 @@ class dbMaster : public dbObject
     /// Translate a database-id back to a pointer.
     ///
     static dbMaster * getMaster( dbLib * lib, uint oid );
-    void *getTimingData();
-    void setTimingData(void * ptr);
+
+    void *staCell();
+    void staSetCell( void * cell );
 };
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -5589,16 +5325,6 @@ class dbMTerm : public dbObject
     dbSet<dbTarget> getTargets();
 
     ///
-    /// Set the timing data. This pointer is not saved.
-    ///
-    void setTimingData( void * ptr );
-
-    ///
-    /// Get the timing data.
-    ///
-    void * getTimingData();
-    
-    ///
     /// Add antenna info that is not specific to an oxide model.
     ///
     void addPartialMetalAreaEntry( double inval, dbTechLayer *refly = NULL );
@@ -5621,6 +5347,9 @@ class dbMTerm : public dbObject
     dbTechAntennaPinModel *getDefaultAntennaModel() const;
     dbTechAntennaPinModel *getOxide2AntennaModel() const;
     void writeAntennaLef(lefout & writer) const;
+
+    void *staPort();
+    void staSetPort( void * port );
 
     ///
     /// Return the index of this mterm on this master.

@@ -175,11 +175,6 @@ void dbObject::getDbName( char name[max_name_length] ) const
                 id = obj->getOID();
                 break;
 
-            case dbTmgObj:
-                *cptr++ = 'F';
-                id = obj->getOID();
-                break;
-
             case dbMetricsObj:
                 *cptr++ = 'm';
                 id = obj->getOID();
@@ -376,11 +371,6 @@ dbObject * dbObject::resolveDbName( dbDatabase * db_, const char * name )
                 obj = dbBlockage::getBlockage( (dbBlock *) obj, oid );
                 break;
 
-            case 'F': // tmg
-//                oid = getOid( name );
-//                obj = dbTmg::getTmg( (dbBlock *) obj, oid );
-                break;
-                
             case 'G': // gcell
                 oid = getOid( name );
                 obj = dbGCellGrid::getGCellGrid( (dbBlock *) obj, oid );
@@ -635,7 +625,6 @@ static const char * name_tbl[] =
     "dbRSeg",
     "dbCCSeg",
     "dbRow",
-    "dbTmg",
     "dbMetrics",
     "dbRegion",
     "dbHier",

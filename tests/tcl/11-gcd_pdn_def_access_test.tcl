@@ -30,7 +30,6 @@ set die_area_rect [$block getDieArea]
 check "block die area" {list [$die_area_rect xMin] [$die_area_rect yMin] [$die_area_rect xMax] [$die_area_rect yMax]} "0 0 200260 201600"
 check "number of regions" {llength [set regions [$block getRegions]]} 0
 check "number of nondefault rules" {llength [set non_default_rules [$block getNonDefaultRules]]} 0
-check "number of scenarios" {$block getNumberOfScenarios} 0
 
 # Row checks
 

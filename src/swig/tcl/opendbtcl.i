@@ -59,7 +59,6 @@ using namespace odb;
 %include "dbExtControl.h"
 %include "dbViaParams.h"
 
-%include "dbtable2.h"
 %include "dbId.h"
 %include "dbRtEdge.h"
 %include "dbStream.h"

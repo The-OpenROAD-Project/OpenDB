@@ -58,8 +58,6 @@ class Logger : public ZInterface
 };
 
 int idle(int =0);
-int milos(int code, const char*msg, ...);
-int ade(int code, const char*msg, ...);
 
 int notice(int code, const char *msg, ...);
 int verbose(int code, const char *msg, ...);

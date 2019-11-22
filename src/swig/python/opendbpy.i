@@ -50,7 +50,6 @@ using namespace odb;
 %include "dbtypes.i"
 %include "dboperators.i"
 %include "dbenums.i"
-%include "dbhelpers.i"
 %include "parserenums.i"
 
 %include "geom.h"

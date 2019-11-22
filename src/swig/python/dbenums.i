@@ -21,7 +21,7 @@
 	$result=obj;
 }
 %typemap(in) odb::dbOrientType, dbOrientType {
-	char *str = PyString_AsString($input);
+	char *str = PyString_AsString(PyUnicode_AsASCIIString($input));
 	if (strcasecmp(str, "R0") == 0) {
 		$1 = odb::dbOrientType::Value::R0;
 	} else if (strcasecmp(str, "R90") == 0) {
@@ -40,8 +40,8 @@
 		$1 = odb::dbOrientType::Value::MXR90;
 	}
 }
-%typemap(typecheck) odb::dbOrientType, dbOrientType {
-	char *str = PyString_AsString($input);
+%typemap(typecheck,precedence=SWIG_TYPECHECK_POINTER) odb::dbOrientType, dbOrientType {
+	char *str = PyString_AsString(PyUnicode_AsASCIIString($input));
 	bool found = false;
 	if (str) {
 		if (strcasecmp(str, "R0") == 0) {
@@ -90,7 +90,7 @@
 	$result=obj;
 }
 %typemap(in) odb::dbSigType, dbSigType {
-	char *str = PyString_AsString($input);
+	char *str = PyString_AsString(PyUnicode_AsASCIIString($input));
 	if (strcasecmp(str, "SIGNAL") == 0) {
 		$1 = odb::dbSigType::Value::SIGNAL;
 	} else if (strcasecmp(str, "POWER") == 0) {
@@ -110,7 +110,7 @@
 	}
 }
 %typemap(typecheck) odb::dbSigType, dbSigType {
-	char *str = PyString_AsString($input);
+	char *str = PyString_AsString(PyUnicode_AsASCIIString($input));
 	bool found = false;
 	if (str) {
 		if (strcasecmp(str, "SIGNAL") == 0) {
@@ -151,7 +151,7 @@
 	$result=obj;
 }
 %typemap(in) odb::dbIoType, dbIoType {
-	char *str = PyString_AsString($input);
+	char *str = PyString_AsString(PyUnicode_AsASCIIString($input));
 	if (strcasecmp(str, "INPUT") == 0) {
 		$1 = odb::dbIoType::Value::INPUT;
 	} else if (strcasecmp(str, "OUTPUT") == 0) {
@@ -163,7 +163,7 @@
 	}
 }
 %typemap(typecheck) odb::dbIoType, dbIoType {
-	char *str = PyString_AsString($input);
+	char *str = PyString_AsString(PyUnicode_AsASCIIString($input));
 	bool found = false;
 	if (str) {
 		if (strcasecmp(str, "INPUT") == 0) {
@@ -202,7 +202,7 @@
 	$result=obj;
 }
 %typemap(in) odb::dbPlacementStatus, dbPlacementStatus {
-	char *str = PyString_AsString($input);
+	char *str = PyString_AsString(PyUnicode_AsASCIIString($input));
 	if (strcasecmp(str, "NONE") == 0) {
 		$1 = odb::dbPlacementStatus::Value::NONE;
 	} else if (strcasecmp(str, "UNPLACED") == 0) {
@@ -220,7 +220,7 @@
 	}
 }
 %typemap(typecheck) odb::dbPlacementStatus, dbPlacementStatus {
-	char *str = PyString_AsString($input);
+	char *str = PyString_AsString(PyUnicode_AsASCIIString($input));
 	bool found = false;
 	if (str) {
 		if (strcasecmp(str, "NONE") == 0) {
@@ -295,7 +295,7 @@
 	$result=obj;
 }
 %typemap(in) odb::dbMasterType, dbMasterType {
-	char *str = PyString_AsString($input);
+	char *str = PyString_AsString(PyUnicode_AsASCIIString($input));
 	if (strcasecmp(str, "NONE") == 0) {
 		$1 = odb::dbMasterType::Value::NONE;
 	} else if (strcasecmp(str, "COVER") == 0) {
@@ -343,7 +343,7 @@
 	}
 }
 %typemap(typecheck) odb::dbMasterType, dbMasterType {
-	char *str = PyString_AsString($input);
+	char *str = PyString_AsString(PyUnicode_AsASCIIString($input));
 	bool found = false;
 	if (str) {
 		if (strcasecmp(str, "NONE") == 0) {
@@ -416,7 +416,7 @@
 	$result=obj;
 }
 %typemap(in) odb::dbTechLayerType, dbTechLayerType {
-	char *str = PyString_AsString($input);
+	char *str = PyString_AsString(PyUnicode_AsASCIIString($input));
 	if (strcasecmp(str, "ROUTING") == 0) {
 		$1 = odb::dbTechLayerType::Value::ROUTING;
 	} else if (strcasecmp(str, "CUT") == 0) {
@@ -432,7 +432,7 @@
 	}
 }
 %typemap(typecheck) odb::dbTechLayerType, dbTechLayerType {
-	char *str = PyString_AsString($input);
+	char *str = PyString_AsString(PyUnicode_AsASCIIString($input));
 	bool found = false;
 	if (str) {
 		if (strcasecmp(str, "ROUTING") == 0) {
@@ -467,7 +467,7 @@
 	$result=obj;
 }
 %typemap(in) odb::dbTechLayerDir, dbTechLayerDir {
-	char *str = PyString_AsString($input);
+	char *str = PyString_AsString(PyUnicode_AsASCIIString($input));
 	if (strcasecmp(str, "NONE") == 0) {
 		$1 = odb::dbTechLayerDir::Value::NONE;
 	} else if (strcasecmp(str, "HORIZONTAL") == 0) {
@@ -477,7 +477,7 @@
 	}
 }
 %typemap(typecheck) odb::dbTechLayerDir, dbTechLayerDir {
-	char *str = PyString_AsString($input);
+	char *str = PyString_AsString(PyUnicode_AsASCIIString($input));
 	bool found = false;
 	if (str) {
 		if (strcasecmp(str, "NONE") == 0) {
@@ -504,7 +504,7 @@
 	$result=obj;
 }
 %typemap(in) odb::dbRowDir, dbRowDir {
-	char *str = PyString_AsString($input);
+	char *str = PyString_AsString(PyUnicode_AsASCIIString($input));
 	if (strcasecmp(str, "HORIZONTAL") == 0) {
 		$1 = odb::dbRowDir::Value::HORIZONTAL;
 	} else if (strcasecmp(str, "VERTICAL") == 0) {
@@ -512,7 +512,7 @@
 	}
 }
 %typemap(typecheck) odb::dbRowDir, dbRowDir {
-	char *str = PyString_AsString($input);
+	char *str = PyString_AsString(PyUnicode_AsASCIIString($input));
 	bool found = false;
 	if (str) {
 		if (strcasecmp(str, "HORIZONTAL") == 0) {
@@ -559,7 +559,7 @@
 	$result=obj;
 }
 %typemap(in) odb::dbBoxOwner, dbBoxOwner {
-	char *str = PyString_AsString($input);
+	char *str = PyString_AsString(PyUnicode_AsASCIIString($input));
 	if (strcasecmp(str, "UNKNOWN") == 0) {
 		$1 = odb::dbBoxOwner::Value::UNKNOWN;
 	} else if (strcasecmp(str, "BLOCK") == 0) {
@@ -589,7 +589,7 @@
 	}
 }
 %typemap(typecheck) odb::dbBoxOwner, dbBoxOwner {
-	char *str = PyString_AsString($input);
+	char *str = PyString_AsString(PyUnicode_AsASCIIString($input));
 	bool found = false;
 	if (str) {
 		if (strcasecmp(str, "UNKNOWN") == 0) {
@@ -640,7 +640,7 @@
 	$result=obj;
 }
 %typemap(in) odb::dbPolygonOwner, dbPolygonOwner {
-	char *str = PyString_AsString($input);
+	char *str = PyString_AsString(PyUnicode_AsASCIIString($input));
 	if (strcasecmp(str, "UNKNOWN") == 0) {
 		$1 = odb::dbPolygonOwner::Value::UNKNOWN;
 	} else if (strcasecmp(str, "BPIN") == 0) {
@@ -652,7 +652,7 @@
 	}
 }
 %typemap(typecheck) odb::dbPolygonOwner, dbPolygonOwner {
-	char *str = PyString_AsString($input);
+	char *str = PyString_AsString(PyUnicode_AsASCIIString($input));
 	bool found = false;
 	if (str) {
 		if (strcasecmp(str, "UNKNOWN") == 0) {
@@ -689,7 +689,7 @@
 	$result=obj;
 }
 %typemap(in) odb::dbWireType, dbWireType {
-	char *str = PyString_AsString($input);
+	char *str = PyString_AsString(PyUnicode_AsASCIIString($input));
 	if (strcasecmp(str, "NONE") == 0) {
 		$1 = odb::dbWireType::Value::NONE;
 	} else if (strcasecmp(str, "COVER") == 0) {
@@ -704,8 +704,8 @@
 		$1 = odb::dbWireType::Value::NOSHIELD;
 	}
 }
-%typemap(typecheck) odb::dbWireType, dbWireType {
-	char *str = PyString_AsString($input);
+%typemap(typecheck,precedence=SWIG_TYPECHECK_POINTER) odb::dbWireType, dbWireType {
+	char *str = PyString_AsString(PyUnicode_AsASCIIString($input));
 	bool found = false;
 	if (str) {
 		if (strcasecmp(str, "NONE") == 0) {
@@ -758,7 +758,7 @@
 	$result=obj;
 }
 %typemap(in) odb::dbWireShapeType, dbWireShapeType {
-	char *str = PyString_AsString($input);
+	char *str = PyString_AsString(PyUnicode_AsASCIIString($input));
 	if (strcasecmp(str, "NONE") == 0) {
 		$1 = odb::dbWireShapeType::Value::NONE;
 	} else if (strcasecmp(str, "RING") == 0) {
@@ -786,7 +786,7 @@
 	}
 }
 %typemap(typecheck) odb::dbWireShapeType, dbWireShapeType {
-	char *str = PyString_AsString($input);
+	char *str = PyString_AsString(PyUnicode_AsASCIIString($input));
 	bool found = false;
 	if (str) {
 		if (strcasecmp(str, "NONE") == 0) {
@@ -833,7 +833,7 @@
 	$result=obj;
 }
 %typemap(in) odb::dbSiteClass, dbSiteClass {
-	char *str = PyString_AsString($input);
+	char *str = PyString_AsString(PyUnicode_AsASCIIString($input));
 	if (strcasecmp(str, "NONE") == 0) {
 		$1 = odb::dbSiteClass::Value::NONE;
 	} else if (strcasecmp(str, "PAD") == 0) {
@@ -843,7 +843,7 @@
 	}
 }
 %typemap(typecheck) odb::dbSiteClass, dbSiteClass {
-	char *str = PyString_AsString($input);
+	char *str = PyString_AsString(PyUnicode_AsASCIIString($input));
 	bool found = false;
 	if (str) {
 		if (strcasecmp(str, "NONE") == 0) {
@@ -870,7 +870,7 @@
 	$result=obj;
 }
 %typemap(in) odb::dbOnOffType, dbOnOffType {
-	char *str = PyString_AsString($input);
+	char *str = PyString_AsString(PyUnicode_AsASCIIString($input));
 	if (strcasecmp(str, "OFF") == 0) {
 		$1 = odb::dbOnOffType::Value::OFF;
 	} else if (strcasecmp(str, "ON") == 0) {
@@ -878,7 +878,7 @@
 	}
 }
 %typemap(typecheck) odb::dbOnOffType, dbOnOffType {
-	char *str = PyString_AsString($input);
+	char *str = PyString_AsString(PyUnicode_AsASCIIString($input));
 	bool found = false;
 	if (str) {
 		if (strcasecmp(str, "OFF") == 0) {
@@ -903,7 +903,7 @@
 	$result=obj;
 }
 %typemap(in) odb::dbClMeasureType, dbClMeasureType {
-	char *str = PyString_AsString($input);
+	char *str = PyString_AsString(PyUnicode_AsASCIIString($input));
 	if (strcasecmp(str, "EUCLIDEAN") == 0) {
 		$1 = odb::dbClMeasureType::Value::EUCLIDEAN;
 	} else if (strcasecmp(str, "MAXXY") == 0) {
@@ -940,7 +940,7 @@
 	$result=obj;
 }
 %typemap(in) odb::dbJournalEntryType, dbJournalEntryType {
-	char *str = PyString_AsString($input);
+	char *str = PyString_AsString(PyUnicode_AsASCIIString($input));
 	if (strcasecmp(str, "NONE") == 0) {
 		$1 = odb::dbJournalEntryType::Value::NONE;
 	} else if (strcasecmp(str, "OWNER") == 0) {
@@ -952,7 +952,7 @@
 	}
 }
 %typemap(typecheck) odb::dbJournalEntryType, dbJournalEntryType {
-	char *str = PyString_AsString($input);
+	char *str = PyString_AsString(PyUnicode_AsASCIIString($input));
 	bool found = false;
 	if (str) {
 		if (strcasecmp(str, "NONE") == 0) {
@@ -987,7 +987,7 @@
 	$result=obj;
 }
 %typemap(in) odb::dbDirection, dbDirection {
-	char *str = PyString_AsString($input);
+	char *str = PyString_AsString(PyUnicode_AsASCIIString($input));
 	if (strcasecmp(str, "NONE") == 0) {
 		$1 = odb::dbDirection::Value::NONE;
 	} else if (strcasecmp(str, "NORTH") == 0) {
@@ -1001,7 +1001,7 @@
 	}
 }
 %typemap(typecheck) odb::dbDirection, dbDirection {
-	char *str = PyString_AsString($input);
+	char *str = PyString_AsString(PyUnicode_AsASCIIString($input));
 	bool found = false;
 	if (str) {
 		if (strcasecmp(str, "NONE") == 0) {
@@ -1034,7 +1034,7 @@
 	$result=obj;
 }
 %typemap(in) odb::dbRegionType, dbRegionType {
-	char *str = PyString_AsString($input);
+	char *str = PyString_AsString(PyUnicode_AsASCIIString($input));
 	if (strcasecmp(str, "INCLUSIVE") == 0) {
 		$1 = odb::dbRegionType::Value::INCLUSIVE;
 	} else if (strcasecmp(str, "EXCLUSIVE") == 0) {
@@ -1044,7 +1044,7 @@
 	}
 }
 %typemap(typecheck) odb::dbRegionType, dbRegionType {
-	char *str = PyString_AsString($input);
+	char *str = PyString_AsString(PyUnicode_AsASCIIString($input));
 	bool found = false;
 	if (str) {
 		if (strcasecmp(str, "INCLUSIVE") == 0) {
@@ -1079,7 +1079,7 @@
 	$result=obj;
 }
 %typemap(in) odb::dbSourceType, dbSourceType {
-	char *str = PyString_AsString($input);
+	char *str = PyString_AsString(PyUnicode_AsASCIIString($input));
 	if (strcasecmp(str, "NONE") == 0) {
 		$1 = odb::dbSourceType::Value::NONE;
 	} else if (strcasecmp(str, "NETLIST") == 0) {
@@ -1095,7 +1095,7 @@
 	}
 }
 %typemap(typecheck) odb::dbSourceType, dbSourceType {
-	char *str = PyString_AsString($input);
+	char *str = PyString_AsString(PyUnicode_AsASCIIString($input));
 	bool found = false;
 	if (str) {
 		if (strcasecmp(str, "NONE") == 0) {

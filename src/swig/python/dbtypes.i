@@ -20,7 +20,6 @@
     $result = list;
 }
 
-
 // Wrapper for dbSet, dbVector...etc
 %define WRAP_DB_CONTAINER(T) 
 %typemap(out) dbSet< T >, dbVector< T > {
@@ -98,6 +97,8 @@
 %enddef
 
 
+
+
 // Handle return by ref.
 %apply int &OUTPUT { int & overhang1, int & overhang2 };
 %apply int &OUTPUT { int & x, int & y };
@@ -134,6 +135,7 @@ WRAP_DB_CONTAINER(odb::dbITerm)
 WRAP_DB_CONTAINER(odb::dbInst)
 WRAP_DB_CONTAINER(odb::dbObstruction)
 WRAP_DB_CONTAINER(odb::dbBlockage)
+WRAP_DB_CONTAINER(odb::dbWire)
 WRAP_DB_CONTAINER(odb::dbNet)
 WRAP_DB_CONTAINER(odb::dbCapNode)
 WRAP_DB_CONTAINER(odb::dbRSeg)
@@ -160,3 +162,5 @@ WRAP_DB_CONTAINER(odb::dbTechLayerSpacingRule)
 WRAP_DB_CONTAINER(odb::dbTechV55InfluenceEntry)
 WRAP_DB_CONTAINER(odb::dbTechMinCutRule)
 WRAP_DB_CONTAINER(odb::dbTechMinEncRule)
+
+

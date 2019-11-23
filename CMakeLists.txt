@@ -76,7 +76,7 @@ endif()
 find_package(SWIG REQUIRED)
 include(${SWIG_USE_FILE})
 
-option(BUILD_PYTHON "Build Python SWIG module" ON)
+option(BUILD_PYTHON "Build Python SWIG module" OFF)
 if(BUILD_PYTHON)
     add_subdirectory(src/swig/python)
 endif()

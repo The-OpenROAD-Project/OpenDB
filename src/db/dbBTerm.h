@@ -73,7 +73,7 @@ struct _dbBTermFlags
     uint                       _spef       : 1;
     uint                       _special    : 1;
     uint                       _mark       : 1;
-    uint                       _spare_bits : 11;
+    uint                       _spare_bits : 13;
 };
 
 //

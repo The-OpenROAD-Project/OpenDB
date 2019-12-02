@@ -19,6 +19,15 @@
 #include "lefiDebug.hpp"
 #include "lefrCallBacks.hpp"
 
+#define LEF_COPY_FUNC(varname) {(varname) = prev.varname;}
+#define LEF_MALLOC_FUNC(varname, vartype, length)                           \
+{                                                                       \
+    if( prev.varname ) {                                                \
+        varname = (vartype*) lefMalloc(length);                         \
+        memcpy(varname, prev.varname, length);                          \
+    }                                                                   \
+}
+
 ////////////////////////////////////////////////////
 ////////////////////////////////////////////////////
 //
@@ -379,6 +388,182 @@ double lefiInfluence::spacing(int index) const {
   return this->spacing_[index];
 }
 
+// *****************************************************************************
+// // lefiTwoWidths
+// // *****************************************************************************
+
+
+lefiTwoWidths::lefiTwoWidths()
+{
+    Init();
+}
+
+void
+lefiTwoWidths::Init()
+{
+    numWidth_ = 0;
+    numWidthAllocated_ = 0;
+}
+
+lefiTwoWidths::lefiTwoWidths(const lefiTwoWidths& prev) {
+    this->Init();
+    LEF_COPY_FUNC( numWidth_ );
+    LEF_COPY_FUNC( numWidthAllocated_ );
+    LEF_MALLOC_FUNC( width_, double, sizeof(double) * numWidthAllocated_ );
+    LEF_MALLOC_FUNC( prl_, double, sizeof(double) * numWidthAllocated_ );
+    LEF_MALLOC_FUNC( hasPRL_, int, sizeof(int) * numWidthAllocated_ );
+    LEF_MALLOC_FUNC( numWidthSpacing_, int, sizeof(int) * numWidthAllocated_ );
+    LEF_MALLOC_FUNC( widthSpacing_, double, sizeof(double) * numWidthAllocated_ );
+    LEF_MALLOC_FUNC( atNsp_, int, sizeof(int) * ( prev.atNsp_[numWidth_] ) );
+}
+void
+lefiTwoWidths::Destroy()
+{
+
+    if (numWidth_) {
+        lefFree((char*) (width_));
+        lefFree((char*) (prl_));
+        lefFree((char*) (widthSpacing_));
+        lefFree((char*) (numWidthSpacing_));
+        lefFree((char*) (atNsp_));
+        lefFree((char*) (hasPRL_));
+    }
+    Init();
+}
+
+lefiTwoWidths::~lefiTwoWidths()
+{
+    Destroy();
+}
+void
+lefiTwoWidths::addTwoWidths(double  width,
+                            double  prl,
+                            int     numSpacing,
+                            double  *spacings,
+                            int     hasPRL)
+{
+    int i;
+
+    if (numWidth_ == numWidthAllocated_) {
+        double  *nw;
+        double  *np;
+        int     *nnws;
+        double  *nws;
+        int     *nat;
+        int     *nHasPrl;
+
+        numWidthAllocated_ = numWidthAllocated_ ?
+            numWidthAllocated_ * 2 : 2;
+        nw = (double*) lefMalloc(sizeof(double) * numWidthAllocated_);
+        np = (double*) lefMalloc(sizeof(double) * numWidthAllocated_);
+        nnws = (int*) lefMalloc(sizeof(int) * numWidthAllocated_);
+        nat = (int*) lefMalloc(sizeof(int) * numWidthAllocated_);
+        nHasPrl = (int*) lefMalloc(sizeof(int) * numWidthAllocated_);
+
+        for (i = 0; i < numWidth_; i++) {
+            nw[i] = width_[i];
+            np[i] = prl_[i];
+            nnws[i] = numWidthSpacing_[i];
+            nat[i] = atNsp_[i];
+            nHasPrl[i] = hasPRL_[i];
+        }
+        // The lefData->last value in atNsp_ is the lefData->last total number of spacing
+         if (numWidth_ > 0) {
+            nws = (double*) lefMalloc(sizeof(double) * (atNsp_[numWidth_ - 1]
+                                                        + numSpacing));
+            for (i = 0; i < atNsp_[numWidth_ - 1]; i++) {
+                nws[i] = widthSpacing_[i];
+            }
+        } else
+            nws = (double*) lefMalloc(sizeof(double) * numSpacing);
+
+        if (numWidth_) {
+            lefFree((char*) (width_));
+            lefFree((char*) (prl_));
+            lefFree((char*) (numWidthSpacing_));
+            lefFree((char*) (widthSpacing_));
+            lefFree((char*) (atNsp_));
+            lefFree((char*) (hasPRL_));
+        }
+        width_ = nw;
+        prl_ = np;
+        numWidthSpacing_ = nnws;
+        widthSpacing_ = nws;
+        atNsp_ = nat;
+        hasPRL_ = nHasPrl;
+    } else {  // need to allocate memory for widthSpacing_
+        double *nws;
+        nws = (double*) lefMalloc(sizeof(double) * (atNsp_[numWidth_ - 1]
+                                                    + numSpacing));
+        for (i = 0; i < atNsp_[numWidth_ - 1]; i++) {
+            nws[i] = widthSpacing_[i];
+        }
+        lefFree((char*) (widthSpacing_));
+        widthSpacing_ = nws;
+    }
+    width_[numWidth_] = width;
+    prl_[numWidth_] = prl;
+    hasPRL_[numWidth_] = hasPRL;
+    numWidthSpacing_[numWidth_] = numSpacing;
+    if (numWidth_ == 0) {
+        for (i = 0; i < numSpacing; i++)
+            widthSpacing_[i] = spacings[i];
+        atNsp_[0] = numSpacing;
+    } else {
+        for (i = 0; i < numSpacing; i++)
+            widthSpacing_[atNsp_[numWidth_ - 1] + i] = spacings[i];
+        atNsp_[numWidth_] = atNsp_[numWidth_ - 1] + numSpacing;
+    }
+    numWidth_ += 1;
+}
+
+int
+lefiTwoWidths::numWidth() const
+{
+    return numWidth_;
+}
+
+double
+lefiTwoWidths::width(int index) const
+{
+    return width_[index];
+}
+
+int
+lefiTwoWidths::hasWidthPRL(int index) const
+{
+    if (hasPRL_[index])
+        return 1;
+    return 0;
+}
+
+double
+lefiTwoWidths::widthPRL(int index) const
+{
+    return prl_[index];
+}
+
+int
+lefiTwoWidths::numWidthSpacing(int index) const
+{
+    return numWidthSpacing_[index];
+}
+
+double
+lefiTwoWidths::widthSpacing(int iWidth,
+                            int iWidthSpacing) const
+{
+    if (iWidth == 0)
+        return widthSpacing_[iWidthSpacing];
+    return widthSpacing_[atNsp_[iWidth - 1] + iWidthSpacing];
+}
+
+
+
+
+
+
+
 ////////////////////////////////////////////////////
 ////////////////////////////////////////////////////
 //
@@ -469,6 +654,145 @@ lefiInfluence* lefiSpacingTable::influence() const {
 lefiParallel* lefiSpacingTable::parallel() const {
   return this->parallel_;
 }
+
+// ---------------------------------------- LEFEDEF58 --------------------------
+
+
+lefiTwoWidths *
+lefiSpacingTable::twoWidths() const
+{
+    return twoWidths_;
+}
+
+// 5.7
+void
+lefiSpacingTable::addTwoWidths(double   width,
+                               double   runLength,
+                               int      numSpacing,
+                               double   *spacings,
+                               int      hasPRL)
+{
+    lefiTwoWidths *twoWidths;
+
+    if (twoWidths_ == 0) {
+        twoWidths = (lefiTwoWidths*) lefMalloc(sizeof(lefiTwoWidths));
+        twoWidths->Init();
+        twoWidths_ = twoWidths;
+    } else
+        twoWidths = twoWidths_;
+    twoWidths->addTwoWidths(width, runLength, numSpacing,
+                            spacings, hasPRL);
+}
+
+// *****************************************************************************
+// lefiOrthogonal
+// *****************************************************************************
+
+lefiOrthogonal::lefiOrthogonal()
+{
+    Init();
+}
+
+void
+lefiOrthogonal::Init()
+{
+    numAllocated_ = 0;
+    numCutOrtho_ = 0;
+    cutWithin_ = 0;
+    ortho_ = 0;
+}
+/* TODO
+LEF_COPY_CONSTRUCTOR_C( lefiOrthogonal ) {
+    this->Init();
+    LEF_COPY_FUNC( numAllocated_ );
+    LEF_COPY_FUNC( numCutOrtho_ );
+    LEF_MALLOC_FUNC( cutWithin_, double, sizeof(double) * numCutOrtho_ );
+    LEF_MALLOC_FUNC( ortho_, double, sizeof(double) * numCutOrtho_  ); 
+}
+
+LEF_ASSIGN_OPERATOR_C( lefiOrthogonal ) {
+    this->Init();
+    LEF_COPY_FUNC( numAllocated_ );
+    LEF_COPY_FUNC( numCutOrtho_ );
+    LEF_MALLOC_FUNC( cutWithin_, double, sizeof(double) * numCutOrtho_ );
+    LEF_MALLOC_FUNC( ortho_, double, sizeof(double) * numCutOrtho_ ); 
+}
+*/
+
+
+
+lefiOrthogonal::~lefiOrthogonal()
+{
+    Destroy();
+}
+
+void
+lefiOrthogonal::Destroy()
+{
+    if (cutWithin_)
+        lefFree((char*) (cutWithin_));
+    if (ortho_)
+        lefFree((char*) (ortho_));
+    numAllocated_ = 0;
+    numCutOrtho_ = 0;
+}
+
+void
+lefiOrthogonal::addOrthogonal(double    cutWithin,
+                              double    ortho)
+{
+    int     i, len;
+    double  *cw;
+    double  *ot;
+
+    if (numAllocated_ == numCutOrtho_) {
+        if (numAllocated_ == 0)
+            len = numAllocated_ = 2;
+        else
+            len = numAllocated_ *= 2;
+        cw = (double*) lefMalloc(sizeof(double) * len);
+        ot = (double*) lefMalloc(sizeof(double) * len);
+
+        for (i = 0; i < numCutOrtho_; i++) {
+            cw[i] = cutWithin_[i];
+            ot[i] = ortho_[i];
+        }
+        if (cutWithin_)
+            lefFree((char*) (cutWithin_));
+        if (ortho_)
+            lefFree((char*) (ortho_));
+        cutWithin_ = cw;
+        ortho_ = ot;
+    }
+    cutWithin_[numCutOrtho_] = cutWithin;
+    ortho_[numCutOrtho_] = ortho;
+    numCutOrtho_ += 1;
+}
+
+int
+lefiOrthogonal::numOrthogonal() const
+{
+    return numCutOrtho_;
+}
+
+double
+lefiOrthogonal::cutWithin(int index) const
+{
+    if (index < 0 || index >= numCutOrtho_)
+        return 0;
+    return cutWithin_[index];
+}
+
+double
+lefiOrthogonal::orthoSpacing(int index) const
+{
+    if (index < 0 || index >= numCutOrtho_)
+        return 0;
+    return ortho_[index];
+}
+
+// ---------------------------------------- LEFEDEF58 -------------------------- END -------------
+
 
 ////////////////////////////////////////////////////
 ////////////////////////////////////////////////////
@@ -1134,7 +1458,7 @@ void lefiLayer::clear() {
   this->numAntennaModel_ = 0;
   this->antennaModelAllocated_ = 0;
 
-  if (this->nums_) lefFree((char*)(this->nums_));
+  // TODO if (this->nums_) lefFree((char*)(this->nums_));
 
   // 5.6
   if (this->numEnclosure_) {
@@ -1481,6 +1805,7 @@ void lefiLayer::setProtrusion(double width1, double length, double width2) {
 //        when bumping to new list, need to copy also hasUseLengthThreshold_
 //        and lengthThreshold_
 void lefiLayer::setSpacingMin(double dist) {
+// fprintf(stdout, " K_SPACING NUMBER dist=%g\n", dist);
   if (this->numSpacings_ == this->spacingsAllocated_) {
     double* nd;
     char** nn;             // Also set up the spacing name
@@ -1757,11 +2082,64 @@ void lefiLayer::setSpacingParallelOverlap() {
   this->hasSpacingParallelOverlap_[this->numSpacings_-1] = 1;
 }
 
+
+// ------------------------------------------ LEFDEF 5.8 ----------------------------
+// 5.7
+void
+lefiLayer::addSpacingTableOrthoWithin(double    cutWithin,
+                                      double    orthoSp)
+{
+    spacingTableOrtho_->addOrthogonal(cutWithin, orthoSp);
+    hasSpacingTableOrtho_ = 1;
+}
+// 5.7
+
+// ------------------------------------------ 5.8 ----------------------------
+
+// 5.7
+void
+lefiLayer::setSpacingAdjacentExcept()
+{
+    hasSpacingAdjacentExcept_[numSpacings_ - 1] = 1;
+}
+// 5.7
+void
+lefiLayer::setSpacingSamenet()
+{
+    hasSpacingSamenet_[numSpacings_ - 1] = 1;
+}
+// 5.7
+void
+lefiLayer::setSpacingSamenetPGonly()
+{
+    hasSpacingSamenetPGonly_[numSpacings_ - 1] = 1;
+}
+// 5.7
+void
+lefiLayer::setSpacingNotchLength(double notchLength)
+{
+    notchLength_[numSpacings_ - 1] = notchLength;
+}
+// 5.7
+void
+lefiLayer::setSpacingEndOfNotchWidth(double eonWidth,
+                                     double mnSpacing,
+                                     double eonLength)
+{
+    endOfNotchWidth_[numSpacings_ - 1] = eonWidth;
+    minNotchSpacing_[numSpacings_ - 1] = mnSpacing;
+    eonotchLength_[numSpacings_ - 1] = eonLength;
+}
+
+
+
+
 // 5.7
 void lefiLayer::setSpacingEol(double width, double within) {
   this->hasSpacingEndOfLine_[this->numSpacings_-1] = 1;
   this->eolWidth_[this->numSpacings_-1] = width;
   this->eolWithin_[this->numSpacings_-1] = within;
+// fprintf(stdout, " K_ENDOFLINE NUMBER K_WITHIN NUMBER width=%g widthin=%g\n", width, within);
 }
 
 // 5.7
@@ -1769,11 +2147,13 @@ void lefiLayer::setSpacingParSW(double space, double within) {
   this->hasSpacingParellelEdge_[this->numSpacings_-1] = 1;
   this->parSpace_[this->numSpacings_-1] = space;
   this->parWithin_[this->numSpacings_-1] = within;
+// fprintf(stdout, " K_PARALLELEDGE NUMBER K_WITHIN NUMBER space=%g widthin=%g\n", space, within);
 }
 
 // 5.7
 void lefiLayer::setSpacingParTwoEdges() {
   this->hasSpacingTwoEdges_[this->numSpacings_-1] = 1;
+// fprintf(stdout, " K_PARALLELEDGE NUMBER K_WITHIN NUMBER - has two edges\n");
 }
 
 // 5.7
@@ -2668,10 +3048,12 @@ void lefiLayer::print(FILE* f) const {
 
 
 void lefiLayer::addProp(const char* name, const char* value, const char type) {
+// fprintf (stdout, "addProp: %s %s %c\n", name, value, type);
   int len = strlen(name) + 1;
 //  char*  tvalue;
 //  int    vlen, i;
   if (this->numProps_ == this->propsAllocated_) {
+// fprintf (stdout, "addProp: %s %s %c\n", name, value, type);
     int i;
     int max;
     int lim = this->numProps_;

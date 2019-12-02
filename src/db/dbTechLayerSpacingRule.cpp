@@ -1,34 +1,34 @@
 ///////////////////////////////////////////////////////////////////////////////
-// BSD 3-Clause License
+//// BSD 3-Clause License
+////
+//// Copyright (c) 2019, Nefelus Inc
+//// All rights reserved.
+////
+//// Redistribution and use in source and binary forms, with or without
+//// modification, are permitted provided that the following conditions are met:
+////
+//// * Redistributions of source code must retain the above copyright notice, this
+////   list of conditions and the following disclaimer.
+////
+//// * Redistributions in binary form must reproduce the above copyright notice,
+////   this list of conditions and the following disclaimer in the documentation
+////   and/or other materials provided with the distribution.
+////
+//// * Neither the name of the copyright holder nor the names of its
+////   contributors may be used to endorse or promote products derived from
+////   this software without specific prior written permission.
+////
+//// THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+//// AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+//// IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+//// DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE
+//// FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
+//// DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR
+//// SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
+//// CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
+//// OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
+//// OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 //
-// Copyright (c) 2019, Nefelus Inc
-// All rights reserved.
-//
-// Redistribution and use in source and binary forms, with or without
-// modification, are permitted provided that the following conditions are met:
-//
-// * Redistributions of source code must retain the above copyright notice, this
-//   list of conditions and the following disclaimer.
-//
-// * Redistributions in binary form must reproduce the above copyright notice,
-//   this list of conditions and the following disclaimer in the documentation
-//   and/or other materials provided with the distribution.
-//
-// * Neither the name of the copyright holder nor the names of its
-//   contributors may be used to endorse or promote products derived from
-//   this software without specific prior written permission.
-//
-// THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
-// AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
-// IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
-// DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE
-// FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
-// DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR
-// SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
-// CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
-// OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
-// OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
-
 #include "dbTechLayerSpacingRule.h"
 #include "dbDatabase.h"
 #include "dbTech.h"
@@ -444,7 +444,59 @@ dbTechLayerSpacingRule::setRangeRange( uint rmin, uint rmax )
   _lsp->_r2min = rmin;
   _lsp->_r2max = rmax;
 }
+// DF58
+void
+dbTechLayerSpacingRule::setEol(uint width, uint within, bool parallelEdge, uint parallelSpace, uint parallelWithin, bool twoEdges)
+{
+	_dbTechLayerSpacingRule* _lsp = (_dbTechLayerSpacingRule*)this;
+	assert((_lsp->_flags._rule != LENGTHTHRESHOLD) &&
+		(_lsp->_flags._rule != LENGTHTHRESHOLD_RANGE) &&
+		(_lsp->_flags._rule != RANGE_RANGE) &&
+		(_lsp->_flags._rule != RANGE_INFLUENCE_RANGE) &&
+		(_lsp->_flags._rule != RANGE_INFLUENCE));
 
+	if (!parallelEdge) {
+		_lsp->_r1min = width;
+		_lsp->_r1max = within;
+		_lsp->_flags._rule = ENDOFLINE;
+	}
+	else {
+		_lsp->_r1min = width;
+		_lsp->_r1max = within;
+		_lsp->_r2min = parallelSpace;
+		_lsp->_r2max = parallelWithin;
+		if (!twoEdges)
+			_lsp->_flags._rule = ENDOFLINE_PARALLEL;
+		else
+			_lsp->_flags._rule = ENDOFLINE_PARALLEL_TWOEDGES;
+	}
+}
+bool
+dbTechLayerSpacingRule::getEol(uint& width, uint& within, bool& parallelEdge, uint& parallelSpace, uint& parallelWithin, bool& twoEdges) const
+{
+	_dbTechLayerSpacingRule* _lsp = (_dbTechLayerSpacingRule*)this;
+
+	if (_lsp->_flags._rule != ENDOFLINE && _lsp->_flags._rule != ENDOFLINE_PARALLEL && _lsp->_flags._rule != ENDOFLINE_PARALLEL_TWOEDGES)
+		return false;
+	
+	// fprintf(stdout, "getEol:: %d %d %d %d\n", _lsp->_r1min, _lsp->_r1max ,_lsp->_r2min, _lsp->_r2max);
+	parallelSpace = 0;
+	parallelWithin = 0;
+	twoEdges = false;
+	if (_lsp->_flags._rule == ENDOFLINE) {
+		width = _lsp->_r1min;
+		within = _lsp->_r1max;
+		parallelSpace = false;
+		return true;
+	}
+	parallelEdge= true;
+	parallelSpace = true;
+	parallelSpace = _lsp->_r2min;
+	parallelWithin = _lsp->_r2max;
+	twoEdges = _lsp->_flags._rule == ENDOFLINE_PARALLEL_TWOEDGES;
+	return true;
+}
+// DF58 end
 void
 dbTechLayerSpacingRule::setAdjacentCuts( uint numcuts, uint within, uint spacing )
 {
@@ -532,7 +584,22 @@ dbTechLayerSpacingRule::writeLef( lefout & writer ) const
       fprintf(writer.out(), "ADJACENTCUTS %d WITHIN %g ", numcuts,
 	      writer.lefdist(length_or_influence));
     }
-
+  else {
+	  uint width, within, parallelSpace, parallelWithin;
+	  bool parallelEdge, twoEdges;
+	  if (getEol(width, within, parallelEdge, parallelSpace, parallelWithin, twoEdges)) {
+		  fprintf(writer.out(), "ENDOFLINE %g WITHIN %g ",
+			  writer.lefdist(width),
+			  writer.lefdist(within));
+		  if (parallelEdge) {
+			  fprintf(writer.out(), "PARALLELEDGE %g WITHIN %g ",
+				  writer.lefdist(parallelSpace),
+				  writer.lefdist(parallelWithin));
+			  if (twoEdges)
+				  fprintf(writer.out(), " TWOEDGES ");
+		  }
+	  }
+  }
   fprintf( writer.out(), " ;\n");
 }
 

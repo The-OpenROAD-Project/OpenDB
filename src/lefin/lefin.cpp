@@ -1,34 +1,34 @@
 ///////////////////////////////////////////////////////////////////////////////
-// BSD 3-Clause License
+////// BSD 3-Clause License
+//////
+////// Copyright (c) 2019, Nefelus Inc
+////// All rights reserved.
+//////
+////// Redistribution and use in source and binary forms, with or without
+////// modification, are permitted provided that the following conditions are met:
+//////
+////// * Redistributions of source code must retain the above copyright notice, this
+//////   list of conditions and the following disclaimer.
+//////
+////// * Redistributions in binary form must reproduce the above copyright notice,
+//////   this list of conditions and the following disclaimer in the documentation
+//////   and/or other materials provided with the distribution.
+//////
+////// * Neither the name of the copyright holder nor the names of its
+//////   contributors may be used to endorse or promote products derived from
+//////   this software without specific prior written permission.
+//////
+////// THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+////// AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+////// IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+////// DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE
+////// FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
+////// DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR
+////// SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
+////// CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
+////// OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
+////// OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 //
-// Copyright (c) 2019, Nefelus Inc
-// All rights reserved.
-//
-// Redistribution and use in source and binary forms, with or without
-// modification, are permitted provided that the following conditions are met:
-//
-// * Redistributions of source code must retain the above copyright notice, this
-//   list of conditions and the following disclaimer.
-//
-// * Redistributions in binary form must reproduce the above copyright notice,
-//   this list of conditions and the following disclaimer in the documentation
-//   and/or other materials provided with the distribution.
-//
-// * Neither the name of the copyright holder nor the names of its
-//   contributors may be used to endorse or promote products derived from
-//   this software without specific prior written permission.
-//
-// THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
-// AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
-// IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
-// DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE
-// FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
-// DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR
-// SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
-// CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
-// OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
-// OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
-
 #ifdef WIN32
 #pragma warning (disable : 4786)
 #endif
@@ -199,7 +199,8 @@ static void create_path_box( dbObject * obj, bool is_pin, dbTechLayer * layer,
     }
     else
     {
-        assert(0); // illegal: non-orthogonal-path
+warning(0, " illegal: non-orthogonal-path at Pin\n");
+        // TODO assert(0); // illegal: non-orthogonal-path
     }
 }
 
@@ -226,7 +227,8 @@ bool lefin::addGeoms( dbObject * object, bool is_pin, lefiGeometries * geometry)
                 if ( layer == NULL )
                 {
                     notice(0,"error: undefined layer (%s) referenced\n", geometry->getLayer(i) );
-                    return false;
+                    // TODO return false;
+                    return true;
                 }
 
                 dw = dbdist(layer->getWidth()) >> 1;
@@ -381,7 +383,8 @@ bool lefin::addGeoms( dbObject * object, bool is_pin, lefiGeometries * geometry)
                 if ( dbvia == NULL )
                 {
                     notice(0,"error: undefined via (%s) referenced\n", via->name );
-                    return false;
+                    // TODO return false;
+                    return true;
                 }
 
                 int x = dbdist(via->x);
@@ -590,12 +593,18 @@ void lefin::layer( lefiLayer * layer )
         notice(0,"Skipping LAYER (%s) ; Non Routing or Cut type\n", layer->name() );
 		return;
 	}
-	
 
     dbTechLayer * l = dbTechLayer::create(_tech, layer->name(), type );
 	if (l==NULL) {
         notice(0,"Skipping LAYER (%s) ; cannot understand type\n", layer->name() );
 		return;
+	}
+	for (int iii=0; iii<layer->numProps(); iii++)
+	{
+		// fprintf(stdout, "LAYER=%s -- prop %s %s\n", layer->name(), layer->propName(iii), layer->propValue(iii));
+		 dbStringProperty::create(l,
+			layer->propName(iii),
+			layer->propValue(iii));
 	}
     
     if ( layer->hasWidth() )
@@ -639,6 +648,19 @@ void lefin::layer( lefiLayer * layer )
 					  dbdist(layer->spacingAdjacentWithin(j)),
 					  dbdist(layer->spacing(j)));
 	      }
+	    else if (layer->hasSpacingEndOfLine(j))
+	      {
+		double w= layer->spacingEolWidth(j);
+		double wn= layer->spacingEolWithin(j);
+	        if (layer->hasSpacingParellelEdge(j)) {
+		    double ps= layer->spacingParSpace(j);
+		    double pw= layer->spacingParWithin(j); 
+                    bool t= layer->hasSpacingTwoEdges(j);
+		    cur_rule->setEol(dbdist(w), dbdist(wn), true, dbdist(ps), dbdist(pw), t);
+                } else {
+		    cur_rule->setEol(dbdist(w), dbdist(wn), false, 0, 0, false);
+		}
+	      }
 	    else if (layer->hasSpacingName(j))
 	      {
 		dbTechLayer *tmply = NULL;
@@ -669,6 +691,8 @@ void lefin::layer( lefiLayer * layer )
 	  }
 	else  // Assume parallel run length spacing table
 	  {
+	fprintf(stdout, "TODO: Assume parallel run length spacing table \n");
+/* TODO
 	    lefiParallel *cur_ipl = cur_sptbl->parallel();
 	    int wddx,lndx;
 
@@ -689,6 +713,7 @@ void lefin::layer( lefiLayer * layer )
 			l->setSpacing(dbdist(cur_ipl->widthSpacing(wddx,lndx)));
 		  }
 	      }
+*/
 	  }
       }
 
@@ -908,6 +933,9 @@ void lefin::macro( lefiMacro * macro )
     if (macro->hasEEQ())
     {
         dbMaster * eeq = _lib->findMaster( macro->EEQ() );
+	if (eeq==NULL) 
+            notice(0,"warning: cannot find EEQ for macro %s \n", macro->name());
+	else
         _master->setEEQ(eeq);
     }
 
@@ -1065,7 +1093,7 @@ void lefin::nonDefault( lefiNonDefault * rule )
         if ( via == NULL )
         {
             notice(0,"error: undefined VIA %s\n", vname );
-            ++_errors;
+            // TODO ++_errors;
             continue;
         }
 
@@ -1080,7 +1108,7 @@ void lefin::nonDefault( lefiNonDefault * rule )
         if ( genrule == NULL )
         {
             notice(0,"error: undefined VIA GENERATE RULE %s\n", rname );
-            ++_errors;
+            // TODO ++_errors;
             continue;
         }
 
@@ -1095,7 +1123,7 @@ void lefin::nonDefault( lefiNonDefault * rule )
         if ( layer == NULL )
         {
             notice(0,"error: undefined LAYER %s\n", lname );
-            ++_errors;
+            // TODO ++_errors;
             continue;
         }
 
@@ -1576,7 +1604,7 @@ void lefin::via( lefiVia * via, dbTechNonDefaultRule * rule )
         if ( rule == NULL )
         {
             notice(0,"error: missing VIA GENERATE rule %s\n", via->viaRuleName() );
-            ++_errors;
+            // TODO ++_errors;
             return;
         }
 
@@ -1590,7 +1618,7 @@ void lefin::via( lefiVia * via, dbTechNonDefaultRule * rule )
         if ( bot == NULL )
         {
             notice(0,"error: missing LAYER %s\n", via->botMetalLayer() );
-            ++_errors;
+            // TODO ++_errors;
             return;
         }
 
@@ -1599,7 +1627,7 @@ void lefin::via( lefiVia * via, dbTechNonDefaultRule * rule )
         if ( cut == NULL )
         {
             notice(0,"error: missing LAYER %s\n", via->cutLayer() );
-            ++_errors;
+            // TODO ++_errors;
             return;
         }
 
@@ -1676,7 +1704,7 @@ void lefin::viaRule( lefiViaRule * viaRule )
         if ( layer == NULL )
         {
             notice(0,"error: VIARULE (%s) undefined layer %s\n", name, leflay->name());
-            ++_errors;
+            // TODO ++_errors;
             return;
         }
 
@@ -1705,7 +1733,7 @@ void lefin::viaRule( lefiViaRule * viaRule )
         if ( via == NULL )
         {
             notice(0,"error: undefined VIA %s in VIARULE %s\n", viaRule->viaName(idx), name );
-            ++_errors;
+            // TODO ++_errors;
         }
         else
         {
@@ -1734,7 +1762,7 @@ void lefin::viaGenerateRule( lefiViaRule * viaRule )
         if ( layer == NULL )
         {
             notice(0,"error: VIARULE (%s) undefined layer %s\n", name, leflay->name());
-            ++_errors;
+            // TODO ++_errors;
             return;
         }
 

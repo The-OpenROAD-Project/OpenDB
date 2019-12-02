@@ -1,34 +1,34 @@
 ///////////////////////////////////////////////////////////////////////////////
-// BSD 3-Clause License
+//// BSD 3-Clause License
+////
+//// Copyright (c) 2019, Nefelus Inc
+//// All rights reserved.
+////
+//// Redistribution and use in source and binary forms, with or without
+//// modification, are permitted provided that the following conditions are met:
+////
+//// * Redistributions of source code must retain the above copyright notice, this
+////   list of conditions and the following disclaimer.
+////
+//// * Redistributions in binary form must reproduce the above copyright notice,
+////   this list of conditions and the following disclaimer in the documentation
+////   and/or other materials provided with the distribution.
+////
+//// * Neither the name of the copyright holder nor the names of its
+////   contributors may be used to endorse or promote products derived from
+////   this software without specific prior written permission.
+////
+//// THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+//// AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+//// IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+//// DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE
+//// FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
+//// DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR
+//// SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
+//// CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
+//// OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
+//// OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 //
-// Copyright (c) 2019, Nefelus Inc
-// All rights reserved.
-//
-// Redistribution and use in source and binary forms, with or without
-// modification, are permitted provided that the following conditions are met:
-//
-// * Redistributions of source code must retain the above copyright notice, this
-//   list of conditions and the following disclaimer.
-//
-// * Redistributions in binary form must reproduce the above copyright notice,
-//   this list of conditions and the following disclaimer in the documentation
-//   and/or other materials provided with the distribution.
-//
-// * Neither the name of the copyright holder nor the names of its
-//   contributors may be used to endorse or promote products derived from
-//   this software without specific prior written permission.
-//
-// THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
-// AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
-// IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
-// DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE
-// FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
-// DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR
-// SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
-// CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
-// OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
-// OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
-
 #include "dbProperty.h"
 #include "dbPropertyItr.h"
 #include "dbName.h"
@@ -572,9 +572,11 @@ void dbStringProperty::setValue( const char * value )
 
 dbStringProperty * dbStringProperty::create( dbObject * object, const char * name, const char * value )
 {
+// fprintf(stdout, "dbStringProperty::create   %s %s \n", name, value);
     if( find(object,name) )
         return NULL;
 
+// fprintf(stdout, "dbStringProperty::create   %s %s \n", name, value);
     _dbProperty * prop = _dbProperty::createProperty( object, name, DB_STRING_PROP );
     prop->_value._str_val = strdup(value);
     ZALLOCATED(prop->_value._str_val);
@@ -647,5 +649,71 @@ dbDoubleProperty * dbDoubleProperty::find( dbObject * object, const char * name 
 {
     return (dbDoubleProperty *) dbProperty::find(object,name,dbProperty::DOUBLE_PROP);
 }
+// ------------------------------------- LEF/DEF 5.8 ----------------------------------------
+void dbProperty::writePropValue(dbProperty * prop, FILE *out)
+{
+    switch( prop->getType() )
+    {
+        case dbProperty::STRING_PROP:
+        {
+            dbStringProperty * p = (dbStringProperty *) prop;
+            dbString v = p->getValue();
+            fprintf(out, "\"%s\" ", v.c_str() );
+            break;
+        }
+
+        case dbProperty::INT_PROP:
+        {
+            dbIntProperty * p = (dbIntProperty *) prop;
+            int v = p->getValue();
+            fprintf(out, "%d ", v);
+            break;
+        }
+
+        case dbProperty::DOUBLE_PROP:
+        {
+            dbDoubleProperty * p = (dbDoubleProperty *) prop;
+            double v = p->getValue();
+            fprintf(out, "%G ", v);
+        }
+
+        default:
+            break;
+    }
+}
+
+void dbProperty::writeProperties( dbObject * object, FILE *out )
+{
+    dbSet<dbProperty> props = dbProperty::getProperties(object);
+    dbSet<dbProperty>::iterator itr;
+
+    for( itr = props.begin(); itr != props.end(); ++itr )
+    {
+        dbProperty * prop = *itr;
+        dbString name = prop->getName();
+        fprintf(out, "    PROPERTY %s ", name.c_str() );
+        writePropValue(prop, out);
+        fprintf(out, "\n");
+    }
+}
+// ------------------------------------- LEF/DEF 5.8 ----------------------------------------
+/* Sample Code to access dbTechLayer properties
+void dbProperty::writeProperties( dbTechLayer * object, FILE *out )
+{
+    dbSet<dbProperty> props = dbProperty::getProperties(object);
+    dbSet<dbProperty>::iterator itr;
+
+    for( itr = props.begin(); itr != props.end(); ++itr )
+    {
+        dbProperty * prop = *itr;
+        dbString name = prop->getName();
+        
+        to get value of a  string type: 
+             dbStringProperty * p = (dbStringProperty *) prop;
+            dbString v = p->getValue();
+	look function dbProperty::writePropValue on how to retrieve int and double values
+    }
+}
+*/
 
 } // namespace

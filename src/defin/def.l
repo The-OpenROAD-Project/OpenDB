@@ -1,34 +1,3 @@
-/*
- BSD 3-Clause License
-
- Copyright (c) 2019, The Regents of the University of California
- All rights reserved.
-
- Redistribution and use in source and binary forms, with or without
- modification, are permitted provided that the following conditions are met:
-
- * Redistributions of source code must retain the above copyright notice, this
-   list of conditions and the following disclaimer.
-
- * Redistributions in binary form must reproduce the above copyright notice,
-   this list of conditions and the following disclaimer in the documentation
-   and/or other materials provided with the distribution.
-
- * Neither the name of the copyright holder nor the names of its
-   contributors may be used to endorse or promote products derived from
-   this software without specific prior written permission.
-
- THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
- AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
- IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
- DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE
- FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
- DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR
- SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
- CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
- OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
- OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
-*/
 %{
 #include <stdlib.h>
 #include "definTypes.h"
@@ -46,8 +15,7 @@ bool deflex_casesens = true;
 int deflex_linecnt = 1000000;
 
 static hashTable keywords;
-int defdebug;
-#ifdef YYDEBUG
+#ifdef XYYDEBUG
 #define DEF_DEBUG(msg) do { if ( defdebug > 1 ) printf(msg, yytext); } while(0)
 #else
 #define DEF_DEBUG(msg)
@@ -417,7 +385,31 @@ void deflex_init()
         keywords.insert( "STYLE", STYLE_K );
         keywords.insert( "PATTERN", PATTERN_K );
         keywords.insert( "PORT", PORT_K );
-        init_keywords = false;
+        keywords.insert( "ALIGN", K_ALIGN );
+        keywords.insert( "BOTTOMLEFT", K_BOTTOMLEFT );
+        keywords.insert( "COMPONENTMASKSHIFT", K_COMPSMASKSHIFT );
+        keywords.insert( "COMPS", K_COMPS );
+        keywords.insert( "GENERATE", K_COMP_GEN );
+        keywords.insert( "HORIZONTAL", K_HORIZONTAL );
+        keywords.insert( "MASK", K_MASK );
+        keywords.insert( "MASKSHIFT", K_MASKSHIFT );
+        keywords.insert( "MAX", K_MAX );
+        keywords.insert( "MIN", K_MIN );
+        keywords.insert( "ROUTEHALO", K_ROUTEHALO );
+        keywords.insert( "ROWS", K_ROWS );
+        keywords.insert( "SOFT", K_SOFT );
+        keywords.insert( "TOPRIGHT", K_TOPRIGHT );
+        keywords.insert( "VERTICAL", K_VERTICAL );
+        keywords.insert( "PARTIAL", PARTIAL_K );
+        keywords.insert( "COMP_GEN", K_COMP_GEN );
+        keywords.insert( "FPC", K_FPC );
+        keywords.insert( "MAXHALFPERIMETER", K_MAXHALFPERIMETER );
+        keywords.insert( "MAXX", K_MAXX );
+        keywords.insert( "MAXY", K_MAXY );
+        keywords.insert( "SAMEMASK", K_SAMEMASK );
+        keywords.insert( "VIRTUAL", K_VIRTUAL );
+        keywords.insert( "EXCEPTPGNET", K_EXCEPTPGNET );
+        keywords.insert( "OPC", K_OPC );
     }
 
     deflex_lineno = 1;

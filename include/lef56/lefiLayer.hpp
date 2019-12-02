@@ -1,16 +1,31 @@
-/*
- *     This  file  is  part  of  the  Cadence  LEF/DEF  Open   Source
- *  Distribution,  Product Version 5.6, and is subject to the Cadence
- *  LEF/DEF Open Source License Agreement.   Your  continued  use  of
- *  this file constitutes your acceptance of the terms of the LEF/DEF
- *  Open Source License and an agreement to abide by its  terms.   If
- *  you  don't  agree  with  this, you must remove this and any other
- *  files which are part of the distribution and  destroy any  copies
- *  made.
- *
- *     For updates, support, or to become part of the LEF/DEF Community,
- *  check www.openeda.org for details.
- */
+// *****************************************************************************
+// *****************************************************************************
+// Copyright 2012 - 2015, Cadence Design Systems
+// 
+// This  file  is  part  of  the  Cadence  LEF/DEF  Open   Source
+// Distribution,  Product Version 5.8. 
+// 
+// Licensed under the Apache License, Version 2.0 (the "License");
+//    you may not use this file except in compliance with the License.
+//    You may obtain a copy of the License at
+// 
+//        http://www.apache.org/licenses/LICENSE-2.0
+// 
+//    Unless required by applicable law or agreed to in writing, software
+//    distributed under the License is distributed on an "AS IS" BASIS,
+//    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or
+//    implied. See the License for the specific language governing
+//    permissions and limitations under the License.
+// 
+// For updates, support, or to become part of the LEF/DEF Community,
+// check www.openeda.org for details.
+// 
+//  $Author: dell $
+//  $Revision: #1 $
+//  $Date: 2017/06/06 $
+//  $State:  $
+// *****************************************************************************
+// *****************************************************************************
 
 #ifndef lefiLayer_h
 #define lefiLayer_h
@@ -18,6 +33,11 @@
 #include <stdio.h>
 #include "lefiKRDefs.hpp"
 #include "lefiMisc.hpp"
+
+// #define LEF_COPY_CONSTRUCTOR_H(cname) cname(const cname & prev)
+// #define LEF_ASSIGN_OPERATOR_H(cname) cname& operator=(const cname & prev)
+
+// BEGIN_LEFDEF_PARSER_NAMESPACE
 
 typedef enum lefiAntennaEnum {
   lefiAntennaAR,
@@ -39,6 +59,8 @@ public:
   lefiAntennaPWL();
   ~lefiAntennaPWL();
 
+  lefiAntennaPWL(const lefiAntennaPWL& prev);
+  static lefiAntennaPWL* create();
   void Init();
   void clear();
   void Destroy();
@@ -61,9 +83,11 @@ public:
   lefiLayerDensity();
   ~lefiLayerDensity();
 
+  lefiLayerDensity(const lefiLayerDensity& prev);
   void Init(const char* type);
   void Destroy();
   void clear();
+  
 
   void setOneEntry(double entry);
   void addFrequency(int num, double* frequency);
@@ -96,13 +120,14 @@ protected:
   double* cutareas_;
 };
 
-
 // 5.5
 class lefiParallel {
 public:
   lefiParallel();
   ~lefiParallel();
 
+  // LEF_COPY_CONSTRUCTOR_H(lefiParallel);
+  // LEF_ASSIGN_OPERATOR_H(lefiParallel);
   void Init();
   void clear();
   void Destroy();
@@ -126,13 +151,14 @@ protected:
   double* widthSpacing_;
 };
 
-
 // 5.5
 class lefiInfluence {
 public:
   lefiInfluence();
   ~lefiInfluence();
 
+  // LEF_COPY_CONSTRUCTOR_H (lefiInfluence);
+  // LEF_ASSIGN_OPERATOR_H (lefiInfluence);
   void Init();
   void clear();
   void Destroy();
@@ -154,12 +180,46 @@ protected:
   double* spacing_;
 };
 
+// 5.7
+class lefiTwoWidths {
+public:
+  lefiTwoWidths();
+  ~lefiTwoWidths();
+
+  lefiTwoWidths(const lefiTwoWidths& prev);
+  void Init();
+  void clear();
+  void Destroy();
+
+  void addTwoWidths(double width, double runLength, int numSpacing,
+                    double* spacings, int hasPRL = 0);
+
+  int    numWidth() const;
+  double width(int iWidth) const;
+  int    hasWidthPRL(int iWidth) const;
+  double widthPRL(int iWidth) const;
+  int    numWidthSpacing(int iWidth) const;
+  double widthSpacing(int iWidth, int iWidthSpacing) const;
+
+protected:
+  int numWidth_;
+  int numWidthAllocated_;
+  double* width_;
+  double* prl_;
+  int*    hasPRL_;
+  int*    numWidthSpacing_;   // each slot contains number of spacing of slot
+  double* widthSpacing_;
+  int*    atNsp_;             // accumulate total number of spacing
+};
+
 // 5.5
 class lefiSpacingTable {
 public:
   lefiSpacingTable();
   ~lefiSpacingTable();
 
+  // LEF_COPY_CONSTRUCTOR_H(lefiSpacingTable);
+  // LEF_ASSIGN_OPERATOR_H(lefiSpacingTable);
   void Init();
   void clear();
   void Destroy();
@@ -169,15 +229,44 @@ public:
   void addParallelWidthSpacing(int numSpacing, double* spacing);
   void setInfluence();
   void addInfluence(double width, double distance, double spacing);
-
+  void addTwoWidths(double width, double runLength, int numSpacing,
+                    double* spacing, int hasPRL = 0);          // 5.7
+  
   int isInfluence() const;
   lefiInfluence* influence() const;
+  int isParallel() const;
   lefiParallel*  parallel() const;
+  lefiTwoWidths* twoWidths() const;           // 5.7
 
 protected:
   int hasInfluence_;
   lefiInfluence*   influence_;
   lefiParallel*    parallel_;
+  lefiTwoWidths*   twoWidths_;               // 5.7
+};
+
+// 5.7
+class lefiOrthogonal {
+public:
+  lefiOrthogonal();
+  ~lefiOrthogonal();
+
+  // LEF_COPY_CONSTRUCTOR_H( lefiOrthogonal );
+  // LEF_ASSIGN_OPERATOR_H( lefiOrthogonal );
+  void Init();
+  void Destroy();
+
+  void addOrthogonal(double cutWithin, double ortho);
+
+  int  numOrthogonal() const;
+  double cutWithin(int index) const;
+  double orthoSpacing(int index) const;
+
+protected:
+  int numAllocated_;
+  int numCutOrtho_;
+  double* cutWithin_;
+  double* ortho_;
 };
 
 // 5.5
@@ -186,9 +275,10 @@ public:
   lefiAntennaModel();
   ~lefiAntennaModel();
 
+  lefiAntennaModel( const lefiAntennaModel& prev);
   void Init();
-  void clear();
   void Destroy();
+  void clear();
 
   void setAntennaModel(int oxide);
   void setAntennaAreaRatio(double value);
@@ -290,6 +380,7 @@ public:
   lefiLayer();
   void Init();
 
+  lefiLayer(const lefiLayer& prev);
   void Destroy();
   ~lefiLayer();
 
@@ -297,6 +388,7 @@ public:
   void setName(const char* name); // calls clear to init
   void setType(const char* typ);
   void setPitch(double num);
+  void setMask(int num);                           // 5.8
   void setPitchXY(double xdist, double ydist);     // 5.6
   void setOffset(double num);
   void setOffsetXY(double xdist, double ydist);    // 5.6
@@ -308,6 +400,7 @@ public:
   void setDiagSpacing(double spacing);             // 5.6
   void setSpacingMin(double dist);
   void setSpacingName(const char* spacingName);    // for CUT layer
+  void setSpacingLayerStack();                     // 5.7 for CUT layer
   void setSpacingAdjacent(int numCuts, double distance);  // 5.5for CUT layer
   void setSpacingRange(double left, double right);
   void setSpacingRangeUseLength();
@@ -317,14 +410,29 @@ public:
   void setSpacingLength(double num);
   void setSpacingLengthRange(double min, double max);
   void setSpacingCenterToCenter();
-  void setSpacingParallelOverlap();                            // 5.7
-  void setSpacingEol(double width, double within);             // 5.7
-  void setSpacingParSW(double space, double within);           // 5.7
-  void setSpacingParTwoEdges();                                // 5.7
-  void setMaxFloatingArea(double num);                         // 5.7
   void setArraySpacing(int hasLongArray, double viaWidth, double cutSpacing);
                                                                // 5.7
   void addArrayCuts(double arrayCuts, double arraySpacing);    // 5.7
+
+  void setSpacingParallelOverlap();                            // 5.7
+  void setSpacingArea(double cutArea);                         // 5.7
+
+  void setSpacingEol(double width, double within);             // 5.7
+  void setSpacingParSW(double space, double within);           // 5.7
+  void setSpacingParTwoEdges();                                // 5.7
+  void setSpacingAdjacentExcept();                             // 5.7
+  void setSpacingSamenet();                                    // 5.7
+  void setSpacingSamenetPGonly();                              // 5.7
+  void setSpacingTableOrtho();                                 // 5.7
+  void addSpacingTableOrthoWithin(double cutWithin, double ortho);  // 5.7
+  void setMaxFloatingArea(double num);                         // 5.7
+  void setArraySpacingLongArray();                             // 5.7
+  void setArraySpacingWidth(double viaWidth);                  // 5.7
+  void setArraySpacingCut(double cutSpacing);                  // 5.7
+  void addArraySpacingArray(int aCuts, double aSpacing);       // 5.7
+  void setSpacingNotchLength(double minNotchLength);           // 5.7
+  void setSpacingEndOfNotchWidth (double endOfNotchWidth,
+           double minNotchSpacing, double minNotchLength);     // 5.7
   void setDirection(const char* dir);
   void setResistance(double num);
   void setCapacitance(double num);
@@ -360,6 +468,7 @@ public:
   void addMinenclosedarea(double area);                             // 5.5
   void addMinenclosedareaWidth(double width);                       // 5.5
   void addMinimumcut(int cuts, double width);                       // 5.5
+  void addMinimumcutWithin(double cutDistance);                     // 5.7
   void addMinimumcutConnect(const char* direction);                 // 5.5
   void addMinimumcutLengDis(double length, double distance);        // 5.5
   void addParellelLength(double length);                            // 5.5
@@ -372,6 +481,10 @@ public:
   void addMinstepType(char* type);                                  // 5.6
   void addMinstepLengthsum(double maxLength);                       // 5.6
   void addMinstepMaxedges(double maxEdges);                         // 5.7
+  void addMinstepMaxedges(int maxEdges);                            // 5.7
+  void addMinstepMinAdjLength(double minAdjLength);                 // 5.7
+  void addMinstepMinBetLength(double minBetLength);                 // 5.7
+  void addMinstepXSameCorners();                                    // 5.7
 
   int  getNumber();     // this is for the parser internal use only
 
@@ -381,18 +494,33 @@ public:
   void addSpParallelWidth(double width);
   void addSpParallelWidthSpacing();
   void setInfluence();
+  void setSpTwoWidthsHasPRL(int hasPRL);
   void addSpInfluence(double width, double distance, double spacing);
+  void addSpTwoWidths(double width, double runLength);              // 5.7
+  
 
   // 5.6
   void addEnclosure(char* enclRule, double overhang1, double overhang2);
   void addEnclosureWidth(double minWidth); 
+  void addEnclosureExceptEC(double cutWithin);       // 5.7
+  void addEnclosureLength(double minLength);         // 5.7
+  void addEnclosureExtraCut();                       // 5.7+
   void addPreferEnclosure(char* enclRule, double overhang1, double overhang2);
   void addPreferEnclosureWidth(double minWidth); 
   void setResPerCut(double value);
   void setDiagMinEdgeLength(double value);
   void setMinSize(lefiGeometries* geom);
 
+  // 5.8
+  // POLYROUTING, MIMCAP, TSV, PASSIVATION, NWELL
+  void setLayerType(const char* lType) ; 
+
   int hasType() const ;
+  int hasLayerType() const ;         // 5.8 - Some layers can be another types
+                                     //  ROUTING can be POLYROUTING or MIMCAP
+                                     //  CUT can be TSV or PASSIVATION
+                                     //  MASTERSLICE can be NWELL
+  int hasMask() const ;              // 5.8
   int hasPitch() const ;
   int hasXYPitch() const ;           // 5.6
   int hasOffset() const ;
@@ -405,6 +533,7 @@ public:
   int hasDiagSpacing() const;        // 5.6 
   int hasSpacingNumber() const ;
   int hasSpacingName(int index) const ;
+  int hasSpacingLayerStack(int index) const ;            // 5.7
   int hasSpacingAdjacent(int index) const ;
   int hasSpacingCenterToCenter(int index) const ;
   int hasSpacingRange(int index) const ;
@@ -415,9 +544,15 @@ public:
   int hasSpacingLengthThreshold(int index) const;
   int hasSpacingLengthThresholdRange(int index) const;
   int hasSpacingParallelOverlap(int index) const;        // 5.7
+  int hasSpacingArea(int index) const;                   // 5.7
   int hasSpacingEndOfLine(int index) const;              // 5.7
   int hasSpacingParellelEdge(int index) const;           // 5.7
   int hasSpacingTwoEdges(int index) const;               // 5.7
+  int hasSpacingAdjacentExcept(int index) const;         // 5.7
+  int hasSpacingSamenet(int index) const;                // 5.7
+  int hasSpacingSamenetPGonly(int index) const;          // 5.7
+  int hasSpacingNotchLength(int index) const;            // 5.7
+  int hasSpacingEndOfNotchWidth(int index) const;        // 5.7
   int hasDirection() const ;
   int hasResistance() const ;
   int hasResistanceArray() const ;
@@ -448,7 +583,9 @@ public:
 
   char* name() const ;
   const char* type() const ;
+  const char* layerType() const ;           // 5.8
   double pitch() const ;
+  int    mask() const;                      // 5.8
   double pitchX() const ;                   // 5.6
   double pitchY() const ;                   // 5.6
   double offset() const ;
@@ -465,6 +602,7 @@ public:
   char*  spacingName(int index) const ;     // for CUT layer
   int    spacingAdjacentCuts(int index) const ;   // 5.5 - for CUT layer
   double spacingAdjacentWithin(int index) const ; // 5.5 - for CUT layer
+  double spacingArea(int index) const;            // 5.7 - for CUT layer
   double spacingRangeMin(int index) const ;
   double spacingRangeMax(int index) const ;
   double spacingRangeInfluence(int index) const ;
@@ -482,10 +620,18 @@ public:
   double spacingParSpace(int index) const;
   double spacingParWithin(int index) const;
 
+  // 5.7 Spacing Notch
+  double spacingNotchLength(int index) const;
+  double spacingEndOfNotchWidth(int index) const;
+  double spacingEndOfNotchSpacing(int index) const;
+  double spacingEndOfNotchLength(int index) const;
+
   // 5.5 Minimum cut rules
   int    numMinimumcut() const;
   int    minimumcut(int index) const;
   double minimumcutWidth(int index) const;
+  int    hasMinimumcutWithin(int index) const;          // 5.7
+  double minimumcutWithin(int index) const;             // 5.7
   int    hasMinimumcutConnection(int index) const;      // FROMABOVE|FROMBELOW
   const  char* minimumcutConnection(int index) const;   // FROMABOVE|FROMBELOW
   int    hasMinimumcutNumCuts(int index) const;
@@ -505,11 +651,11 @@ public:
   double antennaArea() const ;
   double currentDensityPoint() const ;
   void currentDensityArray(int* numPoints,
-	   double** widths, double** current) const ;
+         double** widths, double** current) const ;
   void capacitanceArray(int* numPoints,
-	   double** widths, double** resValues) const ;
+         double** widths, double** resValues) const ;
   void resistanceArray(int* numPoints,
-	   double** widths, double** capValues) const ;
+         double** widths, double** capValues) const ;
 
   int numAccurrentDensity() const;
   lefiLayerDensity* accurrent(int index) const;
@@ -596,7 +742,13 @@ public:
   int    hasMinstepLengthsum(int index) const; // 5.6
   double minstepLengthsum(int index) const;    // 5.6
   int    hasMinstepMaxedges(int index) const;  // 5.7
+  // TODO int    minstepMaxedges(int index) const;     // 5.7
   double minstepMaxedges(int index) const;     // 5.7
+  int    hasMinstepMinAdjLength(int index) const;  // 5.7
+  double minstepMinAdjLength(int index) const;     // 5.7
+  int    hasMinstepMinBetLength(int index) const;  // 5.7
+  double minstepMinBetLength(int index) const;     // 5.7
+  int    hasMinstepXSameCorners(int index) const;  // 5.7
 
   // 5.5 MINENCLOSEDAREA
   int    numMinenclosedarea() const;
@@ -604,7 +756,7 @@ public:
   int    hasMinenclosedareaWidth(int index) const;
   double minenclosedareaWidth(int index) const;
 
-  // 5.5 SPACINGTABLE
+  // 5.5 SPACINGTABLE FOR LAYER ROUTING
   int               numSpacingTable();
   lefiSpacingTable* spacingTable(int index);
 
@@ -616,6 +768,10 @@ public:
   double enclosureOverhang2(int index) const;
   int    hasEnclosureWidth(int index) const;
   double enclosureMinWidth(int index) const;
+  int    hasEnclosureExceptExtraCut(int index) const;    // 5.7
+  double enclosureExceptExtraCut(int index) const;       // 5.7
+  int    hasEnclosureMinLength(int index) const;         // 5.7
+  double enclosureMinLength(int index) const;            // 5.7
   int    numPreferEnclosure() const;
   int    hasPreferEnclosureRule(int index) const;
   char*  preferEnclosureRule(int index) ;
@@ -642,9 +798,13 @@ public:
   int numArrayCuts() const;
   double arrayCuts(int index) const;
   double arraySpacing(int index) const;
+  int    hasSpacingTableOrtho() const; // SPACINGTABLE ORTHOGONAL FOR LAYER CUT
+  lefiOrthogonal *orthogonal() const;
 
-  void parse65nmRules();
-  
+  void parse65nmRules();                  // 5.7
+  void parseLEF58Layer();                 // 5.8
+  int  need58PropsProcessing() const;     // 5.8
+
   // Debug print
   void print(FILE* f) const;
 
@@ -658,30 +818,41 @@ private:
   void parseAntennaAreaMinus(int index);
   void parseAntennaAreaDiff(int index);
 
+  void parseLayerType(int index);         // 5.8
+  void parseLayerEnclosure(int index);    // 5.8
+  void parseLayerWidthTable(int indxe);   // 5.8
+
 protected:
   char* name_;
   int nameSize_;
   char* type_;
   int typeSize_;
+  char* layerType_;   // 5.8 - POLYROUTING, MIMCAP, TSV, PASSIVATION, NWELL
 
   int hasPitch_;
+  int hasMask_;                       // 5.8 native
   int hasOffset_;
-  int hasWidth_;
+  int hasWidth_;            
   int hasArea_;
   int hasSpacing_;
   int hasDiagPitch_;                  // 5.6
   int hasDiagWidth_;                  // 5.6
   int hasDiagSpacing_;                // 5.6
   int* hasSpacingName_;               // 5.5
+  int* hasSpacingLayerStack_;         // 5.7
   int* hasSpacingAdjacent_;           // 5.5
   int* hasSpacingRange_;              // pcr 409334
   int* hasSpacingUseLengthThreshold_; // pcr 282799, due to mult. spacing allow
   int* hasSpacingLengthThreshold_;    // pcr 409334
   int* hasSpacingCenterToCenter_;     // 5.6
   int* hasSpacingParallelOverlap_;    // 5.7
+  int* hasSpacingCutArea_;            // 5.7
   int* hasSpacingEndOfLine_;          // 5.7
   int* hasSpacingParellelEdge_;       // 5.7
   int* hasSpacingTwoEdges_;           // 5.7
+  int* hasSpacingAdjacentExcept_;     // 5.7
+  int* hasSpacingSamenet_;            // 5.7
+  int* hasSpacingSamenetPGonly_;      // 5.7
   int hasArraySpacing_;               // 5.7
   int hasDirection_;
   int hasResistance_;
@@ -710,10 +881,12 @@ protected:
   double wireExtension_;
   int numSpacings_;
   int spacingsAllocated_;
+  int maskNumber_;                     // 5.8
   double* spacing_;          // for Cut & routing Layer, spacing is multiple
   char**  spacingName_;
   int*    spacingAdjacentCuts_;    // 5.5
   double* spacingAdjacentWithin_;  // 5.5
+  double* spacingCutArea_;         // 5.7
   double* rangeMin_;         // pcr 282799 & 408930, due to mult spacing allow
   double* rangeMax_;         // pcr 282799 & 408930, due to mult spacing allow
   double* rangeInfluence_;   // pcr 282799 & 408930, due to mult spacing allow
@@ -730,6 +903,8 @@ protected:
   int     minimumcutAllocated_;
   int*    minimumcut_;                       // pcr 409334
   double* minimumcutWidth_;                  // pcr 409334
+  int*    hasMinimumcutWithin_;              // 5.7
+  double* minimumcutWithin_;                 // 5.7
   int*    hasMinimumcutConnection_;
   char**  minimumcutConnection_;
   int*    hasMinimumcutNumCuts_;
@@ -752,7 +927,9 @@ protected:
   char**  minstepType_;                       // INSIDECORNER|OUTSIDECORNER|STEP
   double* minstepLengthsum_; 
   double* minstepMaxEdges_;                   // 5.7
-  
+  double* minstepMinAdjLength_;               // 5.7
+  double* minstepMinBetLength_;               // 5.7
+  int*    minstepXSameCorners_;               // 5.7
 
   char*  direction_;
   double resistance_;
@@ -817,6 +994,7 @@ protected:
   int hasAntennaSideAreaFactorDUO_;
 
   // 5.5 AntennaModel
+  lefiAntennaModel* currentAntennaModel_;
   int numAntennaModel_;
   int antennaModelAllocated_;
   lefiAntennaModel** antennaModel_;
@@ -835,6 +1013,7 @@ protected:
   int hasDensityCheckWindow_;
   int hasDensityCheckStep_;
   int hasFillActiveSpacing_;
+  int hasTwoWidthPRL_;
 
   double slotWireWidth_; 
   double slotWireLength_; 
@@ -863,6 +1042,9 @@ protected:
   double* overhang1_;
   double* overhang2_;
   double* minWidth_;
+  double* encminWidth_;
+  double* cutWithin_;
+  double* minLength_;
   int numPreferEnclosure_;
   int preferEnclosureAllocated_;
   char** preferEnclosureRules_;
@@ -888,5 +1070,21 @@ protected:
   int     arrayCutsAllocated_;
   double* arrayCuts_;
   double* arraySpacings_;
+  int     hasSpacingTableOrtho_;
+  lefiOrthogonal* spacingTableOrtho_;
+  double* notchLength_;
+  double* endOfNotchWidth_;
+  double* minNotchSpacing_;
+  double* eonotchLength_;
+
+  int     lef58WidthTableOrthoValues_;
+  int     lef58WidthTableWrongDirValues_;
+  double* lef58WidthTableOrtho_;
+  double* lef58WidthTableWrongDir_;
 };
+
+// END_LEFDEF_PARSER_NAMESPACE
+
+// USE_LEFDEF_PARSER_NAMESPACE
+
 #endif

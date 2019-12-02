@@ -50,7 +50,7 @@
 /*
 #define YYMAXDEPTH 20000
 */
-
+bool dimitris_debug= false;
 int lefRetVal;
 static char lefPropDefType;    /* save the current type of the property */
 
@@ -328,17 +328,17 @@ int zeroOrGt(double values) {
 %token K_PLACED K_POLYGON K_PORT K_POST K_POWER K_PRE K_PULLDOWNRES K_RECT
 %token K_RESISTANCE K_RESISTIVE K_RING K_RISE K_RISECS K_RISERS K_RISESATCUR K_RISETHRESH
 %token K_RISESATT1 K_RISET0 K_RISEVOLTAGETHRESHOLD K_FALLVOLTAGETHRESHOLD
-%token K_ROUTING K_ROWMAJOR K_RPERSQ K_SCANUSE K_SHAPE K_SHRINKAGE
+%token K_ROUTING K_ROWMAJOR K_RPERSQ K_SAMENET K_SCANUSE K_SHAPE K_SHRINKAGE
 %token K_SIGNAL K_SITE K_SIZE K_SOURCE K_SPACER K_SPACING K_SPECIALNETS K_STACK
 %token K_START K_STEP K_STOP K_STRUCTURE K_SYMMETRY K_TABLE K_THICKNESS K_TIEHIGH
 %token K_TIELOW K_TIEOFFR K_TIME K_TIMING K_TO K_TOPIN K_TOPLEFT K_TOPRIGHT
 %token K_TOPOFSTACKONLY
 %token K_TRISTATE K_TYPE K_UNATENESS K_UNITS K_USE K_VARIABLE K_VERTICAL K_VHI
-%token K_VIA K_VIARULE K_VLO K_VOLTAGE K_VOLTS K_WIDTH K_X K_Y
+%token K_VIA K_VIARULE K_VLO K_VOLTAGE K_VOLTS K_WIDTH K_X K_Y K_R90
 %token <string> T_STRING QSTRING
 %token <dval>   NUMBER
 %token K_N K_S K_E K_W K_FN K_FS K_FE K_FW
-%token K_R0 K_R90 K_R180 K_R270 K_MX K_MY K_MXR90 K_MYR90
+%token K_R0 K_R180 K_R270 K_MX K_MY K_MXR90 K_MYR90
 %token K_USER K_MASTERSLICE
 %token K_ENDMACRO K_ENDMACROPIN K_ENDVIARULE K_ENDVIA K_ENDLAYER K_ENDSITE
 %token K_CANPLACE K_CANNOTOCCUPY K_TRACKS K_FLOORPLAN K_GCELLGRID K_DEFAULTCAP
@@ -372,12 +372,14 @@ int zeroOrGt(double values) {
 %token K_ANTENNACUMDIFFAREARATIO K_ANTENNAAREAFACTOR K_ANTENNASIDEAREARATIO
 %token K_ANTENNADIFFSIDEAREARATIO K_ANTENNACUMSIDEAREARATIO
 %token K_ANTENNACUMDIFFSIDEAREARATIO K_ANTENNASIDEAREAFACTOR
-%token K_DIFFUSEONLY K_MANUFACTURINGGRID
+%token K_DIFFUSEONLY K_MANUFACTURINGGRID K_FIXEDMASK
 %token K_ANTENNACELL K_CLEARANCEMEASURE K_EUCLIDEAN K_MAXXY
 %token K_USEMINSPACING K_ROWMINSPACING K_ROWABUTSPACING K_FLIP K_NONE
 %token K_ANTENNAPARTIALMETALAREA K_ANTENNAPARTIALMETALSIDEAREA
 %token K_ANTENNAGATEAREA K_ANTENNADIFFAREA K_ANTENNAMAXAREACAR
 %token K_ANTENNAMAXSIDEAREACAR K_ANTENNAPARTIALCUTAREA K_ANTENNAMAXCUTCAR
+%token K_ANTENNACUMROUTINGPLUSCUT K_ANTENNAGATEPLUSDIFF K_ANTENNAAREAMINUSDIFF
+%token K_ANTENNAAREADIFFREDUCEPWL
 %token K_SLOTWIREWIDTH K_SLOTWIRELENGTH K_SLOTWIDTH K_SLOTLENGTH
 %token K_MAXADJACENTSLOTSPACING K_MAXCOAXIALSLOTSPACING K_MAXEDGESLOTSPACING
 %token K_SPLITWIREWIDTH K_MINIMUMDENSITY K_MAXIMUMDENSITY K_DENSITYCHECKWINDOW
@@ -388,7 +390,7 @@ int zeroOrGt(double values) {
 %token K_OXIDE3 K_OXIDE4 K_PARALLELRUNLENGTH K_MINWIDTH
 %token K_PROTRUSIONWIDTH K_SPACINGTABLE K_WITHIN
 %token K_ABOVE K_BELOW K_CENTERTOCENTER K_CUTSIZE K_CUTSPACING K_DENSITY
-%token K_DIAG45 K_DIAG135
+%token K_DIAG45 K_DIAG135 K_MASK
 %token K_DIAGMINEDGELENGTH K_DIAGSPACING K_DIAGPITCH K_DIAGWIDTH
 %token K_GENERATED K_GROUNDSENSITIVITY K_HARDSPACING K_INSIDECORNER
 %token K_LAYERS K_LENGTHSUM K_MICRONS K_MINCUTS
@@ -396,8 +398,10 @@ int zeroOrGt(double values) {
 %token K_PREFERENCLOSURE K_ROWCOL K_ROWPATTERN K_SOFT
 %token K_SUPPLYSENSITIVITY K_USEVIA
 %token K_USEVIARULE K_WELLTAP
-%token K_PARALLELOVERLAP K_SAMENET
+%token K_PARALLELOVERLAP 
+%token K_ARRAYSPACING K_ENDOFLINE K_ENDOFNOTCHWIDTH K_EXCEPTSAMEPGNET K_NOTCHSPACING K_NOTCHLENGTH K_PARALLELEDGE K_PGONLY K_TWOEDGES K_ARRAYCUTS K_LONGARRAY K_ORTHOGONAL K_EXCEPTEXTRACUT  K_PRL K_TWOWIDTHS K_EXCEPTPGNET
 
+%token DOUBLE_QUOTE
 %type <string> start_macro end_macro
 %type <string> start_layer
 %type <string> macro_pin_use
@@ -409,15 +413,17 @@ int zeroOrGt(double values) {
 %type <pt> macro_origin
 %type <string> layer_options layer_type layer_direction
 %type <string> electrical_direction
-%type <integer> orientation
+%type <integer> orientation maskColor
 %type <dval> expression
 %type <integer> b_expr
 %type <string>  s_expr
 %type <integer> relop spacing_value
 %type <string> opt_layer_name risefall unateness delay_or_transition
 %type <string> two_pin_trigger from_pin_trigger to_pin_trigger
-%type <string> one_pin_trigger req_layer_name
+
 %type <string> layer_table_type layer_enclosure_type_opt layer_minstep_type
+%type <string> macro_pin_option one_pin_trigger req_layer_name
+
 
 %nonassoc IF
 %left K_AND
@@ -485,6 +491,7 @@ version: K_VERSION { lefDumbMode = 1; lefNoNum = 1;} T_STRING ';'
       { 
          versionNum = convert_name2num($3);
          //  07/09/2012  if (versionNum > 5.6) {
+/* --------------------------------------------------------------------------- VERSION TODO
          if (versionNum > 5.7) {
            char temp[120];
            sprintf(temp,
@@ -493,6 +500,8 @@ version: K_VERSION { lefDumbMode = 1; lefNoNum = 1;} T_STRING ';'
            yyerror(temp);
            return 1;
          }
+--------------------------------------------------------------------------- VERSION TODO */
+
 /*
          versionNum = $3;         Save the version number for future use */
          if (lefrVersionStrCbk) {
@@ -579,7 +588,7 @@ rule:  version | busbitchars | case_sensitivity | units_section
     | edgeratescalefactor | edgeratethreshold2
     | noisetable | correctiontable | input_antenna
     | output_antenna | inout_antenna
-    | antenna_input | antenna_inout | antenna_output | manufacturing
+    | antenna_input | antenna_inout | antenna_output | manufacturing | fixedmask
     | useminspacing | clearancemeasure | maxstack_via
     | create_file_statement
     	;
@@ -635,6 +644,24 @@ wireextension: K_NOWIREEXTENSIONATPIN K_ON ';'
            if (noWireExtensionWarnings++ < lefrNoWireExtensionWarnings)
              yywarning("NOWIREEXTENSIONATPIN is obsolete in 5.6. It will be ignored.");
     }
+
+fixedmask: K_FIXEDMASK ';'
+    {
+	if (dimitris_debug)
+             yywarning("TODO fixedmask: K_FIXEDMASK");
+	/*
+       if (lefData->versionNum >= 5.8) {
+
+          if (lefCallbacks->FixedMaskCbk) {
+            lefData->lefFixedMask = 1;
+            CALLBACK(lefCallbacks->FixedMaskCbk, lefrFixedMaskCbkType, lefData->lefFixedMask);
+          }
+
+          lefData->hasFixedMask = 1;
+       }
+	*/
+    }
+    
 
 manufacturing: K_MANUFACTURINGGRID NUMBER ';'
     {
@@ -743,6 +770,9 @@ start_layer: K_LAYER {lefDumbMode = 1; lefNoNum = 1; } T_STRING
       lefrHasLayer = 1;
       //strcpy(layerName, $3);
       layerName = strdup($3);
+if (dimitris_debug)
+if (dimitris_debug)
+fprintf(stdout, "Start Layer= %s --------------------------------------------------------\n", layerName);
       hasType = 0;
       hasPitch = 0;
       hasWidth = 0;
@@ -754,7 +784,9 @@ start_layer: K_LAYER {lefDumbMode = 1; lefNoNum = 1; } T_STRING
     }
 
 end_layer: K_END {lefDumbMode = 1; lefNoNum = 1; } T_STRING
-    { 
+    {
+if (dimitris_debug)
+fprintf(stdout, "End Layer -------------------------------------------\n"); 
       if (strcmp(layerName, $3) != 0) {
         lefFree(layerName);
         if (lefrLayerCbk) { /* write error only if cbk is set */
@@ -799,6 +831,9 @@ end_layer: K_END {lefDumbMode = 1; lefNoNum = 1; } T_STRING
           }
         }
       }
+if (dimitris_debug)
+if (dimitris_debug)
+fprintf(stdout, "End Layer -------------------------------------------\n"); 
     }
 
 layer_options:
@@ -808,12 +843,65 @@ layer_options:
     { }
 
 layer_option:
-   K_TYPE layer_type ';'
+ K_ARRAYSPACING                   // 5.7
+    {
+       // let setArraySpacingCutSpacing to set the data
+    }
+    layer_arraySpacing_long
+    layer_arraySpacing_width
+    K_CUTSPACING NUMBER
+    {
+	if (dimitris_debug)
+              yywarning("5.8 K_CUTSPACING TODO");
+/*
+      if (lefCallbacks->LayerCbk) {
+         lefData->lefrLayer.setArraySpacingCut($6);
+         lefData->arrayCutsVal = 0;
+      }
+*/
+    }
+    layer_arraySpacing_arraycuts ';'
+    {
+              yywarning("5.8 layer_arraySpacing_arraycuts TODO");
+/*
+      if (lefData->versionNum < 5.7) {
+         lefData->outMsg = (char*)lefMalloc(10000);
+         sprintf(lefData->outMsg,
+           "ARRAYSPACING is a version 5.7 or later syntax.\nYour lef file is defined with version %g.", lefData->versionNum);
+         lefError(1685, lefData->outMsg);
+         lefFree(lefData->outMsg);
+         CHKERR();
+      }
+*/
+    }
+
+
+|   K_TYPE layer_type ';'
     {
       if (lefrLayerCbk)
          lefrLayer.lefiLayer::setType($2);
       hasType = 1;
     }
+| K_MASK NUMBER ';'
+    {
+              yywarning("5.8 MASK");
+/*
+	
+      if (lefData->versionNum < 5.8) {
+          if (lefData->layerWarnings++ < lefSettings->ViaWarnings) {
+              lefError(2081, "MASK information can only be defined with version 5.8");
+              CHKERR();
+          }
+      } else {
+          if (lefCallbacks->LayerCbk) {
+            lefData->lefrLayer.setMask((int)$2);
+          }
+
+          lefData->hasMask = 1;
+      }
+*/
+    }
+
   | K_PITCH NUMBER ';'
     { 
       if (lefrLayerCbk) lefrLayer.lefiLayer::setPitch($2);
@@ -886,6 +974,41 @@ layer_option:
            lefrLayer.lefiLayer::setSpacingMin($2);
       }
     }
+
+// look : replace from 58
+
+ layer_spacing_opts
+    layer_spacing_cut_routing ';' {}
+  | K_SPACINGTABLE K_ORTHOGONAL K_WITHIN NUMBER K_SPACING NUMBER   // 5.7
+    {
+	if (dimitris_debug)
+                yywarning("5.8 K_SPACINGTABLE TODO");
+/*
+      if (lefCallbacks->LayerCbk)
+         lefData->lefrLayer.setSpacingTableOrtho();
+      if (lefCallbacks->LayerCbk) // due to converting to C, else, convertor produce
+         lefData->lefrLayer.addSpacingTableOrthoWithin($4, $6);//bad code
+*/
+    }
+ layer_spacingtable_opts ';'
+    {
+	if (dimitris_debug)
+                yywarning("5.8 layer_spacingtable_opts TODO");
+/*
+      if (lefData->versionNum < 5.7) {
+         lefData->outMsg = (char*)lefMalloc(10000);
+         sprintf(lefData->outMsg,
+           "SPACINGTABLE ORTHOGONAL is a version 5.7 or later syntax.\nYour lef file is defined with version %g.", lefData->versionNum);
+         lefError(1694, lefData->outMsg);
+         lefFree(lefData->outMsg);
+         CHKERR();
+      }
+*/
+    }
+
+
+
+/***************************************************** replace from 58
     opt_range_detail opt_spacing_cut ';'
 
   |  K_SPACING NUMBER K_PARALLELOVERLAP ';'
@@ -896,6 +1019,11 @@ layer_option:
     {
 	// 09072012 D
     }
+**********************************************************************/
+
+
+
+
   | K_DIRECTION layer_direction ';'
     {
       layerDir = 1;
@@ -1099,7 +1227,9 @@ layer_option:
       }
       if (lefrLayerCbk) lefrLayer.lefiLayer::setCurrentPoint($3, $4);
     }
-  | K_PROPERTY { lefDumbMode = 10000000; lefRealNum = 1; } layer_prop_list ';'
+  | K_PROPERTY { lefDumbMode = 10000000; lefRealNum = 1; if (dimitris_debug)
+if (dimitris_debug)
+fprintf(stdout, "Layer property\n"); } layer_prop_list ';'
     {
       lefDumbMode = 0;
       lefRealNum = 0;
@@ -1523,6 +1653,130 @@ layer_option:
       antennaType = lefiAntennaO;
     }
     layer_oxide ';'
+
+
+  | K_ANTENNACUMROUTINGPLUSCUT ';'        // 5.7 
+    {
+	if (dimitris_debug)
+              yywarning("K_ANTENNACUMROUTINGPLUSCUT 5.8 TODO");
+/*
+      if (lefData->versionNum < 5.7) {
+         lefData->outMsg = (char*)lefMalloc(10000);
+         sprintf(lefData->outMsg,
+           "ANTENNACUMROUTINGPLUSCUT is a version 5.7 or later syntax.\nYour lef file is defined with version %g.", lefData->versionNum);
+         lefError(1686, lefData->outMsg);
+         lefFree(lefData->outMsg);
+         CHKERR();
+      } else {
+         if (!lefData->layerRout && !lefData->layerCut) {
+            if (lefCallbacks->LayerCbk) { // write error only if cbk is set 
+               if (lefData->layerWarnings++ < lefSettings->LayerWarnings) {
+                  lefError(1560, "ANTENNACUMROUTINGPLUSCUT can only be defined in LAYER with type ROUTING or CUT. Parser will stop processing.");
+                  CHKERR();
+               }
+            }
+         }
+         if (lefCallbacks->LayerCbk) lefData->lefrLayer.setAntennaCumRoutingPlusCut();
+      }
+*/
+    }
+| K_ANTENNAGATEPLUSDIFF NUMBER ';'      // 5.7 
+    {
+	if (dimitris_debug)
+              yywarning("K_ANTENNAGATEPLUSDIFF 5.8 TODO");
+/*
+      if (lefData->versionNum < 5.7) {
+         lefData->outMsg = (char*)lefMalloc(10000);
+         sprintf(lefData->outMsg,
+           "ANTENNAGATEPLUSDIFF is a version 5.7 or later syntax.\nYour lef file is defined with version %g.", lefData->versionNum);
+         lefError(1687, lefData->outMsg);
+         lefFree(lefData->outMsg);
+         CHKERR();
+      } else {
+         if (!lefData->layerRout && !lefData->layerCut) {
+            if (lefCallbacks->LayerCbk) { // write error only if cbk is set 
+               if (lefData->layerWarnings++ < lefSettings->LayerWarnings) {
+                  lefError(1561, "ANTENNAGATEPLUSDIFF can only be defined in LAYER with type ROUTING or CUT. Parser will stop processing.");
+                  CHKERR();
+               }
+            }
+         }
+         if (lefCallbacks->LayerCbk) lefData->lefrLayer.setAntennaGatePlusDiff($2);
+      }
+*/
+    }
+| K_ANTENNAAREAMINUSDIFF NUMBER ';'     // 5.7 
+    {
+	if (dimitris_debug)
+              yywarning("K_ANTENNAAREAMINUSDIFF 5.8 TODO");
+/*
+      if (lefData->versionNum < 5.7) {
+         lefData->outMsg = (char*)lefMalloc(10000);
+         sprintf(lefData->outMsg,
+           "ANTENNAAREAMINUSDIFF is a version 5.7 or later syntax.\nYour lef file is defined with version %g.", lefData->versionNum);
+         lefError(1688, lefData->outMsg);
+         lefFree(lefData->outMsg);
+         CHKERR();
+      } else {
+         if (!lefData->layerRout && !lefData->layerCut) {
+            if (lefCallbacks->LayerCbk) { // write error only if cbk is set 
+               if (lefData->layerWarnings++ < lefSettings->LayerWarnings) {
+                  lefError(1562, "ANTENNAAREAMINUSDIFF can only be defined in LAYER with type ROUTING or CUT. Parser will stop processing.");
+                  CHKERR();
+               }
+            }
+         }
+         if (lefCallbacks->LayerCbk) lefData->lefrLayer.setAntennaAreaMinusDiff($2);
+      }
+*/
+    }
+| K_ANTENNAAREADIFFREDUCEPWL '(' pt pt            // 5.7 
+    {
+              yywarning("K_ANTENNAAREADIFFREDUCEPWL 5.8 TODO");
+/*
+      if (!lefData->layerRout && !lefData->layerCut) {
+         if (lefCallbacks->LayerCbk) { // write error only if cbk is set 
+            if (lefData->layerWarnings++ < lefSettings->LayerWarnings) {
+               lefError(1563, "ANTENNAAREADIFFREDUCEPWL can only be defined in LAYER with type ROUTING or CUT. Parser will stop processing.");
+               CHKERR();
+            }
+         }
+      }
+      if (lefCallbacks->LayerCbk) { // require min 2 points, set the 1st 2 
+         if (lefData->lefrAntennaPWLPtr) {
+            lefData->lefrAntennaPWLPtr->Destroy();
+            lefFree(lefData->lefrAntennaPWLPtr);
+         }
+
+         lefData->lefrAntennaPWLPtr = lefiAntennaPWL::create();
+         lefData->lefrAntennaPWLPtr->addAntennaPWL($3.x, $3.y);
+         lefData->lefrAntennaPWLPtr->addAntennaPWL($4.x, $4.y);
+      }
+*/
+    } 
+ layer_diffusion_ratios ')' ';'
+    {
+/*
+      if (lefCallbacks->LayerCbk) {
+        lefData->lefrLayer.setAntennaPWL(lefiAntennaADR, lefData->lefrAntennaPWLPtr);
+        lefData->lefrAntennaPWLPtr = NULL;
+      }
+*/
+    }
+    {
+/*
+      if (lefData->versionNum < 5.7) {
+        lefData->outMsg = (char*)lefMalloc(10000);
+        sprintf(lefData->outMsg,
+          "ANTENNAAREADIFFREDUCEPWL is a version 5.7 or later syntax.\nYour lef file is defined with version %g.", lefData->versionNum);
+        lefError(1689, lefData->outMsg);
+        lefFree(lefData->outMsg);
+        CHKERR();
+      }
+*/
+    }
+
+
   | K_SLOTWIREWIDTH NUMBER ';'
     { /* 5.4 syntax */
       if (ignoreVersion) {
@@ -1910,6 +2164,48 @@ layer_option:
       lefFree(lefrGeometriesPtr);
     }
 
+layer_arraySpacing_long:            // 5.7
+  // empty
+  | K_LONGARRAY
+    {
+/*
+        if (lefCallbacks->LayerCbk)
+           lefData->lefrLayer.setArraySpacingLongArray();
+*/
+    }
+
+layer_arraySpacing_width:           // 5.7
+  // empty
+  | K_WIDTH NUMBER
+    {
+/*
+      if (lefCallbacks->LayerCbk)
+         lefData->lefrLayer.setArraySpacingWidth($2);
+*/
+    }
+
+layer_arraySpacing_arraycuts:       // 5.7
+  // empty
+  | layer_arraySpacing_arraycut layer_arraySpacing_arraycuts
+
+layer_arraySpacing_arraycut:
+  K_ARRAYCUTS NUMBER K_SPACING NUMBER
+    {
+/*
+      if (lefCallbacks->LayerCbk)
+         lefData->lefrLayer.addArraySpacingArray((int)$2, $4);
+         if (lefData->arrayCutsVal > (int)$2) {
+            // Mulitiple ARRAYCUTS value needs to me in ascending order
+            if (!lefData->arrayCutsWar) {
+               if (lefData->layerWarnings++ < lefSettings->LayerWarnings)
+                  lefWarning(2080, "The number of cut values in multiple ARRAYSPACING ARRAYCUTS are not in increasing order.\nTo be consistent with the documentation, update the cut values to increasing order.");
+               lefData->arrayCutsWar = 1;
+            }
+         }
+         lefData->arrayCutsVal = (int)$2;
+*/
+    }
+
 sp_options:
   K_PARALLELRUNLENGTH NUMBER
     { 
@@ -1956,6 +2252,56 @@ sp_options:
       if (lefrLayerCbk) lefrLayer.lefiLayer::addSpParallelWidthSpacing();
     }
     layer_sp_parallel_widths
+
+  | K_TWOWIDTHS K_WIDTH NUMBER layer_sp_TwoWidthsPRL NUMBER
+    {
+	if (dimitris_debug)
+              yywarning("TODO: K_TWOWIDTHS K_WIDTH NUMBER");
+/*
+      if (lefCallbacks->LayerCbk) lefData->lefrLayer.addNumber($5);
+*/
+    }
+    number_list
+    {
+	if (dimitris_debug)
+              yywarning("TODO: K_TWOWIDTHS nt_number_list");
+/*
+      if (lefData->hasParallel) { // 5.7 - Either PARALLEL OR TWOWIDTHS per layer
+         if (lefCallbacks->LayerCbk) { // write error only if cbk is set
+            if (lefData->layerWarnings++ < lefSettings->LayerWarnings) {
+              lefError(1592, "A PARALLELRUNLENGTH statement was already defined in the layer.\nIt is PARALLELRUNLENGTH or TWOWIDTHS is allowed per layer.");
+              CHKERR();
+            }
+         }
+      }
+      if (lefData->hasTwoWidths) { // 5.7 - only 1 TWOWIDTHS per layer
+         if (lefCallbacks->LayerCbk) { // write error only if cbk is set
+            if (lefData->layerWarnings++ < lefSettings->LayerWarnings) {
+              lefError(1593, "A TWOWIDTHS table statement was already defined in the layer.\nOnly one TWOWIDTHS statement is allowed per layer.");
+              CHKERR();
+            }
+         }
+      }
+      if (lefCallbacks->LayerCbk) lefData->lefrLayer.addSpTwoWidths($3, $4);
+      lefData->hasTwoWidths = 1;
+*/
+    }
+    layer_sp_TwoWidths
+    {
+	if (dimitris_debug)
+              yywarning("TODO: layer_sp_TwoWidths");
+/*
+      if (lefData->versionNum < 5.7) {
+        lefData->outMsg = (char*)lefMalloc(10000);
+        sprintf(lefData->outMsg,
+          "TWOWIDTHS is a version 5.7 or later syntax.\nYour lef file is defined with version %g.", lefData->versionNum);
+        lefError(1697, lefData->outMsg);
+        lefFree(lefData->outMsg);
+        CHKERR();
+      }
+*/
+    }
+
   | K_INFLUENCE K_WIDTH NUMBER K_WITHIN NUMBER K_SPACING NUMBER
     {
       if (hasInfluence) {  // 5.5 - INFLUENCE table must follow a PARALLEL
@@ -1981,6 +2327,22 @@ sp_options:
     }
     layer_sp_influence_widths
 
+layer_spacingtable_opts:      // 5.7
+  // empty
+  | layer_spacingtable_opt layer_spacingtable_opts
+
+layer_spacingtable_opt:
+  K_WITHIN NUMBER K_SPACING NUMBER
+  {
+	if (dimitris_debug)
+              yywarning("5.8 layer_spacingtable_opt TODO");
+      if (lefrLayerCbk) {
+       // lefrLayer.lefiLayer::addSpacingTableOrthoWithin($2, $4);
+      }
+  }
+
+
+
 layer_enclosure_type_opt: 
     {$$ = (char*)"NULL";}   /* empty */
   | K_ABOVE  {$$ = (char*)"ABOVE";}
@@ -1993,6 +2355,48 @@ layer_enclosure_width_opt:  /* empty */
          lefrLayer.lefiLayer::addEnclosureWidth($2);
       }
     }
+ layer_enclosure_width_except_opt
+  | K_LENGTH NUMBER              // 5.7
+    {
+	if (dimitris_debug)
+              yywarning("5.8 layer_enclosure_width_except_opt K_LENGTH TODO");
+/*
+      if (lefData->versionNum < 5.7) {
+         lefData->outMsg = (char*)lefMalloc(10000);
+         sprintf(lefData->outMsg,
+           "LENGTH is a version 5.7 or later syntax.\nYour lef file is defined with version %g.", lefData->versionNum);
+         lefError(1691, lefData->outMsg);
+         lefFree(lefData->outMsg);
+         CHKERR();
+      } else {
+         if (lefCallbacks->LayerCbk) {
+            lefData->lefrLayer.addEnclosureLength($2);
+         }
+      }
+*/
+    }
+
+layer_enclosure_width_except_opt: // empty
+  | K_EXCEPTEXTRACUT NUMBER       // 5.7
+    {
+	if (dimitris_debug)
+              yywarning("5.8 layer_enclosure_width_except_opt K_EXCEPTEXTRACUT TODO");
+/*
+      if (lefData->versionNum < 5.7) {
+         lefData->outMsg = (char*)lefMalloc(10000);
+         sprintf(lefData->outMsg,
+           "EXCEPTEXTRACUT is a version 5.7 or later syntax.\nYour lef file is defined with version %g.", lefData->versionNum);
+         lefError(1690, lefData->outMsg);
+         lefFree(lefData->outMsg);
+         CHKERR();
+      } else {
+         if (lefCallbacks->LayerCbk) {
+            lefData->lefrLayer.addEnclosureExceptEC($2);
+         }
+      }
+*/
+    }
+
     
 layer_preferenclosure_width_opt:  /* empty */
   | K_WIDTH NUMBER
@@ -2103,8 +2507,11 @@ layer_diffusion_ratios: /* empty */
 
 layer_diffusion_ratio:
   pt
-  { if (lefrLayerCbk)
+  { 
+/* TODO
+     if (lefrLayerCbk)
       lefrAntennaPWLPtr->lefiAntennaPWL::addAntennaPWL($1.x, $1.y);
+*/
   }
 
 layer_antenna_duo: /* empty */
@@ -2221,6 +2628,10 @@ layer_prop:
         lefrLayer.lefiLayer::addNumProp($1, $2, temp, propTp);
       }
     }
+q_string_list: 
+	T_STRING
+	{ }
+	| q_string_list T_STRING 
 
 current_density_pwl_list :
   current_density_pwl
@@ -2307,6 +2718,49 @@ layer_sp_parallel_width: K_WIDTH NUMBER
     number_list
     { if (lefrLayerCbk) lefrLayer.lefiLayer::addSpParallelWidthSpacing(); }
  
+layer_sp_TwoWidths: // empty               // 5.7
+    { }
+  | layer_sp_TwoWidth layer_sp_TwoWidths
+    { }
+
+layer_sp_TwoWidth: K_WIDTH NUMBER layer_sp_TwoWidthsPRL NUMBER
+    {
+	if (dimitris_debug)
+             yywarning("TODO: layer_sp_TwoWidth");
+/*
+       if (lefCallbacks->LayerCbk) lefData->lefrLayer.addNumber($4);
+*/
+    }
+    number_list
+    {
+	if (dimitris_debug)
+             yywarning("TODO: layer_sp_TwoWidth numbere_list");
+/*
+      if (lefCallbacks->LayerCbk)
+         lefData->lefrLayer.addSpTwoWidths($2, $3);
+*/
+    }
+
+layer_sp_TwoWidthsPRL:                       // 5.7
+    {
+	if (dimitris_debug)
+             yywarning("TODO: layer_sp_TwoWidthsPRL");
+/*
+        $$ = -1; // cannot use 0, since PRL number can be 0
+        lefData->lefrLayer.setSpTwoWidthsHasPRL(0);
+*/
+    }
+  | K_PRL NUMBER
+    {
+	if (dimitris_debug)
+             yywarning("TODO: layer_sp_TwoWidthsPRL KPL");
+/*
+        $$ = $2;
+        lefData->lefrLayer.setSpTwoWidthsHasPRL(1);
+*/
+    }
+
+
 layer_sp_influence_widths: /* empty */
     { }
   | layer_sp_influence_widths layer_sp_influence_width
@@ -2598,10 +3052,25 @@ via_geometries:
   ;
 
 via_geometry:
-  K_RECT pt pt ';'
+  K_RECT maskColor pt pt ';'
+/*
+ if (lefCallbacks->ViaCbk) {
+        if (lefData->versionNum < 5.8 && (int)$2 > 0) {
+          if (lefData->viaWarnings++ < lefSettings->ViaWarnings) {
+              lefError(2081, "MASK information can only be defined with version 5.8");
+              CHKERR();
+            }
+        } else {
+          lefData->lefrVia.addRectToLayer((int)$2, $3.x, $3.y, $4.x, $4.y);
+        }
+      }
+
+*/
     { if (lefrViaCbk)
-        lefrVia.lefiVia::addRectToLayer($2.x, $2.y, $3.x, $3.y); }
-  | K_POLYGON                                               // 5.6
+        // lefrVia.lefiVia::addRectToLayer($2.x, $2.y, $3.x, $3.y); 
+        lefrVia.lefiVia::addRectToLayer($3.x, $3.y, $4.x, $4.y); 
+    }
+  | K_POLYGON maskColor                                              // 5.6
     {
       lefrGeometriesPtr = (lefiGeometries*)lefMalloc(sizeof(lefiGeometries));
       lefrGeometriesPtr->lefiGeometries::Init();
@@ -3036,6 +3505,12 @@ spacing:  samenet_keyword T_STRING T_STRING NUMBER ';'
 samenet_keyword: K_SAMENET
     /* must be followed by two names */
     { lefDumbMode = 2; lefNoNum = 2; hasSamenet = 1; }
+
+maskColor:
+    // empty
+    { $$ = 0; }
+    | K_MASK NUMBER
+    { $$ = (int)$2; }
 
 irdrop: start_irdrop ir_tables end_irdrop
     { }
@@ -3568,6 +4043,7 @@ macro_option:
   | macro_generate 
   | macro_source
   | macro_symmetry_statement 
+  | macro_fixedMask
   | macro_origin 
       { }
   | macro_power 
@@ -3594,7 +4070,7 @@ macro_option:
       { }
   | timing
       { }
-  | K_PROPERTY {lefDumbMode = 1000000; lefRealNum = 1;} macro_prop_list  ';'
+  | K_PROPERTY {lefDumbMode = 1000000; lefRealNum = 1;  yywarning("K_PROPERTY :TODO: macro Property"); } macro_prop_list  ';'
       { lefDumbMode = 0;
         lefRealNum = 0;
       }
@@ -3658,6 +4134,8 @@ macro_name_value_pair:
 
 macro_class: K_CLASS class_type ';'
     {
+if (dimitris_debug)
+fprintf(stdout, "--------------------------------------------------- CLASS=%s \n", $2);
        if (lefrMacroCbk) lefrMacro.lefiMacro::setClass($2);
        if (lefrMacroClassTypeCbk)
           CALLBACK(lefrMacroClassTypeCbk, lefrMacroClassTypeCbkType, $2);
@@ -3712,6 +4190,23 @@ class_type:
     }
   | K_NONE    {$$ = (char*)"NONE"; }
   | K_PAD     {$$ = (char*)"PAD"; } 
+  | K_BUMP                         // 5.7
+      {
+                yywarning("TODO:PORT BUMP");
+/*
+        if (lefData->versionNum < 5.7) {
+          lefData->outMsg = (char*)lefMalloc(10000);
+          sprintf(lefData->outMsg,
+            "BUMP is a version 5.7 or later syntax.\nYour lef file is defined with version %g.", lefData->versionNum);
+          lefError(1698, lefData->outMsg);
+          lefFree(lefData->outMsg);
+          CHKERR();
+        }
+*/
+
+        $$ = (char*)"BUMP";
+     }
+
   | K_VIRTUAL {$$ = (char*)"VIRTUAL"; }
   | K_PAD  pad_type 
       {  sprintf(temp_name, "PAD %s", $2);
@@ -3924,6 +4419,21 @@ macro_foreign:
     { if (lefrMacroCbk)
       lefrMacro.lefiMacro::addForeign($1, 0, 0.0, 0.0, $2);
     }
+
+macro_fixedMask:
+   K_FIXEDMASK ';'
+   {
+               yywarning("macro_fixedMask K_FIXEDMASK");
+/*
+       if (lefCallbacks->MacroCbk && lefData->versionNum >= 5.8) {
+          lefData->lefrMacro.setFixedMask(1);
+       }
+       if (lefCallbacks->MacroFixedMaskCbk) {
+          CALLBACK(lefCallbacks->MacroFixedMaskCbk, lefrMacroFixedMaskCbkType, 1);
+       }
+*/
+    }
+
 
 macro_eeq: K_EEQ { lefDumbMode = 1; lefNoNum = 1; } T_STRING ';'
     { if (lefrMacroCbk) lefrMacro.lefiMacro::setEEQ($3); }
@@ -4725,40 +5235,47 @@ geometry:
         lefrGeometriesPtr->lefiGeometries::addLayer($3);
       needGeometry = 1;    // within LAYER it requires either path, rect, poly
     }
+  layer_exceptpgnet
   layer_spacing ';'
   | K_WIDTH NUMBER ';'
     { if (lefrDoGeometries)
         lefrGeometriesPtr->lefiGeometries::addWidth($2); }
-  | K_PATH firstPt otherPts ';'
+  | K_PATH maskColor firstPt otherPts ';'
     { if (lefrDoGeometries)
         lefrGeometriesPtr->lefiGeometries::addPath();
       hasPRP = 1;
       needGeometry = 2;
     }
-  | K_PATH K_ITERATE firstPt otherPts stepPattern ';'
+  | K_PATH maskColor K_ITERATE firstPt otherPts stepPattern ';'
     { if (lefrDoGeometries)
         lefrGeometriesPtr->lefiGeometries::addPathIter();
       hasPRP = 1;
       needGeometry = 2;
     }
-  | K_RECT pt pt';'
+  | K_RECT maskColor pt pt';'
     { if (lefrDoGeometries)
-        lefrGeometriesPtr->lefiGeometries::addRect($2.x, $2.y, $3.x, $3.y);
+        lefrGeometriesPtr->lefiGeometries::addRect($3.x, $3.y, $4.x, $4.y);
+        //lefrGeometriesPtr->lefiGeometries::addRect($2.x, $2.y, $3.x, $3.y);
+
+// TODO             lefData->lefrGeometriesPtr->addRect((int)$2, $3.x, $3.y, $4.x, $4.y);
+
       needGeometry = 2;
     }
-  | K_RECT K_ITERATE pt pt stepPattern ';'
+  | K_RECT maskColor K_ITERATE pt pt stepPattern ';'
     { if (lefrDoGeometries)
-        lefrGeometriesPtr->lefiGeometries::addRectIter($3.x, $3.y, $4.x, $4.y);
+        lefrGeometriesPtr->lefiGeometries::addRectIter($4.x, $4.y, $5.x, $5.y);
+      //  lefrGeometriesPtr->lefiGeometries::addRectIter($3.x, $3.y, $4.x, $4.y);
+// TODO  lefData->lefrGeometriesPtr->addRectIter((int)$2, $4.x, $4.y, $5.x, $5.y);
       needGeometry = 2;
     }
-  | K_POLYGON firstPt nextPt nextPt nextPt otherPts ';'
+  | K_POLYGON maskColor firstPt nextPt nextPt nextPt otherPts ';'
     {
       if (lefrDoGeometries)
         lefrGeometriesPtr->lefiGeometries::addPolygon();
       hasPRP = 1;
       needGeometry = 2;
     }
-  | K_POLYGON K_ITERATE firstPt nextPt nextPt nextPt otherPts stepPattern ';'
+  | K_POLYGON maskColor K_ITERATE firstPt nextPt nextPt nextPt otherPts stepPattern ';'
     { if (lefrDoGeometries)
         lefrGeometriesPtr->lefiGeometries::addPolygonIter();
       hasPRP = 1;
@@ -4769,6 +5286,25 @@ geometry:
 
 geometry_options: /* empty */
   | geometry_options geometry
+
+layer_exceptpgnet: // empty
+  | K_EXCEPTPGNET                   // 5.7
+    {
+           yywarning("TODO: layer_exceptpgnet");
+/*
+      if (lefData->versionNum < 5.7) {
+        lefData->outMsg = (char*)lefMalloc(10000);
+        sprintf(lefData->outMsg,
+          "EXCEPTPGNET is a version 5.7 or later syntax.\nYour lef file is defined with version %g.", lefData->versionNum);
+        lefError(1699, lefData->outMsg);
+        lefFree(lefData->outMsg);
+        CHKERR();
+      } else {
+       if (lefData->lefrDoGeometries)
+        lefData->lefrGeometriesPtr->addLayerExceptPgNet();
+      }
+*/
+    }
 
 layer_spacing: /* empty */
   | K_SPACING NUMBER
@@ -4809,13 +5345,19 @@ otherPts:
   ;
 
 via_placement:
-  K_VIA pt {lefDumbMode = 1;} T_STRING ';'
+  K_VIA maskColor pt {lefDumbMode = 1;} T_STRING ';'
     { if (lefrDoGeometries)
-        lefrGeometriesPtr->lefiGeometries::addVia($2.x, $2.y, $4); }
-  | K_VIA K_ITERATE pt {lefDumbMode = 1; lefNoNum = 1;} T_STRING
+        lefrGeometriesPtr->lefiGeometries::addVia($3.x, $3.y, $5); 
+        // lefrGeometriesPtr->lefiGeometries::addVia($2.x, $2.y, $4); 
+// TODO lefData->lefrGeometriesPtr->addVia((int)$2, $3.x, $3.y, $5);
+    }
+  | K_VIA K_ITERATE  maskColor pt {lefDumbMode = 1; lefNoNum = 1;} T_STRING
     stepPattern ';'
     { if (lefrDoGeometries)
-        lefrGeometriesPtr->lefiGeometries::addViaIter($3.x, $3.y, $5); }
+        lefrGeometriesPtr->lefiGeometries::addViaIter($4.x, $4.y, $6); 
+        //lefrGeometriesPtr->lefiGeometries::addViaIter($3.x, $3.y, $5); 
+// TODO  lefData->lefrGeometriesPtr->addViaIter((int)$3, $4.x, $4.y, $6);
+    }
         
 
 stepPattern: K_DO NUMBER K_BY NUMBER K_STEP NUMBER NUMBER
@@ -5574,11 +6116,45 @@ opt_range_second:
         lefrLayer.lefiLayer::setSpacingRangeInfluenceRange($4, $5);
       }
     }
-  | K_RANGE NUMBER NUMBER
+  | K_RANGE NUMBER NUMBER 
     {
       if (lefrLayerCbk)
         lefrLayer.lefiLayer::setSpacingRangeRange($2, $3);
     }
+
+
+opt_endofline:                                      // 5.7
+  // nothing
+    { }
+  | K_PARALLELEDGE NUMBER K_WITHIN NUMBER
+    {
+      if (lefrLayerCbk) 
+        lefrLayer.lefiLayer::setSpacingParSW($2, $4);
+    }
+    opt_endofline_twoedges
+
+opt_endofline_twoedges:                             // 5.7
+  // nothing
+    { }
+  | K_TWOEDGES
+    {
+      if (lefrLayerCbk) 
+        lefrLayer.lefiLayer::setSpacingParTwoEdges();
+    }
+
+opt_samenetPGonly:                                  // 5.7
+  // nothing
+    { }
+  | K_PGONLY
+    {
+      // TOD if (lefrLayerCbk) 
+        // TOD lefrLayer.lefiLayer::setSpacingSamenetPGonly();
+/*
+      if (lefCallbacks->LayerCbk)
+        lefData->lefrLayer.setSpacingSamenetPGonly();
+*/
+    }
+
 
 opt_def_range:
   /* nothing */
@@ -5591,6 +6167,306 @@ opt_def_value:
     { }
   | NUMBER
     { if (lefrPropCbk) lefrProp.lefiProp::setNumber($1); }
+
+
+opt_def_dvalue:
+  // empty
+    { }
+  | NUMBER
+    { /* if (lefCallbacks->PropCbk) lefData->lefrProp.setNumber($1); */ }
+
+
+// TODO ------------------------------------------------------------------  layer_spacing_opts
+
+
+layer_spacing_opts:
+  // empty
+  | layer_spacing_opt layer_spacing_opts
+
+
+layer_spacing_opt: K_CENTERTOCENTER      // 5.7 
+    {
+              yywarning("K_CENTERTOCENTER 5.8 TODO");
+/*
+      if (lefCallbacks->LayerCbk) {
+         if (lefData->hasSpCenter) {
+           if (lefData->layerWarnings++ < lefSettings->LayerWarnings) {
+              lefError(1663, "A CENTERTOCENTER statement was already defined in SPACING\nCENTERTOCENTER can only be defined once per LAYER CUT SPACING.");
+              CHKERR();
+           }
+        }
+        lefData->hasSpCenter = 1;
+        if (lefData->versionNum < 5.6) {
+           if (lefData->layerWarnings++ < lefSettings->LayerWarnings) {
+              lefData->outMsg = (char*)lefMalloc(10000);
+              sprintf (lefData->outMsg,
+                 "CENTERTOCENTER statement is a version 5.6 and later syntax.\nYour lef file is defined with version %g.", lefData->versionNum);
+              lefError(1664, lefData->outMsg);
+              lefFree(lefData->outMsg);
+              CHKERR();
+           }
+        }
+        if (lefCallbacks->LayerCbk)
+          lefData->lefrLayer.setSpacingCenterToCenter();
+      }
+*/
+    }
+  | K_SAMENET             // 5.7 
+    {
+              yywarning("K_SAMENET 5.8 TODO");
+/*
+      if (lefCallbacks->LayerCbk) {
+        if (lefData->hasSpSamenet) {
+           if (lefData->layerWarnings++ < lefSettings->LayerWarnings) {
+              lefError(1665, "A SAMENET statement was already defined in SPACING\nSAMENET can only be defined once per LAYER CUT SPACING.");
+              CHKERR();
+           }
+        }
+        lefData->hasSpSamenet = 1;
+        if (lefCallbacks->LayerCbk)
+          lefData->lefrLayer.setSpacingSamenet();
+       }
+*/
+    }
+    opt_samenetPGonly
+    {
+              yywarning("opt_samenetPGonly 5.8 TODO");
+/*
+      if (lefData->versionNum < 5.7) {
+        lefData->outMsg = (char*)lefMalloc(10000);
+        sprintf(lefData->outMsg,
+          "SAMENET is a version 5.7 or later syntax.\nYour lef file is defined with version %g.", lefData->versionNum);
+        lefError(1684, lefData->outMsg);
+        lefFree(lefData->outMsg);
+        CHKERR();
+      }
+*/
+    }
+  | K_PARALLELOVERLAP    // 5.7 
+    {
+              yywarning("K_PARALLELOVERLAP 5.8 TODO");
+/*
+      if (lefData->versionNum < 5.7) {
+        lefData->outMsg = (char*)lefMalloc(10000);
+        sprintf(lefData->outMsg,
+          "PARALLELOVERLAP is a version 5.7 or later syntax.\nYour lef file is defined with version %g.", lefData->versionNum);
+        lefError(1680, lefData->outMsg);
+        lefFree(lefData->outMsg);
+        CHKERR(); 
+      } else {
+        if (lefCallbacks->LayerCbk) {
+          if (lefData->hasSpParallel) {
+             if (lefData->layerWarnings++ < lefSettings->LayerWarnings) {
+                lefError(1666, "A PARALLELOVERLAP statement was already defined in SPACING\nPARALLELOVERLAP can only be defined once per LAYER CUT SPACING.");
+                CHKERR();
+             }
+          }
+          lefData->hasSpParallel = 1;
+          if (lefCallbacks->LayerCbk)
+            lefData->lefrLayer.setSpacingParallelOverlap();
+        }
+      }
+*/
+    }
+
+layer_spacing_cut_routing:
+  // empty 
+  | K_LAYER {  yywarning("layer_spacing_cut_routing K_LAYER 5.8 TODO"); /* TODO lefData->lefDumbMode = 1; lefData->lefNoNum = 1; */  } T_STRING
+    {
+              yywarning("layer_spacing_cut_routing 5.8 TODO");
+/*
+      if (lefCallbacks->LayerCbk)
+	{
+        if (lefData->versionNum < 5.7) {
+           if (lefData->hasSpSamenet) {    // 5.6 and earlier does not allow 
+              if (lefData->layerWarnings++ < lefSettings->LayerWarnings) {
+                 lefError(1667, "A SAMENET statement was already defined in SPACING\nEither SAMENET or LAYER can be defined, but not both.");
+                 CHKERR();
+              }
+           }
+        }
+        lefData->lefrLayer.setSpacingName($3);
+      }
+*/
+    }
+    spacing_cut_layer_opt
+  | K_ADJACENTCUTS NUMBER K_WITHIN NUMBER
+    {
+              yywarning("K_ADJACENTCUTS 5.8 TODO");
+/*
+      if (lefCallbacks->LayerCbk) {
+        if (lefData->versionNum < 5.5) {
+           if (lefData->layerWarnings++ < lefSettings->LayerWarnings) {
+              lefData->outMsg = (char*)lefMalloc(10000);
+              sprintf (lefData->outMsg,
+                 "ADJACENTCUTS statement is a version 5.5 and later syntax.\nYour lef file is defined with version %g.", lefData->versionNum);
+              lefError(1668, lefData->outMsg);
+              lefFree(lefData->outMsg);
+              CHKERR();
+           }
+        }
+        if (lefData->versionNum < 5.7) {
+           if (lefData->hasSpSamenet) {    // 5.6 and earlier does not allow 
+              if (lefData->layerWarnings++ < lefSettings->LayerWarnings) {
+                 lefError(1669, "A SAMENET statement was already defined in SPACING\nEither SAMENET or ADJACENTCUTS can be defined, but not both.");
+                 CHKERR();
+              }
+           }
+        }
+        lefData->lefrLayer.setSpacingAdjacent((int)$2, $4);
+      }
+*/
+    }
+    opt_adjacentcuts_exceptsame
+  | K_AREA NUMBER        // 5.7 
+    {
+              yywarning("K_AREA 5.8 TODO");
+/*
+      if (lefData->versionNum < 5.7) {
+        lefData->outMsg = (char*)lefMalloc(10000);
+        sprintf(lefData->outMsg,
+          "AREA is a version 5.7 or later syntax.\nYour lef file is defined with version %g.", lefData->versionNum);
+        lefError(1693, lefData->outMsg);
+        lefFree(lefData->outMsg);
+        CHKERR();
+      } else {
+        if (lefCallbacks->LayerCbk) {
+          if (lefData->versionNum < 5.7) {
+             if (lefData->hasSpSamenet) {    // 5.6 and earlier does not allow 
+                if (lefData->layerWarnings++ < lefSettings->LayerWarnings) {
+                   lefError(1670, "A SAMENET statement was already defined in SPACING\nEither SAMENET or AREA can be defined, but not both.");
+                   CHKERR();
+                }
+             }
+          }
+          lefData->lefrLayer.setSpacingArea($2);
+        }
+      }
+*/
+    }
+  | K_RANGE NUMBER NUMBER
+    {
+              yywarning("K_RANGE 5.8 TODO");
+/*
+      if (lefCallbacks->LayerCbk)
+        lefData->lefrLayer.setSpacingRange($2, $3);
+*/
+    }
+    opt_range_second
+  | K_LENGTHTHRESHOLD NUMBER
+    {
+              yywarning("K_LENGTHTHRESHOLD 5.8 TODO");
+/*
+      if (lefCallbacks->LayerCbk) {
+        lefData->lefrLayer.setSpacingLength($2);
+      }
+*/
+    }
+  | K_LENGTHTHRESHOLD NUMBER K_RANGE NUMBER NUMBER
+    {
+              yywarning("K_LENGTHTHRESHOLD 5.8 TODO");
+/*
+      if (lefCallbacks->LayerCbk) {
+        lefData->lefrLayer.setSpacingLength($2);
+        lefData->lefrLayer.setSpacingLengthRange($4, $5);
+      }
+*/
+    }
+  | K_ENDOFLINE NUMBER K_WITHIN NUMBER    // 5.7 
+    {
+      if (lefrLayerCbk) 
+        lefrLayer.lefiLayer::setSpacingEol($2, $4);
+    }
+    opt_endofline
+    {
+              // yywarning("opt_endofline 5.8 TODO");
+/*
+      if (lefData->versionNum < 5.7) {
+        lefData->outMsg = (char*)lefMalloc(10000);
+        sprintf(lefData->outMsg,
+          "ENDOFLINE is a version 5.7 or later syntax.\nYour lef file is defined with version %g.", lefData->versionNum);
+        lefError(1681, lefData->outMsg);
+        lefFree(lefData->outMsg);
+        CHKERR();
+      }
+*/
+    }
+  | K_NOTCHLENGTH NUMBER      // 5.7 
+    {
+              yywarning("K_NOTCHLENGTH 5.8 TODO");
+/*
+      if (lefData->versionNum < 5.7) {
+        lefData->outMsg = (char*)lefMalloc(10000);
+        sprintf(lefData->outMsg,
+          "NOTCHLENGTH is a version 5.7 or later syntax.\nYour lef file is defined with version %g.", lefData->versionNum);
+        lefError(1682, lefData->outMsg);
+        lefFree(lefData->outMsg);
+        CHKERR();
+      } else {
+        if (lefCallbacks->LayerCbk)
+          lefData->lefrLayer.setSpacingNotchLength($2);
+      }
+*/
+    }
+  | K_ENDOFNOTCHWIDTH NUMBER K_NOTCHSPACING NUMBER K_NOTCHLENGTH NUMBER //5.7
+    {
+              yywarning("K_ENDOFNOTCHWIDTH 5.8 TODO");
+/*
+      if (lefData->versionNum < 5.7) {
+        lefData->outMsg = (char*)lefMalloc(10000);
+        sprintf(lefData->outMsg,
+          "ENDOFNOTCHWIDTH is a version 5.7 or later syntax.\nYour lef file is defined with version %g.", lefData->versionNum);
+        lefError(1696, lefData->outMsg);
+        lefFree(lefData->outMsg);
+        CHKERR();
+      } else {
+        if (lefCallbacks->LayerCbk)
+          lefData->lefrLayer.setSpacingEndOfNotchWidth($2, $4, $6);
+      }
+*/
+    }
+
+spacing_cut_layer_opt:                      // 5.7 
+  // empty 
+    {}
+  | K_STACK
+    {
+              yywarning("K_STACK 5.8 TODO");
+/*
+      if (lefCallbacks->LayerCbk)
+        lefData->lefrLayer.setSpacingLayerStack();
+*/
+    }
+
+opt_adjacentcuts_exceptsame:                // 5.7 
+  // empty 
+    {}
+  | K_EXCEPTSAMEPGNET
+    {
+              yywarning("K_EXCEPTSAMEPGNET 5.8 TODO");
+/*
+      if (lefData->versionNum < 5.7) {
+        lefData->outMsg = (char*)lefMalloc(10000);
+        sprintf(lefData->outMsg,
+          "EXCEPTSAMEPGNET is a version 5.7 or later syntax.\nYour lef file is defined with version %g.", lefData->versionNum);
+        lefError(1683, lefData->outMsg);
+        lefFree(lefData->outMsg);
+        CHKERR();
+      } else {
+        if (lefCallbacks->LayerCbk)
+          lefData->lefrLayer.setSpacingAdjacentExcept();
+      }
+*/
+    }
+
+
+
+// TODO END
+
+
+
+
+
 
 opt_spacing_cut:
   /* empty */
@@ -5969,6 +6845,8 @@ extension_opt:  /* empty */
 
 extension: K_BEGINEXT
     { 
+                yywarning("K_BEGINEXT K_BEGINEXT K_BEGINEXT K_BEGINEXT");
+
         if (lefrExtensionCbk)
           CALLBACK(lefrExtensionCbk, lefrExtensionCbkType, Hist_text);
         if (versionNum >= 5.6)

@@ -112,6 +112,14 @@ void lef_init_symbol_table(void *Keyword_set)
     lef_add_to_stringtab_Int(Keyword_set, "ANTENNASIZE", K_ANTENNASIZE) ;
     lef_add_to_stringtab_Int(Keyword_set, "ANTENNASIDEAREAFACTOR",
       K_ANTENNASIDEAREAFACTOR) ;
+    lef_add_to_stringtab_Int(Keyword_set, "ANTENNACUMROUTINGPLUSCUT",
+      K_ANTENNACUMROUTINGPLUSCUT) ;
+    lef_add_to_stringtab_Int(Keyword_set, "ANTENNAGATEPLUSDIFF",
+      K_ANTENNAGATEPLUSDIFF) ;
+    lef_add_to_stringtab_Int(Keyword_set, "ANTENNAAREAMINUSDIFF",
+      K_ANTENNAAREAMINUSDIFF) ;
+    lef_add_to_stringtab_Int(Keyword_set, "ANTENNAAREADIFFREDUCEPWL",
+      K_ANTENNAAREADIFFREDUCEPWL) ;
     lef_add_to_stringtab_Int(Keyword_set, "ANYEDGE",    K_ANYEDGE) ;
     lef_add_to_stringtab_Int(Keyword_set, "AREA",	K_AREA) ;
     lef_add_to_stringtab_Int(Keyword_set, "AREAIO",     K_AREAIO) ;
@@ -170,6 +178,7 @@ void lef_init_symbol_table(void *Keyword_set)
       K_DESIGNRULEWIDTH) ;
     lef_add_to_stringtab_Int(Keyword_set, "DIAG45", K_DIAG45) ;
     lef_add_to_stringtab_Int(Keyword_set, "DIAG135", K_DIAG135) ;
+    lef_add_to_stringtab_Int(Keyword_set, "MASK", K_MASK) ;
     lef_add_to_stringtab_Int(Keyword_set, "DIAGMINEDGELENGTH",
       K_DIAGMINEDGELENGTH) ;
     lef_add_to_stringtab_Int(Keyword_set, "DIAGSPACING", K_DIAGSPACING) ;
@@ -179,6 +188,7 @@ void lef_init_symbol_table(void *Keyword_set)
     lef_add_to_stringtab_Int(Keyword_set, "DIFFUSEONLY", K_DIFFUSEONLY) ;
     lef_add_to_stringtab_Int(Keyword_set, "DIRECTION",	K_DIRECTION) ;
     lef_add_to_stringtab_Int(Keyword_set, "DIVIDERCHAR", K_DIVIDERCHAR) ;
+    lef_add_to_stringtab_Int(Keyword_set, "DIVIDER", K_DIVIDERCHAR) ;
     lef_add_to_stringtab_Int(Keyword_set, "DO",		K_DO) ;
     lef_add_to_stringtab_Int(Keyword_set, "E",      	K_E) ;
     lef_add_to_stringtab_Int(Keyword_set, "EDGECAPACITANCE",
@@ -268,6 +278,7 @@ void lef_init_symbol_table(void *Keyword_set)
     lef_add_to_stringtab_Int(Keyword_set, "MACRO",	K_MACRO) ;
     lef_add_to_stringtab_Int(Keyword_set, "MANUFACTURINGGRID",
       K_MANUFACTURINGGRID) ;
+    lef_add_to_stringtab_Int(Keyword_set, "FIXEDMASK", K_FIXEDMASK) ;
     lef_add_to_stringtab_Int(Keyword_set, "MASTERSLICE", K_MASTERSLICE) ;
     lef_add_to_stringtab_Int(Keyword_set, "MATCH",	K_MATCH) ;
     lef_add_to_stringtab_Int(Keyword_set, "MAXADJACENTSLOTSPACING",
@@ -488,6 +499,27 @@ void lef_init_symbol_table(void *Keyword_set)
     lef_add_to_stringtab_Int(Keyword_set, "MAXEDGES",      	K_MAXEDGES) ;
     lef_add_to_stringtab_Int(Keyword_set, "PARALLELOVERLAP",      	K_PARALLELOVERLAP) ;
     lef_add_to_stringtab_Int(Keyword_set, "SAMENET",      	K_SAMENET) ;
+    lef_add_to_stringtab_Int(Keyword_set, "ARRAYSPACING",      	K_ARRAYSPACING) ;
+    lef_add_to_stringtab_Int(Keyword_set, "ENDOFLINE",      	K_ENDOFLINE) ;
+    lef_add_to_stringtab_Int(Keyword_set, "ENDOFNOTCHWIDTH",      	K_ENDOFNOTCHWIDTH) ;
+    lef_add_to_stringtab_Int(Keyword_set, "EXCEPTSAMEPGNET",      	K_EXCEPTSAMEPGNET) ;
+    lef_add_to_stringtab_Int(Keyword_set, "NOTCHSPACING",      	K_NOTCHSPACING) ;
+
+    lef_add_to_stringtab_Int(Keyword_set, "NOTCHLENGTH",      	K_NOTCHLENGTH) ;
+    lef_add_to_stringtab_Int(Keyword_set, "NOTCHLENGTH",      	K_NOTCHLENGTH) ;
+    lef_add_to_stringtab_Int(Keyword_set, "PARALLELEDGE",      	K_PARALLELEDGE) ;
+    lef_add_to_stringtab_Int(Keyword_set, "PGONLY",      	K_PGONLY) ;
+    lef_add_to_stringtab_Int(Keyword_set, "TWOEDGES",      	K_TWOEDGES) ;
+    lef_add_to_stringtab_Int(Keyword_set, "LONGARRAY",      	K_LONGARRAY) ;
+    lef_add_to_stringtab_Int(Keyword_set, "TWOEDGES",      	K_TWOEDGES) ;
+    lef_add_to_stringtab_Int(Keyword_set, "ARRAYCUTS",      	K_ARRAYCUTS) ;
+    lef_add_to_stringtab_Int(Keyword_set, "ORTHOGONAL",      	K_ORTHOGONAL) ;
+    lef_add_to_stringtab_Int(Keyword_set, "EXCEPTEXTRACUT",      	K_EXCEPTEXTRACUT) ;
+    lef_add_to_stringtab_Int(Keyword_set, "LENGTH",      	K_LENGTH) ;
+    lef_add_to_stringtab_Int(Keyword_set, "TWOWIDTHS",      	K_TWOWIDTHS) ;
+    lef_add_to_stringtab_Int(Keyword_set, "PRL",      	K_PRL) ;
+    lef_add_to_stringtab_Int(Keyword_set, "EXCEPTPGNET",      	K_EXCEPTPGNET) ;
+    lef_add_to_stringtab_Int(Keyword_set, "\"",      	DOUBLE_QUOTE) ;
 }
 
 #define yyparse	yyparse

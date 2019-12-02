@@ -3,6 +3,8 @@
 #
 include ../Makefile.defs
 
+# LEX_DEBUG=1
+# YACC_DEBUG=1
 YACC_SRCXX=def.ypp
 YACC_PREFIX=def
 YACC_OUTPUT=def_parser

@@ -1,34 +1,3 @@
-/*
- BSD 3-Clause License
-
- Copyright (c) 2019, The Regents of the University of California
- All rights reserved.
-
- Redistribution and use in source and binary forms, with or without
- modification, are permitted provided that the following conditions are met:
-
- * Redistributions of source code must retain the above copyright notice, this
-   list of conditions and the following disclaimer.
-
- * Redistributions in binary form must reproduce the above copyright notice,
-   this list of conditions and the following disclaimer in the documentation
-   and/or other materials provided with the distribution.
-
- * Neither the name of the copyright holder nor the names of its
-   contributors may be used to endorse or promote products derived from
-   this software without specific prior written permission.
-
- THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
- AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
- IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
- DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE
- FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
- DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR
- SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
- CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
- OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
- OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
-*/
 %{
 #include <stdio.h>
 #include <stdlib.h>
@@ -352,6 +321,8 @@ inline void freeProps( std::vector<prop *> * props )
 %token STYLES_K
 %token STYLE_K
 %token PORT_K
+%token K_ALIGN K_BOTTOMLEFT K_COMPSMASKSHIFT K_COMPS K_COMP_GEN K_EQUAL K_EXCEPTPGNET K_HORIZONTAL K_MASK K_MASKSHIFT  K_MAX K_MIN K_POLYGON K_ROUTEHALO K_ROWS K_SOFT K_TOPRIGHT K_VERTICAL PARTIAL_K K_FPC K_MAXHALFPERIMETER K_MAXX K_MAXY K_SAMEMASK K_VIRTUAL K_OPC
+
 
 %type <_token> qstring
 %type <_token> ident
@@ -361,7 +332,6 @@ inline void freeProps( std::vector<prop *> * props )
 %type <_tid> defDir
 %type <_tid> defOrient
 %type <_points> defPointList
-%type <_int> defComponentSource
 %type <_int> defNetSource
 %type <_int> defSpecialNetSource
 %type <_int> defPropertyType
@@ -370,6 +340,10 @@ inline void freeProps( std::vector<prop *> * props )
 %type <_props> defProperty
 %type <_props> defPropertyValues
 
+// TODO check
+%type <_tid> source_type
+%type <_int> pin_via_mask_opt
+
 %%
 
 defFile
@@ -377,8 +351,35 @@ defFile
     ;
 
 defHeader
-    :    VERSION_K ident ';'       { release( $2 ); }
-         defHeaderOpts
+    :   VERSION_K ident ';'       
+		{ 
+			release( $2 ); 
+			/* NEED_TO_ADD
+				defData->VersionNum = defrData::convert_defname2num($3);
+				if (defData->VersionNum > CURRENT_VERSION) {
+				char temp[300];
+				sprintf(temp,
+				"The execution has been stopped because the DEF parser %.1f does not support DEF file with version %s.\nUpdate your DEF file to version 5.8 or earlier.",
+                  CURRENT_VERSION, $3);
+						defData->defError(6503, temp);
+					return 1;
+				}
+				if (defData->callbacks->VersionStrCbk) {
+					CALLBACK(defData->callbacks->VersionStrCbk, defrVersionStrCbkType, $3);
+				} else if (defData->callbacks->VersionCbk) {
+					CALLBACK(defData->callbacks->VersionCbk, defrVersionCbkType, defData->VersionNum);
+				}
+				if (defData->VersionNum > 5.3 && defData->VersionNum < 5.4)
+					defData->defIgnoreVersion = 1;
+				if (defData->VersionNum < 5.6)     // default to false before 5.6
+					defData->names_case_sensitive = defData->session->reader_case_sensitive;
+				else
+					defData->names_case_sensitive = 1;
+				defData->hasVer = 1;
+				defData->doneDesign = 0;
+			*/
+		}
+        defHeaderOpts
     ;
 
 defHeaderOpts
@@ -388,46 +389,176 @@ defHeaderOpts
 
 defHeaderOpt
     :    DIVIDERCHAR_K qstring ';' { release($2); }
-    |    NAMESCASESENSITIVE_K defCaseSens ';'
+    |    NAMESCASESENSITIVE_K case_sens_stmt ';'
     |    BUSBITCHARS_K qstring ';' { release($2); }
     |    DESIGN_K ident ';'        { release( $2 ); } 
     ;
 
-defCaseSens
+case_sens_stmt
     :    ON_K  { deflex_casesens = true; }
     |    OFF_K { deflex_casesens = false; }
     ;
 
 defStatements
     :    /* nothing */
-    |    defStatements defStatement
+    |    defStatements rule
     ;
 
-defStatement
+rule
     :    TECHNOLOGY_K ident ';' { release( $2 ); }
     |    UNITS_K DISTANCE_K MICRONS_K integer ';' { readerR->units($4); }
     |    defHistory ';'
     |    defPropertyDefinitions
     |    DIEAREA_K defPointList ';' { readerR->dieArea( *$2 ); delete $2; }
-    |    defRow
-    |    defTrack
-    |    defGCellGrid
-    |    defVias
-    |    defRegions
-    |    defComponents
-    |    defPins
-    |    defPinProperties
-    |    defBlockages
+    |    row_rule
+    |    tracks_rule
+    |    gcellgrid
+    |    via_section
+    |    regions_section
+    |    comps_section
+    |    pin_rule
+    |    pin_props_section
+    |    blockage_section
     |    defSlots
-    |    defFills
-    |    defSpecialNets
-    |    defNets
+    |    fill_section
+    |    snets_section
+    |    nets_section
     |    defScanChains
-    |    defGroups
+    |    groups_section
     |    defExtension
     |    defNonDefaultRules
     |    defStyles
+	|    comps_maskShift_section
+	|    floorplan_contraints_section
     ;
+
+comps_maskShift_section 
+	: K_COMPSMASKSHIFT  layer_statement ';'
+         {
+			/* TODO
+           if (defData->VersionNum < 5.8) {
+                if (defData->componentWarnings++ < defData->settings->ComponentWarnings) {
+                   defData->defMsg = (char*)malloc(10000);
+                   sprintf (defData->defMsg,
+                     "The MASKSHIFT statement is available in version 5.8 and later.\nHowever, your DEF file is defined with version %g", defData->VersionNum);
+                   defData->defError(7415, defData->defMsg);
+                   free(defData->defMsg);
+                   CHKERR();
+                }
+            }
+            if (defData->callbacks->ComponentMaskShiftLayerCbk) {
+                CALLBACK(defData->callbacks->ComponentMaskShiftLayerCbk, defrComponentMaskShiftLayerCbkType, &defData->ComponentMaskShiftLayer);
+            }
+			*/
+         }
+	 ;
+layer_statement 
+		 : // empty 
+         | layer_statement maskLayer
+         ;
+         
+maskLayer
+	// :  QSTRING // was T_STRING
+	: ident
+        {
+			/* TODO
+            if (defData->callbacks->ComponentMaskShiftLayerCbk) {
+              defData->ComponentMaskShiftLayer.addMaskShiftLayer($1);
+            }
+			*/
+        } 
+		;
+
+floorplan_contraints_section
+	: fp_start fp_stmts END_K K_FPC
+		 { 
+		/* TODO
+        if (defData->callbacks->FPCEndCbk)
+          CALLBACK(defData->callbacks->FPCEndCbk, defrFPCEndCbkType, 0);
+		  */
+      }
+	  ;
+
+fp_start
+	: K_FPC NUM_DOUBLE ';'
+      {
+	    /* TODO
+        if (defData->callbacks->FPCStartCbk)
+          CALLBACK(defData->callbacks->FPCStartCbk, defrFPCStartCbkType, ROUND($2));
+		  */
+      }
+	  ;
+
+fp_stmts
+	: // empty 
+	| fp_stmts fp_stmt
+      {}
+	  ;
+
+fp_stmt
+	: '-' { /* TODO defData->dumb_mode = 1; defData->no_num = 1; */ } QSTRING h_or_v  // was T_STRING
+      	{ /* TODO
+		if (defData->callbacks->FPCCbk) defData->FPC.setName($3, $4); 
+		*/
+		}
+      constraint_type constrain_what_list ';'
+      { 
+	  /* TODO
+		if (defData->callbacks->FPCCbk) CALLBACK(defData->callbacks->FPCCbk, defrFPCCbkType, &defData->FPC); 
+	 */
+	  }
+	  ;
+
+h_or_v
+	: K_HORIZONTAL 
+      { /* TODO $$ = (char*)"HORIZONTAL"; */ }
+	| K_VERTICAL
+      { /* TODO $$ = (char*)"VERTICAL"; */ }
+	;
+
+constraint_type
+	: K_ALIGN
+      { /* TODO if (defData->callbacks->FPCCbk) defData->FPC.setAlign(); */ }
+	| K_MAX NUM_INT
+      { /* TODO if (defData->callbacks->FPCCbk) defData->FPC.setMax($2); */ }
+	| K_MIN NUM_INT
+      { /* TODO if (defData->callbacks->FPCCbk) defData->FPC.setMin($2);  */}
+	| K_EQUAL NUM_INT
+      { /* TODO if (defData->callbacks->FPCCbk) defData->FPC.setEqual($2); */ }
+	;
+
+constrain_what_list
+	: // empty 
+    | constrain_what_list constrain_what
+    ;
+
+constrain_what
+	:      '+' K_BOTTOMLEFT
+                            { /* TODO if (defData->callbacks->FPCCbk) defData->FPC.setDoingBottomLeft(); */}
+	row_or_comp_list 
+    |       '+' K_TOPRIGHT
+                            { /* TODO if (defData->callbacks->FPCCbk) defData->FPC.setDoingTopRight(); */ }
+    row_or_comp_list 
+    ;
+
+row_or_comp_list
+	: // empty 
+    | row_or_comp_list row_or_comp
+	;
+
+row_or_comp
+	: '(' K_ROWS  { /* TODO defData->dumb_mode = 1; defData->no_num = 1; */ } QSTRING ')' // was T_STRING
+			{  /* TODOif (defData->callbacks->FPCCbk) defData->FPC.addRow($4); */ }
+    |    '(' K_COMPS { /* TODOdefData->dumb_mode = 1; defData->no_num = 1; */ } QSTRING ')'
+			{ /* TODO if (defData->callbacks->FPCCbk) defData->FPC.addComps($4); */ }
+	;
+
+
+
+
+
+
+
 
 defHistory
     :    HISTORY_K {deflex_history();} HISTORY_TEXT
@@ -517,7 +648,7 @@ defPropertyValue
          }
     ;
 
-defRow
+row_rule
     :    ROW_K ident ident integer integer defOrient 
          {
              rowR->begin( *$2, *$3, $4, $5, (defOrient) $6, DEF_HORIZONTAL, 1, 0 );
@@ -525,6 +656,7 @@ defRow
              release($3);
          }
          defRowProperties { rowR->end(); } ';'
+
     |    ROW_K ident ident integer integer defOrient
          DO_K integer BY_K integer
          {
@@ -570,13 +702,27 @@ defRowProperties
     |   defRowProperties '+' defProperty { addRowProps($3); }
     ;
 
-defTrack
+tracks_rule
     :    TRACKS_K defDir integer DO_K integer STEP_K integer 
-             { tracksR->tracksBegin((defDirection) $2, $3, $5, $7); } defTrackLayers ';'
+             { tracksR->tracksBegin((defDirection) $2, $3, $5, $7); } 
+	track_mask_statement
+	defTrackLayers ';'
          {
              tracksR->tracksEnd();
          }
     ;
+
+ track_mask_statement:
+     | K_MASK integer same_mask
+     { // TODO look at 58 track_mask_statement
+     }
+
+ same_mask:
+     // empty
+     { /* TODO $$=0;*/}
+     | K_SAMEMASK
+     { /* TODO $$=1;*/ }
+
 
 defDir
     :    X_K { $$ = DEF_X; }
@@ -593,13 +739,16 @@ defTrackLayerNames
     | defTrackLayerNames ident { tracksR->tracksLayer(*$2); release($2); }
     ;
 
-defGCellGrid
+gcellgrid
     :   GCELLGRID_K defDir integer DO_K integer STEP_K integer ';'
             { gcellR->gcell( (defDirection) $2, $3, $5, $7 ); }
     ;
 
-defVias
+via_section
     :   VIAS_K integer ';' defViaList END_K VIAS_K
+{
+fprintf(stdout, "END VIAS\n");
+}
     ;
 
 defViaList
@@ -608,7 +757,7 @@ defViaList
     ;
 
 defVia
-    :    '-' ident { viaR->viaBegin( *$2); } defViaDef ';' { viaR->viaEnd(); release($2); }
+    :    '-' ident { viaR->viaBegin( *$2); } defViaDef ';' { fprintf(stdout,"end via =%s\n", $2); viaR->viaEnd(); release($2); }
     ;
 
 defViaDef
@@ -628,15 +777,40 @@ defViaGeoms
 defViaGeom
     :    '+' RECT_K ident '(' integer integer ')' '(' integer integer ')'
          {
+fprintf(stdout," defViaGeom: ident=\n");
              viaR->viaRect( *$3, $5, $6, $9, $10 );
              release($3);
+         }
+       |    '+' RECT_K ident '+' K_MASK integer '(' integer integer ')' '(' integer integer ')'
+     //|    '+' RECT_K ident mask '(' integer integer ')' '(' integer integer ')'
+         {
+fprintf(stdout," defViaGeom: ident= MASK \n");
+/*
+             //viaR->viaRect( *$3, $5, $6, $9, $10 );
+             viaR->viaRect( *$3, $8, $9, $12, $13 );
+             release($3);
+*/
          }
     |    '+' POLYGON_K ident defPointList
          {
              delete $4;
              release($3);
          }
+     |    '+' POLYGON_K ident  '+' K_MASK integer defPointList
+    //|    '+' POLYGON_K ident  mask defPointList
+         {
+/* TODO
+             delete $4;
+             release($3);
+*/
+         }
     ;
+
+mask: 
+	|
+       '+' K_MASK integer
+      { /* TODO $$ = $3; */}
+
 
 defViaRects
     : defViaRect
@@ -648,6 +822,14 @@ defViaRect
          {
              viaR->viaRect( *$3, $5, $6, $9, $10 );
              release($3);
+         }
+       |    '+' RECT_K ident '+' K_MASK integer '(' integer integer ')' '(' integer integer ')'
+         {
+/*
+             //viaR->viaRect( *$3, $5, $6, $9, $10 );
+             viaR->viaRect( *$3, $8, $9, $12, $13 );
+             release($3);
+*/
          }
     ;
 
@@ -671,7 +853,7 @@ defViaOpt
     |    '+' PATTERN_K ident { viaR->viaPattern(*$3); release($3); }
     ;
 
-defRegions
+regions_section
     :    REGIONS_K integer ';' defRegionList END_K REGIONS_K
     ;
 
@@ -716,43 +898,179 @@ defRegionType
     |     GUIDE_K { regionR->type( DEF_GUIDE ); }
     ;
 
-defComponents
-    :    COMPONENTS_K integer ';' defComponentList END_K COMPONENTS_K
+comps_section
+    :    COMPONENTS_K integer ';' comps_rule END_K COMPONENTS_K
     ;
 
-defComponentList
+comps_rule
     :    /* nothing */
-    |    defComponentList defComponent
+    |    comps_rule defComponent
     ;
 
 defComponent
-    :    '-' ident ident { componentR->begin( *$2, *$3 ); } defComponentOpts ';'
+    :    '-' ident ident { componentR->begin( *$2, *$3 );/* fprintf(stdout, "BEGIN COMP:------------- %s %s\n", $2, $3);*/ } comp_options ';'
          {
+// fprintf(stdout, "END COMP:-------------\n");
              componentR->end();
              release($2);
              release($3);
          }
     ;
 
-defComponentOpts
+comp_options
     :    /* nothing */
-    |    defComponentOpts defComponentOpt
+    |    comp_options comp_option
     ;
 
-defComponentOpt
+	// TODO Region : is it obsolete??????
+	// TODO EEQMASTER_K ????
+
+comp_option
     :    '+' EEQMASTER_K ident               { release($3); }
-    |    '+' SOURCE_K defComponentSource     { componentR->source( (defSource) $3 ); }
+    |    '+' SOURCE_K source_type           { /*  TODO componentR->source( (defSource) $2 ); */}
     |    '+' FOREIGN_K ident point defOrient { release($3); }
-    |    '+' FIXED_K point defOrient         { componentR->placement( DEF_PLACEMENT_FIXED, $3._x, $3._y, (defOrient) $4 ); }
+    |    comp_type
+    |  	'+' K_MASKSHIFT integer { /* TODO */ }
+    |    '+' WEIGHT_K NUM_INT                { componentR->weight( $3 ); }
+    |    '+' REGION_K ident                  { componentR->region( *$3 ); release($3); }
+    /* TODO |    '+' HALO_K integer integer integer integer { componentR->halo( $3, $4, $5, $6 ); } */
+    |    '+' defProperty { addComponentProps($2); }
+	|    comp_generate
+	|	 comp_halo
+	|	 comp_routehalo
+	|    comp_extension_stmt
+    ;
+
+	comp_extension_stmt
+		: defExtension
+		;
+
+comp_type
+    :    '+' FIXED_K point defOrient         { componentR->placement( DEF_PLACEMENT_FIXED, $3._x, $3._y, (defOrient) $4 ); }
     |    '+' COVER_K point defOrient         { componentR->placement( DEF_PLACEMENT_COVER, $3._x, $3._y, (defOrient) $4 ); }
     |    '+' PLACED_K point defOrient        { componentR->placement( DEF_PLACEMENT_PLACED, $3._x, $3._y, (defOrient) $4 ); }
     |    '+' UNPLACED_K point defOrient      { componentR->placement( DEF_PLACEMENT_UNPLACED, $3._x, $3._y, (defOrient) $4 ); }
     |    '+' UNPLACED_K                      { componentR->placement( DEF_PLACEMENT_UNPLACED, 0, 0, DEF_ORIENT_N ); }
-    |    '+' WEIGHT_K NUM_INT                { componentR->weight( $3 ); }
-    |    '+' REGION_K ident                  { componentR->region( *$3 ); release($3); }
-    |    '+' HALO_K integer integer integer integer { componentR->halo( $3, $4, $5, $6 ); }
-    |    '+' defProperty { addComponentProps($2); }
-    ;
+	;
+
+	        // Adding 'no_num' modification, otherwise the token will be parsed as number (double). 
+maskShift
+	: '+' K_MASKSHIFT { 
+		/* TODO
+		defData->dumb_mode = 1; defData->no_num = 1; */ } ident
+        {
+/*  
+          if (defData->callbacks->ComponentCbk) {
+            if (defData->validateMaskShiftInput($4, defData->componentWarnings, defData->settings->ComponentWarnings)) {
+                defData->Component.setMaskShift($4);
+            }
+          }
+		  */
+        }
+       | '+' K_MASKSHIFT {
+               /* TODO
+               defData->dumb_mode = 1; defData->no_num = 1; */ } integer
+
+	;
+
+comp_generate
+	:    '+' K_COMP_GEN 
+		{ 
+			/* TODO defData->dumb_mode = 2;  defData->no_num = 2; */
+		} ident
+    opt_pattern
+    {
+		/* TODO
+          if (defData->callbacks->ComponentCbk)
+             defData->Component.setGenerate($4, $5);
+	    */
+     }
+	 ;
+
+opt_pattern 
+	:
+		// empty 
+		{ /* TODO $$ = (char*)""; */}
+    | ident
+		{ /* TODO $$ = $1; */ }
+	;
+
+comp_halo
+	: '+' HALO_K                    // 5.7 
+        { 
+			/* TODO
+          if (defData->VersionNum < 5.6) {
+             if (defData->callbacks->ComponentCbk) {
+               if (defData->componentWarnings++ < defData->settings->ComponentWarnings) {
+                 defData->defMsg = (char*)malloc(1000);
+                 sprintf (defData->defMsg,
+                    "The HALO statement is a version 5.6 and later syntax.\nHowever, your DEF file is defined with version %g.", defData->VersionNum);
+                 defData->defError(6529, defData->defMsg);
+                 free(defData->defMsg);
+                 CHKERR();
+               }
+             }
+          }
+		  */
+        }
+        halo_soft NUM_INT NUM_INT NUM_INT NUM_INT 
+        {
+			/* TODO
+          if (defData->callbacks->ComponentCbk)
+            defData->Component.setHalo((int)$5, (int)$6,
+                                                 (int)$7, (int)$8);
+			*/
+        }
+	;
+
+halo_soft: // 5.7 
+    | K_SOFT
+      {
+	  /* TODO
+        if (defData->VersionNum < 5.7) {
+           if (defData->callbacks->ComponentCbk) {
+             if (defData->componentWarnings++ < defData->settings->ComponentWarnings) {
+                defData->defMsg = (char*)malloc(10000);
+                sprintf (defData->defMsg,
+                  "The HALO SOFT is available in version 5.7 or later.\nHowever, your DEF file is defined with version %g.", defData->VersionNum);
+                defData->defError(6550, defData->defMsg);
+                free(defData->defMsg);
+                CHKERR();
+             }
+           }
+        } else {
+           if (defData->callbacks->ComponentCbk)
+             defData->Component.setHaloSoft();
+        }
+		*/
+      }
+	 ;
+
+// 5.7 
+comp_routehalo
+	: '+' K_ROUTEHALO NUM_INT { /* TODO defData->dumb_mode = 2; defData->no_num = 2; */} ident ident // was T_STRING
+      {
+		/* TODO
+        if (defData->VersionNum < 5.7) {
+           if (defData->callbacks->ComponentCbk) {
+             if (defData->componentWarnings++ < defData->settings->ComponentWarnings) {
+                defData->defMsg = (char*)malloc(10000);
+                sprintf (defData->defMsg,
+                  "The ROUTEHALO is available in version 5.7 or later.\nHowever, your DEF file is defined with version %g.", defData->VersionNum);
+                defData->defError(6551, defData->defMsg);
+                free(defData->defMsg);
+                CHKERR();
+             }
+           }
+        } else {
+           if (defData->callbacks->ComponentCbk)
+             defData->Component.setRouteHalo(
+                            (int)$3, $5, $6);
+        }
+		*/
+      }
+	 ;
+
 
 defOrient
     :    N_K  { $$ = DEF_ORIENT_N; }
@@ -765,14 +1083,14 @@ defOrient
     |    FW_K { $$ = DEF_ORIENT_FW; }
     ;
 
-defComponentSource
+source_type
     : NETLIST_K  { $$ = DEF_NETLIST; }
     | DIST_K     { $$ = DEF_DIST; }
     | USER_K     { $$ = DEF_USER; }
     | TIMING_K    { $$ = DEF_TIMING; }
     ;
 
-defPins
+pin_rule
     :    PINS_K integer { pinR->pinsBegin($2); } ';' defPinList END_K PINS_K { pinR->pinsEnd(); }
     ;
 
@@ -811,13 +1129,54 @@ defPinOpt
     |    '+' ANTENNAPINMAXAREACAR_K number LAYER_K ident            { release($5); }
     |    '+' ANTENNAPINMAXSIDEAREACAR_K number LAYER_K ident        { release($5); }
     |    '+' ANTENNAPINMAXCUTCAR_K number LAYER_K ident             { release($5); }
-    |    '+' PORT_K 
+    |    '+' PORT_K // 5.7
     |    '+' LAYER_K ident defPinGeomOpt point point { pinR->pinRect( *$3, $5._x, $5._y, $6._x, $6._y ); release($3); }
+    |    '+' LAYER_K ident  K_MASK integer defPinGeomOpt point point { 
+		/* TODO pinR->pinRect( *$3, $5._x, $5._y, $6._x, $6._y ); release($3); */ }
     |    '+' POLYGON_K ident defPinGeomOpt defPointList { pinR->pinPolygon( *$5 ); delete $5; release($3); }
+    |    '+' POLYGON_K ident  K_MASK integer defPinGeomOpt defPointList { 
+			/* TODO pinR->pinPolygon( *$5 ); delete $5; release($3); */ }
     |    '+' COVER_K point defOrient   { pinR->pinPlacement( DEF_PLACEMENT_COVER, $3._x, $3._y, (defOrient) $4 ); }
     |    '+' FIXED_K point defOrient   { pinR->pinPlacement( DEF_PLACEMENT_FIXED, $3._x, $3._y, (defOrient) $4 ); }
     |    '+' PLACED_K point defOrient  { pinR->pinPlacement( DEF_PLACEMENT_PLACED, $3._x, $3._y, (defOrient) $4 ); }
+    |    '+' VIA_K { /* TODO defData->dumb_mode = 1; */ } ident pin_via_mask_opt '(' NUM_INT NUM_INT ')'   // 5.7
+           { /*
+             if (defData->VersionNum < 5.7) {
+               if (defData->callbacks->PinCbk || defData->callbacks->PinExtCbk) {
+                 if ((defData->pinWarnings++ < defData->settings->PinWarnings) &&
+                     (defData->pinWarnings++ < defData->settings->PinExtWarnings)) {
+                   defData->defMsg = (char*)malloc(1000);
+                   sprintf (defData->defMsg,
+                      "The PIN VIA statement is available in version 5.7 and later.\nHowever, your DEF file is defined with version %g.", defData->VersionNum);
+                   defData->defError(6556, defData->defMsg);
+                   free(defData->defMsg);
+                   CHKERR();
+                 }
+               }
+             } else {
+               if (defData->callbacks->PinCbk || defData->callbacks->PinExtCbk) {
+                 if (defData->hasPort)
+                    defData->Pin.addPortVia($4, (int)$7,
+                                                (int)$8, $5);
+                 else
+                    defData->Pin.addVia($4, (int)$7,
+                                                (int)$8, $5);
+               }
+             }
+ 			*/
+           }
     ;
+
+    pin_via_mask_opt
+ 		:  // empty 
+ 					{ $$ = 0; }
+         | K_MASK NUM_INT
+          { /* TODO
+            if (defData->validateMaskInput((int)$2, defData->pinWarnings, defData->settins->PinWarnings)) {
+              $$ = $2;
+            }
+ 		   */
+          }
 
 defPinGeomOpt
     : /* nothing */
@@ -852,7 +1211,7 @@ defPinLayerOpt
     |    LAYER_K ident { release($2); }
     ;
 
-defPinProperties
+pin_props_section
     :    PINPROPERTIES_K integer ';' defPinPropertyList END_K PINPROPERTIES_K
     ;
 
@@ -879,40 +1238,108 @@ defPinPropertyValues
     |    defPinPropertyValues '+' defProperty { addComponentPinProps($3); }
     ;
 
-defBlockages
-    :    BLOCKAGES_K integer ';' defBlockageList END_K BLOCKAGES_K
+blockage_section
+    :    BLOCKAGES_K integer ';' blockage_defs END_K BLOCKAGES_K
     ;
 
-defBlockageList
+blockage_defs
     :    /* nothing */
-    |    defBlockageList defBlockage
+    |    blockage_defs blockage_rule
     ;
 
-defBlockage
-    :    '-' LAYER_K ident { blockageR->blockageRoutingBegin(*$3); } defBlockageRoutingOpts defBlockageRoutingGeoms ';' 
+blockage_defs: // empty 
+      | blockage_defs blockage_def
+      ;
+
+blockage_def: // TODO : why rectPoly_blockage since you have rectPoly_blockage_rules
+		blockage_rule rectPoly_blockage rectPoly_blockage_rules
+      ';'
+      {
+/* TODO
+        if (defData->callbacks->BlockageCbk) {
+          CALLBACK(defData->callbacks->BlockageCbk, defrBlockageCbkType, &defData->Blockage);
+          defData->Blockage.clear();
+        }
+*/
+      }
+
+
+blockage_rule
+    :    '-' LAYER_K ident { blockageR->blockageRoutingBegin(*$3); } 
+		layer_blockage_rules defBlockageRoutingGeoms ';' 
          { 
              blockageR->blockageRoutingEnd();
              release($3); 
          }
-    |    '-' PLACEMENT_K { blockageR->blockagePlacementBegin(); } defBlockagePlacementOpts defBlockagePlacementRects ';'
+    |    '-' PLACEMENT_K { blockageR->blockagePlacementBegin(); } 
+		placement_comp_rules defBlockagePlacementRects ';'
          { 
              blockageR->blockagePlacementEnd();
          }
     ;
 
-defBlockageRoutingOpts
+layer_blockage_rules
     :    /* nothing */
-    |    defBlockageRoutingOpts defBlockageRoutingOpt
+    |    layer_blockage_rules layer_blockage_rule
     ;
 
-defBlockageRoutingOpt
+layer_blockage_rule
+    :    '+' SPACING_K  NUM_INT { blockageR->blockageRoutingMinSpacing($3); }
+    |    '+' DESIGNRULEWIDTH_K  NUM_INT { blockageR->blockageRoutingEffectiveWidth($3); }
+	|    mask_blockage_rule
+	|	 comp_blockage_rule
+    ;
+
+mask_blockage_rule: 
+      '+' K_MASK NUM_INT
+      {   
+	  /* TODO
+        if (defData->validateMaskInput((int)$3, defData->blockageWarnings, defData->settings->BlockageWarnings)) {
+          defData->Blockage.setMask((int)$3);
+        }
+		*/
+      } 
+	  ;
+
+comp_blockage_rule
     :    '+' COMPONENT_K ident { blockageR->blockageRoutingComponent(*$3); release($3); }
     |    '+' SLOTS_K           { blockageR->blockageRoutingSlots(); }
     |    '+' FILLS_K           { blockageR->blockageRoutingFills(); }
     |    '+' PUSHDOWN_K        { blockageR->blockageRoutingPushdown(); }
-    |    '+' SPACING_K  NUM_INT { blockageR->blockageRoutingMinSpacing($3); }
-    |    '+' DESIGNRULEWIDTH_K  NUM_INT { blockageR->blockageRoutingEffectiveWidth($3); }
-    ;
+	|    '+' K_EXCEPTPGNET              // 5.7 
+    {
+	  /* TODO
+        if (defData->VersionNum < 5.7) {
+           if (defData->callbacks->BlockageCbk) {
+             if (defData->blockageWarnings++ < defData->settings->BlockageWarnings) {
+               defData->defMsg = (char*)malloc(10000);
+               sprintf (defData->defMsg,
+                 "The EXCEPTPGNET is available in version 5.7 or later.\nHowever, your DEF file is defined with version %g.", defData->VersionNum);
+               defData->defError(6549, defData->defMsg);
+               free(defData->defMsg);
+               CHKERR();
+              }
+           }
+        } else {
+           if (defData->hasBlkLayerComp) {
+             if (defData->callbacks->BlockageCbk) {
+               if (defData->blockageWarnings++ < defData->settings->BlockageWarnings) {
+                 defData->defError(6542, "The defined BLOCKAGES COMPONENT statement has either COMPONENT, SLOTS, FILLS, PUSHDOWN or EXCEPTPGNET defined.\nOnly one of these statements is allowed per LAYER. Updated the DEF file to define a valid BLOCKAGES COMPONENT statement per layer.");
+                 CHKERR();
+               }
+             }
+           } else {
+             if (defData->callbacks->BlockageCbk){
+               defData->Blockage.setExceptpgnet();
+             }
+             if (defData->VersionNum < 5.8){
+               defData->hasBlkLayerComp = 1;
+             }
+           }
+        }
+		*/
+      }
+	;
 
 defBlockageRoutingGeoms
     :    defBlockageRoutingGeom
@@ -942,14 +1369,88 @@ defPoint
     |    '(' '*' '*' ')'         { }
     ;
 
-defBlockagePlacementOpts
+placement_comp_rules
     :    /* nothing */
-    |    defBlockagePlacementOpts defBlockagePlacementOpt
+    |    placement_comp_rules placement_comp_rule
     ;
 
-defBlockagePlacementOpt
+placement_comp_rule
     :    '+' COMPONENT_K ident { blockageR->blockagePlacementComponent(*$3); release($3); }
     |    '+' PUSHDOWN_K        { blockageR->blockagePlacementPushdown(); }
+
+	| '+' K_SOFT                  // 5.7
+      {
+	    /* TODO
+        if (defData->VersionNum < 5.7) {
+           if (defData->callbacks->BlockageCbk) {
+             if (defData->blockageWarnings++ < defData->settings->BlockageWarnings) {
+               defData->defMsg = (char*)malloc(10000);
+               sprintf (defData->defMsg,
+                 "The PLACEMENT SOFT is available in version 5.7 or later.\nHowever, your DEF file is defined with version %g.", defData->VersionNum);
+               defData->defError(6547, defData->defMsg);
+               free(defData->defMsg);
+               CHKERR();
+             }
+           }
+        } else {
+           if (defData->hasBlkPlaceComp || defData->hasBlkPlaceTypeComp) {
+             if (defData->callbacks->BlockageCbk) {
+               if (defData->blockageWarnings++ < defData->settings->BlockageWarnings) {
+                 defData->defError(6543, "The defined BLOCKAGES PLACEMENT statement has either COMPONENT, PUSHDOWN, SOFT or PARTIAL defined.\nOnly one of these statements is allowed per LAYER. Updated the DEF file to define a valid BLOCKAGES PLACEMENT statement.");
+                 CHKERR();
+               }
+             }
+           } else {
+             if (defData->callbacks->BlockageCbk){
+               defData->Blockage.setSoft();
+             }
+             if (defData->VersionNum < 5.8) {
+               defData->hasBlkPlaceComp = 1;
+             }
+             if (defData->VersionNum == 5.8) {
+               defData->hasBlkPlaceTypeComp = 1;
+             }
+           }
+        }
+		*/
+      }
+      // | '+' PARTIAL_K NUMBER         // 5.7
+      | '+' PARTIAL_K NUM_DOUBLE         // 5.7
+      {
+		/* TODO
+        if (defData->VersionNum < 5.7) {
+           if (defData->callbacks->BlockageCbk) {
+             if (defData->blockageWarnings++ < defData->settings->BlockageWarnings) {
+                defData->defMsg = (char*)malloc(10000);
+                sprintf (defData->defMsg,
+                  "The PARTIAL is available in version 5.7 or later.\nHowever, your DEF file is defined with version %g.", defData->VersionNum);
+                defData->defError(6548, defData->defMsg);
+                free(defData->defMsg);
+                CHKERR();
+             }
+           }
+        } else {
+           if (defData->hasBlkPlaceComp || defData->hasBlkPlaceTypeComp) {
+             if (defData->callbacks->BlockageCbk) {
+               if (defData->blockageWarnings++ < defData->settings->BlockageWarnings) {
+                 defData->defError(6543, "The defined BLOCKAGES PLACEMENT statement has either COMPONENT, PUSHDOWN, SOFT or PARTIAL defined.\nOnly one of these statements is allowed per LAYER. Updated the DEF file to define a valid BLOCKAGES PLACEMENT statement.");
+                 CHKERR();
+               }
+             }
+           } else {
+             if (defData->callbacks->BlockageCbk){
+               defData->Blockage.setPartial($3);
+             } 
+             if (defData->VersionNum < 5.8) {
+               defData->hasBlkPlaceComp = 1;
+             }
+             if (defData->VersionNum == 5.8) {
+               defData->hasBlkPlaceTypeComp = 1;
+             }
+           }
+         }
+		 */
+      }
     ;
 
 defBlockagePlacementRects
@@ -980,16 +1481,17 @@ defSlotGeom
     |    POLYGON_K defPointList { delete $2; }
     ;
 
-defFills
+fill_section
     :    FILLS_K integer ';' defFillList END_K FILLS_K
     ;
 
 defFillList
     :    /* nothing */
-    |    defFillList defFill
+    // |    defFillList fill_rule_1
+    |    defFillList fill_def
     ;
 
-defFill
+fill_rule_1
     :    '-' LAYER_K ident { fillR->fillBegin(*$3); } defFillGeoms ';' { fillR->fillEnd(); release($3); }
     ;
 
@@ -1003,7 +1505,285 @@ defFillGeom
     |    POLYGON_K defPointList { fillR->fillPolygon(*$2); delete $2; }
     ;
 
-defSpecialNets
+
+// ------------------------------- FILLS Section -------------------------------
+
+
+fill_def: fill_rule geom_fill_rules ';'
+      { 
+/* TODO
+        if (defData->callbacks->FillCbk) {
+          CALLBACK(defData->callbacks->FillCbk, defrFillCbkType, &defData->Fill);
+          defData->Fill.clear();
+        }
+*/
+      }
+      | '-' VIA_K { /* TODO defData->dumb_mode = 1; defData->no_num = 1; */  } ident  // 5.7
+      {
+/* TODO
+        if (defData->callbacks->FillCbk) {
+          defData->Fill.setVia($4);
+          defData->Fill.clearPts();
+          defData->Geometries.Reset();
+        }
+*/
+      }
+      fill_via_mask_opc_opt fill_via_pt ';'
+
+fill_rule: '-' LAYER_K { /* TODO defData->dumb_mode = 1; defData->no_num = 1; */ } ident
+      {
+/* TODO
+        if (defData->callbacks->FillCbk) {
+          defData->Fill.setLayer($4);
+          defData->Fill.clearPoly();    // free poly, if any
+        }
+*/
+      }
+      fill_layer_mask_opc_opt geom_fill            // 5.7
+
+geom_fill_rules: // empty
+      | geom_fill_rules geom_fill
+      ;
+
+geom_fill: RECT_K point point
+      {
+/* TODO
+        if (defData->callbacks->FillCbk)
+          defData->Fill.addRect($2.x, $2.y, $3.x, $3.y);
+*/
+      }
+      | POLYGON_K
+      {
+/*
+        defData->Geometries.Reset();
+*/
+      }
+      firstPt nextPt nextPt otherPts
+      {
+/* TODO
+        if (defData->VersionNum >= 5.6) {  // only 5.6 and beyond
+          if (defData->callbacks->FillCbk)
+            defData->Fill.addPolygon(&defData->Geometries);
+        } else {
+            defData->defMsg = (char*)malloc(10000);
+            sprintf (defData->defMsg,
+              "POLYGON statement in FILLS LAYER is a version 5.6 and later syntax.\nYour def file is defined with version %g.", defData->VersionNum);
+            defData->defError(6564, defData->defMsg);
+            free(defData->defMsg);
+            CHKERR();
+        }
+*/
+      }
+
+fill_layer_mask_opc_opt: // empty
+    | fill_layer_mask_opc_opt opt_mask_opc_l
+    ;
+opt_mask_opc_l: fill_layer_opc
+    | fill_mask
+    ;
+
+// 5.7
+fill_layer_opc:
+      '+' K_OPC
+      {
+/* TODO
+        if (defData->VersionNum < 5.7) {
+           if (defData->callbacks->FillCbk) {
+             if (defData->fillWarnings++ < defData->settings->FillWarnings) {
+               defData->defMsg = (char*)malloc(10000);
+               sprintf (defData->defMsg,
+                 "The LAYER OPC is available in version 5.7 or later.\nHowever, your DEF file is defined with version %g.", defData->VersionNum);
+               defData->defError(6553, defData->defMsg);
+               free(defData->defMsg);
+               CHKERR();
+             }
+           }
+        } else {
+           if (defData->callbacks->FillCbk)
+             defData->Fill.setLayerOpc();
+        }
+*/
+      }
+
+fill_via_pt: firstPt otherPts
+    {
+/* TODO
+        if (defData->callbacks->FillCbk) {
+          defData->Fill.addPts(&defData->Geometries);
+          CALLBACK(defData->callbacks->FillCbk, defrFillCbkType, &defData->Fill);
+          defData->Fill.clear();
+        }
+*/
+    }
+
+
+fill_via_mask_opc_opt: // empty
+    | fill_via_mask_opc_opt opt_mask_opc
+    ;
+opt_mask_opc: fill_via_opc
+    | fill_viaMask
+    ;
+
+
+
+// 5.7
+fill_via_opc:
+      '+' K_OPC
+      {
+/* TODO
+        if (defData->VersionNum < 5.7) {
+           if (defData->callbacks->FillCbk) {
+             if (defData->fillWarnings++ < defData->settings->FillWarnings) {
+               defData->defMsg = (char*)malloc(10000);
+               sprintf (defData->defMsg,
+                 "The VIA OPC is available in version 5.7 or later.\nHowever, your DEF file is defined with version %g.", defData->VersionNum);
+               defData->defError(6554, defData->defMsg);
+               free(defData->defMsg);
+               CHKERR();
+             }
+           }
+        } else {
+           if (defData->callbacks->FillCbk)
+             defData->Fill.setViaOpc();
+        }
+*/
+      }
+
+fill_mask:
+      '+' K_MASK integer
+      {
+/* TODO
+        if (defData->validateMaskInput((int)$3, defData->fillWarnings, defData->settings->FillWarnings)) {
+             if (defData->callbacks->FillCbk) {
+                defData->Fill.setMask((int)$3);
+             }
+        }
+*/
+      }
+
+fill_viaMask:
+      '+' K_MASK integer
+      {
+/* TODO
+        if (defData->validateMaskInput((int)$3, defData->fillWarnings, defData->settings->FillWarnings)) {
+             if (defData->callbacks->FillCbk) {
+                defData->Fill.setMask((int)$3);
+             }
+        }
+*/
+      }
+
+// ----------------------------------------- FILLS Section END -----------------------------------------
+
+
+
+
+
+
+
+
+
+
+
+rectPoly_blockage_rules: // empty -------------------------------------------------- TODO
+      | rectPoly_blockage_rules rectPoly_blockage
+      ;
+  
+rectPoly_blockage: RECT_K point point
+      {
+	  /*
+        if (defData->callbacks->BlockageCbk)
+          defData->Blockage.addRect($2.x, $2.y, $3.x, $3.y); */
+      }
+      | K_POLYGON
+      {
+	  /*
+        if (defData->callbacks->BlockageCbk) {
+            defData->Geometries.Reset();
+        }
+		*/
+      }
+      firstPt nextPt nextPt otherPts
+      { /*
+        if (defData->callbacks->BlockageCbk) {
+          if (defData->VersionNum >= 5.6) {  // only 5.6 and beyond
+            if (defData->Blockage.hasLayer()) {  // only in layer
+              if (defData->callbacks->BlockageCbk)
+                defData->Blockage.addPolygon(&defData->Geometries);
+            } else {
+              if (defData->callbacks->BlockageCbk) {
+                if (defData->blockageWarnings++ < defData->settings->BlockageWarnings) {
+                  defData->defError(6544, "A POLYGON statement is defined in the BLOCKAGE statement,\nbut it is not defined in the BLOCKAGE LAYER statement.\nUpdate your DEF file to either remove the POLYGON statement from the BLOCKAGE statement or\ndefine the POLYGON statement in a BLOCKAGE LAYER statement.");
+                  CHKERR();
+                }
+              }
+            }
+          }
+        }
+		*/
+      }
+
+
+
+
+firstPt: point
+          { /* TODO defData->Geometries.startList($1.x, $1.y); */ }
+
+nextPt: point
+          { /* TODO defData->Geometries.addToList($1.x, $1.y); */ }
+
+otherPts: // empty
+        | otherPts nextPt
+        ;
+
+point: '(' NUM_INT NUM_INT ')'
+          {
+/* TODO
+            defData->save_x = $2;
+            defData->save_y = $3;
+            $$.x = ROUND($2);
+            $$.y = ROUND($3);
+*/
+          }
+        | '(' '*' NUM_INT ')'
+          {
+/* TODO
+            defData->save_y = $3;
+            $$.x = ROUND(defData->save_x);
+            $$.y = ROUND($3);
+*/
+          }
+        | '(' NUM_INT '*' ')'
+          {
+/* TODO
+            defData->save_x = $2;
+            $$.x = ROUND($2);
+            $$.y = ROUND(defData->save_y);
+*/
+          }
+        | '(' '*' '*' ')'
+          {
+/* TODO
+            $$.x = ROUND(defData->save_x);
+            $$.y = ROUND(defData->save_y);
+*/
+          }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+snets_section
     :    SPECIALNETS_K integer ';' defSpecialNetList END_K SPECIALNETS_K
     ;
 
@@ -1035,6 +1815,7 @@ defSpecialNetOpts
 
 defSpecialNetOpt
     :    '+' VOLTAGE_K number
+    |    snet_width
     |    '+' defSpecialNetWiring
     |    '+' SOURCE_K defSpecialNetSource { snetR->source( (defSource) $3) ;}
     |    '+' FIXEDBUMP_K { snetR->fixedbump(); }
@@ -1045,6 +1826,17 @@ defSpecialNetOpt
     |    '+' WEIGHT_K NUM_INT { snetR->weight($3); }
     |    '+' defProperty { addSNetProps($2); }
     ;
+
+snet_width: '+' WIDTH_K { /* TODO defData->dumb_mode = 1; */ } ident integer
+            {
+/* TODO
+              // 11/12/2002 - this is obsolete in 5.5, & will be ignored
+              if (defData->VersionNum < 5.5)
+                 if (defData->callbacks->SNetCbk) defData->Net.setWidth($4, $5);
+              else
+                 defData->defWarning(7026, "The WIDTH statement is obsolete in version 5.5 and later.\nThe DEF parser will ignore this statement.");
+*/
+            }
 
 defSpecialNetSource
     : DIST_K     { $$ = DEF_DIST; }
@@ -1069,22 +1861,63 @@ defSpecialNetPattern
     ;
 
 defSpecialNetWiring
-    :    COVER_K        { snetR->wire( DEF_WIRE_COVER, NULL ); }   defSpecialNetPathList { snetR->wireEnd(); }
-    |    FIXED_K        { snetR->wire( DEF_WIRE_FIXED, NULL ); }   defSpecialNetPathList { snetR->wireEnd(); }
-    |    ROUTED_K       { snetR->wire( DEF_WIRE_ROUTED, NULL ); }  defSpecialNetPathList { snetR->wireEnd(); }
-    |    SHIELD_K ident { snetR->wire( DEF_WIRE_SHIELD, *$2 ); }   defSpecialNetPathList { snetR->wireEnd(); release($2); }
+    :    COVER_K        { snetR->wire( DEF_WIRE_COVER, NULL ); }  defSpecialNetPathList { snetR->wireEnd(); }
+    |    FIXED_K        { snetR->wire( DEF_WIRE_FIXED, NULL ); }  defSpecialNetPathList { snetR->wireEnd(); }
+    |    ROUTED_K       { snetR->wire( DEF_WIRE_ROUTED, NULL ); } defSpecialNetPathList { snetR->wireEnd(); }
+    |    SHIELD_K ident { snetR->wire( DEF_WIRE_SHIELD, *$2 ); }  defSpecialNetPathList { snetR->wireEnd(); release($2); }
     |    RECT_K ident point point { snetR->rect( *$2, $3._x, $3._y, $4._x, $4._y ); release($2); }
     |    POLYGON_K ident defPointList { snetR->polygon( *$2, *$3 ); release($2); delete $3; }
+    |    VIA_K { /* TODO defData->dumb_mode = 1; */ } ident defOrient  '(' NUM_INT NUM_INT ')'  '(' NUM_INT NUM_INT ')'
+    |    SHAPE_K ident '+' VIA_K ident '(' NUM_INT NUM_INT ')'  '(' NUM_INT NUM_INT ')' // TODO
     ;
+
+snet_other_option: 
+	{}
+     |  '+' SHAPE_K ident
+          {
+/* TODO
+            defData->specialWire_shapeType = $3;
+*/
+          }
+        | '+' K_MASK integer
+          {
+/* TODO
+            if (defData->validateMaskInput((int)$3, defData->sNetWarnings, defData->settings->SNetWarnings)) {
+                defData->specialWire_mask = $3;
+            }
+*/
+          }
 
 defSpecialNetPathList
     :    defSpecialNetPath
     |    defSpecialNetPathList NEW_K defSpecialNetPath
+	/* TODO
+	| '+' VIA_K { defData->dumb_mode = 1; } T_STRING orient_pt
+        {
+          if (defData->VersionNum < 5.8) {
+              if (defData->callbacks->SNetCbk) {
+                if (defData->sNetWarnings++ < defData->settings->SNetWarnings) {
+                  defData->defMsg = (char*)malloc(1000);
+                  sprintf (defData->defMsg,
+                     "The VIA statement is available in version 5.8 and later.\nHowever, your DEF file is defined with version %g", defData->VersionNum);
+                  defData->defError(6536, defData->defMsg);
+                  free(defData->defMsg);
+                  CHKERR();
+                }
+              }
+          }
+        }
+		*/
     ;
 
 defSpecialNetPath
     :    ident integer { snetR->path( *$1, $2 ); } defSpecialNetWireShapeOpts defSpecialNetPathPoints 
              { snetR->pathEnd(); deflex_kid = 0; release($1); }
+    |    defSpecialNetWireShapeOpts '+' RECT_K ident  '(' NUM_INT NUM_INT ')'  '(' NUM_INT NUM_INT ')'  /* TODO */
+    |    defSpecialNetWireShapeOpts '+' RECT_K ident defSpecialNetPathPoints  /* TODO */
+    |    defSpecialNetWireShapeOpts '+' POLYGON_K ident defPointList  /* TODO */
+    |    defSpecialNetWireShapeOpts '+' VIA_K ident defOrient  '(' NUM_INT NUM_INT ')'  '(' NUM_INT NUM_INT ')'
+    |    defSpecialNetWireShapeOpts '+' VIA_K ident '(' NUM_INT NUM_INT ')'  '(' NUM_INT NUM_INT ')'
     ;
 
 defSpecialNetWireShapeOpts
@@ -1095,6 +1928,7 @@ defSpecialNetWireShapeOpts
 
 defSpecialNetWireShapeOpt
     :    '+' SHAPE_K ident { snetR->pathShape( *$3 ); release($3); }
+    |    '+' K_MASK integer { /* TODO snetR->pathStyle( $3 ); */ }
     |    '+' STYLE_K integer { snetR->pathStyle( $3 ); }
     ;
 
@@ -1121,7 +1955,7 @@ defSpecialNetPathPoint
          }
     ;
 
-defNets
+nets_section
     :    NETS_K integer ';' defNetList END_K NETS_K
     ;
 
@@ -1131,13 +1965,16 @@ defNetList
     ;
 
 defNet
-    :    '-' { deflex_kid = NET_ID; }  MUSTJOIN_K  { deflex_kid = 0; } '(' ident ident ')' { netR->beginMustjoin( *$6, *$7 ); } defNetOpts ';'
+    :    '-' { deflex_kid = NET_ID; }  
+	    MUSTJOIN_K  { deflex_kid = 0; } '(' ident ident ')' { netR->beginMustjoin( *$6, *$7 ); } 
+	    defNetOpts ';'
          {
              netR->end();
              release($6);
              release($7);
          }
-    |    '-' { deflex_kid = NET_ID; } ident  { deflex_kid = 0; netR->begin(*$3); } defNetConnections defNetOpts ';'
+    |    '-' { deflex_kid = NET_ID; } ident  { deflex_kid = 0; netR->begin(*$3); } 
+	     defNetConnections defNetOpts ';'
          {
              netR->end();
              release($3);
@@ -1166,10 +2003,10 @@ defNetConnection
 
 defNetOpts
     :    /* nothing */
-    |    defNetOpts defNetOpt
+    |    defNetOpts net_option
     ;
 
-defNetOpt
+net_option
     :    '+' SHIELDNET_K ident { release($3); }
     |    '+' defNetVPin
     |    '+' defSubNet
@@ -1181,6 +2018,8 @@ defNetOpt
     |    '+' FREQUENCY_K number
     |    '+' ORIGINAL_K ident { release($3); }
     |    '+' USE_K defNetUse
+	|    '+' STYLE_K NUM_INT
+            { /* TODO if (defData->callbacks->SNetCbk) defData->Net.setStyle((int)$3); */ }
     |    '+' PATTERN_K defNetPattern
     |    '+' ESTCAP_K number
     |    '+' WEIGHT_K NUM_INT { netR->weight($3); }
@@ -1212,8 +2051,8 @@ defNetPattern
 
 defNetWire
     :    COVER_K    { netR->wire( DEF_WIRE_COVER ); }    defNetPathList { netR->wireEnd(); }
-    |    FIXED_K    { netR->wire( DEF_WIRE_FIXED ); }    defNetPathList { netR->wireEnd(); }
-    |    ROUTED_K   { netR->wire( DEF_WIRE_ROUTED ); }   defNetPathList { netR->wireEnd(); }
+    |    FIXED_K    { fprintf(stdout, "defNetWire FIXED_K\n"); netR->wire( DEF_WIRE_FIXED ); }    defNetPathList { netR->wireEnd(); }
+    |    ROUTED_K   { fprintf(stdout, "defNetWire ROUTED_K\n"); netR->wire( DEF_WIRE_ROUTED ); }   defNetPathList { netR->wireEnd(); }
     |    NOSHIELD_K { netR->wire( DEF_WIRE_NOSHIELD ); } defNetPathList { netR->wireEnd(); }
     ;
 
@@ -1229,16 +2068,20 @@ defNetPath
     |    ident STYLE_K integer                   { netR->path( *$1 ); netR->pathStyle($3); }               defNetPathPoints { netR->pathEnd(); deflex_kid = 0; release($1); }
     |    ident TAPER_K STYLE_K integer           { netR->pathTaper( *$1 );  netR->pathStyle($4);}          defNetPathPoints { netR->pathEnd(); deflex_kid = 0; release($1); }
     |    ident TAPERRULE_K ident STYLE_K integer { netR->pathTaperRule( *$1, *$3 ); netR->pathStyle($5); } defNetPathPoints { netR->end(); deflex_kid = 0; release($1); release($3); }
+
     ;
 
-defNetPathPoints
+defNetPathPoints 
     :    '(' integer integer ')'         { deflex_kid = NET_PATH_ID; cur_x = $2; cur_y = $3; netR->pathPoint( cur_x, cur_y ); }
     |    '(' integer integer integer ')' { deflex_kid = NET_PATH_ID; cur_x = $2; cur_y = $3; netR->pathPoint( cur_x, cur_y, $4 ); }
-    |    defNetPathPoints defNetPathPoint
+    | defNetPathPoints defNetPathPoint
+    //| defNetPathPoint defNetPathPoints
     ;
 
 defNetPathPoint
-    :    '(' integer integer ')'         { cur_x = $2; cur_y = $3; netR->pathPoint( cur_x, cur_y ); }
+    : {}
+    |    '(' integer integer ')'         { cur_x = $2; cur_y = $3; netR->pathPoint( cur_x, cur_y ); }
+    |    '(' integer integer integer integer ')' { /* TODO cur_x = $2; cur_y = $3; netR->pathPoint( cur_x, cur_y, $4 );*/ }
     |    '(' integer integer integer ')' { cur_x = $2; cur_y = $3; netR->pathPoint( cur_x, cur_y, $4 ); }
     |    '(' '*' integer ')'             { cur_y = $3; netR->pathPoint( cur_x, cur_y ); }
     |    '(' '*' integer integer ')'     { cur_y = $3; netR->pathPoint( cur_x, cur_y, $4 ); }
@@ -1248,7 +2091,285 @@ defNetPathPoint
     |    '(' '*' '*' integer ')'         { netR->pathPoint( cur_x, cur_y, $4 ); }
     |    ident                           { netR->pathVia(*$1); release($1); }
     |    ident defOrient                 { netR->pathVia(*$1,$2); release($1); }
+    // |    rect_statement
+    |    K_VIRTUAL defNetPathPoint RECT_K defNetPathPoint { fprintf(stdout, "K_VIRTUAL defNetPathPoint RECT_K\n");/* TODO cur_x = $2; cur_y = $3; netR->pathPoint( cur_x, cur_y ); */ }
+    |    K_VIRTUAL defNetPathPoint  { fprintf(stdout, "K_VIRTUAL defNetPathPoint\n");/* TODO cur_x = $2; cur_y = $3; netR->pathPoint( cur_x, cur_y ); */ }
+    |    K_MASK  integer ident  /* TO VERIFY maybe does not exits*/   { fprintf(stdout, "K_MASK iinteger ident defNetPathPoint\n");/* TODO cur_x = $2; cur_y = $3; netR->pathPoint( cur_x, cur_y ); */ }
+    |    K_MASK integer  defNetPathPoint { fprintf(stdout, "K_MASK integer ( i1  i2 ) \n");netR->wireEnd();/* TODO cur_x = $2; cur_y = $3; netR->pathPoint( cur_x, cur_y ); */ }
     ;
+
+// ----------------------------------- Dimitris: add <path_item:> section minus first rule ----------- 11/11/19 -----------------------
+virtual_statement :
+    // K_VIRTUAL virtual_pt
+    K_VIRTUAL defNetPathPoint
+    {
+/* TODO
+
+      if (defData->VersionNum < 5.8) {
+              if (defData->callbacks->SNetCbk) {
+                if (defData->sNetWarnings++ < defData->settings->SNetWarnings) {
+                  defData->defMsg = (char*)malloc(1000);
+                  sprintf (defData->defMsg,
+                     "The VIRTUAL statement is available in version 5.8 and later.\nHowever, your DEF file is defined with version %g", defData->VersionNum);
+                  defData->defError(6536, defData->defMsg);
+                  free(defData->defMsg);
+                  CHKERR();
+                }
+              }
+          }
+*/
+    }
+rect_statement :
+    {}
+
+    | RECT_K rect_pts
+    {
+/* TODO
+      if (defData->VersionNum < 5.8) {
+              if (defData->callbacks->SNetCbk) {
+                if (defData->sNetWarnings++ < defData->settings->SNetWarnings) {
+                  defData->defMsg = (char*)malloc(1000);
+                  sprintf (defData->defMsg,
+                     "The RECT statement is available in version 5.8 and later.\nHowever, your DEF file is defined with version %g", defData->VersionNum);
+                  defData->defError(6536, defData->defMsg);
+                  free(defData->defMsg);
+                  CHKERR();
+                }
+              }
+      }
+*/
+    }
+
+rect_pts :
+    '(' integer integer integer integer ')'
+    {
+/* TODO
+        if (defData->NeedPathData && ((defData->callbacks->NetCbk && (defData->netOsnet==1)) ||
+          (defData->callbacks->SNetCbk && (defData->netOsnet==2)))) {
+          defData->PathObj.addViaRect($2, $3, $4, $5);
+        }
+*/
+    }
+
+
+path_item:
+/* covered as the first rule under defNetPath
+     T_STRING
+      {
+        if (defData->NeedPathData && ((defData->callbacks->NetCbk && (defData->netOsnet==1)) ||
+            (defData->callbacks->SNetCbk && (defData->netOsnet==2)))) {
+          if (strcmp($1, "TAPER") == 0)
+            defData->PathObj.setTaper();
+          else {
+            defData->PathObj.addVia($1);
+            }
+        }
+      }
+    | */
+     K_MASK integer ident
+      {
+/* TODO
+        if (defData->validateMaskInput((int)$2, defData->sNetWarnings, defData->settings->SNetWarnings)) {
+            if (defData->NeedPathData && ((defData->callbacks->NetCbk && (defData->netOsnet==1)) ||
+                (defData->callbacks->SNetCbk && (defData->netOsnet==2)))) {
+              if (strcmp($3, "TAPER") == 0)
+                defData->PathObj.setTaper();
+              else {
+                defData->PathObj.addViaMask($2);
+                defData->PathObj.addVia($3);
+                }
+            }
+        }
+*/
+      }
+    | ident defOrient
+/*
+      { if (defData->NeedPathData && ((defData->callbacks->NetCbk && (defData->netOsnet==1)) ||
+            (defData->callbacks->SNetCbk && (defData->netOsnet==2)))) {
+            defData->PathObj.addVia($1);
+            defData->PathObj.addViaRotation($2);
+        }
+      }
+*/
+    | K_MASK integer ident defOrient
+      {
+/* TODO
+        if (defData->validateMaskInput((int)$2, defData->sNetWarnings, defData->settings->SNetWarnings)) {
+            if (defData->NeedPathData && ((defData->callbacks->NetCbk && (defData->netOsnet==1)) ||
+                (defData->callbacks->SNetCbk && (defData->netOsnet==2)))) {
+                defData->PathObj.addViaMask($2);
+                defData->PathObj.addVia($3);
+                defData->PathObj.addViaRotation($4);
+            }
+        }
+*/
+      }
+    | K_MASK integer ident DO_K integer BY_K integer STEP_K integer integer
+      {
+/* TODO
+        if (defData->validateMaskInput((int)$2, defData->sNetWarnings, defData->settings->SNetWarnings)) {
+            if (($5 == 0) || ($7 == 0)) {
+              if (defData->NeedPathData &&
+                  defData->callbacks->SNetCbk) {
+                if (defData->netWarnings++ < defData->settings->NetWarnings) {
+                  defData->defError(6533, "Either the numX or numY in the VIA DO statement has the value. The value specified is 0.\nUpdate your DEF file with the correct value and then try again.\n");
+                  CHKERR();
+                }
+              }
+            }
+            if (defData->NeedPathData && (defData->callbacks->SNetCbk && (defData->netOsnet==2))) {
+                defData->PathObj.addViaMask($2);
+                defData->PathObj.addVia($3);
+                defData->PathObj.addViaData((int)$5, (int)$7, (int)$9, (int)$10);
+            }  else if (defData->NeedPathData && (defData->callbacks->NetCbk && (defData->netOsnet==1))) {
+              if (defData->netWarnings++ < defData->settings->NetWarnings) {
+                defData->defError(6567, "The VIA DO statement is defined in the NET statement and is invalid.\nRemove this statement from your DEF file and try again.");
+                CHKERR();
+              }
+            }
+        }
+*/
+      }
+ | ident DO_K integer BY_K integer STEP_K integer integer
+      {
+/* TODO
+        if (defData->VersionNum < 5.5) {
+          if (defData->NeedPathData &&
+              defData->callbacks->SNetCbk) {
+            if (defData->netWarnings++ < defData->settings->NetWarnings) {
+              defData->defMsg = (char*)malloc(1000);
+              sprintf (defData->defMsg,
+                 "The VIA DO statement is available in version 5.5 and later.\nHowever, your DEF file is defined with version %g", defData->VersionNum);
+              defData->defError(6532, defData->defMsg);
+              free(defData->defMsg);
+              CHKERR();
+            }
+          }
+        }
+        if (($3 == 0) || ($5 == 0)) {
+          if (defData->NeedPathData &&
+              defData->callbacks->SNetCbk) {
+            if (defData->netWarnings++ < defData->settings->NetWarnings) {
+              defData->defError(6533, "Either the numX or numY in the VIA DO statement has the value. The value specified is 0.\nUpdate your DEF file with the correct value and then try again.\n");
+              CHKERR();
+            }
+          }
+        }
+        if (defData->NeedPathData && (defData->callbacks->SNetCbk && (defData->netOsnet==2))) {
+            defData->PathObj.addVia($1);
+            defData->PathObj.addViaData((int)$3, (int)$5, (int)$7, (int)$8);
+        }  else if (defData->NeedPathData && (defData->callbacks->NetCbk && (defData->netOsnet==1))) {
+          if (defData->netWarnings++ < defData->settings->NetWarnings) {
+            defData->defError(6567, "The VIA DO statement is defined in the NET statement and is invalid.\nRemove this statement from your DEF file and try again.");
+            CHKERR();
+          }
+        }
+*/
+      }
+    | ident defOrient DO_K integer BY_K integer STEP_K integer integer
+      {
+/* TODO
+        if (defData->VersionNum < 5.5) {
+          if (defData->NeedPathData &&
+              defData->callbacks->SNetCbk) {
+            if (defData->netWarnings++ < defData->settings->NetWarnings) {
+              defData->defMsg = (char*)malloc(1000);
+              sprintf (defData->defMsg,
+                 "The VIA DO statement is available in version 5.5 and later.\nHowever, your DEF file is defined with version %g", defData->VersionNum);
+              defData->defError(6532, defData->defMsg);
+              CHKERR();
+            }
+          }
+        }
+        if (($4 == 0) || ($6 == 0)) {
+          if (defData->NeedPathData &&
+              defData->callbacks->SNetCbk) {
+            if (defData->netWarnings++ < defData->settings->NetWarnings) {
+              defData->defError(6533, "Either the numX or numY in the VIA DO statement has the value. The value specified is 0.\nUpdate your DEF file with the correct value and then try again.\n");
+              CHKERR();
+            }
+          }
+        }
+        if (defData->NeedPathData && (defData->callbacks->SNetCbk && (defData->netOsnet==2))) {
+            defData->PathObj.addVia($1);
+            defData->PathObj.addViaRotation($2);
+            defData->PathObj.addViaData((int)$4, (int)$6, (int)$8, (int)$9);
+        } else if (defData->NeedPathData && (defData->callbacks->NetCbk && (defData->netOsnet==1))) {
+          if (defData->netWarnings++ < defData->settings->NetWarnings) {
+            defData->defError(6567, "The VIA DO statement is defined in the NET statement and is invalid.\nRemove this statement from your DEF file and try again.");
+            CHKERR();
+          }
+        }
+*/
+      }
+  | K_MASK integer ident defOrient DO_K integer BY_K integer STEP_K integer integer
+      {
+/* TODO
+        if (defData->validateMaskInput((int)$2, defData->sNetWarnings, defData->settings->SNetWarnings)) {
+            if (($6 == 0) || ($8 == 0)) {
+              if (defData->NeedPathData &&
+                  defData->callbacks->SNetCbk) {
+                if (defData->netWarnings++ < defData->settings->NetWarnings) {
+                  defData->defError(6533, "Either the numX or numY in the VIA DO statement has the value. The value specified is 0.\nUpdate your DEF file with the correct value and then try again.\n");
+                  CHKERR();
+                }
+              }
+            }
+            if (defData->NeedPathData && (defData->callbacks->SNetCbk && (defData->netOsnet==2))) {
+                defData->PathObj.addViaMask($2);
+                defData->PathObj.addVia($3);
+                defData->PathObj.addViaRotation($4);;
+                defData->PathObj.addViaData((int)$6, (int)$8, (int)$10, (int)$11);
+            } else if (defData->NeedPathData && (defData->callbacks->NetCbk && (defData->netOsnet==1))) {
+              if (defData->netWarnings++ < defData->settings->NetWarnings) {
+                defData->defError(6567, "The VIA DO statement is defined in the NET statement and is invalid.\nRemove this statement from your DEF file and try again.");
+                CHKERR();
+              }
+            }
+        }
+*/
+      }
+   | virtual_statement
+   | rect_statement
+   | K_MASK integer RECT_K { /* TODO defData->dumb_mode = 6; */ } '(' integer integer integer integer ')'
+    {
+/* TODO
+      if (defData->validateMaskInput((int)$2, defData->sNetWarnings, defData->settings->SNetWarnings)) {
+        if (defData->NeedPathData && ((defData->callbacks->NetCbk && (defData->netOsnet==1)) ||
+          (defData->callbacks->SNetCbk && (defData->netOsnet==2)))) {
+          defData->PathObj.addMask($2);
+          defData->PathObj.addViaRect($6, $7, $8, $9);
+        }
+      }
+*/
+    }
+   | K_MASK integer
+    {
+/* TODO
+       if (defData->validateMaskInput((int)$2, defData->sNetWarnings, defData->settings->SNetWarnings)) {
+        if (defData->NeedPathData && ((defData->callbacks->NetCbk && (defData->netOsnet==1)) ||
+          (defData->callbacks->SNetCbk && (defData->netOsnet==2)))) {
+          defData->PathObj.addMask($2);
+        }
+       }
+*/
+    }
+/* org 
+    path_pt
+  | path_pt
+*/
+defNetPathPoint
+  | defNetPathPoint
+    {
+/* TODO
+       // reset defData->dumb_mode to 1 just incase the next token is a via of the path
+        // 2/5/2004 - pcr 686781
+        defData->dumb_mode = DEF_MAX_INT; defData->by_is_keyword = TRUE; defData->do_is_keyword = TRUE;
+        defData->new_is_keyword = TRUE; defData->step_is_keyword = TRUE;
+        defData->orient_is_keyword = TRUE;
+*/
+    }
+// END ----------------------------------- Dimitris: add <path_item:> section minus first rule ----------- 11/11/19 -----------------------
 
 defNetVPin
     :    VPIN_K ident point point                                   { release($2); }
@@ -1406,7 +2527,7 @@ defScanComponentOpt
     |    defScanBits
     ;
 
-defGroups
+groups_section
     :    GROUPS_K integer ';' defGroupList END_K GROUPS_K
     ;
 
@@ -1426,20 +2547,64 @@ defGroupCompList
 
 defGroupOpts
     :    /* nothing */
-    |    defGroupOpts defGroupOpt
+    |    defGroupOpts group_option
     ;
 
-defGroupOpt
-    :    '+' REGION_K ident { regionR->parent(*$3); release($3); }
+group_option
+    :	 '+' K_SOFT group_soft_options { }
+    |    '+' REGION_K ident { regionR->parent(*$3); release($3); }
+    |    '+' REGION_K '(' integer integer ')' '(' integer integer ')' { /* TODO regionR->parent(*$3); release($3);*/ }
     |    '+' defProperty { addRegionProps($2); }
+    |    defExtension {
+	    /* TODO
+        if (defData->callbacks->GroupMemberCbk)
+          CALLBACK(defData->callbacks->GroupExtCbk, defrGroupExtCbkType, &defData->History_text[0]);
+*/
+    }
     ;
+
+group_soft_options: // empty
+      | group_soft_options group_soft_option
+      { }
+
+group_soft_option: K_MAXX NUM_INT
+      {
+/*
+        // 11/12/2002 - this is obsolete in 5.5, & will be ignored
+        if (defData->VersionNum < 5.5)
+          if (defData->callbacks->GroupCbk) defData->Group.setMaxX(ROUND($2));
+        else
+          defData->defWarning(7028, "The GROUP SOFT MAXX statement is obsolete in version 5.5 and later.\nThe DEF parser will ignore this statement.");
+*/
+      }
+      | K_MAXY NUM_INT
+      {
+/*
+        // 11/12/2002 - this is obsolete in 5.5, & will be ignored
+        if (defData->VersionNum < 5.5)
+          if (defData->callbacks->GroupCbk) defData->Group.setMaxY(ROUND($2));
+        else
+          defData->defWarning(7029, "The GROUP SOFT MAXY statement is obsolete in version 5.5 and later.\nThe DEF parser will ignore this statement.");
+*/
+      }
+      | K_MAXHALFPERIMETER NUM_INT
+      {
+/*
+        // 11/12/2002 - this is obsolete in 5.5, & will be ignored
+        if (defData->VersionNum < 5.5)
+          if (defData->callbacks->GroupCbk) defData->Group.setPerim(ROUND($2));
+        else
+          defData->defWarning(7030, "The GROUP SOFT MAXHALFPERIMETER statement is obsolete in version 5.5 and later.\nThe DEF parser will ignore this statement.");
+*/
+      }
+	;
 
 defExtension
     :    BEGINEXT_K {deflex_extension();} ENDEXT_K
     ;
 
 defNonDefaultRules
-    : NONDEFAULTRULES_K integer { non_default_ruleR->beginRules($2); }
+    : NONDEFAULTRULES_K integer { non_default_ruleR->beginRules($2); fprintf(stdout,"defNonDefaultRule=\n"); }
           ';' defNonDefaultRuleList END_K { non_default_ruleR->endRules(); }
           NONDEFAULTRULES_K
     ;
@@ -1451,6 +2616,9 @@ defNonDefaultRuleList
 
 defNonDefaultRule
     : '-' ident { non_default_ruleR->beginRule(*$2); release($2); } defNonDefaultRuleAttrs ';' { non_default_ruleR->endRule(); }
+{
+fprintf(stdout," ---------------------------------------------------- defNonDefaultRule=\n");
+}
     ;
 
 defNonDefaultRuleAttrs
@@ -1461,7 +2629,7 @@ defNonDefaultRuleAttrs
 defNonDefaultRuleAttr
     : '+' HARDSPACING_K { non_default_ruleR->hardSpacing(); }
 
-    | '+' LAYER_K ident WIDTH_K integer { non_default_ruleR->beginLayerRule(*$3, $5 ); }
+    | '+' LAYER_K ident WIDTH_K NUM_DOUBLE { non_default_ruleR->beginLayerRule(*$3, $5 ); }
          defNonDefaultRuleLayerAttrOpts { release($3); non_default_ruleR->endLayerRule(); }
     | '+' VIA_K ident { non_default_ruleR->via(*$3); release($3); }
     | '+' VIARULE_K ident { non_default_ruleR->viaRule(*$3); release($3); }
@@ -1475,9 +2643,9 @@ defNonDefaultRuleLayerAttrOpts
     ;
 
 defNonDefaultRuleLayerAttrOpt
-    : DIAGWIDTH_K integer
-    | SPACING_K integer { non_default_ruleR->spacing($2); }
-    | WIREEXT_K integer { non_default_ruleR->wireExt($2); }
+    : DIAGWIDTH_K NUM_DOUBLE
+    | SPACING_K NUM_DOUBLE { non_default_ruleR->spacing($2); }
+    | WIREEXT_K NUM_DOUBLE { non_default_ruleR->wireExt($2); }
     ;
 
 defStyles
@@ -1491,11 +2659,15 @@ defStyleTable
 
 defStyle
     : '-' STYLE_K integer defPointList ';'
+{
+fprintf(stdout,"defStyle: STYLE=\n");
+}
     ;
 
 point
     :    '(' integer integer ')'
           {
+fprintf(stdout,"STYLE= %s %s \n", $2, $3);
               $$._x = $2;
               $$._y = $3;
           }
@@ -1568,6 +2740,7 @@ void defparse_init( FILE * file )
     non_default_ruleR = &default_non_default_ruleR;
     prop_defsR = &default_prop_defsR;
     pin_propsR = &default_pin_propsR;
+	// defdebug= 1;
 }
 
 void defin_set_IBlockage( definIBlockage * blockage )

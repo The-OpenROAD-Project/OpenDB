@@ -6,7 +6,6 @@ set_source_files_properties(${PROJECT_SOURCE_DIR}/src/swig/python/opendbpy.i
     PROPERTIES CPLUSPLUS ON
 )
 include_directories(${PROJECT_SOURCE_DIR}/include/opendb)
-include_directories(${PROJECT_SOURCE_DIR}/include/lef56)
 
 # Add swig module
 swig_add_library(opendbpy 

@@ -38,6 +38,7 @@
 
 #include <list>
 
+namespace LefDefParser {
 class lefiArray;
 struct lefiNoiseMargin;
 class lefiNoiseTable;
@@ -62,6 +63,7 @@ class lefiMaxStackVia;
 class lefiObstruction;
 class lefiGeometries;
 class lefiGeomPolygon;
+}
 
 namespace odb {
 
@@ -72,6 +74,8 @@ class dbLib;
 class dbMaster;
 class dbDatabase;
 class dbTechLayer;
+
+using namespace LefDefParser;
 
 class lefin
 {

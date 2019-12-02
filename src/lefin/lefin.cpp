@@ -56,9 +56,9 @@
 #include "lefin.h"
 #include "logger.h"
 
-extern int lefrRelaxMode; // This variable turns off strick checking in the lef 5.6 parser.
-
 namespace odb {
+
+using LefDefParser::lefrSetRelaxMode;
 
 extern bool lefin_parse( lefin *, const char * );
 
@@ -1869,7 +1869,7 @@ bool lefin::readLef( const char * lef_file )
 
 dbTech * lefin::createTech( const char * lef_file )
 {
-    lefrRelaxMode = true;
+    lefrSetRelaxMode();
     init();
     
     if ( _db->getTech() )
@@ -1898,7 +1898,7 @@ dbTech * lefin::createTech( const char * lef_file )
 
 dbLib * lefin::createLib( const char * name, const char * lef_file )
 {
-    lefrRelaxMode = true;
+    lefrSetRelaxMode();
     init();
     
     _tech = _db->getTech();
@@ -1938,7 +1938,7 @@ dbLib * lefin::createLib( const char * name, const char * lef_file )
 
 dbLib * lefin::createTechAndLib( const char * lib_name, const char * lef_file )
 {
-    lefrRelaxMode = true;
+    lefrSetRelaxMode();
     init();
     
     if ( _db->findLib(lib_name) )
@@ -1985,7 +1985,7 @@ dbLib * lefin::createTechAndLib( const char * lib_name, const char * lef_file )
 
 dbLib * lefin::createTechAndLib( const char *lib_name, std::list<std::string> &file_list )
 {
-    lefrRelaxMode = true;
+    lefrSetRelaxMode();
     init();
     
     if ( _db->findLib(lib_name) )
@@ -2052,7 +2052,7 @@ dbLib * lefin::createTechAndLib( const char *lib_name, std::list<std::string> &f
 bool lefin::updateLib( dbLib * lib,
                        const char * lef_file )
 {
-    lefrRelaxMode = true;
+    lefrSetRelaxMode();
     init();
     _tech = lib->getTech();
     _lib = lib;
@@ -2071,7 +2071,7 @@ bool lefin::updateLib( dbLib * lib,
 bool lefin::updateTechAndLib( dbLib * lib,
                               const char * lef_file )
 {
-    lefrRelaxMode = true;
+    lefrSetRelaxMode();
     
     init();
     _lib = lib;
@@ -2089,7 +2089,7 @@ bool lefin::updateTechAndLib( dbLib * lib,
 bool lefin::updateTech( dbTech * tech,
                         const char * lef_file )
 {
-    lefrRelaxMode = true;
+    lefrSetRelaxMode();
     init();
     _tech = tech;
     _create_tech = true;

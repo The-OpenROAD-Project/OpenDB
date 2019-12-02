@@ -39,9 +39,9 @@ if(NOT TARGET defout)
     add_subdirectory(src/defout)
 endif()
 
-# lef56
-if(NOT TARGET opendblef)
-    add_subdirectory(src/lef56)
+# lef
+if(NOT TARGET lef)
+    add_subdirectory(src/lef)
 endif()
 
 # lefin

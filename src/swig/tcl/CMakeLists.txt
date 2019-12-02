@@ -9,7 +9,6 @@ target_include_directories(opendbtcl
     PUBLIC
         $<INSTALL_INTERFACE:include/opendb>
         ${PROJECT_SOURCE_DIR}/include/opendb
-        ${PROJECT_SOURCE_DIR}/include/lef56
     PRIVATE
         ${CMAKE_CURRENT_SOURCE_DIR}/src/swig/tcl
 )
@@ -46,7 +45,6 @@ target_include_directories(opendbtcl-bin
     PUBLIC
         $<INSTALL_INTERFACE:include/opendb>
         ${PROJECT_SOURCE_DIR}/include/opendb
-        ${PROJECT_SOURCE_DIR}/include/lef56
     PRIVATE
         ${CMAKE_CURRENT_SOURCE_DIR}/src/swig/tcl
 )

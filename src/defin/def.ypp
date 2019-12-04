@@ -778,9 +778,8 @@ gcellgrid
 
 via_section
     :   VIAS_K integer ';' defViaList END_K VIAS_K
-{
-fprintf(stdout, "END VIAS\n");
-}
+    	{
+	}
     ;
 
 defViaList
@@ -789,7 +788,7 @@ defViaList
     ;
 
 defVia
-    :    '-' ident { viaR->viaBegin( *$2); } defViaDef ';' { fprintf(stdout,"end via =%s\n", $2); viaR->viaEnd(); release($2); }
+    :    '-' ident { viaR->viaBegin( *$2); } defViaDef ';' { viaR->viaEnd(); release($2); }
     ;
 
 defViaDef
@@ -809,39 +808,29 @@ defViaGeoms
 defViaGeom
     :    '+' RECT_K ident '(' integer integer ')' '(' integer integer ')'
          {
-fprintf(stdout," defViaGeom: ident=\n");
              viaR->viaRect( *$3, $5, $6, $9, $10 );
              release($3);
          }
-       |    '+' RECT_K ident '+' K_MASK integer '(' integer integer ')' '(' integer integer ')'
-     //|    '+' RECT_K ident mask '(' integer integer ')' '(' integer integer ')'
+    |    '+' RECT_K ident '+' K_MASK integer '(' integer integer ')' '(' integer integer ')'
+//  |    '+' RECT_K ident mask '(' integer integer ')' '(' integer integer ')'
          {
-fprintf(stdout," defViaGeom: ident= MASK \n");
-/*
-             //viaR->viaRect( *$3, $5, $6, $9, $10 );
-             viaR->viaRect( *$3, $8, $9, $12, $13 );
-             release($3);
-*/
          }
     |    '+' POLYGON_K ident defPointList
          {
              delete $4;
              release($3);
          }
-     |    '+' POLYGON_K ident  '+' K_MASK integer defPointList
-    //|    '+' POLYGON_K ident  mask defPointList
+    |    '+' POLYGON_K ident  '+' K_MASK integer defPointList
+//  |    '+' POLYGON_K ident  mask defPointList
          {
-/* TODO
-             delete $4;
-             release($3);
-*/
+	 /* TODO */
          }
     ;
 
 mask: 
-	|
+    |
        '+' K_MASK integer
-      { /* TODO $$ = $3; */}
+      { /* TODO */}
 
 
 defViaRects
@@ -857,11 +846,6 @@ defViaRect
          }
        |    '+' RECT_K ident '+' K_MASK integer '(' integer integer ')' '(' integer integer ')'
          {
-/*
-             //viaR->viaRect( *$3, $5, $6, $9, $10 );
-             viaR->viaRect( *$3, $8, $9, $12, $13 );
-             release($3);
-*/
          }
     ;
 
@@ -940,9 +924,8 @@ comps_rule
     ;
 
 defComponent
-    :    '-' ident ident { componentR->begin( *$2, *$3 );/* fprintf(stdout, "BEGIN COMP:------------- %s %s\n", $2, $3);*/ } comp_options ';'
+    :    '-' ident ident { componentR->begin( *$2, *$3 ); } comp_options ';'
          {
-// fprintf(stdout, "END COMP:-------------\n");
              componentR->end();
              release($2);
              release($3);
@@ -954,28 +937,26 @@ comp_options
     |    comp_options comp_option
     ;
 
-	// TODO Region : is it obsolete??????
-	// TODO EEQMASTER_K ????
+// TODO Region : is it obsolete??????
+// TODO EEQMASTER_K ????
 
 comp_option
     :    '+' EEQMASTER_K ident               { release($3); }
-    |    '+' SOURCE_K source_type           { /*  TODO componentR->source( (defSource) $2 ); */}
+    |    '+' SOURCE_K source_type           { /* TODO */}
     |    '+' FOREIGN_K ident point defOrient { release($3); }
     |    comp_type
     |  	'+' K_MASKSHIFT integer { /* TODO */ }
     |    '+' WEIGHT_K NUM_INT                { componentR->weight( $3 ); }
     |    '+' REGION_K ident                  { componentR->region( *$3 ); release($3); }
-    /* TODO |    '+' HALO_K integer integer integer integer { componentR->halo( $3, $4, $5, $6 ); } */
+    /* TODO |    '+' HALO_K integer integer integer integer {  } */
     |    '+' defProperty { addComponentProps($2); }
-	|    comp_generate
-	|	 comp_halo
-	|	 comp_routehalo
-	|    comp_extension_stmt
+    |    comp_generate
+    |	 comp_halo
+    |	 comp_routehalo
+    |    comp_extension_stmt
     ;
 
-	comp_extension_stmt
-		: defExtension
-		;
+comp_extension_stmt : defExtension ;
 
 comp_type
     :    '+' FIXED_K point defOrient         { componentR->placement( DEF_PLACEMENT_FIXED, $3._x, $3._y, (defOrient) $4 ); }
@@ -985,46 +966,26 @@ comp_type
     |    '+' UNPLACED_K                      { componentR->placement( DEF_PLACEMENT_UNPLACED, 0, 0, DEF_ORIENT_N ); }
 	;
 
-	        // Adding 'no_num' modification, otherwise the token will be parsed as number (double). 
+// Adding 'no_num' modification, otherwise the token will be parsed as number (double). 
 maskShift
-	: '+' K_MASKSHIFT { 
-		/* TODO
-		defData->dumb_mode = 1; defData->no_num = 1; */ } ident
+	: '+' K_MASKSHIFT { /* TODO */ } ident
         {
-/*  
-          if (defData->callbacks->ComponentCbk) {
-            if (defData->validateMaskShiftInput($4, defData->componentWarnings, defData->settings->ComponentWarnings)) {
-                defData->Component.setMaskShift($4);
-            }
-          }
-		  */
         }
-       | '+' K_MASKSHIFT {
-               /* TODO
-               defData->dumb_mode = 1; defData->no_num = 1; */ } integer
+       | '+' K_MASKSHIFT { /* TODO */ } integer
 
 	;
 
 comp_generate
-	:    '+' K_COMP_GEN 
-		{ 
-			/* TODO defData->dumb_mode = 2;  defData->no_num = 2; */
-		} ident
-    opt_pattern
-    {
-		/* TODO
-          if (defData->callbacks->ComponentCbk)
-             defData->Component.setGenerate($4, $5);
-	    */
-     }
+	:    '+' K_COMP_GEN {/* TODO  */} ident
+    opt_pattern {/* TODO */}
 	 ;
 
 opt_pattern 
 	:
 		// empty 
-		{ /* TODO $$ = (char*)""; */}
+		{ /* TODO */}
     | ident
-		{ /* TODO $$ = $1; */ }
+		{ /* TODO */ }
 	;
 
 comp_halo
@@ -1768,52 +1729,13 @@ otherPts: // empty
         | otherPts nextPt
         ;
 
-point: '(' NUM_INT NUM_INT ')'
+point
+    :    '(' integer integer ')'
           {
-/* TODO
-            defData->save_x = $2;
-            defData->save_y = $3;
-            $$.x = ROUND($2);
-            $$.y = ROUND($3);
-*/
+              $$._x = $2;
+              $$._y = $3;
           }
-        | '(' '*' NUM_INT ')'
-          {
-/* TODO
-            defData->save_y = $3;
-            $$.x = ROUND(defData->save_x);
-            $$.y = ROUND($3);
-*/
-          }
-        | '(' NUM_INT '*' ')'
-          {
-/* TODO
-            defData->save_x = $2;
-            $$.x = ROUND($2);
-            $$.y = ROUND(defData->save_y);
-*/
-          }
-        | '(' '*' '*' ')'
-          {
-/* TODO
-            $$.x = ROUND(defData->save_x);
-            $$.y = ROUND(defData->save_y);
-*/
-          }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+    ;
 
 snets_section
     :    SPECIALNETS_K integer ';' defSpecialNetList END_K SPECIALNETS_K
@@ -1907,17 +1829,11 @@ snet_other_option:
 	{}
      |  '+' SHAPE_K ident
           {
-/* TODO
-            defData->specialWire_shapeType = $3;
-*/
+	  /* TODO */
           }
-        | '+' K_MASK integer
+     | '+' K_MASK integer
           {
-/* TODO
-            if (defData->validateMaskInput((int)$3, defData->sNetWarnings, defData->settings->SNetWarnings)) {
-                defData->specialWire_mask = $3;
-            }
-*/
+	  /* TODO */
           }
 
 defSpecialNetPathList
@@ -1925,21 +1841,7 @@ defSpecialNetPathList
     |    defSpecialNetPathList NEW_K defSpecialNetPath
 	/* TODO
 	| '+' VIA_K { defData->dumb_mode = 1; } T_STRING orient_pt
-        {
-          if (defData->VersionNum < 5.8) {
-              if (defData->callbacks->SNetCbk) {
-                if (defData->sNetWarnings++ < defData->settings->SNetWarnings) {
-                  defData->defMsg = (char*)malloc(1000);
-                  sprintf (defData->defMsg,
-                     "The VIA statement is available in version 5.8 and later.\nHowever, your DEF file is defined with version %g", defData->VersionNum);
-                  defData->defError(6536, defData->defMsg);
-                  free(defData->defMsg);
-                  CHKERR();
-                }
-              }
-          }
-        }
-		*/
+        */
     ;
 
 defSpecialNetPath
@@ -2083,8 +1985,8 @@ defNetPattern
 
 defNetWire
     :    COVER_K    { netR->wire( DEF_WIRE_COVER ); }    defNetPathList { netR->wireEnd(); }
-    |    FIXED_K    { fprintf(stdout, "defNetWire FIXED_K\n"); netR->wire( DEF_WIRE_FIXED ); }    defNetPathList { netR->wireEnd(); }
-    |    ROUTED_K   { fprintf(stdout, "defNetWire ROUTED_K\n"); netR->wire( DEF_WIRE_ROUTED ); }   defNetPathList { netR->wireEnd(); }
+    |    FIXED_K    { netR->wire( DEF_WIRE_FIXED ); }    defNetPathList { netR->wireEnd(); }
+    |    ROUTED_K   { netR->wire( DEF_WIRE_ROUTED ); }   defNetPathList { netR->wireEnd(); }
     |    NOSHIELD_K { netR->wire( DEF_WIRE_NOSHIELD ); } defNetPathList { netR->wireEnd(); }
     ;
 
@@ -2124,10 +2026,10 @@ defNetPathPoint
     |    ident                           { netR->pathVia(*$1); release($1); }
     |    ident defOrient                 { netR->pathVia(*$1,$2); release($1); }
     // |    rect_statement
-    |    K_VIRTUAL defNetPathPoint RECT_K defNetPathPoint { fprintf(stdout, "K_VIRTUAL defNetPathPoint RECT_K\n");/* TODO cur_x = $2; cur_y = $3; netR->pathPoint( cur_x, cur_y ); */ }
-    |    K_VIRTUAL defNetPathPoint  { fprintf(stdout, "K_VIRTUAL defNetPathPoint\n");/* TODO cur_x = $2; cur_y = $3; netR->pathPoint( cur_x, cur_y ); */ }
-    |    K_MASK  integer ident  /* TO VERIFY maybe does not exits*/   { fprintf(stdout, "K_MASK iinteger ident defNetPathPoint\n");/* TODO cur_x = $2; cur_y = $3; netR->pathPoint( cur_x, cur_y ); */ }
-    |    K_MASK integer  defNetPathPoint { fprintf(stdout, "K_MASK integer ( i1  i2 ) \n");netR->wireEnd();/* TODO cur_x = $2; cur_y = $3; netR->pathPoint( cur_x, cur_y ); */ }
+    |    K_VIRTUAL defNetPathPoint RECT_K defNetPathPoint {  /* TODO cur_x = $2; cur_y = $3; netR->pathPoint( cur_x, cur_y ); */ }
+    |    K_VIRTUAL defNetPathPoint  { /* TODO cur_x = $2; cur_y = $3; netR->pathPoint( cur_x, cur_y ); */ }
+    |    K_MASK  integer ident  /* TO VERIFY maybe does not exits*/   { /* TODO cur_x = $2; cur_y = $3; netR->pathPoint( cur_x, cur_y ); */ }
+    |    K_MASK integer  defNetPathPoint { netR->wireEnd();/* TODO cur_x = $2; cur_y = $3; netR->pathPoint( cur_x, cur_y ); */ }
     ;
 
 // ----------------------------------- Dimitris: add <path_item:> section minus first rule ----------- 11/11/19 -----------------------
@@ -2636,7 +2538,7 @@ defExtension
     ;
 
 defNonDefaultRules
-    : NONDEFAULTRULES_K integer { non_default_ruleR->beginRules($2); fprintf(stdout,"defNonDefaultRule=\n"); }
+    : NONDEFAULTRULES_K integer { non_default_ruleR->beginRules($2); }
           ';' defNonDefaultRuleList END_K { non_default_ruleR->endRules(); }
           NONDEFAULTRULES_K
     ;
@@ -2648,9 +2550,8 @@ defNonDefaultRuleList
 
 defNonDefaultRule
     : '-' ident { non_default_ruleR->beginRule(*$2); release($2); } defNonDefaultRuleAttrs ';' { non_default_ruleR->endRule(); }
-{
-fprintf(stdout," ---------------------------------------------------- defNonDefaultRule=\n");
-}
+        {
+	}
     ;
 
 defNonDefaultRuleAttrs
@@ -2691,17 +2592,15 @@ defStyleTable
 
 defStyle
     : '-' STYLE_K integer defPointList ';'
-{
-fprintf(stdout,"defStyle: STYLE=\n");
-}
+      {
+      }
     ;
 
 point
     :    '(' integer integer ')'
-          {
-fprintf(stdout,"STYLE= %s %s \n", $2, $3);
-              $$._x = $2;
-              $$._y = $3;
+          { 
+             $$._x = $2;
+             $$._y = $3;
           }
     ;
 

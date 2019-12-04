@@ -130,12 +130,8 @@ _dbChip::~_dbChip()
     delete _block_tbl;
     delete _prop_tbl;
     delete _name_cache;
-/* dimitri_fix: cooment 2 delete LOOK_AGAIN ******************************
- warning: deleting object of polymorphic class type ‘dbBlockItr’ which has non-virtual destructor might cause undefined behavior [-Wdelete-non-virtual-dtor]
-
     delete _block_itr;
     delete _prop_itr;
-******************************************************/
 }
 
 dbOStream & operator<<( dbOStream & stream, const _dbChip & chip )

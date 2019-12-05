@@ -1,5 +1,11 @@
+source [file join [file dirname [info script]] "test_helpers.tcl"]
+set current_dir [file dirname [file normalize [info script]]]
+set tests_dir [find_parent_dir $current_dir]
+set opendb_dir [find_parent_dir $tests_dir]
+set data_dir [file join $tests_dir "data"]
+
 set db [dbDatabase_create]
-set chip [odb_read_design $db  ./OpenDB/tests/data/Nangate45/NangateOpenCellLibrary.mod.lef ./OpenDB/tests/data/gcd/floorplan.def]
+set chip [odb_read_design $db  $data_dir/Nangate45/NangateOpenCellLibrary.mod.lef $data_dir/gcd/floorplan.def]
 set lib [lindex [$db getLibs] 0]
 
 
@@ -8,8 +14,6 @@ set tech [[$block getDataBase] getTech]
 set lib [lindex [concat {*}[[$block getDataBase] getLibs]] 0]
 set site [lindex [set sites [$lib getSites]] 0]
 set rt [dbRow_create $block ROW_test $site 0 380 "MX" "HORIZONTAL" 420 380]
-
-source OpenDB/tests/tcl/test_helpers.tcl
 
 check "row name" {$rt getName} ROW_test
 check "row origin" {$rt getOrigin} "0 380"

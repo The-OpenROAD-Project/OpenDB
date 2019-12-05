@@ -444,59 +444,62 @@ dbTechLayerSpacingRule::setRangeRange( uint rmin, uint rmax )
   _lsp->_r2min = rmin;
   _lsp->_r2max = rmax;
 }
-// DF58
+
 void
-dbTechLayerSpacingRule::setEol(uint width, uint within, bool parallelEdge, uint parallelSpace, uint parallelWithin, bool twoEdges)
+dbTechLayerSpacingRule::setEol(uint width, uint within, bool parallelEdge,
+			       uint parallelSpace, uint parallelWithin, bool twoEdges)
 {
-	_dbTechLayerSpacingRule* _lsp = (_dbTechLayerSpacingRule*)this;
-	assert((_lsp->_flags._rule != LENGTHTHRESHOLD) &&
-		(_lsp->_flags._rule != LENGTHTHRESHOLD_RANGE) &&
-		(_lsp->_flags._rule != RANGE_RANGE) &&
-		(_lsp->_flags._rule != RANGE_INFLUENCE_RANGE) &&
-		(_lsp->_flags._rule != RANGE_INFLUENCE));
+  _dbTechLayerSpacingRule* _lsp = (_dbTechLayerSpacingRule*)this;
+  assert((_lsp->_flags._rule != LENGTHTHRESHOLD) &&
+	 (_lsp->_flags._rule != LENGTHTHRESHOLD_RANGE) &&
+	 (_lsp->_flags._rule != RANGE_RANGE) &&
+	 (_lsp->_flags._rule != RANGE_INFLUENCE_RANGE) &&
+	 (_lsp->_flags._rule != RANGE_INFLUENCE));
 
-	if (!parallelEdge) {
-		_lsp->_r1min = width;
-		_lsp->_r1max = within;
-		_lsp->_flags._rule = ENDOFLINE;
-	}
-	else {
-		_lsp->_r1min = width;
-		_lsp->_r1max = within;
-		_lsp->_r2min = parallelSpace;
-		_lsp->_r2max = parallelWithin;
-		if (!twoEdges)
-			_lsp->_flags._rule = ENDOFLINE_PARALLEL;
-		else
-			_lsp->_flags._rule = ENDOFLINE_PARALLEL_TWOEDGES;
-	}
+  if (!parallelEdge) {
+    _lsp->_r1min = width;
+    _lsp->_r1max = within;
+    _lsp->_flags._rule = ENDOFLINE;
+  }
+  else {
+    _lsp->_r1min = width;
+    _lsp->_r1max = within;
+    _lsp->_r2min = parallelSpace;
+    _lsp->_r2max = parallelWithin;
+    if (!twoEdges)
+      _lsp->_flags._rule = ENDOFLINE_PARALLEL;
+    else
+      _lsp->_flags._rule = ENDOFLINE_PARALLEL_TWOEDGES;
+  }
 }
+
 bool
-dbTechLayerSpacingRule::getEol(uint& width, uint& within, bool& parallelEdge, uint& parallelSpace, uint& parallelWithin, bool& twoEdges) const
+dbTechLayerSpacingRule::getEol(uint& width, uint& within, bool& parallelEdge,
+			       uint& parallelSpace, uint& parallelWithin,
+			       bool& twoEdges) const
 {
-	_dbTechLayerSpacingRule* _lsp = (_dbTechLayerSpacingRule*)this;
+  _dbTechLayerSpacingRule* _lsp = (_dbTechLayerSpacingRule*)this;
 
-	if (_lsp->_flags._rule != ENDOFLINE && _lsp->_flags._rule != ENDOFLINE_PARALLEL && _lsp->_flags._rule != ENDOFLINE_PARALLEL_TWOEDGES)
-		return false;
+  if (_lsp->_flags._rule != ENDOFLINE && _lsp->_flags._rule != ENDOFLINE_PARALLEL && _lsp->_flags._rule != ENDOFLINE_PARALLEL_TWOEDGES)
+    return false;
 	
-	// fprintf(stdout, "getEol:: %d %d %d %d\n", _lsp->_r1min, _lsp->_r1max ,_lsp->_r2min, _lsp->_r2max);
-	parallelSpace = 0;
-	parallelWithin = 0;
-	twoEdges = false;
-	if (_lsp->_flags._rule == ENDOFLINE) {
-		width = _lsp->_r1min;
-		within = _lsp->_r1max;
-		parallelSpace = false;
-		return true;
-	}
-	parallelEdge= true;
-	parallelSpace = true;
-	parallelSpace = _lsp->_r2min;
-	parallelWithin = _lsp->_r2max;
-	twoEdges = _lsp->_flags._rule == ENDOFLINE_PARALLEL_TWOEDGES;
-	return true;
+  parallelSpace = 0;
+  parallelWithin = 0;
+  twoEdges = false;
+  if (_lsp->_flags._rule == ENDOFLINE) {
+    width = _lsp->_r1min;
+    within = _lsp->_r1max;
+    parallelSpace = false;
+    return true;
+  }
+  parallelEdge= true;
+  parallelSpace = true;
+  parallelSpace = _lsp->_r2min;
+  parallelWithin = _lsp->_r2max;
+  twoEdges = _lsp->_flags._rule == ENDOFLINE_PARALLEL_TWOEDGES;
+  return true;
 }
-// DF58 end
+
 void
 dbTechLayerSpacingRule::setAdjacentCuts( uint numcuts, uint within, uint spacing )
 {

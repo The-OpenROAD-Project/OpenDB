@@ -1,4 +1,4 @@
-///////////////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////
 // BSD 3-Clause License
 //
 // Copyright (c) 2019, Nefelus Inc
@@ -199,8 +199,7 @@ static void create_path_box( dbObject * obj, bool is_pin, dbTechLayer * layer,
     }
     else
     {
-warning(0, " illegal: non-orthogonal-path at Pin\n");
-        // TODO assert(0); // illegal: non-orthogonal-path
+      warning(0, "illegal: non-orthogonal-path at Pin\n");
     }
 }
 
@@ -227,8 +226,7 @@ bool lefin::addGeoms( dbObject * object, bool is_pin, lefiGeometries * geometry)
                 if ( layer == NULL )
                 {
                     notice(0,"error: undefined layer (%s) referenced\n", geometry->getLayer(i) );
-                    // TODO return false;
-                    return true;
+                    return false;
                 }
 
                 dw = dbdist(layer->getWidth()) >> 1;
@@ -383,8 +381,7 @@ bool lefin::addGeoms( dbObject * object, bool is_pin, lefiGeometries * geometry)
                 if ( dbvia == NULL )
                 {
                     notice(0,"error: undefined via (%s) referenced\n", via->name );
-                    // TODO return false;
-                    return true;
+                    return false;
                 }
 
                 int x = dbdist(via->x);
@@ -601,10 +598,7 @@ void lefin::layer( lefiLayer * layer )
 	}
 	for (int iii=0; iii<layer->numProps(); iii++)
 	{
-		// fprintf(stdout, "LAYER=%s -- prop %s %s\n", layer->name(), layer->propName(iii), layer->propValue(iii));
-		 dbStringProperty::create(l,
-			layer->propName(iii),
-			layer->propValue(iii));
+	  dbStringProperty::create(l, layer->propName(iii), layer->propValue(iii));
 	}
     
     if ( layer->hasWidth() )
@@ -690,9 +684,7 @@ void lefin::layer( lefiLayer * layer )
 	      }
 	  }
 	else  // Assume parallel run length spacing table
-	  {
-	fprintf(stdout, "TODO: Assume parallel run length spacing table \n");
-/* TODO
+	  { /* TODO
 	    lefiParallel *cur_ipl = cur_sptbl->parallel();
 	    int wddx,lndx;
 
@@ -934,9 +926,9 @@ void lefin::macro( lefiMacro * macro )
     {
         dbMaster * eeq = _lib->findMaster( macro->EEQ() );
 	if (eeq==NULL) 
-            notice(0,"warning: cannot find EEQ for macro %s \n", macro->name());
+	  notice(0,"warning: cannot find EEQ for macro %s \n", macro->name());
 	else
-        _master->setEEQ(eeq);
+	  _master->setEEQ(eeq);
     }
 
     if (macro->hasLEQ())
@@ -1093,7 +1085,7 @@ void lefin::nonDefault( lefiNonDefault * rule )
         if ( via == NULL )
         {
             notice(0,"error: undefined VIA %s\n", vname );
-            // TODO ++_errors;
+            ++_errors;
             continue;
         }
 
@@ -1108,7 +1100,7 @@ void lefin::nonDefault( lefiNonDefault * rule )
         if ( genrule == NULL )
         {
             notice(0,"error: undefined VIA GENERATE RULE %s\n", rname );
-            // TODO ++_errors;
+            ++_errors;
             continue;
         }
 
@@ -1123,7 +1115,7 @@ void lefin::nonDefault( lefiNonDefault * rule )
         if ( layer == NULL )
         {
             notice(0,"error: undefined LAYER %s\n", lname );
-            // TODO ++_errors;
+            ++_errors;
             continue;
         }
 
@@ -1526,7 +1518,7 @@ void lefin::useMinSpacing( lefiUseMinSpacing * spacing )
     }
   else
     {
-      fprintf(stderr,"Unknown object type for USEMINSPACING: %s\n",spacing->name());
+      notice(0, "Unknown object type for USEMINSPACING: %s\n",spacing->name());
     }
 }
 
@@ -1604,7 +1596,7 @@ void lefin::via( lefiVia * via, dbTechNonDefaultRule * rule )
         if ( rule == NULL )
         {
             notice(0,"error: missing VIA GENERATE rule %s\n", via->viaRuleName() );
-            // TODO ++_errors;
+            ++_errors;
             return;
         }
 
@@ -1618,7 +1610,7 @@ void lefin::via( lefiVia * via, dbTechNonDefaultRule * rule )
         if ( bot == NULL )
         {
             notice(0,"error: missing LAYER %s\n", via->botMetalLayer() );
-            // TODO ++_errors;
+            ++_errors;
             return;
         }
 
@@ -1627,7 +1619,7 @@ void lefin::via( lefiVia * via, dbTechNonDefaultRule * rule )
         if ( cut == NULL )
         {
             notice(0,"error: missing LAYER %s\n", via->cutLayer() );
-            // TODO ++_errors;
+            ++_errors;
             return;
         }
 
@@ -1704,7 +1696,7 @@ void lefin::viaRule( lefiViaRule * viaRule )
         if ( layer == NULL )
         {
             notice(0,"error: VIARULE (%s) undefined layer %s\n", name, leflay->name());
-            // TODO ++_errors;
+            ++_errors;
             return;
         }
 
@@ -1733,7 +1725,7 @@ void lefin::viaRule( lefiViaRule * viaRule )
         if ( via == NULL )
         {
             notice(0,"error: undefined VIA %s in VIARULE %s\n", viaRule->viaName(idx), name );
-            // TODO ++_errors;
+            ++_errors;
         }
         else
         {
@@ -1762,7 +1754,7 @@ void lefin::viaGenerateRule( lefiViaRule * viaRule )
         if ( layer == NULL )
         {
             notice(0,"error: VIARULE (%s) undefined layer %s\n", name, leflay->name());
-            // TODO ++_errors;
+            ++_errors;
             return;
         }
 

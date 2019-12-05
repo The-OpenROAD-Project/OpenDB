@@ -572,11 +572,9 @@ void dbStringProperty::setValue( const char * value )
 
 dbStringProperty * dbStringProperty::create( dbObject * object, const char * name, const char * value )
 {
-// fprintf(stdout, "dbStringProperty::create   %s %s \n", name, value);
     if( find(object,name) )
         return NULL;
 
-// fprintf(stdout, "dbStringProperty::create   %s %s \n", name, value);
     _dbProperty * prop = _dbProperty::createProperty( object, name, DB_STRING_PROP );
     prop->_value._str_val = strdup(value);
     ZALLOCATED(prop->_value._str_val);
@@ -649,7 +647,7 @@ dbDoubleProperty * dbDoubleProperty::find( dbObject * object, const char * name 
 {
     return (dbDoubleProperty *) dbProperty::find(object,name,dbProperty::DOUBLE_PROP);
 }
-// ------------------------------------- LEF/DEF 5.8 ----------------------------------------
+
 void dbProperty::writePropValue(dbProperty * prop, FILE *out)
 {
     switch( prop->getType() )
@@ -696,7 +694,7 @@ void dbProperty::writeProperties( dbObject * object, FILE *out )
         fprintf(out, "\n");
     }
 }
-// ------------------------------------- LEF/DEF 5.8 ----------------------------------------
+
 /* Sample Code to access dbTechLayer properties
 void dbProperty::writeProperties( dbTechLayer * object, FILE *out )
 {

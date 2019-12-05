@@ -1292,7 +1292,7 @@ dbTechLayer::getTechLayer( dbTech * tech_, uint dbid_ )
     return (dbTechLayer *) tech->_layer_tbl->getPtr( dbid_ );
 }
 
-/*
+/* Sample code to access properties
 void dbProperty::GetProperties(dbTechLayer *layer)
 {
     dbSet<dbProperty> props = dbProperty::getProperties(object);
@@ -1307,9 +1307,6 @@ void dbProperty::GetProperties(dbTechLayer *layer)
             dbString v = p->getValue();
 
         fprintf(out, "PROPERTY %s ", name.c_str() );
-
-// ------------------------------ LEF 5.8 ----------------------------------------
-// ---------------------------------------------------------------------------
 */
 
 } // namespace

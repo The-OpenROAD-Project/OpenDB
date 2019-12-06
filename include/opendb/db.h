@@ -32,6 +32,9 @@
 #ifndef ADS_DB_H
 #define ADS_DB_H
 
+// These goofy looking protection checks save sending the contents of the
+// include file through the C preprocessor to improve compile times. -cherry
+
 #ifndef ADS_H
 #include "ads.h"
 #endif
@@ -153,7 +156,11 @@ class dbExtControl;
 /// C-string wrapper classe. Strings returned from the database are returned
 /// in an instance of this class.
 ///
-/// Todo: Improve this implementation.
+/// Avoid using dbString. Use std::string instead. For example, instead of
+///   dbString name = getName()
+/// use
+///   std::string name = getConstName()
+/// -cherry
 ///
 ///////////////////////////////////////////////////////////////////////////////
 class dbString
@@ -5821,13 +5828,13 @@ class dbTechLayer : public dbObject
     void setDirection( dbTechLayerDir direction );
 
     ///
-    /// Get/Set the resitance per square nm
+    /// Get/Set the resistance (ohms per square)
     ///
     double getResistance();
     void setResistance( double res );
 
     ///
-    /// Get/Set the capacitance per square nm
+    /// Get/Set the capacitance (pF per square dbu)
     ///
     double getCapacitance();
     void setCapacitance( double cap );
@@ -5839,7 +5846,7 @@ class dbTechLayer : public dbObject
     void setEdgeCapacitance( double cap );
 
     ///
-    /// Get/Set the edge capacitance
+    /// Get/Set the edge capacitance (pF per dbu)
     ///
     uint getWireExtension();
     void setWireExtension( uint ext );

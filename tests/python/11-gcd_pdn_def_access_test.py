@@ -1,9 +1,13 @@
-import importlib.util
-spec = importlib.util.spec_from_file_location("opendbpy", "./OpenDB/build/src/swig/python/opendbpy.py")
-odb = importlib.util.module_from_spec(spec)
-spec.loader.exec_module(odb)
+import opendbpy as odb
+import os 
+
+current_dir = os.path.dirname(os.path.realpath(__file__))
+tests_dir = os.path.abspath(os.path.join(current_dir, os.pardir))
+opendb_dir = os.path.abspath(os.path.join(tests_dir, os.pardir))
+data_dir = os.path.join(tests_dir, "data")
+
 db = odb.dbDatabase.create()
-chip = odb.odb_read_design(db,["./OpenDB/tests/data/Nangate45/NangateOpenCellLibrary.mod.lef"],["./OpenDB/tests/data/gcd/gcd_pdn.def"])
+chip = odb.odb_read_design(db,[os.path.join(data_dir, "Nangate45/NangateOpenCellLibrary.mod.lef")],[os.path.join(data_dir, "gcd/gcd_pdn.def")])
 block = chip.getBlock()
 nets = block.getNets()
 tech = db.getTech()

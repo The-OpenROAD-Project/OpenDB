@@ -1,10 +1,14 @@
-import importlib.util
-spec = importlib.util.spec_from_file_location("opendbpy", "./OpenDB/build/src/swig/python/opendbpy.py")
-odb = importlib.util.module_from_spec(spec)
-spec.loader.exec_module(odb)
+import opendbpy as odb
+import os 
+
+current_dir = os.path.dirname(os.path.realpath(__file__))
+tests_dir = os.path.abspath(os.path.join(current_dir, os.pardir))
+opendb_dir = os.path.abspath(os.path.join(tests_dir, os.pardir))
+data_dir = os.path.join(tests_dir, "data")
+
 db = odb.dbDatabase.create()
 lef_parser = odb.lefin(db, True)
-tech = lef_parser.createTech("./OpenDB/tests/data/gscl45nm.lef")
+tech = lef_parser.createTech(os.path.join(data_dir, "gscl45nm.lef"))
 if tech == None:
     exit("Tech not created")
  

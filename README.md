@@ -102,6 +102,14 @@ same layout across save/restores.
 
 The database distance units are **nanometers** and use the type `uint`.
 
+## Tests
+There are a set of regression tests in /tests.
+
+```
+./tests/regression-tcl.sh
+./tests/regression-py.sh
+```
+
 ## Database Internals
 
 The internal description included here is paraphrased from Lukas van

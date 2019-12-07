@@ -20,7 +20,8 @@ configure_file (
     "${PROJECT_BINARY_DIR}/include/opendb/version.hh"
 )
 
-include_directories(/usr/include/tcl)
+find_package(TCL)
+include_directories(${TCL_INCLUDE_PATH})
 
 ############################################################################
 ################################# Targets ##################################

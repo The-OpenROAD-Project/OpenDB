@@ -2,7 +2,6 @@
 
 %{
 #define SWIG_FILE_WITH_INIT
-#include <stdio.h>
 #include "db.h"
 #include "dbShape.h"
 #include "lefin.h"

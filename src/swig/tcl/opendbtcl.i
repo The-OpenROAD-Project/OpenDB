@@ -2,7 +2,6 @@
 
 %{
 #define SWIG_FILE_WITH_INIT
-#include <stdio.h>
 #include "db.h"
 #include "dbShape.h"
 #include "lefin.h"
@@ -73,7 +72,3 @@ using namespace odb;
 %include "dbRtTree.h"
 %include "dbgdefines.h"
 %include "dbCCSegSet.h"
-// Support file operations
-FILE *fopen(const char *name, const char *mode);
-int fclose(FILE *);
-int fgetc(FILE *);

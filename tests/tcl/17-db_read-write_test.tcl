@@ -12,21 +12,17 @@ if {$chip == "NULL"} {
 }
 
 set export_result [odb_export_db $db $opendb_dir/build/export.db]
-if {$export_result != 1} {
+if {!$export_result} {
     puts "Export DB failed"
     exit 1
 }
 
 set new_db [dbDatabase_create]
 odb_import_db $new_db $opendb_dir/build/export.db
-if {$new_db == "NULL"} {
-    puts "Import DB Failed"
-    exit 1
-}
-set diff_file [fopen $opendb_dir/build/db-export-import-diff.txt w]
+
+set diff_file [file join $opendb_dir "build" "db-export-import-diff.txt"]
 set diff_rc [dbDatabase_diff $db $new_db $diff_file 4]
-fclose $diff_file
-if {$diff_rc != "0"} {
+if {$diff_rc} {
     puts "Database diff failed"
     exit 1
 }

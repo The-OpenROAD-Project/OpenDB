@@ -78,9 +78,3 @@ using namespace odb;
 %include "dbgdefines.h"
 %include "dbCCSegSet.h"
 %include "dbSet.h"
-
-
-// Support file operations
-FILE *fopen(const char *name, const char *mode);
-int fclose(FILE *);
-int fgetc(FILE *);

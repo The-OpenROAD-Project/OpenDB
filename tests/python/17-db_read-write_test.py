@@ -24,10 +24,6 @@ new_db = odb.odb_import_db(new_db, os.path.join(opendb_dir, "build/export.db"))
 if new_db == None:
     exit("Import DB Failed")
 
-diff_file = open(os.path.join(opendb_dir, "build/db-export-import-diff.txt"), "w+")
-diff_file_content = diff_file.read()
-diff_file.close()
-
-if diff_file_content != "":
+diff_file = os.path.join(opendb_dir, "build/db-export-import-diff.txt")
+if odb.dbDatabase.diff(db, new_db, diff_file, 4):
     exit("Error: Difference found between exported and imported DB")
-    

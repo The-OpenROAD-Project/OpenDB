@@ -8,6 +8,8 @@
 		obj = Tcl_NewStringObj("DEF_5_5", -1);
 	} else if ($1 == odb::defout::Version::DEF_5_6) {
 		obj = Tcl_NewStringObj("DEF_5_6", -1);
+	} else {
+                return TCL_ERROR;
 	}
     Tcl_SetObjResult(interp, obj);
 }
@@ -21,6 +23,8 @@
 		$1 = odb::defout::Version::DEF_5_5;
 	} else if (strcasecmp(str, "DEF_5_6") == 0 || strcasecmp(str, "5.6") == 0) {
 		$1 = odb::defout::Version::DEF_5_6;
+	} else {
+                return TCL_ERROR;
 	}
 }
 %typemap(typecheck) odb::defout::Version, defout::Version {

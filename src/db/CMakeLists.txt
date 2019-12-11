@@ -113,6 +113,8 @@ target_link_libraries(opendb
         lefout
         zutil
         lefin
+	rt
     PRIVATE
         tcl
+	rt
 )

@@ -32,29 +32,12 @@
 #ifndef ADS_DB_DIFF_H
 #define ADS_DB_DIFF_H
 
-#ifndef ADS_H
 #include "ads.h"
-#endif
-
-#ifndef ADS_TM_H
 #include "tm.h"
-#endif
-
-#ifndef ADS_GEOM_H
 #include "geom.h"
-#endif
-
-#ifndef ADS_DB_OBJECT_H
 #include "dbObject.h"
-#endif
-
-#ifndef ADS_DB_ID_H
 #include "dbId.h"
-#endif
-
-#ifndef ADS_DB_TYPES_H
 #include "dbTypes.h"
-#endif
 
 namespace odb {
 

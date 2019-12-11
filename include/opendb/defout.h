@@ -32,9 +32,7 @@
 #ifndef ADS_DEFOUT_H
 #define ADS_DEFOUT_H
 
-#ifndef ADS_H
 #include "ads.h"
-#endif
 
 namespace odb {
 

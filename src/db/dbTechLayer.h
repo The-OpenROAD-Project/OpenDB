@@ -32,25 +32,11 @@
 #ifndef ADS_DB_TECH_LAYER_H
 #define ADS_DB_TECH_LAYER_H
 
-#ifndef ADS_H
 #include "ads.h"
-#endif
-
-#ifndef ADS_DB_TYPES_H
 #include "dbTypes.h"
-#endif
-
-#ifndef ADS_DB_CORE_H
 #include "dbCore.h"
-#endif
-
-#ifndef ADS_DB_VECTOR_H
 #include "dbVector.h"
-#endif
-
-#ifndef ADS_DB_MATRIX_H
 #include "dbMatrix.h"
-#endif
 
 namespace odb {
 

@@ -35,17 +35,9 @@
 #include <vector>
 #include <map>
 
-#ifndef ADS_H
 #include "ads.h"
-#endif
-
-#ifndef ADS_DEFIN_ITRACKS_H
 #include "definITracks.h"
-#endif
-
-#ifndef ADS_DEFIN_BASE_H
 #include "definBase.h"
-#endif
 
 namespace odb {
 

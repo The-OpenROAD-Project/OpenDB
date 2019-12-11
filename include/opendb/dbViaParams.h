@@ -32,13 +32,8 @@
 #ifndef ADS_DB_VIA_PARAMS_H
 #define ADS_DB_VIA_PARAMS_H
 
-#ifndef ADS_H
 #include "ads.h"
-#endif
-
-#ifndef ADS_DB_ID_H
 #include "dbId.h"
-#endif
 
 namespace odb {
 

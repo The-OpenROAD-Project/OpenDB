@@ -34,9 +34,7 @@
 
 #include <new>
 
-#ifndef ADS_H
 #include "ads.h"
-#endif
 
 #ifdef ADS_PURIFY
 #define ADS_PURIFY_ALLOCATOR

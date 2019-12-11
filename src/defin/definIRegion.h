@@ -32,9 +32,7 @@
 #ifndef ADS_DEFIN_DEF_IREGION_H
 #define ADS_DEFIN_DEF_IREGION_H
 
-#ifndef ADS_DEFIN_TYPES_H
 #include "definTypes.h"
-#endif
 
 class definIRegion
 {

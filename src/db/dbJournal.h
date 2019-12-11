@@ -32,13 +32,8 @@
 #ifndef ADS_DB_JOURNAL_H
 #define ADS_DB_JOURNAL_H
 
-#ifndef ADS_H
 #include "ads.h"
-#endif
-
-#ifndef ADS_DB_JOURNAL_LOG_H
 #include "dbJournalLog.h"
-#endif
 
 namespace odb {
 

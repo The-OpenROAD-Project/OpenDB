@@ -32,21 +32,10 @@
 #ifndef ADS_DB_PAGED_VECTOR_H
 #define ADS_DB_PAGED_VECTOR_H
 
-#ifndef ADS_H
 #include "ads.h"
-#endif
-
-#ifndef ADS_ZEXCEPTION_H
 #include "ZException.h"
-#endif
-
-#ifndef ADS_DB_STREAM_H
 #include "dbStream.h"
-#endif
-
-#ifndef ADS_DB_DIFF_H
 #include "dbDiff.h"
-#endif
 
 #include "logger.h"
 namespace odb {

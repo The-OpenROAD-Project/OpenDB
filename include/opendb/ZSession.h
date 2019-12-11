@@ -32,9 +32,7 @@
 #ifndef ADS_ZSESSION_H
 #define ADS_ZSESSION_H
 
-#ifndef ADS_TM_H
 #include "tm.h"
-#endif
 
 namespace odb {
 

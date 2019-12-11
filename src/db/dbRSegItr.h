@@ -32,13 +32,8 @@
 #ifndef ADS_DB_RSEG_ITR_H
 #define ADS_DB_RSEG_ITR_H
 
-#ifndef ADS_H
 #include "ads.h"
-#endif
-
-#ifndef ADS_DB_ITERATOR_H
 #include "dbIterator.h"
-#endif
 
 namespace odb {
 

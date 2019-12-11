@@ -35,21 +35,10 @@
 #include <vector>
 #include <map>
 
-#ifndef ADS_H
 #include "ads.h"
-#endif
-
-#ifndef ADS_DB_H
 #include "db.h"
-#endif
-
-#ifndef ADS_DEFIN_ISNET_H
 #include "definISNet.h"
-#endif
-
-#ifndef ADS_DEFIN_BASE_H
 #include "definBase.h"
-#endif
 
 namespace odb {
 

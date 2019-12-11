@@ -32,29 +32,12 @@
 #ifndef ADS_DEFIN_PIN_H
 #define ADS_DEFIN_PIN_H
 
-#ifndef ADS_H
 #include "ads.h"
-#endif
-
-#ifndef ADS_GEOM_H
 #include "geom.h"
-#endif
-
-#ifndef ADS_DEFIN_IPIN_H
 #include "definIPin.h"
-#endif
-
-#ifndef ADS_DEFIN_BASE_H
 #include "definBase.h"
-#endif
-
-#ifndef ADS_DB_TYPES_H
 #include "dbTypes.h"
-#endif
-
-#ifndef ADS_DEFIN_POLYGON_H
 #include "definPolygon.h"
-#endif
 
 #include <string>
 

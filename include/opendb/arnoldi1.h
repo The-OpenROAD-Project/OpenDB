@@ -38,9 +38,7 @@
 #ifndef ARNOLD1_H
 #define ARNOLD1_H
 
-#ifndef ADS_H
 #include "ads.h"
-#endif
 
 namespace odb {
 

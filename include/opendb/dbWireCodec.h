@@ -34,13 +34,8 @@
 
 #include <vector>
 
-#ifndef ADS_H
 #include "ads.h"
-#endif
-
-#ifndef ADS_DB_TYPES_H
 #include "dbTypes.h"
-#endif
 
 namespace odb {
 

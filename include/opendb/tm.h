@@ -36,21 +36,10 @@
 #include <tcl.h>
 #endif
 
-#ifndef ADS_H
 #include "ads.h"
-#endif
-
-#ifndef ADS_GEOM_H
 #include "geom.h"
-#endif
-
-#ifndef ADS_ZEXCEPTION_H
 #include "ZException.h"
-#endif
-
-#ifndef ADS_ZINTERFACE_H
 #include "ZInterface.h"
-#endif
 
 #include <vector>
 #include <list>

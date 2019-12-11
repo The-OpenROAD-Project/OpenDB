@@ -46,9 +46,7 @@
 #include "tcl.h"
 
 
-#ifndef ADS_DB_H
 #include "db.h"
-#endif
 
 using namespace odb;
 class dcrASA;

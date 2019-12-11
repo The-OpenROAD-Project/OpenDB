@@ -32,9 +32,7 @@
 #ifndef ADS_GEOM_H
 #define ADS_GEOM_H
 
-#ifndef ADS_H
 #include "ads.h"
-#endif
 
 namespace odb {
 

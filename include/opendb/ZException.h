@@ -32,9 +32,7 @@
 #ifndef ADS_ZEXCEPTION_H
 #define ADS_ZEXCEPTION_H
 
-#ifndef ADS_H
 #include "ads.h"
-#endif
 
 #ifdef __GNUC__
 #define ADS_FORMAT_PRINTF(F,A) __attribute__((format(printf,F,A)))

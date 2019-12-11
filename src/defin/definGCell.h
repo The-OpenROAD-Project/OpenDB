@@ -32,17 +32,9 @@
 #ifndef ADS_DEFIN_GCELL_H
 #define ADS_DEFIN_GCELL_H
 
-#ifndef ADS_H
 #include "ads.h"
-#endif
-
-#ifndef ADS_DEFIN_IGCELL_H
 #include "definIGCell.h"
-#endif
-
-#ifndef ADS_DEFIN_BASE_H
 #include "definBase.h"
-#endif
 
 namespace odb {
 

@@ -35,13 +35,8 @@
 #include <map>
 #include <vector>
 
-#ifndef ADS_H
 #include "ads.h"
-#endif
-
-#ifndef ADS_DB_SET_H
-#include "../db/dbSet.h"
-#endif
+#include "dbSet.h"
 
 namespace odb {
 
@@ -120,8 +115,6 @@ class dbMap
 
 } // namespace
 
-#ifndef ADS_DB_MAP_HPP
 #include "dbMap.hpp"
-#endif
 
 #endif

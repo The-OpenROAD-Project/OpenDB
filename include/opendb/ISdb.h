@@ -32,13 +32,8 @@
 #ifndef ADS_DCR_ISDB_H
 #define ADS_DCR_ISDB_H
 
-#ifndef ADS_H
 #include "ads.h"
-#endif
-
-#ifndef ADS_GEOM_H
 #include "geom.h"
-#endif
 
 #ifndef ADS_ZOBJECT_H
 #include "ZObject.h"

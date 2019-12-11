@@ -32,9 +32,7 @@
 #ifndef ADS_DB_OBJECT_H
 #define ADS_DB_OBJECT_H
 
-#ifndef ADS_H
 #include "ads.h"
-#endif
 
 namespace odb {
 

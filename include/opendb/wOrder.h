@@ -32,9 +32,7 @@
 #ifndef WORDER_H
 #define WORDER_H
 
-#ifndef ADS_H
 #include "ads.h"
-#endif
 
 namespace odb {
 

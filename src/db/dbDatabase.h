@@ -32,13 +32,8 @@
 #ifndef ADS_DB_DATABASE_H
 #define ADS_DB_DATABASE_H
 
-#ifndef ADS_H
 #include "ads.h"
-#endif
-
-#ifndef ADS_DB_CORE_H
 #include "dbCore.h"
-#endif
 
 namespace odb {
 

@@ -32,17 +32,9 @@
 #ifndef ADS_ZOBJECT_H
 #define ADS_ZOBJECT_H
 
-#ifndef ADS_H
 #include "ads.h"
-#endif
-
-#ifndef ADS_ZEXCEPTION_H
 #include "ZException.h"
-#endif
-
-#ifndef ADS_ZCOMPONENTS_H
 #include "ZComponents.h"
-#endif
 
 ///
 /// This file contains an implmentation of a component based software

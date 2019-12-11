@@ -32,13 +32,8 @@
 #ifndef ADS_DEFIN_POLYGON_H
 #define ADS_DEFIN_POLYGON_H
 
-#ifndef ADS_H
 #include "ads.h"
-#endif
-
-#ifndef ADS_GEOM_H
 #include "geom.h"
-#endif
 
 #include <vector>
 

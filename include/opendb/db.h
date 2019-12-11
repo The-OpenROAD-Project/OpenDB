@@ -35,37 +35,14 @@
 // These goofy looking protection checks save sending the contents of the
 // include file through the C preprocessor to improve compile times. -cherry
 
-#ifndef ADS_H
 #include "ads.h"
-#endif
-
-#ifndef ADS_GEOM_H
 #include "geom.h"
-#endif
-
-#ifndef ADS_DB_OBJECT_H
 #include "dbObject.h"
-#endif
-
-#ifndef ADS_DCR_ISDB_H
 #include "ISdb.h"
-#endif
-
-#ifndef ADS_DB_SET_H
 #include "dbSet.h"
-#endif
-
-#ifndef ADS_DB_VIA_PARAMS_H
 #include "dbViaParams.h"
-#endif
-
-#ifndef ADS_DB_TYPES_H
 #include "dbTypes.h"
-#endif
-
-#ifndef ADS_DB_PRINTCONTROL_H
 #include "dbPrintControl.h"
-#endif
 
 #include "logger.h"
 

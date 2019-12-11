@@ -32,9 +32,7 @@
 #ifndef ADS_DB_NAME_CACHE_H
 #define ADS_DB_NAME_CACHE_H
 
-#ifndef ADS_DB_HASH_TABLE_H
 #include "dbHashTable.h"
-#endif
 
 namespace odb {
 

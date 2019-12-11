@@ -32,21 +32,10 @@
 #ifndef ADS_DB_BPIN_H
 #define ADS_DB_BPIN_H
 
-#ifndef ADS_H
 #include "ads.h"
-#endif
-
-#ifndef ADS_DB_ID_H
 #include "dbId.h"
-#endif
-
-#ifndef ADS_DB_OBJECT_H
 #include "dbObject.h"
-#endif
-
-#ifndef ADS_DB_TYPES_H
 #include "dbTypes.h"
-#endif
 
 namespace odb {
 

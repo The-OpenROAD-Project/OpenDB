@@ -34,13 +34,8 @@
 
 #include <string.h>
 
-#ifndef ADS_H
 #include "ads.h"
-#endif
-
-#ifndef ADS_ZEXCEPTION_H
 #include "ZException.h"
-#endif
 
 namespace odb {
 

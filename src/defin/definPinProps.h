@@ -32,25 +32,11 @@
 #ifndef ADS_DEFIN_PIN_PROPS_H
 #define ADS_DEFIN_PIN_PROPS_H
 
-#ifndef ADS_H
 #include "ads.h"
-#endif
-
-#ifndef ADS_GEOM_H
 #include "geom.h"
-#endif
-
-#ifndef ADS_DEFIN_IPIN_PROPS_H
 #include "definIPinProps.h"
-#endif
-
-#ifndef ADS_DEFIN_BASE_H
 #include "definBase.h"
-#endif
-
-#ifndef ADS_DB_TYPES_H
 #include "dbTypes.h"
-#endif
 
 namespace odb {
 

@@ -32,9 +32,7 @@
 #ifndef ADS_DB_ID_H
 #define ADS_DB_ID_H
 
-#ifndef ADS_DB_STREAM_H
 #include "dbStream.h"
-#endif
 
 namespace odb {
 

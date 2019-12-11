@@ -32,13 +32,8 @@
 #ifndef ADS_DEFIN_PROP_DEFS_H
 #define ADS_DEFIN_PROP_DEFS_H
 
-#ifndef ADS_DEFIN_IPROP_DEFS_H
 #include "definIPropDefs.h"
-#endif
-
-#ifndef ADS_DEFIN_BASE_H
 #include "definBase.h"
-#endif
 
 #include <string>
 

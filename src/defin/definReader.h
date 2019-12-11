@@ -32,17 +32,9 @@
 #ifndef ADS_DEFIN_READER_H
 #define ADS_DEFIN_READER_H
 
-#ifndef ADS_H
 #include "ads.h"
-#endif
-
-#ifndef ADS_DEFIN_IREADER_H
 #include "definIReader.h"
-#endif
-
-#ifndef ADS_DEFIN_BASE_H
 #include "definBase.h"
-#endif
 
 namespace odb {
 

@@ -32,13 +32,8 @@
 #ifndef ADS_DEFOUT_IMPL_H
 #define ADS_DEFOUT_IMPL_H
 
-#ifndef ADS_H
 #include "ads.h"
-#endif
-
-#ifndef ADS_DB_MAP_H
 #include "dbMap.h"
-#endif
 
 #include <list>
 #include <map>

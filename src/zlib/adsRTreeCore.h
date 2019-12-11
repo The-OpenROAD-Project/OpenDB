@@ -32,17 +32,9 @@
 #ifndef ADS_RTREE_CORE_H
 #define ADS_RTREE_CORE_H
 
-#ifndef ADS_H
 #include "ads.h"
-#endif
-
-#ifndef ADS_GEOM_H
 #include "geom.h"
-#endif
-
-#ifndef ADS_ALLOCATOR_H
 #include "adsAllocator.h"
-#endif
 
 namespace odb {
 

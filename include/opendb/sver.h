@@ -32,9 +32,7 @@
 #ifndef SVER_H
 #define SVER_H
 
-#ifndef ADS_H
 #include "ads.h"
-#endif
 
 // A very simple verilog parser
 // for the sole purpose of interpreting

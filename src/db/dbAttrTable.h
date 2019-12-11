@@ -32,21 +32,10 @@
 #ifndef ADS_DB_ATTR_TABLE_H
 #define ADS_DB_ATTR_TABLE_H
 
-#ifndef ADS_H
 #include "ads.h"
-#endif
-
-#ifndef ADS_ZEXCEPTION_H
 #include "ZException.h"
-#endif
-
-#ifndef ADS_DB_STREAM_H
 #include "dbStream.h"
-#endif
-
-#ifndef ADS_DB_DIFF_H
 #include "dbDiff.h"
-#endif
 
 namespace odb {
 

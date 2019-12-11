@@ -34,25 +34,11 @@
 
 #include <vector>
 
-#ifndef ADS_H
 #include "ads.h"
-#endif
-
-#ifndef ADS_DLIST_H
 #include "adsDList.h"
-#endif
-
-#ifndef ADS_DB_TYPES_H
 #include "dbTypes.h"
-#endif
-
-#ifndef ADS_DB_ROUTE_NODE_H
 #include "dbRtNode.h"
-#endif
-
-#ifndef ADS_DB_ROUTE_EDGE_H
 #include "dbRtEdge.h"
-#endif
 
 namespace odb {
 

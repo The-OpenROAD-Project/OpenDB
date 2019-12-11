@@ -32,17 +32,9 @@
 #ifndef ADS_DEFIN_BASE_H
 #define ADS_DEFIN_BASE_H
 
-#ifndef ADS_H
 #include "ads.h"
-#endif
-
-#ifndef ADS_GEOM_H
 #include "geom.h"
-#endif
-
-#ifndef ADS_DEFIN_TYPES_H
 #include "definTypes.h"
-#endif
 
 #include <vector>
 

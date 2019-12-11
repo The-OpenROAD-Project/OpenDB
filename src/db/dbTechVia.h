@@ -32,25 +32,11 @@
 #ifndef ADS_DB_TECH_VIA_H
 #define ADS_DB_TECH_VIA_H
 
-#ifndef ADS_H
 #include "ads.h"
-#endif
-
-#ifndef ADS_DB_TYPES_H
 #include "dbTypes.h"
-#endif
-
-#ifndef ADS_DB_ID_H
 #include "dbId.h"
-#endif
-
-#ifndef ADS_DB_OBJECT_H
 #include "dbObject.h"
-#endif
-
-#ifndef ADS_DB_VIA_PARAMS_H
 #include "dbViaParams.h"
-#endif
 
 namespace odb {
 

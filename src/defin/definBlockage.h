@@ -32,17 +32,9 @@
 #ifndef ADS_DEFIN_BLOCKAGE_H
 #define ADS_DEFIN_BLOCKAGE_H
 
-#ifndef ADS_H
 #include "ads.h"
-#endif
-
-#ifndef ADS_DEFIN_IBLOCKAGE_H
 #include "definIBlockage.h"
-#endif
-
-#ifndef ADS_DEFIN_BASE_H
 #include "definBase.h"
-#endif
 
 namespace odb {
 

@@ -32,30 +32,17 @@
 #ifndef ADS_DB_INST_H
 #define ADS_DB_INST_H
 
-#ifndef ADS_H
 #include "ads.h"
-#endif
-
-#ifndef ADS_DB_TYPES_H
 #include "dbTypes.h"
-#endif
-
-#ifndef ADS_DB_ID_H
 #include "dbId.h"
-#endif
-
-#ifndef ADS_DB_OBJECT_H
 #include "dbObject.h"
-#endif
 
 #ifndef ADS_DB_VECTOR_H
 #include "dbVector.h"                // disconnect the child-iterm
 
 #endif
 
-#ifndef ADS_DB_DATABASE_H
 #include "dbDatabase.h"
-#endif
 
 namespace odb {
 

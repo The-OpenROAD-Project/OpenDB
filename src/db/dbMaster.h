@@ -32,25 +32,11 @@
 #ifndef ADS_DB_MASTER_H
 #define ADS_DB_MASTER_H
 
-#ifndef ADS_H
 #include "ads.h"
-#endif
-
-#ifndef ADS_DB_TYPES_H
 #include "dbTypes.h"
-#endif
-
-#ifndef ADS_DB_CORE_H
 #include "dbCore.h"
-#endif
-
-#ifndef ADS_DB_OBJECT_H
 #include "dbObject.h"
-#endif
-
-#ifndef ADS_DB_HASH_TABLE_H
 #include "dbHashTable.h"
-#endif
 
 namespace odb {
 

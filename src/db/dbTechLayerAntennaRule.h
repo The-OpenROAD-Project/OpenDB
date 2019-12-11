@@ -32,17 +32,9 @@
 #ifndef ADS_DB_TECH_LAYERANTENNARULE_H
 #define ADS_DB_TECH_LAYERANTENNARULE_H
 
-#ifndef ADS_H
 #include "ads.h"
-#endif
-
-#ifndef ADS_DB_TYPES_H
 #include "dbTypes.h"
-#endif
-
-#ifndef ADS_DB_TECH_LAYER_H
 #include "dbTechLayer.h"
-#endif
 
 namespace odb {
 

@@ -32,17 +32,9 @@
 #ifndef ADS_ZIMPLEMENTS_H
 #define ADS_ZIMPLEMENTS_H
 
-#ifndef ADS_H
 #include "ads.h"
-#endif
-
-#ifndef ADS_ZINTERFACE_H
 #include "ZInterface.h"
-#endif
-
-#ifndef ADS_ZOBJECT_H
 #include "ZObject.h"
-#endif
 
 ///
 /// This file contains an implmentation of a component based software

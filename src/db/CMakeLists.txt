@@ -92,7 +92,6 @@ target_include_directories(opendb
     PUBLIC
         $<INSTALL_INTERFACE:include/opendb>
         $<BUILD_INTERFACE:${PROJECT_SOURCE_DIR}/include/opendb>
-        $<BUILD_INTERFACE:${PROJECT_SOURCE_DIR}/include/lef56>
     PRIVATE
         ${PROJECT_SOURCE_DIR}/src/db
 )
@@ -106,8 +105,7 @@ target_link_libraries(opendb
         zutil 
         zlib 
         tm
-        opendblef
-        opendblefrw
+        lef
         defin
         defout
         lefout

@@ -1,0 +1,3 @@
+[submodule "lef"]
+	path = src/lef
+	url = https://github.com/The-OpenROAD-Project/lef.git

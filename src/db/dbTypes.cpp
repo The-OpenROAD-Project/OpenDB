@@ -1282,6 +1282,18 @@ const char * TechLayerSpacingRule::getString( TechLayerSpacingRule::_RuleType v 
         case TechLayerSpacingRule::ADJACENT_CUTS_INFLUENCE:
             s = "ADJACENT_CUTS_INFLUENCE";
             break;
+            
+        case TechLayerSpacingRule::ENDOFLINE:
+            s = "ENDOFLINE";
+            break;
+            
+        case TechLayerSpacingRule::ENDOFLINE_PARALLEL:
+            s = "ENDOFLINE_PARALLEL";
+            break;
+            
+        case TechLayerSpacingRule::ENDOFLINE_PARALLEL_TWOEDGES:
+            s = "ENDOFLINE_PARALLEL_TWOEDGES";
+            break;
     }
 
     return s;

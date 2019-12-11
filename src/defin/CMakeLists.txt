@@ -59,6 +59,7 @@ add_custom_command(
             -v  -p${YACC_PREFIX} -d
             --output=${DEF_PARSER}
             ${PROJECT_SOURCE_DIR}/src/defin/def.ypp
+    DEPENDS ${PROJECT_SOURCE_DIR}/src/defin/def.ypp
     COMMENT "Generating parser.cpp"
 )
 
@@ -69,7 +70,7 @@ add_custom_command(
             --outfile=${DEF_SCANNER}
             ${PROJECT_SOURCE_DIR}/src/defin/def.l
     COMMENT "Generating scanner.cpp"
-    DEPENDS ${DEF_PARSER}
+    DEPENDS ${DEF_PARSER} ${PROJECT_SOURCE_DIR}/src/defin/def.l
 )
 set_property(DIRECTORY APPEND PROPERTY ADDITIONAL_MAKE_CLEAN_FILES 
         ${DEF_SCANNER}

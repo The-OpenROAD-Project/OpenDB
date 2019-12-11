@@ -648,4 +648,70 @@ dbDoubleProperty * dbDoubleProperty::find( dbObject * object, const char * name 
     return (dbDoubleProperty *) dbProperty::find(object,name,dbProperty::DOUBLE_PROP);
 }
 
+void dbProperty::writePropValue(dbProperty * prop, FILE *out)
+{
+    switch( prop->getType() )
+    {
+        case dbProperty::STRING_PROP:
+        {
+            dbStringProperty * p = (dbStringProperty *) prop;
+            dbString v = p->getValue();
+            fprintf(out, "\"%s\" ", v.c_str() );
+            break;
+        }
+
+        case dbProperty::INT_PROP:
+        {
+            dbIntProperty * p = (dbIntProperty *) prop;
+            int v = p->getValue();
+            fprintf(out, "%d ", v);
+            break;
+        }
+
+        case dbProperty::DOUBLE_PROP:
+        {
+            dbDoubleProperty * p = (dbDoubleProperty *) prop;
+            double v = p->getValue();
+            fprintf(out, "%G ", v);
+        }
+
+        default:
+            break;
+    }
+}
+
+void dbProperty::writeProperties( dbObject * object, FILE *out )
+{
+    dbSet<dbProperty> props = dbProperty::getProperties(object);
+    dbSet<dbProperty>::iterator itr;
+
+    for( itr = props.begin(); itr != props.end(); ++itr )
+    {
+        dbProperty * prop = *itr;
+        dbString name = prop->getName();
+        fprintf(out, "    PROPERTY %s ", name.c_str() );
+        writePropValue(prop, out);
+        fprintf(out, "\n");
+    }
+}
+
+/* Sample Code to access dbTechLayer properties
+void dbProperty::writeProperties( dbTechLayer * object, FILE *out )
+{
+    dbSet<dbProperty> props = dbProperty::getProperties(object);
+    dbSet<dbProperty>::iterator itr;
+
+    for( itr = props.begin(); itr != props.end(); ++itr )
+    {
+        dbProperty * prop = *itr;
+        dbString name = prop->getName();
+        
+        to get value of a  string type: 
+             dbStringProperty * p = (dbStringProperty *) prop;
+            dbString v = p->getValue();
+	look function dbProperty::writePropValue on how to retrieve int and double values
+    }
+}
+*/
+
 } // namespace

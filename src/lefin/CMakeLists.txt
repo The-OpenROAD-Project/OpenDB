@@ -7,7 +7,6 @@ target_include_directories(lefin
     PUBLIC
         $<INSTALL_INTERFACE:include/opendb>
         $<BUILD_INTERFACE:${PROJECT_SOURCE_DIR}/include/opendb>
-        $<BUILD_INTERFACE:${PROJECT_SOURCE_DIR}/include/lef56>
     PRIVATE
         ${PROJECT_SOURCE_DIR}/src/lefin
 )
@@ -19,5 +18,5 @@ set_property(TARGET lefin PROPERTY POSITION_INDEPENDENT_CODE ON)
 target_link_libraries(lefin
     PUBLIC
         zutil
-        opendblef
+        lef
 )

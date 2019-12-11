@@ -446,6 +446,61 @@ dbTechLayerSpacingRule::setRangeRange( uint rmin, uint rmax )
 }
 
 void
+dbTechLayerSpacingRule::setEol(uint width, uint within, bool parallelEdge,
+			       uint parallelSpace, uint parallelWithin, bool twoEdges)
+{
+  _dbTechLayerSpacingRule* _lsp = (_dbTechLayerSpacingRule*)this;
+  assert((_lsp->_flags._rule != LENGTHTHRESHOLD) &&
+	 (_lsp->_flags._rule != LENGTHTHRESHOLD_RANGE) &&
+	 (_lsp->_flags._rule != RANGE_RANGE) &&
+	 (_lsp->_flags._rule != RANGE_INFLUENCE_RANGE) &&
+	 (_lsp->_flags._rule != RANGE_INFLUENCE));
+
+  if (!parallelEdge) {
+    _lsp->_r1min = width;
+    _lsp->_r1max = within;
+    _lsp->_flags._rule = ENDOFLINE;
+  }
+  else {
+    _lsp->_r1min = width;
+    _lsp->_r1max = within;
+    _lsp->_r2min = parallelSpace;
+    _lsp->_r2max = parallelWithin;
+    if (!twoEdges)
+      _lsp->_flags._rule = ENDOFLINE_PARALLEL;
+    else
+      _lsp->_flags._rule = ENDOFLINE_PARALLEL_TWOEDGES;
+  }
+}
+
+bool
+dbTechLayerSpacingRule::getEol(uint& width, uint& within, bool& parallelEdge,
+			       uint& parallelSpace, uint& parallelWithin,
+			       bool& twoEdges) const
+{
+  _dbTechLayerSpacingRule* _lsp = (_dbTechLayerSpacingRule*)this;
+
+  if (_lsp->_flags._rule != ENDOFLINE && _lsp->_flags._rule != ENDOFLINE_PARALLEL && _lsp->_flags._rule != ENDOFLINE_PARALLEL_TWOEDGES)
+    return false;
+	
+  parallelSpace = 0;
+  parallelWithin = 0;
+  twoEdges = false;
+  if (_lsp->_flags._rule == ENDOFLINE) {
+    width = _lsp->_r1min;
+    within = _lsp->_r1max;
+    parallelSpace = false;
+    return true;
+  }
+  parallelEdge= true;
+  parallelSpace = true;
+  parallelSpace = _lsp->_r2min;
+  parallelWithin = _lsp->_r2max;
+  twoEdges = _lsp->_flags._rule == ENDOFLINE_PARALLEL_TWOEDGES;
+  return true;
+}
+
+void
 dbTechLayerSpacingRule::setAdjacentCuts( uint numcuts, uint within, uint spacing )
 {
   _dbTechLayerSpacingRule * _lsp = (_dbTechLayerSpacingRule *) this;
@@ -532,7 +587,22 @@ dbTechLayerSpacingRule::writeLef( lefout & writer ) const
       fprintf(writer.out(), "ADJACENTCUTS %d WITHIN %g ", numcuts,
 	      writer.lefdist(length_or_influence));
     }
-
+  else {
+	  uint width, within, parallelSpace, parallelWithin;
+	  bool parallelEdge, twoEdges;
+	  if (getEol(width, within, parallelEdge, parallelSpace, parallelWithin, twoEdges)) {
+		  fprintf(writer.out(), "ENDOFLINE %g WITHIN %g ",
+			  writer.lefdist(width),
+			  writer.lefdist(within));
+		  if (parallelEdge) {
+			  fprintf(writer.out(), "PARALLELEDGE %g WITHIN %g ",
+				  writer.lefdist(parallelSpace),
+				  writer.lefdist(parallelWithin));
+			  if (twoEdges)
+				  fprintf(writer.out(), " TWOEDGES ");
+		  }
+	  }
+  }
   fprintf( writer.out(), " ;\n");
 }
 

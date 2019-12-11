@@ -56,9 +56,9 @@
 #include "lefin.h"
 #include "logger.h"
 
-extern int lefrRelaxMode; // This variable turns off strick checking in the lef 5.6 parser.
-
 namespace odb {
+
+using LefDefParser::lefrSetRelaxMode;
 
 extern bool lefin_parse( lefin *, const char * );
 
@@ -199,7 +199,7 @@ static void create_path_box( dbObject * obj, bool is_pin, dbTechLayer * layer,
     }
     else
     {
-        assert(0); // illegal: non-orthogonal-path
+      warning(0, "illegal: non-orthogonal-path at Pin\n");
     }
 }
 
@@ -590,12 +590,15 @@ void lefin::layer( lefiLayer * layer )
         notice(0,"Skipping LAYER (%s) ; Non Routing or Cut type\n", layer->name() );
 		return;
 	}
-	
 
     dbTechLayer * l = dbTechLayer::create(_tech, layer->name(), type );
 	if (l==NULL) {
         notice(0,"Skipping LAYER (%s) ; cannot understand type\n", layer->name() );
 		return;
+	}
+	for (int iii=0; iii<layer->numProps(); iii++)
+	{
+	  dbStringProperty::create(l, layer->propName(iii), layer->propValue(iii));
 	}
     
     if ( layer->hasWidth() )
@@ -639,6 +642,19 @@ void lefin::layer( lefiLayer * layer )
 					  dbdist(layer->spacingAdjacentWithin(j)),
 					  dbdist(layer->spacing(j)));
 	      }
+	    else if (layer->hasSpacingEndOfLine(j))
+	      {
+		double w= layer->spacingEolWidth(j);
+		double wn= layer->spacingEolWithin(j);
+	        if (layer->hasSpacingParellelEdge(j)) {
+		    double ps= layer->spacingParSpace(j);
+		    double pw= layer->spacingParWithin(j); 
+                    bool t= layer->hasSpacingTwoEdges(j);
+		    cur_rule->setEol(dbdist(w), dbdist(wn), true, dbdist(ps), dbdist(pw), t);
+                } else {
+		    cur_rule->setEol(dbdist(w), dbdist(wn), false, 0, 0, false);
+		}
+	      }
 	    else if (layer->hasSpacingName(j))
 	      {
 		dbTechLayer *tmply = NULL;
@@ -668,7 +684,7 @@ void lefin::layer( lefiLayer * layer )
 	      }
 	  }
 	else  // Assume parallel run length spacing table
-	  {
+	  { /* TODO
 	    lefiParallel *cur_ipl = cur_sptbl->parallel();
 	    int wddx,lndx;
 
@@ -689,6 +705,7 @@ void lefin::layer( lefiLayer * layer )
 			l->setSpacing(dbdist(cur_ipl->widthSpacing(wddx,lndx)));
 		  }
 	      }
+*/
 	  }
       }
 
@@ -908,7 +925,10 @@ void lefin::macro( lefiMacro * macro )
     if (macro->hasEEQ())
     {
         dbMaster * eeq = _lib->findMaster( macro->EEQ() );
-        _master->setEEQ(eeq);
+	if (eeq==NULL) 
+	  notice(0,"warning: cannot find EEQ for macro %s \n", macro->name());
+	else
+	  _master->setEEQ(eeq);
     }
 
     if (macro->hasLEQ())
@@ -1498,7 +1518,7 @@ void lefin::useMinSpacing( lefiUseMinSpacing * spacing )
     }
   else
     {
-      fprintf(stderr,"Unknown object type for USEMINSPACING: %s\n",spacing->name());
+      notice(0, "Unknown object type for USEMINSPACING: %s\n",spacing->name());
     }
 }
 
@@ -1841,7 +1861,7 @@ bool lefin::readLef( const char * lef_file )
 
 dbTech * lefin::createTech( const char * lef_file )
 {
-    lefrRelaxMode = true;
+    lefrSetRelaxMode();
     init();
     
     if ( _db->getTech() )
@@ -1870,7 +1890,7 @@ dbTech * lefin::createTech( const char * lef_file )
 
 dbLib * lefin::createLib( const char * name, const char * lef_file )
 {
-    lefrRelaxMode = true;
+    lefrSetRelaxMode();
     init();
     
     _tech = _db->getTech();
@@ -1910,7 +1930,7 @@ dbLib * lefin::createLib( const char * name, const char * lef_file )
 
 dbLib * lefin::createTechAndLib( const char * lib_name, const char * lef_file )
 {
-    lefrRelaxMode = true;
+    lefrSetRelaxMode();
     init();
     
     if ( _db->findLib(lib_name) )
@@ -1957,7 +1977,7 @@ dbLib * lefin::createTechAndLib( const char * lib_name, const char * lef_file )
 
 dbLib * lefin::createTechAndLib( const char *lib_name, std::list<std::string> &file_list )
 {
-    lefrRelaxMode = true;
+    lefrSetRelaxMode();
     init();
     
     if ( _db->findLib(lib_name) )
@@ -2024,7 +2044,7 @@ dbLib * lefin::createTechAndLib( const char *lib_name, std::list<std::string> &f
 bool lefin::updateLib( dbLib * lib,
                        const char * lef_file )
 {
-    lefrRelaxMode = true;
+    lefrSetRelaxMode();
     init();
     _tech = lib->getTech();
     _lib = lib;
@@ -2043,7 +2063,7 @@ bool lefin::updateLib( dbLib * lib,
 bool lefin::updateTechAndLib( dbLib * lib,
                               const char * lef_file )
 {
-    lefrRelaxMode = true;
+    lefrSetRelaxMode();
     
     init();
     _lib = lib;
@@ -2061,7 +2081,7 @@ bool lefin::updateTechAndLib( dbLib * lib,
 bool lefin::updateTech( dbTech * tech,
                         const char * lef_file )
 {
-    lefrRelaxMode = true;
+    lefrSetRelaxMode();
     init();
     _tech = tech;
     _create_tech = true;

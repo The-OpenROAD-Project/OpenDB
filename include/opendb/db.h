@@ -320,6 +320,9 @@ class dbProperty : public dbObject
     static void destroyProperties( dbObject * obj );
     static dbSet<dbProperty> getProperties( dbObject * object );
     static dbSet<dbProperty>::iterator destroy( dbSet<dbProperty>::iterator itr );
+// 5.8
+    static void writeProperties(dbObject * object, FILE *out );
+    static void writePropValue(dbProperty * prop, FILE *out);
 };
 
 ///
@@ -6308,6 +6311,9 @@ class dbTechLayerSpacingRule : public dbObject
     void  setRangeRange( uint rmin, uint rmax );
     void  setAdjacentCuts( uint numcuts, uint within, uint spacing );
     void  setCutLayer4Spacing( dbTechLayer *cutly );
+    void  setEol(uint width, uint within, bool parallelEdge, uint parallelSpace, uint parallelWithin, bool twoEdges);
+    bool  getEol(uint & width, uint & within, bool & parallelEdge, uint & parallelSpace, uint & parallelWithin, bool & twoEdges) const;
+
 
     ///
     /// Create a new layer spacing rule.

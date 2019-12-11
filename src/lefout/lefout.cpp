@@ -543,9 +543,10 @@ void lefout::writeLayer( dbTechLayer * layer )
     if ( layer->getEdgeCapacitance() != 0.0)
         fprintf( _out, "    EDGECAPACITANCE %g ;\n", layer->getEdgeCapacitance() );
 
+    dbProperty::writeProperties(layer, _out );
+
     fprintf( _out, "END %s\n", name.c_str() );
 }
-
 void lefout::writeVia( dbTechVia * via )
 {
     dbString name = via->getName();

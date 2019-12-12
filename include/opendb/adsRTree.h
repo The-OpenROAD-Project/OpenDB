@@ -34,21 +34,10 @@
 
 #include <string.h>
 
-#ifndef ADS_H
 #include "ads.h"
-#endif
-
-#ifndef ADS_GEOM_H
 #include "geom.h"
-#endif
-
-#ifndef ADS_ALLOCATOR_H
 #include "adsAllocator.h"
-#endif
-
-#ifndef ADS_RTREE_CORE_H
 #include "../zlib/adsRTreeCore.h"
-#endif
 
 namespace odb {
 

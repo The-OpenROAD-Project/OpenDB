@@ -32,17 +32,9 @@
 #ifndef ADS_DCR_IZDCR_H
 #define ADS_DCR_IZDCR_H
 
-#ifndef ADS_H
 #include "ads.h"
-#endif
-
-#ifndef ADS_GEOM_H
 #include "geom.h"
-#endif
-
-#ifndef ADS_ZOBJECT_H
 #include "ZObject.h"
-#endif
 
 
 namespace odb {

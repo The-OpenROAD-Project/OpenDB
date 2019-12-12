@@ -32,9 +32,7 @@
 #ifndef ADS_ZCOMPONENTS_H
 #define ADS_ZCOMPONENTS_H
 
-#ifndef ADS_H
 #include "ads.h"
-#endif
 
 ///
 /// ZINTERFACE - Declare the interface identifier; add to adsInterfaces enum

@@ -32,13 +32,8 @@
 #ifndef ADS_DB_JOURNAL_LOG_H
 #define ADS_DB_JOURNAL_LOG_H
 
-#ifndef ADS_H
 #include "ads.h"
-#endif
-
-#ifndef ADS_DB_PAGED_VECTOR_H
 #include "dbPagedVector.h"
-#endif
 
 namespace odb {
 

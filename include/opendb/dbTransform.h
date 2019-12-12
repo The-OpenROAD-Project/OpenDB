@@ -32,21 +32,10 @@
 #ifndef ADS_DB_TRANSFORM_H
 #define ADS_DB_TRANSFORM_H
 
-#ifndef ADS_GEOM_H
 #include "geom.h"
-#endif
-
-#ifndef ADS_H
 #include "ads.h"
-#endif
-
-#ifndef ADS_GEOM_H
 #include "geom.h"
-#endif
-
-#ifndef ADS_DB_TYPES_H
 #include "dbTypes.h"
-#endif
 
 namespace odb {
 

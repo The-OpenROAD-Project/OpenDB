@@ -32,9 +32,7 @@
 #ifndef ADS_DEFIN_IBLOCKAGE_H
 #define ADS_DEFIN_IBLOCKAGE_H
 
-#ifndef ADS_DEFIN_TYPES_H
 #include "definTypes.h"
-#endif
 
 #include <vector>
 

@@ -32,17 +32,9 @@
 #ifndef ADS_DB_LIB_H
 #define ADS_DB_LIB_H
 
-#ifndef ADS_H
 #include "ads.h"
-#endif
-
-#ifndef ADS_DB_CORE_H
 #include "dbCore.h"
-#endif
-
-#ifndef ADS_DB_HASH_TABLE_H
 #include "dbHashTable.h"
-#endif
 
 namespace odb {
 

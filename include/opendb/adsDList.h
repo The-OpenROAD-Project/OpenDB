@@ -32,9 +32,7 @@
 #ifndef ADS_DLIST_H
 #define ADS_DLIST_H
 
-#ifndef ADS_H
 #include "ads.h"
-#endif
 
 namespace odb {
 

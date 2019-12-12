@@ -32,13 +32,8 @@
 #ifndef ADS_DEFIN_IREADER_H
 #define ADS_DEFIN_IREADER_H
 
-#ifndef ADS_DB_H
 #include "db.h"
-#endif
-
-#ifndef ADS_DB_DEFIN_TYPES_H
 #include "definTypes.h"
-#endif
 
 class definIReader
 {

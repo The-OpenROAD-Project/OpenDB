@@ -32,9 +32,7 @@
 #ifndef ADS_DEFIN_DEF_ICOMPONENT_H
 #define ADS_DEFIN_DEF_ICOMPONENT_H
 
-#ifndef ADS_DEFIN_TYPES_H
 #include "definTypes.h"
-#endif
 
 class definIComponent
 {

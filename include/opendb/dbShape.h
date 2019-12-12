@@ -32,33 +32,13 @@
 #ifndef ADS_DB_SHAPE_H
 #define ADS_DB_SHAPE_H
 
-#ifndef ADS_H
 #include "ads.h"
-#endif
-
-#ifndef ADS_GEOM_H
 #include "geom.h"
-#endif
-
-#ifndef ADS_DB_TRANSFORM_H
 #include "dbTransform.h"
-#endif
-
-#ifndef ADS_DB_WIRE_CODEC_H
 #include "dbWireCodec.h"
-#endif
-
-#ifndef ADS_DB_SET_H
 #include "dbSet.h"
-#endif
-
-#ifndef ADS_DB_OBJECT_H
 #include "dbObject.h"
-#endif
-
-#ifndef ADS_ZEXCEPTION_H
 #include "ZException.h"
-#endif
 
 namespace odb {
 

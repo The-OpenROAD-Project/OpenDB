@@ -36,17 +36,9 @@
 #include <vector>
 #include <map>
 
-#ifndef ADS_H
 #include "ads.h"
-#endif
-
-#ifndef ADS_DEFIN_IROW_H
 #include "definIRow.h"
-#endif
-
-#ifndef ADS_DEFIN_DEF_BASE_H
 #include "definBase.h"
-#endif
 
 namespace odb {
 

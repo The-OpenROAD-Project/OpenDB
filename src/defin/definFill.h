@@ -32,17 +32,9 @@
 #ifndef ADS_DEFIN_FILL_H
 #define ADS_DEFIN_FILL_H
 
-#ifndef ADS_H
 #include "ads.h"
-#endif
-
-#ifndef ADS_DEFIN_BASE_H
 #include "definBase.h"
-#endif
-
-#ifndef ADS_DEFIN_IFILL_H
 #include "definIFill.h"
-#endif
 
 namespace odb {
 

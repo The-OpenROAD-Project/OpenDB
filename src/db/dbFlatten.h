@@ -32,25 +32,11 @@
 #ifndef ADS_DB_FLATTEN_H
 #define ADS_DB_FLATTEN_H
 
-#ifndef ADS_H
 #include "ads.h"
-#endif
-
-#ifndef ADS_DB_TYPES_H
 #include "dbTypes.h"
-#endif
-
-#ifndef ADS_DB_TRANSFORM_H
 #include "dbTransform.h"
-#endif
-
-#ifndef ADS_DB_FLATTEN_H
 #include "dbFlatten.h"
-#endif
-
-#ifndef ADS_DB_VECTOR_H
 #include "dbVector.h"
-#endif
 
 #include <map>
 

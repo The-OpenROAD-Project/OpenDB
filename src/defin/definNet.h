@@ -32,21 +32,10 @@
 #ifndef ADS_DEFIN_NET_H
 #define ADS_DEFIN_NET_H
 
-#ifndef ADS_H
 #include "ads.h"
-#endif
-
-#ifndef ADS_DB_WIRE_CODEC_H
 #include "dbWireCodec.h"
-#endif
-
-#ifndef ADS_DEFIN_INET_H
 #include "definINet.h"
-#endif
-
-#ifndef ADS_DEFIN_BASE_H
 #include "definBase.h"
-#endif
 
 #include <map>
 #include <string>

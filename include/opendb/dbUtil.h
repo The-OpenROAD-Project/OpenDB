@@ -32,9 +32,7 @@
 #ifndef ADS_DB_UTIL_H
 #define ADS_DB_UTIL_H
 
-#ifndef ADS_H
 #include "ads.h"
-#endif
 
 #include "dbMatrix.h"
 #include "dbTypes.h"

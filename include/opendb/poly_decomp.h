@@ -32,13 +32,8 @@
 #ifndef ADS_POLY_DECOMP_H
 #define ADS_POLY_DECOMP_H
 
-#ifndef ADS_H
 #include "ads.h"
-#endif
-
-#ifndef ADS_GEOM_H
 #include "geom.h"
-#endif
 
 namespace odb {
 

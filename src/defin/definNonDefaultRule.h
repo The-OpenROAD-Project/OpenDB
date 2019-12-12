@@ -32,21 +32,10 @@
 #ifndef ADS_DEFIN_NON_DEFAULT_RULE_H
 #define ADS_DEFIN_NON_DEFAULT_RULE_H
 
-#ifndef ADS_H
 #include "ads.h"
-#endif
-
-#ifndef ADS_GEOM_H
 #include "geom.h"
-#endif
-
-#ifndef ADS_DEFIN_INON_DEFAULT_RULE_H
 #include "definINonDefaultRule.h"
-#endif
-
-#ifndef ADS_DEFIN_BASE_H
 #include "definBase.h"
-#endif
 
 namespace odb {
 

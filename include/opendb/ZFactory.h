@@ -32,13 +32,8 @@
 #ifndef ADS_ZFACTORY_H
 #define ADS_ZFACTORY_H
 
-#ifndef ADS_H
 #include "ads.h"
-#endif
-
-#ifndef ADS_ZOBJECT_H
 #include "ZObject.h"
-#endif
 
 namespace odb {
 

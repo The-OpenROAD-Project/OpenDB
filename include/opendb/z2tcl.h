@@ -37,13 +37,8 @@
 #include "atypes.h"
 #include "tcl.h"
 
-#ifndef ADS_H
 #include "ads.h"
-#endif
-
-#ifndef ADS_DB_H
 #include "db.h"
-#endif
 
 #include "dbShape.h"
 #include "geom.h"

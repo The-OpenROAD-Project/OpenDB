@@ -32,21 +32,10 @@
 #ifndef ADS_DEFIN_VIA_H
 #define ADS_DEFIN_VIA_H
 
-#ifndef ADS_H
 #include "ads.h"
-#endif
-
-#ifndef ADS_DEFIN_IVIA_H
 #include "definIVia.h"
-#endif
-
-#ifndef ADS_DEFIN_BASE_H
 #include "definBase.h"
-#endif
-
-#ifndef ADS_DB_H
 #include "db.h"
-#endif
 
 namespace odb {
 

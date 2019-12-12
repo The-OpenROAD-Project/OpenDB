@@ -34,9 +34,7 @@
 
 #include <vector>
 
-#ifndef ADS_H
 #include "ads.h"
-#endif
 
 namespace odb {
 

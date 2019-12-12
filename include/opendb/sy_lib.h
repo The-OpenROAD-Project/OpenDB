@@ -32,13 +32,8 @@
 #ifndef SY_LIB_H
 #define SY_LIB_H
 
-#ifndef ADS_H
 #include "ads.h"
-#endif
-
-#ifndef ADS_DB_H
 #include "db.h"
-#endif
 
 namespace odb {
 

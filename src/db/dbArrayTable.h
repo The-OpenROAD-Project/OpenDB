@@ -32,21 +32,10 @@
 #ifndef ADS_DB_ARRAY_TABLE_H
 #define ADS_DB_ARRAY_TABLE_H
 
-#ifndef ADS_H
 #include "ads.h"
-#endif
-
-#ifndef ADS_DB_CORE_H
 #include "dbCore.h"
-#endif
-
-#ifndef ADS_DB_VECTOR_H
 #include "dbVector.h"
-#endif
-
-#ifndef ADS_ZEXCEPTION_H
 #include "ZException.h"
-#endif
 
 #include <vector>
 

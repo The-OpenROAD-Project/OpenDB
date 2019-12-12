@@ -95,7 +95,7 @@
 #include "logger.h"
 #include "defout.h"
 #include "lefout.h"
-#include<string>
+#include <string>
 
 namespace odb {
 

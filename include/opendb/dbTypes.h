@@ -32,9 +32,7 @@
 #ifndef ADS_DB_TYPES_H
 #define ADS_DB_TYPES_H
 
-#ifndef ADS_H
 #include "ads.h"
-#endif
 
 namespace odb {
 

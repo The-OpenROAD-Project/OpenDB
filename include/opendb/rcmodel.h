@@ -32,13 +32,8 @@
 #ifndef RCMODEL_H
 #define RCMODEL_H
 
-#ifndef ADS_H
 #include "ads.h"
-#endif
-
-#ifndef ARNOLDI1_H
 #include "arnoldi1.h"
-#endif
 
 namespace odb {
 

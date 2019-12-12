@@ -32,9 +32,7 @@
 #ifndef ADS_LEFIN_H
 #define ADS_LEFIN_H
 
-#ifndef ADS_H
 #include "ads.h"
-#endif
 
 #include <list>
 

@@ -32,9 +32,7 @@
 #ifndef ADS_DEFIN_IGCELL_H
 #define ADS_DEFIN_IGCELL_H
 
-#ifndef ADS_DEFIN_TYPES
 #include "definTypes.h"
-#endif
 
 class definIGCell
 {

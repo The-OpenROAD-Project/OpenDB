@@ -32,9 +32,7 @@
 #ifndef ADS_DB_SET_H
 #define ADS_DB_SET_H
 
-#ifndef ADS_DB_ITERATOR_H
 #include "dbIterator.h"
-#endif
 
 namespace odb {
 

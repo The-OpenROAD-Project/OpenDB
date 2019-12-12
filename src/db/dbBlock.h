@@ -32,47 +32,18 @@
 #ifndef ADS_DB_BLOCK_H
 #define ADS_DB_BLOCK_H
 
-#ifndef ADS_H
 #include "ads.h"
-#endif
-
-#ifndef ADS_GEOM_H
 #include "geom.h"
-#endif
-
-#ifndef ADS_DB_TYPES_H
 #include "dbTypes.h"
-#endif
-
-#ifndef ADS_DB_CORE_H
 #include "dbCore.h"
-#endif
-
-#ifndef ADS_DB_HASH_TABLE_H
 #include "dbHashTable.h"
-#endif
-
-#ifndef ADS_DB_INT_HASH_TABLE_H
 #include "dbIntHashTable.h"
-#endif
-
-#ifndef ADS_DB_PAGED_VECTOR_H
 #include "dbPagedVector.h"
-#endif
-
-#ifndef ADS_DB_VECTOR_H
 #include "dbVector.h"
-#endif
-
-#ifndef ADS_DB_TRANSFORM_H
 #include "dbTransform.h"
-#endif
-
-#ifndef ADS_DB_PRINTCONTROL_H
 #include "dbPrintControl.h"
-#endif
 
-#include<list>
+#include <list>
 
 /*DELETE
 #ifndef ADS_DCR_ISDB_H

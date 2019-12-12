@@ -32,9 +32,7 @@
 #ifndef ADS_DB_BLOCK_SET_H
 #define ADS_DB_BLOCK_SET_H
 
-#ifndef ADS_DB_OBJECT_H
 #include "dbObject.h"
-#endif
 
 namespace odb {
 

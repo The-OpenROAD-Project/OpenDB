@@ -32,21 +32,10 @@
 #ifndef ADS_DB_ROUTE_NODE_H
 #define ADS_DB_ROUTE_NODE_H
 
-#ifndef ADS_H
 #include "ads.h"
-#endif
-
-#ifndef ADS_GEOM_H
 #include "geom.h"
-#endif
-
-#ifndef ADS_DLIST_H
 #include "adsDList.h"
-#endif
-
-#ifndef ADS_DB_ROUTE_EDGE
 #include "dbRtEdge.h"
-#endif
 
 #include <vector>
 

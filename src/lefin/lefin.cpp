@@ -606,6 +606,9 @@ void lefin::layer( lefiLayer * layer )
 
     if ( layer->hasPitch() )
         l->setPitch( dbdist(layer->pitch() ) );
+    else if ( layer->hasXYPitch() )
+        // Use X pitch until DB supports XY pitch -cherry
+	l->setPitch( dbdist(layer->pitchX() ) );
     
     int j;
     dbTechLayerSpacingRule  *cur_rule;

@@ -867,7 +867,7 @@ comp_options
 
 comp_option
     :    '+' EEQMASTER_K ident               { release($3); }
-    |    '+' SOURCE_K source_type           { /* TODO */}
+    |    '+' SOURCE_K source_type            { componentR->source( (defSource) $3 ); }
     |    '+' FOREIGN_K ident point defOrient { release($3); }
     |    comp_type
     |  	'+' K_MASKSHIFT integer { /* TODO */ }

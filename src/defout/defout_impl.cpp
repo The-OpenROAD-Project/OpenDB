@@ -141,6 +141,8 @@ bool defout_impl::writeBlock( dbBlock * block, const char * def_file )
         fprintf( _out, "VERSION 5.5 ;\n");
     } else if (_version == defout::DEF_5_6) {
         fprintf( _out, "VERSION 5.6 ;\n");
+    } else if (_version == defout::DEF_5_8) {
+        fprintf( _out, "VERSION 5.8 ;\n");
     }
     fprintf( _out, "NAMESCASESENSITIVE ON ;\n");
     char hd = block->getHierarchyDelimeter();
@@ -1752,8 +1754,6 @@ void defout_impl::writeSpecialPath( dbSBox * box )
 
 void defout_impl::writeNet( dbNet * net )
 {
-    dbSet<dbITerm> iterms = net->getITerms();
-
     if ( _use_net_inst_ids )
         fprintf(_out, "    - N%u", net->getId() );
     else
@@ -1764,12 +1764,17 @@ void defout_impl::writeNet( dbNet * net )
 
     char ttname[dbObject::max_name_length];
     int i = 0;
-    dbSet<dbITerm>::iterator iterm_itr;
 
-    for( iterm_itr = iterms.begin(); iterm_itr != iterms.end(); ++iterm_itr )
+    for( dbBTerm *bterm : net->getBTerms())
     {
-        dbITerm * iterm = *iterm_itr;
+      const char *pin_name = bterm->getConstName();
+      if ( (++i & 7) == 0 )
+	fprintf(_out, "\n     ");
+      fprintf(_out, " ( PIN %s )", pin_name);
+    }
 
+    for (dbITerm *iterm : net->getITerms())
+    {
         if ( iterm->isSpecial() )
             continue;
             
@@ -1781,25 +1786,15 @@ void defout_impl::writeNet( dbNet * net )
         char *mtname = mterm->getName(inst, &ttname[0]);
 
         if ( (++i & 7) == 0 )
-        {
-            if ( _use_net_inst_ids )
-                fprintf(_out, "\n      ( I%u %s )", inst->getId(), mtname);
-            else
-            {
-                dbString iname = inst->getName();
-                fprintf(_out, "\n      ( %s %s )", iname.c_str(), mtname);
-            }
-        }
-        else
-        {
-            if ( _use_net_inst_ids )
-                fprintf(_out, " ( I%u %s )", inst->getId(), mtname);
-           else
-            {
-                dbString iname = inst->getName();
-                fprintf(_out, " ( %s %s )", iname.c_str(), mtname);
-            }
-        }
+	  fprintf(_out, "\n     ");
+
+	if ( _use_net_inst_ids )
+	  fprintf(_out, " ( I%u %s )", inst->getId(), mtname);
+	else
+	{
+	  dbString iname = inst->getName();
+	  fprintf(_out, " ( %s %s )", iname.c_str(), mtname);
+	}
     }
 
     if ( net->getXTalkClass() != 0 )

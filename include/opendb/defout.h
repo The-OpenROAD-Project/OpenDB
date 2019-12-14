@@ -45,7 +45,7 @@ class defout
     defout_impl * _writer;
 
   public:
-    enum Version { DEF_5_3, DEF_5_4, DEF_5_5, DEF_5_6 };
+    enum Version { DEF_5_3, DEF_5_4, DEF_5_5, DEF_5_6, DEF_5_8 };
 
     defout();
     ~defout();

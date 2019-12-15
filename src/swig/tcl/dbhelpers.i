@@ -1,3 +1,13 @@
+// The functions defined in this file are wrong on so many levels.
+// For example:
+// They are needlessly complicated by the use of string vector arguments
+// where multiple calls in the rare circumstances there are multiple lef
+// files would suffice. Why does odb_read_def use a vector of
+// def file names and then error if there is more than one?
+// Tcl is not polymorphic but there are multiple inline functions definitions
+// with the same name. A "NULL" db arg creates a database. What good is that?
+// I highly discourage their use. -cherry
+
 %{
 #include <libgen.h>
 odb::dbLib*
@@ -33,7 +43,7 @@ odb::dbChip*
 odb_read_def(std::vector<odb::dbLib*>& libs, std::vector<std::string> paths)
 {
     if (paths.size() != 1) {
-        fprintf(stderr, "Only one DEF file should be provided.\n");
+	fprintf(stderr, "Only one DEF file should be provided.\n");
         return NULL;
     }
     if (!libs.size()) {
@@ -118,7 +128,9 @@ odb_export_db(odb::dbDatabase* db, const char* db_path)
     fclose(fp);
     return 1;
 }
+
 %}
+
 std::vector<odb::dbLib*>     odb_read_lef(odb::dbDatabase* db, std::vector<std::string> path);
 odb::dbChip*     odb_read_def(odb::dbDatabase* db, std::vector<std::string> paths);
 odb::dbChip*     odb_read_def(std::vector<odb::dbLib*>& libs, std::vector<std::string> paths);

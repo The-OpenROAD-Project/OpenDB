@@ -776,17 +776,4 @@ bool dbDatabase::diff( dbDatabase * db0_, dbDatabase * db1_, FILE * file, int in
     return diff.hasDifferences();
 }
 
-bool dbDatabase::diff( dbDatabase * db0, dbDatabase * db1,
-		       const char *diff_file, int indent_per_level )
-{
-  FILE *stream = nullptr;
-  if (diff_file)
-    stream = fopen(diff_file, "w");
-  // diff supports nullptr file args so no need to check the fopen result.
-  bool diffs = diff(db0, db1, stream, indent_per_level);
-  if (stream)
-    fclose(stream);
-  return diffs;
-}
-
 } // namespace

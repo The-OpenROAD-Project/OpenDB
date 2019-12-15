@@ -52,6 +52,7 @@ using namespace odb;
 %include "dbenums.i"
 %include "dbhelpers.i"
 %include "parserenums.i"
+%include "../tcl/dbdiff.i"
 
 %include "geom.h"
 %include "dbObject.h"

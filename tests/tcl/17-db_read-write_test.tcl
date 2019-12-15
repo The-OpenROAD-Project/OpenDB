@@ -20,14 +20,9 @@ if {!$export_result} {
 set new_db [dbDatabase_create]
 odb_import_db $new_db $opendb_dir/build/export.db
 
-set diff_file [file join $opendb_dir "build" "db-export-import-diff.txt"]
-set diff_rc [dbDatabase_diff $db $new_db $diff_file 4]
-if {$diff_rc} {
-    puts "Database diff failed"
-    exit 1
+if { [db_diff $db $new_db] } {
+  puts "Differences found between exported and imported db"
+  exit 1
 }
-if {[exec cat $opendb_dir/build/db-export-import-diff.txt] != ""} {
-    puts "Differences found between exported and imported db"
-    exit 1
-}
+
 exit 0

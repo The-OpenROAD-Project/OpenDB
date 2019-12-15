@@ -546,8 +546,6 @@ class dbDatabase : public dbObject
     /// Returns true if differences were found.
     ///
     static bool diff( dbDatabase * db0, dbDatabase * db1, FILE * file, int indent_per_level );
-    static bool diff( dbDatabase * db0, dbDatabase * db1, const char *diff_file,
-		      int indent_per_level );
     ///
     /// Translate a database-id back to a pointer.
     ///

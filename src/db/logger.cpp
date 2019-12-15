@@ -202,9 +202,9 @@ int _enableMemCount(ClientData data, Tcl_Interp *interp, int objc, Tcl_Obj *CONS
 #else
 int _enableMemCount(ClientData data, Tcl_Interp *interp, int objc, Tcl_Obj *CONST objv[])
 {
-    struct itimerval it;
-    it.it_interval.tv_sec = 5;
-    it.it_interval.tv_usec = 0;
+    // struct itimerval it;
+    // it.it_interval.tv_sec = 5;
+    // it.it_interval.tv_usec = 0;
 
     int status = 1;
     if ( objc >= 2 )

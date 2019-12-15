@@ -318,7 +318,6 @@ _dbBlock::_dbBlock( _dbDatabase * db, const _dbBlock & block )
       _chip( block._chip ),
       _bbox( block._bbox ),
       _parent( block._parent ),
-      _children_v0( block._children_v0 ),
       _next_block( block._next_block ),
       _gcell_grid( block._gcell_grid ),
       _parent_block( block._parent_block ),
@@ -740,7 +739,6 @@ dbOStream & operator<<( dbOStream & stream, const _dbBlock & block )
     stream << block._chip;
     stream << block._bbox;
     stream << block._parent;
-    stream << block._children_v0;
     stream << block._next_block;
     stream << block._gcell_grid;
     if (block._flags._skip_hier_stream) {
@@ -828,7 +826,6 @@ dbIStream & operator>>( dbIStream & stream, _dbBlock & block )
     stream >> block._chip;
     stream >> block._bbox;
     stream >> block._parent;
-    stream >> block._children_v0;
     stream >> block._next_block;
     stream >> block._gcell_grid;
     stream >> block._parent_block;
@@ -960,9 +957,6 @@ bool _dbBlock::operator==( const _dbBlock & rhs ) const
         return false;
 
     if ( _parent != rhs._parent )
-        return false;
-
-    if ( _children_v0 != rhs._children_v0 )
         return false;
 
     if ( _next_block != rhs._next_block )
@@ -1120,7 +1114,6 @@ void _dbBlock::differences( dbDiff & diff, const char * field, const _dbBlock & 
     DIFF_FIELD(_chip);
     DIFF_FIELD(_bbox);
     DIFF_FIELD(_parent);
-    DIFF_FIELD(_children_v0);
     DIFF_FIELD(_next_block);
     DIFF_OBJECT(_gcell_grid, _gcell_grid_tbl, rhs._gcell_grid_tbl);
     DIFF_FIELD(_parent_block);
@@ -1198,7 +1191,6 @@ void _dbBlock::out( dbDiff & diff, char side, const char * field  ) const
     DIFF_OUT_FIELD(_chip);
     DIFF_OUT_FIELD(_bbox);
     DIFF_OUT_FIELD(_parent);
-    DIFF_OUT_FIELD(_children_v0);
     DIFF_OUT_FIELD(_next_block);
     DIFF_OUT_OBJECT(_gcell_grid, _gcell_grid_tbl);
     DIFF_OUT_FIELD(_parent_block);

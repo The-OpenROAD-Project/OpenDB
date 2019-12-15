@@ -157,7 +157,6 @@ class _dbBlock : public dbObject
     dbId<_dbChip>               _chip;
     dbId<_dbBox>                _bbox;
     dbId<_dbBlock>              _parent;
-    dbId<_dbBlock>              _children_v0;     // obsolete field: ADS_DB_BLOCK_CHILDREN_V1, keep to update data
     dbId<_dbBlock>              _next_block;
     dbId<_dbGCellGrid>          _gcell_grid;
     dbId<_dbBlock>              _parent_block; // Up hierarchy: TWG

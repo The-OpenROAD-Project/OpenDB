@@ -47,15 +47,6 @@ class dbIStream;
 class dbOStream;
 class dbDiff;
 
-//struct _dbCCSegFlags
-//{
-//    uint             _cnt          : 8;
-//    uint             _spef_mark_1  : 1;
-//    uint             _mark         : 1;
-//    uint             _inFileCnt    : 4;
-//    uint             _spare_bits   : 18;
-//};
-
 struct _dbCCSegFlags
 {
     uint             _spef_mark_1  : 1;

@@ -48,22 +48,6 @@ class dbIStream;
 class dbOStream;
 class dbDiff;
 
-//struct _dbCapNodeFlags
-//{
-//    uint             _cnt          : 7;
-//    uint             _internal     : 1;
-//    uint             _iterm        : 1;
-//    uint             _bterm        : 1;
-//    uint             _branch       : 1;
-//    uint             _foreign      : 1;
-//    uint             _childrenCnt  : 3;
-//    uint             _select       : 1;
-//    union {
-//            uint             _spare_bits   : 16;
-//            uint             _sort_index   : 16;
-//    };
-//};
-
 struct _dbCapNodeFlags
 {
     uint             _internal     : 1;

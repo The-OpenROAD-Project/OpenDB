@@ -23,7 +23,10 @@ RUN yum install -y https://centos7.iuscommunity.org/ius-release.rpm && \
     yum update -y && \
     yum install -y python36u python36u-libs python36u-devel python36u-pip
 
+RUN mkdir /.local && chmod 777 /.local && chmod 777 /usr/lib/python3.6/site-packages/
+
 FROM base-dependencies AS builder
+
 
 COPY . /OpenDB
 WORKDIR /OpenDB

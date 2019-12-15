@@ -34,18 +34,3 @@ proc exit_summary {} {
     }
     exit $::failing_checks
 }
-
-proc find_parent_dir { dir } {
-  if { $dir == "." } {
-    return ".."
-  } else {
-    set path [file split $dir]
-    set path_len [llength $path]
-    if { $path_len == 1 } {
-      return "."
-    } else {
-      set path_len2 [expr $path_len - 2]
-      return [eval file join [lrange $path 0 $path_len2]]
-    }
-  }
-}

@@ -171,7 +171,7 @@ class _dbBlock : public dbObject
     int                         _minExtModelIndex;
     int                         _maxExtModelIndex;
     dbVector<dbId<_dbMetrics> > _metrics;
-    dbVector<dbId<_dbBlock> >   _children_v1;
+    dbVector<dbId<_dbBlock> >   _children;
     uint                        _currentCcAdjOrder;
 
     // NON-PERSISTANT-STREAMED-MEMBERS

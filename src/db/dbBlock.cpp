@@ -332,7 +332,7 @@ _dbBlock::_dbBlock( _dbDatabase * db, const _dbBlock & block )
       _minExtModelIndex( block._minExtModelIndex ),
       _maxExtModelIndex( block._maxExtModelIndex ),
       _metrics( block._metrics ),
-      _children_v1( block._children_v1 ),
+      _children( block._children ),
       _currentCcAdjOrder( block._currentCcAdjOrder)
 {
     if ( block._name )
@@ -629,7 +629,7 @@ void _dbBlock::initialize( _dbChip * chip, _dbBlock * parent, const char * name,
         _def_units = parent->_def_units;
         _dbu_per_micron = parent->_dbu_per_micron;
         _parent = parent->getOID();
-        parent->_children_v1.push_back( getOID() );
+        parent->_children.push_back( getOID() );
         _num_ext_corners = parent->_num_ext_corners;
         _corners_per_block = parent->_corners_per_block;
     }
@@ -763,7 +763,7 @@ dbOStream & operator<<( dbOStream & stream, const _dbBlock & block )
 	stream << 0 ;
     }
     else
-        stream << block._children_v1;
+        stream << block._children;
 
     stream << block._currentCcAdjOrder;
     stream << *block._bterm_tbl;
@@ -840,7 +840,7 @@ dbIStream & operator>>( dbIStream & stream, _dbBlock & block )
     stream >> block._minExtModelIndex;
     stream >> block._maxExtModelIndex;
     stream >> block._metrics;
-    stream >> block._children_v1;
+    stream >> block._children;
     stream >> block._currentCcAdjOrder;
     stream >> *block._bterm_tbl;
     stream >> *block._iterm_tbl;
@@ -1001,7 +1001,7 @@ bool _dbBlock::operator==( const _dbBlock & rhs ) const
     if ( _metrics != rhs._metrics )
         return false;
 
-    if ( _children_v1 != rhs._children_v1 )
+    if ( _children != rhs._children )
         return false;
 
     if (_currentCcAdjOrder != rhs._currentCcAdjOrder )
@@ -1133,7 +1133,7 @@ void _dbBlock::differences( dbDiff & diff, const char * field, const _dbBlock & 
     DIFF_FIELD(_minExtModelIndex);
     DIFF_FIELD(_maxExtModelIndex);
     DIFF_VECTOR(_metrics);
-    DIFF_VECTOR(_children_v1);
+    DIFF_VECTOR(_children);
     DIFF_FIELD(_currentCcAdjOrder);
     DIFF_TABLE(_bterm_tbl);
     DIFF_TABLE_NO_DEEP(_iterm_tbl);
@@ -1210,7 +1210,7 @@ void _dbBlock::out( dbDiff & diff, char side, const char * field  ) const
     DIFF_OUT_FIELD(_minExtModelIndex);
     DIFF_OUT_FIELD(_maxExtModelIndex);
     DIFF_OUT_VECTOR(_metrics);
-    DIFF_OUT_VECTOR(_children_v1);
+    DIFF_OUT_VECTOR(_children);
     DIFF_OUT_FIELD(_currentCcAdjOrder);
     DIFF_OUT_TABLE(_bterm_tbl);
     DIFF_OUT_TABLE_NO_DEEP(_iterm_tbl);
@@ -2282,7 +2282,7 @@ dbBlock::duplicate( dbBlock * child_, const char * name_ )
     _dbBlock * dup = chip->_block_tbl->duplicate(child);
 
     // link child-to-parent
-    parent->_children_v1.push_back( dup->getOID() );
+    parent->_children.push_back( dup->getOID() );
     dup->_parent = parent->getOID();
     
     if ( name_ && dup->_name )
@@ -2318,7 +2318,7 @@ dbBlock::destroy( dbBlock * block_ )
     // delete the children of this block
     dbVector<dbId<_dbBlock> >::iterator citr;
 
-    for( citr = block->_children_v1.begin(); citr != block->_children_v1.end(); ++citr )
+    for( citr = block->_children.begin(); citr != block->_children.end(); ++citr )
     {
         _dbBlock * child = chip->_block_tbl->getPtr( *citr );
         destroy( (dbBlock *) child );
@@ -2345,11 +2345,11 @@ void unlink_child_from_parent( _dbBlock * child, _dbBlock * parent )
     
     dbVector<dbId<_dbBlock> >::iterator citr;
 
-    for( citr = parent->_children_v1.begin(); citr != parent->_children_v1.end(); ++citr )
+    for( citr = parent->_children.begin(); citr != parent->_children.end(); ++citr )
     {
         if ( *citr == id )
         {
-            parent->_children_v1.erase(citr);
+            parent->_children.erase(citr);
             break;
         }
     }

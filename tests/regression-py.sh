@@ -4,8 +4,7 @@ BASE_DIR=$(dirname $0)
 SETUP_FILE=$BASE_DIR/../build/src/swig/python/setup.py
 
 export PYTHONPATH=/OpenROAD/build/src/swig/python:$PYTHONPATH
-echo $SETUP_FILE
-echo $PYTHONPATH
+
 python3 $SETUP_FILE install --user
 
 echo "Running tests .."

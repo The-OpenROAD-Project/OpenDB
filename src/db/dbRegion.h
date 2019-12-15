@@ -51,7 +51,7 @@ struct _dbRegionFlags
 {
     dbRegionType::Value  _type : 4;
     uint                 _invalid : 1;
-    uint                 _spare_bits : 28;
+    uint                 _spare_bits : 27;
 };
 
 class _dbRegion : public dbObject

@@ -87,12 +87,8 @@ dbIStream & operator>>( dbIStream & stream, _dbObstruction & obs )
     stream >> *bit_field;
     stream >> obs._inst;
     stream >> obs._bbox;
-
-    if ( stream.getDatabase()->isSchema(ADS_DB_DEF_5_6) )
-    {
-        stream >> obs._min_spacing;
-        stream >> obs._effective_width;
-    }
+    stream >> obs._min_spacing;
+    stream >> obs._effective_width;
 
     return stream;
 }

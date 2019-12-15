@@ -135,7 +135,6 @@ _dbBlock::_dbBlock( _dbDatabase * db )
     _flags._active_pins = 0;
     _flags._skip_hier_stream = 0;
     _flags._mme = 0;
-    //_flags._spare_bits_28 = 0;
     _flags._spare_bits_27 = 0;
     _def_units = 100;
     _dbu_per_micron = 1000;
@@ -734,8 +733,7 @@ dbOStream & operator<<( dbOStream & stream, const _dbBlock & block )
     stream << block._left_bus_delimeter;
     stream << block._right_bus_delimeter;
     stream << block._num_ext_corners;
-    if (stream.getDatabase()->_schema_minor >= ADS_DB_INDEPENDENT_EXT_CORNERS)
-        stream << block._corners_per_block;
+    stream << block._corners_per_block;
     stream << block._corner_name_list;
     stream << block._name;
     stream << block._die_area;
@@ -749,8 +747,8 @@ dbOStream & operator<<( dbOStream & stream, const _dbBlock & block )
 	stream << 0 ;
 	stream << 0 ;
     } else {
-    stream << block._parent_block;
-    stream << block._parent_inst;
+        stream << block._parent_block;
+        stream << block._parent_inst;
     }
     stream << block._net_hash;
     stream << block._inst_hash;
@@ -767,7 +765,7 @@ dbOStream & operator<<( dbOStream & stream, const _dbBlock & block )
 	stream << 0 ;
     }
     else
-    stream << block._children_v1;
+        stream << block._children_v1;
 
     stream << block._currentCcAdjOrder;
     stream << *block._bterm_tbl;
@@ -802,12 +800,12 @@ dbOStream & operator<<( dbOStream & stream, const _dbBlock & block )
     stream << *block._extControl;
 
 //---------------------------------------------------------- stream out properties
-	// TOM
-	dbObjectTable * table = block.getTable();
+    // TOM
+    dbObjectTable * table = block.getTable();
     dbId<_dbProperty> propList = table->getPropList(block.getOID());
 
-	stream << propList;
-	// TOM
+    stream << propList;
+    // TOM
 //---------------------------------------------------------- 
 	
     for (cbitr = block._callbacks.begin(); cbitr !=  block._callbacks.end(); ++cbitr)
@@ -818,27 +816,13 @@ dbOStream & operator<<( dbOStream & stream, const _dbBlock & block )
 dbIStream & operator>>( dbIStream & stream, _dbBlock & block )
 {
     stream >> block._def_units;
-
-    if ( stream.getDatabase()->isSchema(ADS_DB_DEF_5_6) )
-        stream >> block._dbu_per_micron;
-    else
-    {
-        if ( block._def_units <= 1000 )
-            block._dbu_per_micron = 1000;
-        else
-            block._dbu_per_micron = 2000;
-    }
-
+    stream >> block._dbu_per_micron;
     stream >> block._hier_delimeter;
     stream >> block._left_bus_delimeter;
     stream >> block._right_bus_delimeter;
     stream >> block._num_ext_corners;
-    if (stream.getDatabase()->_schema_minor >= ADS_DB_INDEPENDENT_EXT_CORNERS)
-        stream >> block._corners_per_block;
-    else
-        block._corners_per_block = block._num_ext_corners;
-    if (stream.getDatabase()->isSchema(ADS_DB_EXT_CORNERS_SCHEMA))
-        stream >> block._corner_name_list;
+    stream >> block._corners_per_block;
+    stream >> block._corner_name_list;
     stream >> block._name;
     stream >> block._die_area;
     stream >> block._chip;
@@ -847,13 +831,8 @@ dbIStream & operator>>( dbIStream & stream, _dbBlock & block )
     stream >> block._children_v0;
     stream >> block._next_block;
     stream >> block._gcell_grid;
-
-    if ( stream.getDatabase()->isSchema(ADS_DB_HIER_INST_SCHEMA) )
-    {
-        stream >> block._parent_block;
-        stream >> block._parent_inst;
-    }
-
+    stream >> block._parent_block;
+    stream >> block._parent_inst;
     stream >> block._net_hash;
     stream >> block._inst_hash;
     stream >> block._inst_hdr_hash;
@@ -864,39 +843,8 @@ dbIStream & operator>>( dbIStream & stream, _dbBlock & block )
     stream >> block._minExtModelIndex;
     stream >> block._maxExtModelIndex;
     stream >> block._metrics;
-
-    if ( stream.getDatabase()->isSchema(ADS_DB_BLOCK_CHILDREN_V1) )
-        stream >> block._children_v1;
-
-    if ( stream.getDatabase()->isSchema(ADS_DB_ADJUSTCC) )
-        stream >> block._currentCcAdjOrder;
-    else
-        block._currentCcAdjOrder = 0;
-
-    if ( stream.getDatabase()->isSchema(ADS_DB_HIER_INST_SCHEMA) )
-    {
-        if ( stream.getDatabase()->isSchema(ADS_DB_TRANSFORM_FIX2) )
-        {
-        }
-        else if ( stream.getDatabase()->isSchema(ADS_DB_TRANSFORM_FIX) )
-        {
-            dbTransform t;
-            stream >> t;
-        }
-        else
-        {
-            // This is data is from the old _dbBlockTransform (this transform was never used)...
-            // discard it...
-            dbVector<adsPoint>     origin_stack;
-            dbVector<OldTransform> transform_stack;
-            stream >> origin_stack;
-            stream >> transform_stack;
-        }
-    }
-    
-    if ( stream.getDatabase()->isLessThanSchema(ADS_DB_HIER_INST_SCHEMA) )
-        block._bterm_pins = new std::vector<_dbBTermPin>();
-
+    stream >> block._children_v1;
+    stream >> block._currentCcAdjOrder;
     stream >> *block._bterm_tbl;
     stream >> *block._iterm_tbl;
     stream >> *block._net_tbl;
@@ -913,28 +861,13 @@ dbIStream & operator>>( dbIStream & stream, _dbBlock & block )
     stream >> *block._sbox_tbl;
     stream >> *block._row_tbl;
     stream >> *block._metrics_tbl;
-
-    if ( stream.getDatabase()->isSchema(ADS_DB_REGION_SCHEMA) )
-        stream >> *block._region_tbl;
-
-    if ( stream.getDatabase()->isSchema(ADS_DB_HIER_INST_SCHEMA) )
-    {
-        stream >> *block._hier_tbl;
-        stream >> *block._bpin_tbl;
-    }
-
-    if ( stream.getDatabase()->isSchema(ADS_DB_DEF_5_6) )
-    {
-        stream >> *block._non_default_rule_tbl;
-        stream >> *block._layer_rule_tbl;
-    }
-
-    if ( stream.getDatabase()->isSchema(ADS_DB_PROPERTIES) )
-    {
-        stream >> *block._prop_tbl;
-        stream >> *block._name_cache;
-    }
-
+    stream >> *block._region_tbl;
+    stream >> *block._hier_tbl;
+    stream >> *block._bpin_tbl;
+    stream >> *block._non_default_rule_tbl;
+    stream >> *block._layer_rule_tbl;
+    stream >> *block._prop_tbl;
+    stream >> *block._name_cache;
     stream >> *block._r_val_tbl;
     stream >> *block._c_val_tbl;
     stream >> *block._cc_val_tbl;
@@ -943,61 +876,20 @@ dbIStream & operator>>( dbIStream & stream, _dbBlock & block )
     stream >> *block._cc_seg_tbl;
     stream >> *block._extControl;
 
-	//---------------------------------------------------------- stream in properties
-	// TOM
-    if ( stream.getDatabase()->isSchema(ADS_DB_BLOCK_STREAM_PROPERTIES) )
-	{
-		dbObjectTable * table = block.getTable();
-		dbId<_dbProperty> oldList = table->getPropList(block.getOID());
-		dbId<_dbProperty> propList;
-		stream >> propList;
-		
-		if ( propList != 0 )
-			table->setPropList(block.getOID(), propList);
-        else if ( oldList != 0 )
-			table->setPropList(block.getOID(), 0);
-	}
-	// TOM
-	//-------------------------------------------------------------------------------
-
-    // Create bpins
-    if ( stream.getDatabase()->isLessThanSchema(ADS_DB_HIER_INST_SCHEMA) )
-    {
-        std::vector<_dbBTermPin>::iterator itr;
-
-        for( itr = block._bterm_pins->begin(); itr != block._bterm_pins->end(); ++itr )
-        {
-            _dbBTermPin & bp = *itr;
-            dbBPin * bpin = dbBPin::create((dbBTerm *)bp._bterm);
-            bpin->setPlacementStatus( dbPlacementStatus(bp._status) );
-            _dbBox * box = block._box_tbl->getPtr( bp._pin );
-            adsRect r = box->_rect;
-            adsPoint offset(bp._x, bp._y);
-            dbOrientType orient(bp._orient);
-            dbTransform transform( orient, offset );
-            transform.apply(r);
-            dbBox::create(bpin, (dbTechLayer *) box->getTechLayer(), r.xMin(), r.yMin(), r.xMax(), r.yMax());
-            block._box_tbl->destroy( box );
-        }
-
-        delete block._bterm_pins;
-    }
-
-    if ( stream.getDatabase()->isLessThanSchema(ADS_DB_TRANSFORM_FIX) )
-    {
-        dbSet<dbInst> insts( &block, block._inst_tbl );
-        dbSet<dbInst>::iterator itr;
-
-        for( itr = insts.begin(); itr != insts.end(); ++itr )
-        {
-            dbInst * inst = *itr;
-            int x, y;
-            inst->getOrigin(x,y);
-            inst->setLocation(x,y);
-        }
-    }
-
+    //---------------------------------------------------------- stream in properties
+    // TOM
+    dbObjectTable * table = block.getTable();
+    dbId<_dbProperty> oldList = table->getPropList(block.getOID());
+    dbId<_dbProperty> propList;
+    stream >> propList;
     
+    if ( propList != 0 )
+        table->setPropList(block.getOID(), propList);
+    else if ( oldList != 0 )
+        table->setPropList(block.getOID(), 0);
+    // TOM
+    //-------------------------------------------------------------------------------
+
     return stream;
 }
 

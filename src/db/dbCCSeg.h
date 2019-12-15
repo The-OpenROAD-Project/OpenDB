@@ -140,8 +140,6 @@ inline dbIStream & operator>>( dbIStream & stream, _dbCCSeg & seg )
 {
     uint *bit_field = (uint *) &seg._flags;
     stream >> *bit_field;
-    if (!stream.getDatabase()->isSchema(ADS_DB_INDEPENDENT_EXT_CORNERS))
-        *bit_field = (*bit_field)>>8;
     stream >> seg._cap_node[0];
     stream >> seg._cap_node[1];
     stream >> seg._next[0];

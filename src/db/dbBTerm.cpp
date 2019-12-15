@@ -245,54 +245,20 @@ dbOStream & operator<<( dbOStream & stream, const _dbBTerm & bterm )
 
 dbIStream & operator>>( dbIStream & stream, _dbBTerm & bterm )
 {
-    struct _dbBTermPin bp;
-    
     uint * bit_field = (uint *) &bterm._flags;
     stream >> *bit_field;
     stream >> bterm._ext_id;
-
-    if ( stream.getDatabase()->isLessThanSchema(ADS_DB_HIER_INST_SCHEMA) )
-    {
-        bp._bterm = &bterm;
-        bp._status = (dbPlacementStatus::Value) bterm._flags._status;
-        bp._orient = (dbOrientType::Value) bterm._flags._orient;
-        stream >> bp._x;
-        stream >> bp._y;
-        bterm._flags._status = 0;
-        bterm._flags._orient = 0;
-    }
-    
     stream >> bterm._name;
     stream >> bterm._next_entry;
     stream >> bterm._net;
-
-    if ( stream.getDatabase()->isLessThanSchema(ADS_DB_HIER_INST_SCHEMA) )
-    {
-        stream >> bp._pin;
-    }
-    
     stream >> bterm._next_bterm;
     stream >> bterm._prev_bterm;
-
-    if ( stream.getDatabase()->isSchema(ADS_DB_HIER_INST_SCHEMA) )
-    {
-        stream >> bterm._parent_block;
-        stream >> bterm._parent_iterm;
-        stream >> bterm._bpins;
-    }
-
-    if ( stream.getDatabase()->isSchema(ADS_DB_DEF_5_6) )
-    {
-        stream >> bterm._ground_pin;
-        stream >> bterm._supply_pin;
-    }
+    stream >> bterm._parent_block;
+    stream >> bterm._parent_iterm;
+    stream >> bterm._bpins;
+    stream >> bterm._ground_pin;
+    stream >> bterm._supply_pin;
     
-    if ( stream.getDatabase()->isLessThanSchema(ADS_DB_HIER_INST_SCHEMA) )
-    {
-        _dbBlock * block = (_dbBlock *) bterm.getOwner();
-        block->_bterm_pins->push_back(bp);
-    }
-        
     return stream;
 }
 

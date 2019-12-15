@@ -78,7 +78,6 @@ struct _dbCapNodeFlags
             uint             _sort_index   : 20;
     };
     uint             _name         : 1;
-    //uint             _dest         : 1;
 };
 
 class _dbCapNode : public dbObject
@@ -162,14 +161,6 @@ inline dbIStream & operator>>( dbIStream & stream, _dbCapNode & seg )
 {
     uint *bit_field = (uint *) &seg._flags;
     stream >> *bit_field;
-    if (!stream.getDatabase()->isSchema(ADS_DB_INDEPENDENT_EXT_CORNERS))
-        *bit_field = (*bit_field)>>7;
-    if (!stream.getDatabase()->isSchema(ADS_DB_5BITCAPNODECHILDRENCNT))
-    {
-        seg._flags._select = (seg._flags._childrenCnt % 16) >> 3;
-        seg._flags._childrenCnt = seg._flags._childrenCnt % 8;
-    }
-
     stream >> seg._node_num;
     stream >> seg._net;
     stream >> seg._next;

@@ -48,16 +48,6 @@ class dbIStream;
 class dbOStream;
 class dbDiff;
 
-//struct _dbRSegFlags
-//{
-//    uint             _cnt          : 8;
-//    uint             _path_dir     : 1; // 0 == low to hi coord
-//    uint             _allocated_cap: 1; // 0, cap points to target node cap
-//                                        // 1, cap is allocated
-//    uint             _update_cap: 1;^M
-//    uint             _spare_bits_21: 21;^M
-//};
-
 struct _dbRSegFlags
 {
     uint             _path_dir     : 1; // 0 == low to hi coord
@@ -150,13 +140,8 @@ inline dbOStream & operator<<( dbOStream & stream, const _dbRSeg & seg )
     stream << *bit_field;
     stream << seg._source;
     stream << seg._target;
-    if (stream.getDatabase()->isLessThanSchema(ADS_DB_EXT_RSEG_COORDS))
-        stream << seg._shape_id;
-    else
-    {
-        stream << seg._xcoord;
-        stream << seg._ycoord;
-    }
+    stream << seg._xcoord;
+    stream << seg._ycoord;
     stream << seg._next;
     return stream;
 }
@@ -165,17 +150,10 @@ inline dbIStream & operator>>( dbIStream & stream, _dbRSeg & seg )
 {
     uint *bit_field = (uint *) &seg._flags;
     stream >> *bit_field;
-    if (!stream.getDatabase()->isSchema(ADS_DB_INDEPENDENT_EXT_CORNERS))
-        *bit_field = (*bit_field)>>8;
     stream >> seg._source;
     stream >> seg._target;
-    if (stream.getDatabase()->isLessThanSchema(ADS_DB_EXT_RSEG_COORDS))
-        stream >> seg._shape_id;
-    else
-    {
-        stream >> seg._xcoord;
-        stream >> seg._ycoord;
-    }
+    stream >> seg._xcoord;
+    stream >> seg._ycoord;
     stream >> seg._next;
     return stream;
 }

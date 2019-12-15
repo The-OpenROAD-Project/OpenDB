@@ -172,27 +172,10 @@ dbIStream & operator>>( dbIStream & stream, _dbNet & net )
     stream >> net._cap_nodes;
     stream >> net._r_segs;
     stream >> net._non_default_rule;
-
-    if ( stream.getDatabase()->isSchema(ADS_DB_DEF_ATTRS) )
-    {
-        stream >> net._weight;
-        stream >> net._xtalk;
-    }
-    else
-    {
-        net._weight = 1;
-        net._xtalk = 0;
-    }
-    if ( stream.getDatabase()->isSchema(ADS_DB_ADJUSTCC) )
-    {
-        stream >> net._ccAdjustFactor;
-        stream >> net._ccAdjustOrder;
-    }
-    else
-    {
-        net._ccAdjustFactor = -1;
-        net._ccAdjustOrder = 0;
-    }
+    stream >> net._weight;
+    stream >> net._xtalk;
+    stream >> net._ccAdjustFactor;
+    stream >> net._ccAdjustOrder;
         
     return stream;
 }

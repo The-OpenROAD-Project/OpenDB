@@ -43,7 +43,7 @@ namespace odb {
 //
 // GOOD:
 //
-//    if ( db->isSchema(ADS_DB_REGION_SCHEMA) )
+//    if ( db->isSchema(db_schema_initial) )
 //    {
 //     ....
 //    }
@@ -61,26 +61,9 @@ namespace odb {
 //
 // Schema Revisions
 //
-#define ADS_DB_SCHEMA_MAJOR                 0  // Not used...
-#define ADS_DB_REGION_SCHEMA                33
-#define ADS_DB_HIER_REGION_SCHEMA           34
-#define ADS_DB_HIER_INST_SCHEMA             35
-#define ADS_DB_EXT_CORNERS_SCHEMA           36
-#define ADS_DB_EXT_CORNERS_SCHEMA           36
-#define ADS_DB_EXT_CONTROL_CORNERS_SCHEMA   37
-#define ADS_DB_DEF_5_6                      38
-#define ADS_DB_DEF_ATTRS                    39
-#define ADS_DB_EXT_RSEG_COORDS              40
-#define ADS_DB_PROPERTIES                   41
-#define ADS_DB_TRANSFORM_FIX                42
-#define ADS_DB_TRANSFORM_FIX2               43
-#define ADS_DB_BLOCK_STREAM_PROPERTIES      45
-#define ADS_DB_BLOCK_CHILDREN_V1            46
-#define ADS_DB_INDEPENDENT_EXT_CORNERS      48
-#define ADS_DB_ADJUSTCC                     49
-#define ADS_DB_5BITCAPNODECHILDRENCNT       50
-#define ADS_DB_EXT_CONTROL_STAMPWIRE        51
-#define ADS_DB_SCHEMA_MINOR                 51 // Current revision number
+const uint db_schema_major   =  0;  // Not used...
+const uint db_schema_initial = 51;
+const uint db_schema_minor   = 51; // Current revision number
 
 template <class T> class dbTable;
 class _dbProperty;

@@ -44,11 +44,10 @@ using namespace odb;
 %include "dbenums.i"
 %include "parserenums.i"
 %include "dbtypes.i"
-
+%include "dbdiff.i"
 
 %include "geom.h"
 %include "db.h"
-
 
 %include "lefin.h"
 %include "lefout.h"

@@ -71,9 +71,24 @@ bool _dbTechLayer::operator==( const _dbTechLayer & rhs ) const
     if( _flags._has_alias != rhs._flags._has_alias )
         return false;
 
-    if( _pitch != rhs._pitch )
+    if( _flags._has_xy_pitch != rhs._flags._has_xy_pitch )
+        return false;
+
+    if( _flags._has_xy_offset != rhs._flags._has_xy_offset )
+        return false;
+
+    if( _pitch_x != rhs._pitch_x )
+        return false;
+
+    if( _pitch_y != rhs._pitch_y )
+        return false;
+
+    if( _offset_x != rhs._offset_x )
         return false;
     
+    if( _offset_y != rhs._offset_y )
+        return false;
+
     if( _width != rhs._width )
         return false;
     
@@ -182,7 +197,12 @@ void _dbTechLayer::differences( dbDiff & diff, const char * field, const _dbTech
     DIFF_FIELD(_flags._has_area);
     DIFF_FIELD(_flags._has_protrusion);
     DIFF_FIELD(_flags._has_alias);
-    DIFF_FIELD(_pitch);
+    DIFF_FIELD(_flags._has_xy_pitch);
+    DIFF_FIELD(_flags._has_xy_offset);
+    DIFF_FIELD(_pitch_x);
+    DIFF_FIELD(_pitch_y);
+    DIFF_FIELD(_offset_x);
+    DIFF_FIELD(_offset_y);
     DIFF_FIELD(_width);
     DIFF_FIELD(_spacing);
     DIFF_FIELD(_resistance);
@@ -225,7 +245,12 @@ void _dbTechLayer::out( dbDiff & diff, char side, const char * field ) const
     DIFF_OUT_FIELD(_flags._has_area);
     DIFF_OUT_FIELD(_flags._has_protrusion);
     DIFF_OUT_FIELD(_flags._has_alias);
-    DIFF_OUT_FIELD(_pitch);
+    DIFF_OUT_FIELD(_flags._has_xy_pitch);
+    DIFF_OUT_FIELD(_flags._has_xy_offset);
+    DIFF_OUT_FIELD(_pitch_x);
+    DIFF_OUT_FIELD(_pitch_y);
+    DIFF_OUT_FIELD(_offset_x);
+    DIFF_OUT_FIELD(_offset_y);
     DIFF_OUT_FIELD(_width);
     DIFF_OUT_FIELD(_spacing);
     DIFF_OUT_FIELD(_resistance);
@@ -271,8 +296,11 @@ _dbTechLayer::_dbTechLayer( _dbDatabase * db )
     _flags._has_min_step = _flags._has_max_width = 0;
     _flags._has_protrusion = 0;
     _flags._has_alias = 0;
+    _flags._has_xy_pitch = 0;
+    _flags._has_xy_offset = 0;
     _flags._spare_bits = 0;
-    _pitch = 0;
+    _pitch_x = _pitch_y = 0;
+    _offset_x = _offset_y = 0;
     _width = 0;
     _spacing  = 0;
     _resistance = 0.0;
@@ -306,7 +334,10 @@ _dbTechLayer::_dbTechLayer( _dbDatabase * db )
 
 _dbTechLayer::_dbTechLayer( _dbDatabase * db, const _dbTechLayer & l )
         : _flags(l._flags),
-          _pitch(l._pitch),
+          _pitch_x(l._pitch_x),
+          _pitch_y(l._pitch_y),
+          _offset_x(l._offset_x),
+          _offset_y(l._offset_y),
           _width(l._width),
           _spacing(l._spacing),
           _resistance(l._resistance),
@@ -377,7 +408,10 @@ dbOStream & operator<<( dbOStream & stream, const _dbTechLayer & layer )
 {
     uint * bit_field = (uint *) &layer._flags;
     stream << *bit_field;
-    stream << layer._pitch;
+    stream << layer._pitch_x;
+    stream << layer._pitch_y;
+    stream << layer._offset_x;
+    stream << layer._offset_y;
     stream << layer._width;
     stream << layer._spacing;
     stream << layer._resistance;
@@ -418,7 +452,10 @@ dbIStream & operator>>( dbIStream & stream, _dbTechLayer & layer )
   //uint tparea;
     uint * bit_field = (uint *) &layer._flags;
     stream >> *bit_field;
-    stream >> layer._pitch;
+    stream >> layer._pitch_x;
+    stream >> layer._pitch_y;
+    stream >> layer._offset_x;
+    stream >> layer._offset_y;
     stream >> layer._width;
     stream >> layer._spacing;
     stream >> layer._resistance;
@@ -1140,19 +1177,94 @@ dbTechLayer::setProtrusion(uint pt_width, uint pt_length, uint pt_from_width)
   layer->_pt._from_width = pt_from_width;
 }
 
-
 int
 dbTechLayer::getPitch()
 {
     _dbTechLayer * layer = (_dbTechLayer *) this;
-    return layer->_pitch;
+    return layer->_pitch_x;
+}
+
+int
+dbTechLayer::getPitchX()
+{
+    _dbTechLayer * layer = (_dbTechLayer *) this;
+    return layer->_pitch_x;
+}
+
+int
+dbTechLayer::getPitchY()
+{
+    _dbTechLayer * layer = (_dbTechLayer *) this;
+    return layer->_pitch_y;
 }
 
 void
 dbTechLayer::setPitch( int pitch )
 {
     _dbTechLayer * layer = (_dbTechLayer *) this;
-    layer->_pitch = pitch;
+    layer->_pitch_x = layer->_pitch_y = pitch;
+    layer->_flags._has_xy_pitch = false;
+}
+
+void
+dbTechLayer::setPitchXY( int pitch_x, int pitch_y )
+{
+    _dbTechLayer * layer = (_dbTechLayer *) this;
+    layer->_pitch_x = pitch_x;
+    layer->_pitch_y = pitch_y;
+    layer->_flags._has_xy_pitch = true;
+}
+
+bool
+dbTechLayer::hasXYPitch()
+{
+    _dbTechLayer * layer = (_dbTechLayer *) this;
+    return layer->_flags._has_xy_pitch;
+}
+
+int
+dbTechLayer::getOffset()
+{
+    _dbTechLayer * layer = (_dbTechLayer *) this;
+    return layer->_offset_x;
+}
+
+int
+dbTechLayer::getOffsetX()
+{
+    _dbTechLayer * layer = (_dbTechLayer *) this;
+    return layer->_offset_x;
+}
+
+int
+dbTechLayer::getOffsetY()
+{
+    _dbTechLayer * layer = (_dbTechLayer *) this;
+    return layer->_offset_y;
+}
+
+void
+dbTechLayer::setOffset( int offset )
+{
+    _dbTechLayer * layer = (_dbTechLayer *) this;
+    layer->_offset_x = layer->_offset_y = offset;
+    layer->_flags._has_xy_offset = false;
+}
+
+void
+dbTechLayer::setOffsetXY( int offset_x, int offset_y )
+{
+    _dbTechLayer * layer = (_dbTechLayer *) this;
+    layer->_offset_x = offset_x;
+    layer->_offset_y = offset_y;
+    layer->_flags._has_xy_offset = true;
+}
+
+bool
+dbTechLayer::hasXYOffset()
+{
+    _dbTechLayer * layer = (_dbTechLayer *) this;
+    return layer->_flags._has_xy_offset;
 }
 
 dbTechLayerDir

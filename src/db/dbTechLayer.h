@@ -67,10 +67,15 @@ struct _LyFlags
     uint                   _has_area         : 1;
     uint                   _has_protrusion   : 1;
     uint                   _has_alias   : 1;
-    uint                   _spare_bits  : 18;
+    uint                   _has_xy_pitch : 1;
+    uint                   _has_xy_offset: 1;
+    uint                   _spare_bits  : 16;
 } _flags;
 
-    uint                   _pitch;
+    uint                   _pitch_x;
+    uint                   _pitch_y;
+    uint                   _offset_x;
+    uint                   _offset_y;
     uint                   _width;
     uint                   _spacing;
     double                 _resistance;

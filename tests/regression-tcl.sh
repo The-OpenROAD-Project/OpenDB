@@ -6,8 +6,8 @@ APP=$BASE_DIR/../build/src/swig/tcl/opendbtcl
 echo $BASE_DIR
 echo $APP
 
-echo "Running tests .."
-echo "================"
+echo "Running tests.."
+echo "================="
 
 echo "[1] Importing opendbtcl package"
 $APP $BASE_DIR/tcl/01-import_package_test.tcl

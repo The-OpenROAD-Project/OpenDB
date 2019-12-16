@@ -76,7 +76,12 @@ endif()
 ################################# SWIG #####################################
 ############################################################################
 
+set(SWIG_REQUIRED_VERSION "2.0")
 find_package(SWIG REQUIRED)
+if(${SWIG_VERSION} VERSION_LESS ${SWIG_REQUIRED_VERSION})
+  message(FATAL_ERROR "SWIG version ${SWIG_VERSION} must be at least ${SWIG_REQUIRED_VERSION}")
+endif()
+
 include(${SWIG_USE_FILE})
 
 option(BUILD_PYTHON "Build Python SWIG module" ON)

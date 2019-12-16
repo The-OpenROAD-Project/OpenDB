@@ -5753,7 +5753,18 @@ class dbTechLayer : public dbObject
     /// Get/Set the minimum feature size (pitch).
     ///
     int getPitch();
+    int getPitchX();
+    int getPitchY();
     void setPitch( int pitch );
+    void setPitchXY( int pitch_x, int pitch_y );
+    bool hasXYPitch();
+
+    int getOffset();
+    int getOffsetX();
+    int getOffsetY();
+    void setOffset( int pitch );
+    void setOffsetXY( int pitch_x, int pitch_y );
+    bool hasXYOffset();
 
     ///
     ///  Get THICKNESS in DB units, and return indicator of existence.

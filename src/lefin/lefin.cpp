@@ -577,17 +577,16 @@ void lefin::layer( lefiLayer * layer )
 
     dbTechLayerType type( dbTechLayerType::ROUTING );
 
-    if (layer->hasType()) {
+    if (layer->hasType())
         type = dbTechLayerType( layer->type() );
-    }
-    
-	if (_ignore_non_routing_layers && (
-		(type!=dbTechLayerType::ROUTING) &&
-		(type!=dbTechLayerType::CUT) &&
-		(type!=dbTechLayerType::MASTERSLICE) &&
-		(type!=dbTechLayerType::OVERLAP))
-		){
-		
+
+
+    if (_ignore_non_routing_layers && (
+        (type!=dbTechLayerType::ROUTING) &&
+        (type!=dbTechLayerType::CUT) &&
+        (type!=dbTechLayerType::MASTERSLICE) &&
+        (type!=dbTechLayerType::OVERLAP))
+    ){
         notice(0,"Skipping LAYER (%s) ; Non Routing or Cut type\n", layer->name() );
 		return;
 	}

@@ -7,7 +7,7 @@ echo $BASE_DIR
 echo $APP
 
 echo "Running tests.."
-echo "================"
+echo "================="
 
 echo "[1] Importing opendbtcl package"
 $APP $BASE_DIR/tcl/01-import_package_test.tcl

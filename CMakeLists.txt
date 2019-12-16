@@ -11,8 +11,7 @@ endif()
 
 # Setting up OpenDB project
 project(OpenDB VERSION 0.0.1
-                DESCRIPTION "Database and Tool Framework for EDA"
-                LANGUAGES C CXX)
+  LANGUAGES CXX)
 
 # Configure build version
 configure_file (

@@ -414,15 +414,20 @@ dbBTerm::connect(dbNet * net_)
     _dbBTerm * bterm = (_dbBTerm *) this;
     _dbNet * net = (_dbNet *) net_;
     _dbBlock * block = (_dbBlock *) net->getOwner();
+    if (_net)
+      bterm->disconnectNet(bterm, block);
     bterm->connectNet(net, block);
 }
 
 void
 dbBTerm::disconnect()
 {
-    _dbBTerm * bterm = (_dbBTerm *) this;
-    _dbBlock * block = (_dbBlock *) bterm->getOwner();
-    bterm->disconnectNet(bterm, block);
+    if (_net)
+    {
+        _dbBTerm* bterm = (_dbBTerm*)this;
+        _dbBlock* block = (_dbBlock*)bterm->getOwner();
+        bterm->disconnectNet(bterm, block);
+    }
 }
 
 dbSet<dbBPin>

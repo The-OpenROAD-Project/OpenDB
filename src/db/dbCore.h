@@ -101,10 +101,10 @@ class dbObjectTable
 };
 
 ///////////////////////////////////////////////////////////////
-/// _dbObject definition - free-list object
+/// _dbFreeObject definition - free-list object
 ///////////////////////////////////////////////////////////////
 
-class _dbObject : public dbObject
+class _dbFreeObject : public dbObject
 {
   public:
     uint _next;
@@ -144,7 +144,7 @@ inline dbObjectTable::dbObjectTable( _dbDatabase * db, dbObject * owner,
     _type = type;
 
     // Objects must be greater than 16-bytes
-    assert( size >= sizeof(_dbObject) );
+    assert( size >= sizeof(_dbFreeObject) );
     _obj_size = size;
 }
 

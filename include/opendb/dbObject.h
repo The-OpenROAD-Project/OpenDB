@@ -36,10 +36,6 @@
 
 namespace odb {
 
-#ifndef DB_PRIVATE
-#define DB_PRIVATE public
-#endif
-
 ///
 /// When adding a new database object, you must add a dbObjectType enumerator and
 /// edit dbObject.cpp and assign an unique "character" code for its database-name.

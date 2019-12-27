@@ -402,10 +402,15 @@ uint dbBTerm::getExtId()
 dbNet *
 dbBTerm::getNet()
 {
-    _dbBTerm * bterm = (_dbBTerm *) this;
-    _dbBlock * block = (_dbBlock *) getOwner();
-    _dbNet * net = block->_net_tbl->getPtr(bterm->_net);
-    return (dbNet *) net;
+    _dbBTerm* bterm = (_dbBTerm*)this;
+    if (bterm->_net)
+    {
+      _dbBlock* block = (_dbBlock*)getOwner();
+      _dbNet* net = block->_net_tbl->getPtr(bterm->_net);
+      return (dbNet*)net;
+    }
+    else
+      return nullptr;
 }
 
 void
@@ -414,7 +419,7 @@ dbBTerm::connect(dbNet * net_)
     _dbBTerm * bterm = (_dbBTerm *) this;
     _dbNet * net = (_dbNet *) net_;
     _dbBlock * block = (_dbBlock *) net->getOwner();
-    if (_net)
+    if (bterm->_net)
       bterm->disconnectNet(bterm, block);
     bterm->connectNet(net, block);
 }
@@ -422,11 +427,11 @@ dbBTerm::connect(dbNet * net_)
 void
 dbBTerm::disconnect()
 {
-    if (_net)
+    _dbBTerm* bterm = (_dbBTerm*)this;
+    if (bterm->_net)
     {
-        _dbBTerm* bterm = (_dbBTerm*)this;
-        _dbBlock* block = (_dbBlock*)bterm->getOwner();
-        bterm->disconnectNet(bterm, block);
+      _dbBlock* block = (_dbBlock*)bterm->getOwner();
+      bterm->disconnectNet(bterm, block);
     }
 }
 

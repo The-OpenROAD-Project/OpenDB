@@ -87,6 +87,10 @@ class _dbBTerm : public dbObject
     _dbBTerm( _dbDatabase *, const _dbBTerm & b );
     ~_dbBTerm();
 
+    void connectNet( _dbNet * net,
+		     _dbBlock * block);
+    void disconnectNet( _dbBTerm * bterm,
+			_dbBlock * block );
     bool operator==( const _dbBTerm & rhs ) const;
     bool operator!=( const _dbBTerm & rhs ) const { return ! operator==(rhs); }
     bool operator<(const _dbBTerm & rhs ) const;

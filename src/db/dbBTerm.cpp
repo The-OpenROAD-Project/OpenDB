@@ -402,10 +402,37 @@ uint dbBTerm::getExtId()
 dbNet *
 dbBTerm::getNet()
 {
+    _dbBTerm* bterm = (_dbBTerm*)this;
+    if (bterm->_net)
+    {
+      _dbBlock* block = (_dbBlock*)getOwner();
+      _dbNet* net = block->_net_tbl->getPtr(bterm->_net);
+      return (dbNet*)net;
+    }
+    else
+      return nullptr;
+}
+
+void
+dbBTerm::connect(dbNet * net_)
+{
     _dbBTerm * bterm = (_dbBTerm *) this;
-    _dbBlock * block = (_dbBlock *) getOwner();
-    _dbNet * net = block->_net_tbl->getPtr(bterm->_net);
-    return (dbNet *) net;
+    _dbNet * net = (_dbNet *) net_;
+    _dbBlock * block = (_dbBlock *) net->getOwner();
+    if (bterm->_net)
+      bterm->disconnectNet(bterm, block);
+    bterm->connectNet(net, block);
+}
+
+void
+dbBTerm::disconnect()
+{
+    _dbBTerm* bterm = (_dbBTerm*)this;
+    if (bterm->_net)
+    {
+      _dbBlock* block = (_dbBlock*)bterm->getOwner();
+      bterm->disconnectNet(bterm, block);
+    }
 }
 
 dbSet<dbBPin>
@@ -555,18 +582,23 @@ dbBTerm::create( dbNet * net_, const char * name )
     ZALLOCATED(bterm->_name);
     block->_bterm_hash.insert(bterm);
 
-    bterm->_net = net->getOID();
+    bterm->connectNet(net, block);
 
+    return (dbBTerm *) bterm;
+}
+
+void _dbBTerm::connectNet( _dbNet * net ,
+			   _dbBlock * block)
+{
+    _net = net->getOID();
     if ( net->_bterms != 0 )
     {
         _dbBTerm * tail = block->_bterm_tbl->getPtr( net->_bterms );
-        bterm->_next_bterm = net->_bterms;
-        bterm->_prev_bterm = 0;
-        tail->_prev_bterm = bterm->getOID();
+        _next_bterm = net->_bterms;
+        _prev_bterm = 0;
+        tail->_prev_bterm = getOID();
     }
-
-    net->_bterms = bterm->getOID();
-    return (dbBTerm *) bterm;
+    net->_bterms = getOID();
 }
 
 void dbBTerm::destroy( dbBTerm * bterm_ )
@@ -586,6 +618,16 @@ void dbBTerm::destroy( dbBTerm * bterm_ )
     // remove from hash-table
     block->_bterm_hash.remove( bterm );
 
+    bterm->disconnectNet(bterm, block);
+
+    dbProperty::destroyProperties(bterm);
+    block->_bterm_tbl->destroy(bterm);
+}
+
+void
+_dbBTerm::disconnectNet( _dbBTerm * bterm,
+			 _dbBlock * block )
+{
     // unlink bterm from the net
     _dbNet * net = block->_net_tbl->getPtr(bterm->_net);
     uint id = bterm->getOID();
@@ -614,9 +656,7 @@ void dbBTerm::destroy( dbBTerm * bterm_ )
             prev->_next_bterm = bterm->_next_bterm;
         }
     }
-
-    dbProperty::destroyProperties(bterm);
-    block->_bterm_tbl->destroy(bterm);
+    _net = 0;
 }
 
 dbSet<dbBTerm>::iterator dbBTerm::destroy( dbSet<dbBTerm>::iterator & itr )

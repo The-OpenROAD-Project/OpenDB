@@ -1617,6 +1617,14 @@ class dbBTerm : public dbObject
     ///
     dbNet * getNet();
 
+    /// Disconnect the block-terminal from it's net.
+    ///
+    void disconnect();
+
+    /// Connect the block-terminal to net.
+    ///
+    void connect(dbNet * net);
+
     ///
     /// Get the block of this block-terminal.
     ///

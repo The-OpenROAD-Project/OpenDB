@@ -30,6 +30,8 @@
 // OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 #include <stdio.h>
+#include <string>
+#include <set>
 #include "db.h"
 #include "dbMap.h"
 #include "defout_impl.h"
@@ -1256,40 +1258,32 @@ void defout_impl::writeSNet( dbNet * net )
     
     int i = 0;
 
-    char *wildName = NULL;
-    if ( (_use_net_inst_ids == false ) && net->isWildConnected() )
-    {
-        if ( iterms.begin() != iterms.end() )
-        {
-            dbSet<dbITerm>::iterator iterm_itr = iterms.begin();
-            dbITerm * iterm = *iterm_itr;
-            dbMTerm * mterm = iterm->getMTerm();
-            wildName = (char *)mterm->getConstName();
-            fprintf(_out, " ( * %s )", wildName );
-            ++i;
-        }
-    }
     char ttname[dbObject::max_name_length];
-//    else
-    if (1)
+    dbSet<dbITerm>::iterator iterm_itr;
+    std::set<std::string> wild_names;
+    for( iterm_itr = iterms.begin(); iterm_itr != iterms.end(); ++iterm_itr )
     {
-        dbSet<dbITerm>::iterator iterm_itr;
+        dbITerm* iterm = *iterm_itr;
 
-        for( iterm_itr = iterms.begin(); iterm_itr != iterms.end(); ++iterm_itr )
+        if (!iterm->isSpecial())
+            continue;
+
+        dbInst*  inst  = iterm->getInst();
+        dbMTerm* mterm = iterm->getMTerm();
+        // dbString mtname = mterm->getName();
+        char* mtname = mterm->getName(inst, &ttname[0]);
+        if (net->isWildConnected())
         {
-            dbITerm * iterm = *iterm_itr;
-
-            if ( ! iterm->isSpecial() )
-                continue;
-            
-            dbInst * inst = iterm->getInst();
-            dbMTerm * mterm = iterm->getMTerm();
-            //dbString mtname = mterm->getName();
-            char *mtname = mterm->getName(inst, &ttname[0]);
-            if (wildName && strcmp(wildName, mtname) == 0)
-                continue;
-
-            if ( (++i & 7) == 0 )
+            if (wild_names.find(mtname) == wild_names.end())
+            {
+                fprintf(_out, " ( * %s )", mtname);
+                ++i;
+                wild_names.insert(mtname);
+            }
+        }
+        else
+        {
+            if ((++i & 7) == 0)
             {
                 if ( _use_net_inst_ids )
                     fprintf(_out, "\n      ( I%u %s )", inst->getId(), mtname);

@@ -54,8 +54,8 @@ class dbDiff;
 //    uint             _path_dir     : 1; // 0 == low to hi coord
 //    uint             _allocated_cap: 1; // 0, cap points to target node cap
 //                                        // 1, cap is allocated
-//    uint             _update_cap: 1;^M
-//    uint             _spare_bits_21: 21;^M
+//    uint             _update_cap: 1;
+//    uint             _spare_bits_21: 21;
 //};
 
 struct _dbRSegFlags

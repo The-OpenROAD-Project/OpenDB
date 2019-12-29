@@ -7,5 +7,4 @@ data_dir = os.path.join(tests_dir, "data")
 
 
 db = odb.dbDatabase.create()
-lef_parser = odb.lefin(db, True)
-tech = lef_parser.createTech(os.path.join(data_dir, "gscl45nm.lef"))
+lef = odb_read_lef(os.path.join(data_dir, "gscl45nm.lef"))

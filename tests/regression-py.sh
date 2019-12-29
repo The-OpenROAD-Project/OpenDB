@@ -3,7 +3,7 @@ set -e
 BASE_DIR=$(dirname $0)
 SETUP_FILE=$BASE_DIR/../build/src/swig/python/setup.py
 
-export PYTHONPATH=/OpenROAD/build/src/swig/python:$PYTHONPATH
+export PYTHONPATH=$BASE_DIR/../build/src/swig/python:$PYTHONPATH
 
 python3 $SETUP_FILE install --user
 
@@ -83,11 +83,6 @@ echo ""
 
 echo "[15] Database row create test"
 python3 $BASE_DIR/python/15-row_settings_test.py
-echo "SUCCESS!"
-echo ""
-
-echo "[16] Wrtie def versions test"
-python3 $BASE_DIR/python/16-write_def_versions_test.py
 echo "SUCCESS!"
 echo ""
 

@@ -7,11 +7,14 @@ opendb_dir = os.path.abspath(os.path.join(tests_dir, os.pardir))
 data_dir = os.path.join(tests_dir, "data")
 
 db = odb.dbDatabase.create()
-lef_parser = odb.lefin(db, True)
-tech = lef_parser.createTech(os.path.join(data_dir, "gscl45nm.lef"))
+lib = odb.odb_read_lef(os.path.join(data_dir, "gscl45nm.lef"))
+if lib == None:
+    exit("Lib not created")
+ 
+tech = db.getTech(db)
 if tech == None:
     exit("Tech not created")
- 
+
 via_rules = tech.getViaRules()
 
 if via_rules == None:

@@ -84,11 +84,6 @@ $APP $BASE_DIR/tcl/15-row_settings_test.tcl
 echo "SUCCESS!"
 echo ""
 
-echo "[16] Wrtie def versions test"
-$APP $BASE_DIR/tcl/16-write_def_versions_test.tcl
-echo "SUCCESS!"
-echo ""
-
 echo "[17] Database read/write test"
 $APP $BASE_DIR/tcl/17-db_read-write_test.tcl
 echo "SUCCESS!"

@@ -7,4 +7,4 @@ data_dir = os.path.join(tests_dir, "data")
 
 
 db = odb.dbDatabase.create()
-lef = odb_read_lef(os.path.join(data_dir, "gscl45nm.lef"))
+lef = odb.odb_read_lef(os.path.join(data_dir, "gscl45nm.lef"))

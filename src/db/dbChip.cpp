@@ -147,36 +147,9 @@ dbIStream & operator>>( dbIStream & stream, _dbChip & chip )
 {
     stream >> chip._top;
     stream >> *chip._block_tbl;
+    stream >> *chip._prop_tbl;
+    stream >> *chip._name_cache;
 
-    if ( stream.getDatabase()->isSchema(ADS_DB_PROPERTIES) )
-    {
-        stream >> *chip._prop_tbl;
-        stream >> *chip._name_cache;
-    }
-    
-    // fix children pointers
-    if ( stream.getDatabase()->isLessThanSchema(ADS_DB_BLOCK_CHILDREN_V1) )
-    {
-        dbSet<_dbBlock> blocks( &chip, chip._block_tbl );
-        dbSet<_dbBlock>::iterator itr;
-
-        for( itr = blocks.begin(); itr != blocks.end(); ++itr )
-        {
-            _dbBlock * block = *itr;
-
-            uint id;
-
-            for( id = block->_children_v0; id != 0; )
-            {
-                _dbBlock * child = chip._block_tbl->getPtr(id);
-                block->_children_v1.push_back(id);
-                id = child->_next_block;
-                child->_next_block = 0;
-            }
-
-            block->_children_v0 = 0;
-        }
-    }
     return stream;
 }
 

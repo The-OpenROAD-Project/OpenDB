@@ -198,13 +198,9 @@ dbIStream & operator>>( dbIStream & stream, _dbRegion & r )
     stream >> r._name;
     stream >> r._insts;
     stream >> r._boxes;
-
-    if ( stream.getDatabase()->isSchema(ADS_DB_HIER_REGION_SCHEMA) )
-    {
-        stream >> r._parent;
-        stream >> r._children;
-        stream >> r._next_child;
-    }
+    stream >> r._parent;
+    stream >> r._children;
+    stream >> r._next_child;
     
     return stream;
 }

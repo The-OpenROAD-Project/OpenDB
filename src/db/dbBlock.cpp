@@ -135,7 +135,6 @@ _dbBlock::_dbBlock( _dbDatabase * db )
     _flags._active_pins = 0;
     _flags._skip_hier_stream = 0;
     _flags._mme = 0;
-    //_flags._spare_bits_28 = 0;
     _flags._spare_bits_27 = 0;
     _def_units = 100;
     _dbu_per_micron = 1000;
@@ -319,7 +318,6 @@ _dbBlock::_dbBlock( _dbDatabase * db, const _dbBlock & block )
       _chip( block._chip ),
       _bbox( block._bbox ),
       _parent( block._parent ),
-      _children_v0( block._children_v0 ),
       _next_block( block._next_block ),
       _gcell_grid( block._gcell_grid ),
       _parent_block( block._parent_block ),
@@ -334,7 +332,7 @@ _dbBlock::_dbBlock( _dbDatabase * db, const _dbBlock & block )
       _minExtModelIndex( block._minExtModelIndex ),
       _maxExtModelIndex( block._maxExtModelIndex ),
       _metrics( block._metrics ),
-      _children_v1( block._children_v1 ),
+      _children( block._children ),
       _currentCcAdjOrder( block._currentCcAdjOrder)
 {
     if ( block._name )
@@ -631,7 +629,7 @@ void _dbBlock::initialize( _dbChip * chip, _dbBlock * parent, const char * name,
         _def_units = parent->_def_units;
         _dbu_per_micron = parent->_dbu_per_micron;
         _parent = parent->getOID();
-        parent->_children_v1.push_back( getOID() );
+        parent->_children.push_back( getOID() );
         _num_ext_corners = parent->_num_ext_corners;
         _corners_per_block = parent->_corners_per_block;
     }
@@ -734,23 +732,21 @@ dbOStream & operator<<( dbOStream & stream, const _dbBlock & block )
     stream << block._left_bus_delimeter;
     stream << block._right_bus_delimeter;
     stream << block._num_ext_corners;
-    if (stream.getDatabase()->_schema_minor >= ADS_DB_INDEPENDENT_EXT_CORNERS)
-        stream << block._corners_per_block;
+    stream << block._corners_per_block;
     stream << block._corner_name_list;
     stream << block._name;
     stream << block._die_area;
     stream << block._chip;
     stream << block._bbox;
     stream << block._parent;
-    stream << block._children_v0;
     stream << block._next_block;
     stream << block._gcell_grid;
     if (block._flags._skip_hier_stream) {
 	stream << 0 ;
 	stream << 0 ;
     } else {
-    stream << block._parent_block;
-    stream << block._parent_inst;
+        stream << block._parent_block;
+        stream << block._parent_inst;
     }
     stream << block._net_hash;
     stream << block._inst_hash;
@@ -767,7 +763,7 @@ dbOStream & operator<<( dbOStream & stream, const _dbBlock & block )
 	stream << 0 ;
     }
     else
-    stream << block._children_v1;
+        stream << block._children;
 
     stream << block._currentCcAdjOrder;
     stream << *block._bterm_tbl;
@@ -802,12 +798,12 @@ dbOStream & operator<<( dbOStream & stream, const _dbBlock & block )
     stream << *block._extControl;
 
 //---------------------------------------------------------- stream out properties
-	// TOM
-	dbObjectTable * table = block.getTable();
+    // TOM
+    dbObjectTable * table = block.getTable();
     dbId<_dbProperty> propList = table->getPropList(block.getOID());
 
-	stream << propList;
-	// TOM
+    stream << propList;
+    // TOM
 //---------------------------------------------------------- 
 	
     for (cbitr = block._callbacks.begin(); cbitr !=  block._callbacks.end(); ++cbitr)
@@ -818,42 +814,22 @@ dbOStream & operator<<( dbOStream & stream, const _dbBlock & block )
 dbIStream & operator>>( dbIStream & stream, _dbBlock & block )
 {
     stream >> block._def_units;
-
-    if ( stream.getDatabase()->isSchema(ADS_DB_DEF_5_6) )
-        stream >> block._dbu_per_micron;
-    else
-    {
-        if ( block._def_units <= 1000 )
-            block._dbu_per_micron = 1000;
-        else
-            block._dbu_per_micron = 2000;
-    }
-
+    stream >> block._dbu_per_micron;
     stream >> block._hier_delimeter;
     stream >> block._left_bus_delimeter;
     stream >> block._right_bus_delimeter;
     stream >> block._num_ext_corners;
-    if (stream.getDatabase()->_schema_minor >= ADS_DB_INDEPENDENT_EXT_CORNERS)
-        stream >> block._corners_per_block;
-    else
-        block._corners_per_block = block._num_ext_corners;
-    if (stream.getDatabase()->isSchema(ADS_DB_EXT_CORNERS_SCHEMA))
-        stream >> block._corner_name_list;
+    stream >> block._corners_per_block;
+    stream >> block._corner_name_list;
     stream >> block._name;
     stream >> block._die_area;
     stream >> block._chip;
     stream >> block._bbox;
     stream >> block._parent;
-    stream >> block._children_v0;
     stream >> block._next_block;
     stream >> block._gcell_grid;
-
-    if ( stream.getDatabase()->isSchema(ADS_DB_HIER_INST_SCHEMA) )
-    {
-        stream >> block._parent_block;
-        stream >> block._parent_inst;
-    }
-
+    stream >> block._parent_block;
+    stream >> block._parent_inst;
     stream >> block._net_hash;
     stream >> block._inst_hash;
     stream >> block._inst_hdr_hash;
@@ -864,39 +840,8 @@ dbIStream & operator>>( dbIStream & stream, _dbBlock & block )
     stream >> block._minExtModelIndex;
     stream >> block._maxExtModelIndex;
     stream >> block._metrics;
-
-    if ( stream.getDatabase()->isSchema(ADS_DB_BLOCK_CHILDREN_V1) )
-        stream >> block._children_v1;
-
-    if ( stream.getDatabase()->isSchema(ADS_DB_ADJUSTCC) )
-        stream >> block._currentCcAdjOrder;
-    else
-        block._currentCcAdjOrder = 0;
-
-    if ( stream.getDatabase()->isSchema(ADS_DB_HIER_INST_SCHEMA) )
-    {
-        if ( stream.getDatabase()->isSchema(ADS_DB_TRANSFORM_FIX2) )
-        {
-        }
-        else if ( stream.getDatabase()->isSchema(ADS_DB_TRANSFORM_FIX) )
-        {
-            dbTransform t;
-            stream >> t;
-        }
-        else
-        {
-            // This is data is from the old _dbBlockTransform (this transform was never used)...
-            // discard it...
-            dbVector<adsPoint>     origin_stack;
-            dbVector<OldTransform> transform_stack;
-            stream >> origin_stack;
-            stream >> transform_stack;
-        }
-    }
-    
-    if ( stream.getDatabase()->isLessThanSchema(ADS_DB_HIER_INST_SCHEMA) )
-        block._bterm_pins = new std::vector<_dbBTermPin>();
-
+    stream >> block._children;
+    stream >> block._currentCcAdjOrder;
     stream >> *block._bterm_tbl;
     stream >> *block._iterm_tbl;
     stream >> *block._net_tbl;
@@ -913,28 +858,13 @@ dbIStream & operator>>( dbIStream & stream, _dbBlock & block )
     stream >> *block._sbox_tbl;
     stream >> *block._row_tbl;
     stream >> *block._metrics_tbl;
-
-    if ( stream.getDatabase()->isSchema(ADS_DB_REGION_SCHEMA) )
-        stream >> *block._region_tbl;
-
-    if ( stream.getDatabase()->isSchema(ADS_DB_HIER_INST_SCHEMA) )
-    {
-        stream >> *block._hier_tbl;
-        stream >> *block._bpin_tbl;
-    }
-
-    if ( stream.getDatabase()->isSchema(ADS_DB_DEF_5_6) )
-    {
-        stream >> *block._non_default_rule_tbl;
-        stream >> *block._layer_rule_tbl;
-    }
-
-    if ( stream.getDatabase()->isSchema(ADS_DB_PROPERTIES) )
-    {
-        stream >> *block._prop_tbl;
-        stream >> *block._name_cache;
-    }
-
+    stream >> *block._region_tbl;
+    stream >> *block._hier_tbl;
+    stream >> *block._bpin_tbl;
+    stream >> *block._non_default_rule_tbl;
+    stream >> *block._layer_rule_tbl;
+    stream >> *block._prop_tbl;
+    stream >> *block._name_cache;
     stream >> *block._r_val_tbl;
     stream >> *block._c_val_tbl;
     stream >> *block._cc_val_tbl;
@@ -943,61 +873,20 @@ dbIStream & operator>>( dbIStream & stream, _dbBlock & block )
     stream >> *block._cc_seg_tbl;
     stream >> *block._extControl;
 
-	//---------------------------------------------------------- stream in properties
-	// TOM
-    if ( stream.getDatabase()->isSchema(ADS_DB_BLOCK_STREAM_PROPERTIES) )
-	{
-		dbObjectTable * table = block.getTable();
-		dbId<_dbProperty> oldList = table->getPropList(block.getOID());
-		dbId<_dbProperty> propList;
-		stream >> propList;
-		
-		if ( propList != 0 )
-			table->setPropList(block.getOID(), propList);
-        else if ( oldList != 0 )
-			table->setPropList(block.getOID(), 0);
-	}
-	// TOM
-	//-------------------------------------------------------------------------------
-
-    // Create bpins
-    if ( stream.getDatabase()->isLessThanSchema(ADS_DB_HIER_INST_SCHEMA) )
-    {
-        std::vector<_dbBTermPin>::iterator itr;
-
-        for( itr = block._bterm_pins->begin(); itr != block._bterm_pins->end(); ++itr )
-        {
-            _dbBTermPin & bp = *itr;
-            dbBPin * bpin = dbBPin::create((dbBTerm *)bp._bterm);
-            bpin->setPlacementStatus( dbPlacementStatus(bp._status) );
-            _dbBox * box = block._box_tbl->getPtr( bp._pin );
-            adsRect r = box->_rect;
-            adsPoint offset(bp._x, bp._y);
-            dbOrientType orient(bp._orient);
-            dbTransform transform( orient, offset );
-            transform.apply(r);
-            dbBox::create(bpin, (dbTechLayer *) box->getTechLayer(), r.xMin(), r.yMin(), r.xMax(), r.yMax());
-            block._box_tbl->destroy( box );
-        }
-
-        delete block._bterm_pins;
-    }
-
-    if ( stream.getDatabase()->isLessThanSchema(ADS_DB_TRANSFORM_FIX) )
-    {
-        dbSet<dbInst> insts( &block, block._inst_tbl );
-        dbSet<dbInst>::iterator itr;
-
-        for( itr = insts.begin(); itr != insts.end(); ++itr )
-        {
-            dbInst * inst = *itr;
-            int x, y;
-            inst->getOrigin(x,y);
-            inst->setLocation(x,y);
-        }
-    }
-
+    //---------------------------------------------------------- stream in properties
+    // TOM
+    dbObjectTable * table = block.getTable();
+    dbId<_dbProperty> oldList = table->getPropList(block.getOID());
+    dbId<_dbProperty> propList;
+    stream >> propList;
     
+    if ( propList != 0 )
+        table->setPropList(block.getOID(), propList);
+    else if ( oldList != 0 )
+        table->setPropList(block.getOID(), 0);
+    // TOM
+    //-------------------------------------------------------------------------------
+
     return stream;
 }
 
@@ -1070,9 +959,6 @@ bool _dbBlock::operator==( const _dbBlock & rhs ) const
     if ( _parent != rhs._parent )
         return false;
 
-    if ( _children_v0 != rhs._children_v0 )
-        return false;
-
     if ( _next_block != rhs._next_block )
         return false;
 
@@ -1115,7 +1001,7 @@ bool _dbBlock::operator==( const _dbBlock & rhs ) const
     if ( _metrics != rhs._metrics )
         return false;
 
-    if ( _children_v1 != rhs._children_v1 )
+    if ( _children != rhs._children )
         return false;
 
     if (_currentCcAdjOrder != rhs._currentCcAdjOrder )
@@ -1228,7 +1114,6 @@ void _dbBlock::differences( dbDiff & diff, const char * field, const _dbBlock & 
     DIFF_FIELD(_chip);
     DIFF_FIELD(_bbox);
     DIFF_FIELD(_parent);
-    DIFF_FIELD(_children_v0);
     DIFF_FIELD(_next_block);
     DIFF_OBJECT(_gcell_grid, _gcell_grid_tbl, rhs._gcell_grid_tbl);
     DIFF_FIELD(_parent_block);
@@ -1248,7 +1133,7 @@ void _dbBlock::differences( dbDiff & diff, const char * field, const _dbBlock & 
     DIFF_FIELD(_minExtModelIndex);
     DIFF_FIELD(_maxExtModelIndex);
     DIFF_VECTOR(_metrics);
-    DIFF_VECTOR(_children_v1);
+    DIFF_VECTOR(_children);
     DIFF_FIELD(_currentCcAdjOrder);
     DIFF_TABLE(_bterm_tbl);
     DIFF_TABLE_NO_DEEP(_iterm_tbl);
@@ -1306,7 +1191,6 @@ void _dbBlock::out( dbDiff & diff, char side, const char * field  ) const
     DIFF_OUT_FIELD(_chip);
     DIFF_OUT_FIELD(_bbox);
     DIFF_OUT_FIELD(_parent);
-    DIFF_OUT_FIELD(_children_v0);
     DIFF_OUT_FIELD(_next_block);
     DIFF_OUT_OBJECT(_gcell_grid, _gcell_grid_tbl);
     DIFF_OUT_FIELD(_parent_block);
@@ -1326,7 +1210,7 @@ void _dbBlock::out( dbDiff & diff, char side, const char * field  ) const
     DIFF_OUT_FIELD(_minExtModelIndex);
     DIFF_OUT_FIELD(_maxExtModelIndex);
     DIFF_OUT_VECTOR(_metrics);
-    DIFF_OUT_VECTOR(_children_v1);
+    DIFF_OUT_VECTOR(_children);
     DIFF_OUT_FIELD(_currentCcAdjOrder);
     DIFF_OUT_TABLE(_bterm_tbl);
     DIFF_OUT_TABLE_NO_DEEP(_iterm_tbl);
@@ -2398,7 +2282,7 @@ dbBlock::duplicate( dbBlock * child_, const char * name_ )
     _dbBlock * dup = chip->_block_tbl->duplicate(child);
 
     // link child-to-parent
-    parent->_children_v1.push_back( dup->getOID() );
+    parent->_children.push_back( dup->getOID() );
     dup->_parent = parent->getOID();
     
     if ( name_ && dup->_name )
@@ -2434,7 +2318,7 @@ dbBlock::destroy( dbBlock * block_ )
     // delete the children of this block
     dbVector<dbId<_dbBlock> >::iterator citr;
 
-    for( citr = block->_children_v1.begin(); citr != block->_children_v1.end(); ++citr )
+    for( citr = block->_children.begin(); citr != block->_children.end(); ++citr )
     {
         _dbBlock * child = chip->_block_tbl->getPtr( *citr );
         destroy( (dbBlock *) child );
@@ -2461,11 +2345,11 @@ void unlink_child_from_parent( _dbBlock * child, _dbBlock * parent )
     
     dbVector<dbId<_dbBlock> >::iterator citr;
 
-    for( citr = parent->_children_v1.begin(); citr != parent->_children_v1.end(); ++citr )
+    for( citr = parent->_children.begin(); citr != parent->_children.end(); ++citr )
     {
         if ( *citr == id )
         {
-            parent->_children_v1.erase(citr);
+            parent->_children.erase(citr);
             break;
         }
     }

@@ -30,6 +30,8 @@
 // OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 #include <stdio.h>
+#include <string>
+#include <set>
 #include "db.h"
 #include "dbMap.h"
 #include "defout_impl.h"
@@ -874,59 +876,63 @@ void defout_impl::writeGroups( dbBlock * block )
 
 void defout_impl::writeBTerm( dbBTerm * bterm )
 {
-
-    dbSet<dbBPin> bpins = bterm->getBPins();
-
-    if ( bpins.size() != 0 )
+    dbNet* net = bterm->getNet();
+    if (net)
     {
-        int cnt = 0;
-        
-        dbSet<dbBPin>::iterator itr;
+        dbSet<dbBPin> bpins = bterm->getBPins();
 
-        for( itr = bpins.begin(); itr != bpins.end(); ++itr )
-            writeBPin( *itr, cnt++ );
+        if (bpins.size() != 0)
+        {
+            int cnt = 0;
 
-        return;
+            dbSet<dbBPin>::iterator itr;
+
+            for (itr = bpins.begin(); itr != bpins.end(); ++itr)
+                writeBPin(*itr, cnt++);
+
+            return;
+        }
+
+        dbString bname = bterm->getName();
+
+        if (_use_net_inst_ids)
+            fprintf(_out, "    - %s + NET N%u", bname.c_str(), net->getId());
+        else
+        {
+            dbString nname = net->getName();
+            fprintf(_out, "    - %s + NET %s", bname.c_str(), nname.c_str());
+        }
+
+        if (bterm->isSpecial())
+            fprintf(_out, " + SPECIAL");
+
+        fprintf(_out, " + DIRECTION %s", defIoType(bterm->getIoType()));
+
+        if (_version >= defout::DEF_5_6)
+        {
+            dbBTerm* supply = bterm->getSupplyPin();
+
+            if (supply)
+            {
+                dbString pname = supply->getName();
+                fprintf(_out, " + SUPPLYSENSITIVITY %s", pname.c_str());
+            }
+
+            dbBTerm* ground = bterm->getGroundPin();
+
+            if (ground)
+            {
+                dbString pname = ground->getName();
+                fprintf(_out, " + GROUNDSENSITIVITY %s", pname.c_str());
+            }
+        }
+
+        fprintf(_out, " + USE %s", defSigType(bterm->getSigType()));
+        fprintf(_out, " ;\n");
     }
-    
-    dbNet * net = bterm->getNet();
-    dbString bname = bterm->getName();
-
-    if ( _use_net_inst_ids )
-        fprintf(_out, "    - %s + NET N%u", bname.c_str(), net->getId() );
     else
-    {
-        dbString nname = net->getName();
-        fprintf(_out, "    - %s + NET %s", bname.c_str(), nname.c_str() );
-    }
-
-    if (bterm->isSpecial())
-    	fprintf(_out, " + SPECIAL"); 
-
-    fprintf(_out, " + DIRECTION %s", defIoType(bterm->getIoType()));
-
-    if ( _version >= defout::DEF_5_6 )
-    {
-        dbBTerm * supply = bterm->getSupplyPin();
-
-        if ( supply )
-        {
-            dbString pname = supply->getName();
-            fprintf(_out, " + SUPPLYSENSITIVITY %s", pname.c_str() );
-        }
-
-        dbBTerm * ground = bterm->getGroundPin();
-
-        if ( ground )
-        {
-            dbString pname = ground->getName();
-            fprintf(_out, " + GROUNDSENSITIVITY %s", pname.c_str() );
-        }
-        
-    }
-    
-    fprintf(_out, " + USE %s", defSigType(bterm->getSigType()));
-    fprintf(_out, " ;\n");
+        notice(0, "warning: pin %s skipped because it has no net",
+               bterm->getConstName());
 }
 
 void defout_impl::writeBPin( dbBPin * bpin, int cnt )
@@ -1256,40 +1262,32 @@ void defout_impl::writeSNet( dbNet * net )
     
     int i = 0;
 
-    char *wildName = NULL;
-    if ( (_use_net_inst_ids == false ) && net->isWildConnected() )
-    {
-        if ( iterms.begin() != iterms.end() )
-        {
-            dbSet<dbITerm>::iterator iterm_itr = iterms.begin();
-            dbITerm * iterm = *iterm_itr;
-            dbMTerm * mterm = iterm->getMTerm();
-            wildName = (char *)mterm->getConstName();
-            fprintf(_out, " ( * %s )", wildName );
-            ++i;
-        }
-    }
     char ttname[dbObject::max_name_length];
-//    else
-    if (1)
+    dbSet<dbITerm>::iterator iterm_itr;
+    std::set<std::string> wild_names;
+    for( iterm_itr = iterms.begin(); iterm_itr != iterms.end(); ++iterm_itr )
     {
-        dbSet<dbITerm>::iterator iterm_itr;
+        dbITerm* iterm = *iterm_itr;
 
-        for( iterm_itr = iterms.begin(); iterm_itr != iterms.end(); ++iterm_itr )
+        if (!iterm->isSpecial())
+            continue;
+
+        dbInst*  inst  = iterm->getInst();
+        dbMTerm* mterm = iterm->getMTerm();
+        // dbString mtname = mterm->getName();
+        char* mtname = mterm->getName(inst, &ttname[0]);
+        if (net->isWildConnected())
         {
-            dbITerm * iterm = *iterm_itr;
-
-            if ( ! iterm->isSpecial() )
-                continue;
-            
-            dbInst * inst = iterm->getInst();
-            dbMTerm * mterm = iterm->getMTerm();
-            //dbString mtname = mterm->getName();
-            char *mtname = mterm->getName(inst, &ttname[0]);
-            if (wildName && strcmp(wildName, mtname) == 0)
-                continue;
-
-            if ( (++i & 7) == 0 )
+            if (wild_names.find(mtname) == wild_names.end())
+            {
+                fprintf(_out, " ( * %s )", mtname);
+                ++i;
+                wild_names.insert(mtname);
+            }
+        }
+        else
+        {
+            if ((++i & 7) == 0)
             {
                 if ( _use_net_inst_ids )
                     fprintf(_out, "\n      ( I%u %s )", inst->getId(), mtname);

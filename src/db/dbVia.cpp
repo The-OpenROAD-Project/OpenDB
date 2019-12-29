@@ -214,25 +214,17 @@ dbOStream & operator<<( dbOStream & stream, const _dbVia & v )
 
 dbIStream & operator>>( dbIStream & stream, _dbVia & v )
 {
-    if ( stream.getDatabase()->isSchema(ADS_DB_DEF_5_6) )
-    {
-        uint * bit_field = (uint *) &v._flags;
-        stream >> *bit_field;
-    }
-
+    uint * bit_field = (uint *) &v._flags;
+    stream >> *bit_field;
     stream >> v._name;
     stream >> v._pattern;
     stream >> v._bbox;
     stream >> v._boxes;
     stream >> v._top;
     stream >> v._bottom;
-
-    if ( stream.getDatabase()->isSchema(ADS_DB_DEF_5_6) )
-    {
-        stream >> v._generate_rule;
-        stream >> v._rotated_via_id;
-        stream >> v._via_params;
-    }
+    stream >> v._generate_rule;
+    stream >> v._rotated_via_id;
+    stream >> v._via_params;
 
     return stream;
 }

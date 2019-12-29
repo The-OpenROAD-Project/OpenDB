@@ -1,5 +1,10 @@
 %{
 #include <libgen.h>
+#include "lefin.h"
+#include "lefout.h"
+#include "defin.h"
+#include "defout.h"
+
 odb::dbLib*
 odb_read_lef(odb::dbDatabase* db, const char* path)
 {

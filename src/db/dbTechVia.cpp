@@ -216,13 +216,9 @@ dbIStream & operator>>( dbIStream & stream, _dbTechVia & via )
     stream >> via._top;
     stream >> via._bottom;
     stream >> via._non_default_rule;
-
-    if ( stream.getDatabase()->isSchema(ADS_DB_DEF_5_6) )
-    {
-        stream >> via._generate_rule;
-        stream >> via._via_params;
-        stream >> via._pattern;
-    }
+    stream >> via._generate_rule;
+    stream >> via._via_params;
+    stream >> via._pattern;
     
     return stream;
 }

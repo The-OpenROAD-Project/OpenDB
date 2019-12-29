@@ -743,10 +743,7 @@ dbIStream & operator>>( dbIStream & stream, dbTable<T> & table )
     for( ; i < table._page_tbl_size; ++i )
         table._pages[i] = NULL;
 
-    if ( stream.getDatabase()->isSchema(ADS_DB_PROPERTIES) )
-    {
-        stream >> table._prop_list;
-    }
+    stream >> table._prop_list;
 
 #ifdef ADS_DB_CHECK_STREAM
     stream.checkStream();

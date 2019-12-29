@@ -168,8 +168,8 @@ _dbDatabase::_dbDatabase( _dbDatabase * db )
 {
     _magic1 = ADS_DB_MAGIC1;
     _magic2 = ADS_DB_MAGIC2;
-    _schema_major = ADS_DB_SCHEMA_MAJOR;
-    _schema_minor = ADS_DB_SCHEMA_MINOR;
+    _schema_major = db_schema_major;
+    _schema_minor = db_schema_minor;
     _master_id = 0;
     _file = NULL;
     _unique_id = db_unique_id++;
@@ -200,8 +200,8 @@ _dbDatabase::_dbDatabase( _dbDatabase * db, int id )
 {
     _magic1 = ADS_DB_MAGIC1;
     _magic2 = ADS_DB_MAGIC2;
-    _schema_major = ADS_DB_SCHEMA_MAJOR;
-    _schema_minor = ADS_DB_SCHEMA_MINOR;
+    _schema_major = db_schema_major;
+    _schema_minor = db_schema_minor;
     _master_id = 0;
     _file = NULL;
     _unique_id = id;
@@ -298,21 +298,21 @@ dbIStream & operator>>( dbIStream & stream, _dbDatabase & db )
     stream >> db._magic1;
 
     if ( db._magic1 != ADS_DB_MAGIC1 )
-        throw ZException( "database file is not an Athena Database");
+        throw ZException( "database file is not an OpenDB Database");
 
     stream >> db._magic2;
     
     if ( db._magic2 != ADS_DB_MAGIC2 )
-        throw ZException( "database file is not an Athena Database");
+        throw ZException( "database file is not an OpenDB Database");
     
     stream >> db._schema_major;
 
-    if ( db._schema_major != ADS_DB_SCHEMA_MAJOR )
+    if ( db._schema_major != db_schema_major )
         throw ZException( "Incompatible database schema revision");
 
     stream >> db._schema_minor;
 
-    if ( db._schema_minor < ADS_DB_REGION_SCHEMA )
+    if ( db._schema_minor < db_schema_initial )
         throw ZException( "incompatible database schema revision");
 
     stream >> db._master_id;
@@ -324,27 +324,23 @@ dbIStream & operator>>( dbIStream & stream, _dbDatabase & db )
     stream >> *db._tech_tbl;
     stream >> *db._lib_tbl;
     stream >> *db._chip_tbl;
+    stream >> *db._prop_tbl;
+    stream >> *db._name_cache;
 
-    if ( db._schema_minor >= ADS_DB_PROPERTIES )
+    // Fix up the owner id of properties of this db, this value changes.
+    dbSet<_dbProperty> props(&db, db._prop_tbl);
+    dbSet<_dbProperty>::iterator itr;
+    uint oid = db.getId();
+
+    for( itr = props.begin(); itr != props.end(); ++itr )
     {
-        stream >> *db._prop_tbl;
-        stream >> *db._name_cache;
-
-        // Fix up the owner id of properties of this db, this value changes.
-        dbSet<_dbProperty> props(&db, db._prop_tbl);
-        dbSet<_dbProperty>::iterator itr;
-        uint oid = db.getId();
-
-        for( itr = props.begin(); itr != props.end(); ++itr )
-        {
-            _dbProperty * p = *itr;
-            p->_owner = oid;
-        }
+        _dbProperty * p = *itr;
+        p->_owner = oid;
     }
 
     // Set the revision of the database to the current revision
-    db._schema_major = ADS_DB_SCHEMA_MAJOR;
-    db._schema_minor = ADS_DB_SCHEMA_MINOR;
+    db._schema_major = db_schema_major;
+    db._schema_minor = db_schema_minor;
     return stream;
 }
 

@@ -72,9 +72,8 @@ struct _dbInstFlags
     uint                     _eco_destroy : 1;
     uint                     _eco_modify  : 1;
     uint                     _input_cone  : 1;
-    uint                     _inside_cone  : 1;
-    uint                     _level        : 9;
-    //uint                     _spare_bits  : 11;
+    uint                     _inside_cone : 1;
+    uint                     _level       : 9;
 };
 
 class _dbInst : public dbObject

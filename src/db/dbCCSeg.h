@@ -47,15 +47,6 @@ class dbIStream;
 class dbOStream;
 class dbDiff;
 
-//struct _dbCCSegFlags
-//{
-//    uint             _cnt          : 8;
-//    uint             _spef_mark_1  : 1;
-//    uint             _mark         : 1;
-//    uint             _inFileCnt    : 4;
-//    uint             _spare_bits   : 18;
-//};
-
 struct _dbCCSegFlags
 {
     uint             _spef_mark_1  : 1;
@@ -140,8 +131,6 @@ inline dbIStream & operator>>( dbIStream & stream, _dbCCSeg & seg )
 {
     uint *bit_field = (uint *) &seg._flags;
     stream >> *bit_field;
-    if (!stream.getDatabase()->isSchema(ADS_DB_INDEPENDENT_EXT_CORNERS))
-        *bit_field = (*bit_field)>>8;
     stream >> seg._cap_node[0];
     stream >> seg._cap_node[1];
     stream >> seg._next[0];

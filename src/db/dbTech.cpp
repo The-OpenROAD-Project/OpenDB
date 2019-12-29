@@ -440,41 +440,19 @@ dbIStream & operator>>( dbIStream & stream, _dbTech & tech )
     stream >> tech._layer_cnt;
     stream >> tech._rlayer_cnt;
     stream >> tech._lef_units;
-
-    if ( stream.getDatabase()->isSchema(ADS_DB_DEF_5_6) )
-        stream >> tech._dbu_per_micron;
-    else
-    {
-        if ( tech._lef_units <= 1000 )
-            tech._dbu_per_micron = 1000;
-        else
-            tech._dbu_per_micron = 2000;
-    }
-    
+    stream >> tech._dbu_per_micron;
     stream >> tech._mfgrid;
 
     uint * bit_field = (uint *) &tech._flags;
     stream >> *bit_field;
 
-    if ( stream.getDatabase()->isLessThanSchema(ADS_DB_DEF_5_6) )
-    {
-        float  lef_version;
-        stream >> lef_version;
-        tech._setLefVersion(lef_version);
-    }
-    else
-    {
-        double  lef_version;
-        stream >> lef_version;
-        tech._setLefVersion(lef_version);
-    }
+    double  lef_version;
+    stream >> lef_version;
+    tech._setLefVersion(lef_version);
 
     stream >> tech._bottom;
     stream >> tech._top;
-
-    if ( stream.getDatabase()->isSchema(ADS_DB_DEF_5_6) )
-        stream >> tech._non_default_rules;
-
+    stream >> tech._non_default_rules;
     stream >> tech._samenet_rules;
     stream >> tech._samenet_matrix;
     stream >> *tech._layer_tbl;
@@ -484,19 +462,11 @@ dbIStream & operator>>( dbIStream & stream, _dbTech & tech )
     stream >> *tech._box_tbl;
     stream >> *tech._samenet_rule_tbl;
     stream >> *tech._antenna_rule_tbl;
-
-    if ( stream.getDatabase()->isSchema(ADS_DB_DEF_5_6) )
-    {
-        stream >> *tech._via_rule_tbl;
-        stream >> *tech._via_layer_rule_tbl;
-        stream >> *tech._via_generate_rule_tbl;
-    }
-
-    if ( stream.getDatabase()->isSchema(ADS_DB_PROPERTIES) )
-    {
-        stream >> *tech._prop_tbl;
-        stream >> *tech._name_cache;
-    }
+    stream >> *tech._via_rule_tbl;
+    stream >> *tech._via_layer_rule_tbl;
+    stream >> *tech._via_generate_rule_tbl;
+    stream >> *tech._prop_tbl;
+    stream >> *tech._name_cache;
 
     return stream;
 }

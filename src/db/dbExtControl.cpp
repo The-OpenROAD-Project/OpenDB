@@ -91,13 +91,10 @@ dbOStream & operator<<( dbOStream & stream, const dbExtControl & extControl )
     stream << extControl._extracted;
     if (!extControl._extracted)
         return stream;
-    if (stream.getDatabase()->isSchema(ADS_DB_INDEPENDENT_EXT_CORNERS))
-        stream << extControl._independentExtCorners;
-    if (stream.getDatabase()->isSchema(ADS_DB_EXT_CONTROL_STAMPWIRE))
-      stream << extControl._wireStamped;
+    stream << extControl._independentExtCorners;
+    stream << extControl._wireStamped;
     stream << extControl._foreign;
-    if (!stream.getDatabase()->isLessThanSchema(ADS_DB_EXT_RSEG_COORDS))
-        stream << extControl._rsegCoord;
+    stream << extControl._rsegCoord;
     stream << extControl._lefRC;
     stream << extControl._cornerCnt;
     stream << extControl._ccPreseveGeom;
@@ -114,8 +111,8 @@ dbOStream & operator<<( dbOStream & stream, const dbExtControl & extControl )
     stream << extControl._CCnoPowerTarget;
     stream << extControl._usingMetalPlanes;
     stream << extControl._ruleFileName;
-	// new fields
-	stream << extControl._extractedCornerList;
+    // new fields
+    stream << extControl._extractedCornerList;
     stream << extControl._derivedCornerList;
     stream << extControl._cornerIndexList;
     stream << extControl._resFactorList;
@@ -131,15 +128,10 @@ dbIStream & operator>>( dbIStream & stream, dbExtControl & extControl )
     stream >> extControl._extracted;
     if (!extControl._extracted)
         return stream;
-    if (stream.getDatabase()->isSchema(ADS_DB_INDEPENDENT_EXT_CORNERS))
-        stream >> extControl._independentExtCorners;
-    else
-        extControl._independentExtCorners = false;
-    if (stream.getDatabase()->isSchema(ADS_DB_EXT_CONTROL_STAMPWIRE))
-      stream >> extControl._wireStamped;
+    stream >> extControl._independentExtCorners;
+    stream >> extControl._wireStamped;
     stream >> extControl._foreign;
-    if (!stream.getDatabase()->isLessThanSchema(ADS_DB_EXT_RSEG_COORDS))
-        stream >> extControl._rsegCoord;
+    stream >> extControl._rsegCoord;
     stream >> extControl._lefRC;
     stream >> extControl._cornerCnt;
     stream >> extControl._ccPreseveGeom;
@@ -156,11 +148,7 @@ dbIStream & operator>>( dbIStream & stream, dbExtControl & extControl )
     stream >> extControl._CCnoPowerTarget;
     stream >> extControl._usingMetalPlanes;
     stream >> extControl._ruleFileName;
-
-	if ( !stream.getDatabase()->isSchema(ADS_DB_EXT_CONTROL_CORNERS_SCHEMA) )
-		return stream;
-
-	stream >> extControl._extractedCornerList;
+    stream >> extControl._extractedCornerList;
     stream >> extControl._derivedCornerList;
     stream >> extControl._cornerIndexList;
     stream >> extControl._resFactorList;

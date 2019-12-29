@@ -143,12 +143,8 @@ dbIStream & operator>>( dbIStream & stream, _dbBPin & bpin )
     stream >> bpin._bterm;
     stream >> bpin._bbox;
     stream >> bpin._next_bpin;
-
-    if ( stream.getDatabase()->isSchema(ADS_DB_DEF_5_6) )
-    {
-        stream >> bpin._min_spacing;
-        stream >> bpin._effective_width;
-    }
+    stream >> bpin._min_spacing;
+    stream >> bpin._effective_width;
     
     return stream;
 }

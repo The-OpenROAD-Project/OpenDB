@@ -125,11 +125,10 @@ struct _dbBTermPin
 struct _dbBlockFlags
 {
     uint _valid_bbox : 1;
-	uint _buffer_altered : 1;
-	uint _active_pins : 1;
-	uint _mme : 1;
-	uint _skip_hier_stream : 1;
-    //uint _spare_bits_28 : 28;
+    uint _buffer_altered : 1;
+    uint _active_pins : 1;
+    uint _mme : 1;
+    uint _skip_hier_stream : 1;
     uint _spare_bits_27 : 27;
 };
     
@@ -158,7 +157,6 @@ class _dbBlock : public dbObject
     dbId<_dbChip>               _chip;
     dbId<_dbBox>                _bbox;
     dbId<_dbBlock>              _parent;
-    dbId<_dbBlock>              _children_v0;     // obsolete field: ADS_DB_BLOCK_CHILDREN_V1, keep to update data
     dbId<_dbBlock>              _next_block;
     dbId<_dbGCellGrid>          _gcell_grid;
     dbId<_dbBlock>              _parent_block; // Up hierarchy: TWG
@@ -173,7 +171,7 @@ class _dbBlock : public dbObject
     int                         _minExtModelIndex;
     int                         _maxExtModelIndex;
     dbVector<dbId<_dbMetrics> > _metrics;
-    dbVector<dbId<_dbBlock> >   _children_v1;
+    dbVector<dbId<_dbBlock> >   _children;
     uint                        _currentCcAdjOrder;
 
     // NON-PERSISTANT-STREAMED-MEMBERS

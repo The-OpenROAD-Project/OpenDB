@@ -183,32 +183,16 @@ dbIStream & operator>>( dbIStream & stream, _dbInst & inst )
     stream >> inst._name;
     stream >> inst._x;
     stream >> inst._y;
-
-    if ( stream.getDatabase()->isSchema(ADS_DB_DEF_ATTRS) )
-        stream >> inst._weight;
-
+    stream >> inst._weight;
     stream >> inst._next_entry;
     stream >> inst._inst_hdr;
     stream >> inst._bbox;
-
-    if ( stream.getDatabase()->isSchema(ADS_DB_REGION_SCHEMA) )
-    {
-        stream >> inst._region;
-        stream >> inst._region_next;
-        stream >> inst._region_prev;
-    }
-
-    if ( stream.getDatabase()->isSchema(ADS_DB_HIER_INST_SCHEMA) )
-    {
-        stream >> inst._hierarchy;
-    }
-    
+    stream >> inst._region;
+    stream >> inst._region_next;
+    stream >> inst._region_prev;
+    stream >> inst._hierarchy;
     stream >> inst._iterms;
-
-    if ( stream.getDatabase()->isSchema(ADS_DB_DEF_5_6) )
-    {
-        stream >> inst._halo;
-    }
+    stream >> inst._halo;
 
     return stream;
 }

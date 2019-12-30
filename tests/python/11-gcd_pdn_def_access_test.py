@@ -7,7 +7,7 @@ opendb_dir = os.path.abspath(os.path.join(tests_dir, os.pardir))
 data_dir = os.path.join(tests_dir, "data")
 
 db = odb.dbDatabase.create()
-lib = odb.odb_read_lib(db, os.path.join(data_dir, "Nangate45/NangateOpenCellLibrary.mod.lef"))
+lib = odb.odb_read_lef(db, os.path.join(data_dir, "Nangate45/NangateOpenCellLibrary.mod.lef"))
 odb.odb_read_def(db, os.path.join(data_dir, "gcd/gcd_pdn.def"))
 chip = db.getChip()
 block = chip.getBlock()

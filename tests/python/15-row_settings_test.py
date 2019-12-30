@@ -7,11 +7,10 @@ opendb_dir = os.path.abspath(os.path.join(tests_dir, os.pardir))
 data_dir = os.path.join(tests_dir, "data")
 
 db = odb.dbDatabase.create()
-chip = odb.odb_read_design(db,[os.path.join(data_dir, "Nangate45/NangateOpenCellLibrary.mod.lef")],
-[os.path.join(data_dir, "gcd/floorplan.def")])
+lib = odb.odb_read_lib(db, [os.path.join(data_dir, "Nangate45/NangateOpenCellLibrary.mod.lef")])
+odb.odb_read_def(db, [os.path.join(data_dir, "gcd/floorplan.def")])
+chip = db.getChip()
 tech = db.getTech()
-libs = db.getLibs()
-lib = libs[0]
 block = chip.getBlock()
 sites = lib.getSites()
 site = sites[0]

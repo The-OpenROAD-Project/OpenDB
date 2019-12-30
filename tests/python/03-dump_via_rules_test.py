@@ -11,7 +11,7 @@ lib = odb.odb_read_lef(db, os.path.join(data_dir, "gscl45nm.lef"))
 if lib == None:
     exit("Lib not created")
  
-tech = db.getTech(db)
+tech = db.getTech()
 if tech == None:
     exit("Tech not created")
 

@@ -4,7 +4,7 @@ set data_dir [file join $tests_dir "data"]
 source [file join $tcl_dir "test_helpers.tcl"]
 
 set db [dbDatabase_create]
-set lib [odb_read_lef $db $data_dir/gscl45nm.lef]
+set lib [odb_read_lef $db [file join $data_dir "gscl45nm.lef"]]
 set tech [$lib getTech]
 set vias [$tech getVias]
 foreach via $vias {

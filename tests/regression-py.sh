@@ -36,11 +36,6 @@ python3 $BASE_DIR/python/05-read_def_test.py
 echo "SUCCESS!"
 echo ""
 
-echo "[6] Read design"
-python3 $BASE_DIR/python/06-read_design_test.py
-echo "SUCCESS!"
-echo ""
-
 echo "[7] Dump nets"
 python3 $BASE_DIR/python/07-dump_nets_test.py
 echo "SUCCESS!"

@@ -4,8 +4,9 @@ set data_dir [file join $tests_dir "data"]
 source [file join $tcl_dir "test_helpers.tcl"]
 
 set db [dbDatabase_create]
-set chip [odb_read_design $db $data_dir/gscl45nm.lef $data_dir/design.def]
-set lib [lindex [$db getLibs] 0]
+set lib [odb_read_lef $db [file join $data_dir "gscl45nm.lef"]]
+odb_read_def $db [file join $data_dir "design.def"]
+set chip [$db getChip]
 if {$chip == "NULL"} {
     puts "Read DEF Failed"
     exit 1
@@ -22,7 +23,7 @@ set row [dbRow_create $block "row0" $site 0 0 "RO" "HORIZONTAL" 1 10]
 if {$row == "NULL"} {
     exit 1
 }
-puts $net
-puts $row
-puts $swire
+puts [$net getConstName]
+puts [$row getConstName]
+puts [[$swire getNet] getConstName]
 exit 0

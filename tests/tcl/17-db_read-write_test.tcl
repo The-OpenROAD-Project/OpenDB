@@ -5,20 +5,18 @@ set opendb_dir [file dirname $tests_dir]
 source [file join $tcl_dir "test_helpers.tcl"]
 
 set db [dbDatabase_create]
-set chip [odb_read_design $db $data_dir/gscl45nm.lef $data_dir/design.def]
-if {$chip == "NULL"} {
-    puts "Read DEF Failed"
-    exit 1
-}
+odb_read_lef $db [file join $data_dir "gscl45nm.lef"]
+odb_read_def $db [file join $data_dir "design.def"]
 
-set export_result [odb_export_db $db $opendb_dir/build/export.db]
-if {!$export_result} {
-    puts "Export DB failed"
+set db_file [file join $opendb_dir "build" "export.db"]
+set write_result [odb_write_db $db $db_file]
+if {!$write_result} {
+    puts "Write DB failed"
     exit 1
 }
 
 set new_db [dbDatabase_create]
-odb_import_db $new_db $opendb_dir/build/export.db
+odb_read_db $new_db $db_file
 
 if { [db_diff $db $new_db] } {
   puts "Differences found between exported and imported db"

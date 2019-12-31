@@ -5,19 +5,19 @@ SETUP_FILE=$BASE_DIR/../build/src/swig/python/setup.py
 
 export PYTHONPATH=$BASE_DIR/../build/src/swig/python:$PYTHONPATH
 
-python3 $SETUP_FILE install --user
+python3 $SETUP_FILE install --user --prefix=
 
 echo "Running tests .."
 echo "================"
 
 echo "[1] Importing opendbpy package"
 python3 $BASE_DIR/python/01-import_package_test.py
-echo "SUCESS!"
+echo "SUCCESS!"
 echo ""
 
 echo "[2] Reading lef files"
 python3 $BASE_DIR/python/02-read_lef_test.py
-echo "SUCESS!"
+echo "SUCCESS!"
 echo ""
 
 

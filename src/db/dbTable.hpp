@@ -57,7 +57,7 @@
 namespace odb {
 
 template <class T>
-inline void dbTable<T>::pushQ( uint & Q, _dbObject * e )
+inline void dbTable<T>::pushQ( uint & Q, _dbFreeObject * e )
 {
     if ( Q == 0 )
     {
@@ -69,21 +69,21 @@ inline void dbTable<T>::pushQ( uint & Q, _dbObject * e )
     {
         e->_prev = 0;
         e->_next = Q;
-        _dbObject * head = (_dbObject *) getFreeObj(Q);
+        _dbFreeObject * head = (_dbFreeObject *) getFreeObj(Q);
         head->_prev = e->getOID();
         Q = e->getOID();
     }
 }
     
 template <class T>
-inline _dbObject * dbTable<T>::popQ( uint & Q )
+inline _dbFreeObject * dbTable<T>::popQ( uint & Q )
 {
-    _dbObject * e = (_dbObject *) getFreeObj(Q);
+    _dbFreeObject * e = (_dbFreeObject *) getFreeObj(Q);
     Q = e->_next;
 
     if ( Q )
     {
-        _dbObject * head = (_dbObject *) getFreeObj(Q);
+        _dbFreeObject * head = (_dbFreeObject *) getFreeObj(Q);
         head->_prev = 0;
     }
     
@@ -91,7 +91,7 @@ inline _dbObject * dbTable<T>::popQ( uint & Q )
 }
 
 template <class T>
-inline void dbTable<T>::unlinkQ( uint & Q, _dbObject * e )
+inline void dbTable<T>::unlinkQ( uint & Q, _dbFreeObject * e )
 {
     uint oid = e->getOID();
     
@@ -101,7 +101,7 @@ inline void dbTable<T>::unlinkQ( uint & Q, _dbObject * e )
 
         if ( Q )
         {
-            _dbObject * head = (_dbObject *) getFreeObj(Q);
+            _dbFreeObject * head = (_dbFreeObject *) getFreeObj(Q);
             head->_prev = 0;
         }
     }
@@ -109,13 +109,13 @@ inline void dbTable<T>::unlinkQ( uint & Q, _dbObject * e )
     {
         if ( e->_next )
         {
-            _dbObject * next = (_dbObject *) getFreeObj(e->_next);
+            _dbFreeObject * next = (_dbFreeObject *) getFreeObj(e->_next);
             next->_prev = e->_prev;
         }
 
         if ( e->_prev )
         {
-            _dbObject * prev = (_dbObject *) getFreeObj(e->_prev);
+            _dbFreeObject * prev = (_dbFreeObject *) getFreeObj(e->_prev);
             prev->_next = e->_next;
         }
     }
@@ -252,7 +252,7 @@ void dbTable<T>::newPage()
 
         for( ; t >= b; --t )
         {
-            _dbObject * o = (_dbObject *) t;
+            _dbFreeObject * o = (_dbFreeObject *) t;
             o->_oid = (uint) ((char *) t - (char *) b);
 
             if ( t != b ) // don't link zero-object
@@ -266,7 +266,7 @@ void dbTable<T>::newPage()
 
         for( ; t >= b; --t )
         {
-            _dbObject * o = (_dbObject *) t;
+            _dbFreeObject * o = (_dbFreeObject *) t;
             o->_oid = (uint) ((char *) t - (char *) b);
             pushQ(_free_list, o);
         }
@@ -281,7 +281,7 @@ T * dbTable<T>::create()
     if ( _free_list == 0 )
         newPage();
     
-    _dbObject * o = popQ(_free_list);
+    _dbFreeObject * o = popQ(_free_list);
     new(o) T(_db);
     o->_oid |= DB_ALLOC_BIT;
     T * t = (T *) o;
@@ -308,7 +308,7 @@ T * dbTable<T>::duplicate( T * c )
     if ( _free_list == 0 )
         newPage();
     
-    _dbObject * o = popQ(_free_list);
+    _dbFreeObject * o = popQ(_free_list);
     o->_oid |= DB_ALLOC_BIT;
     new(o) T(_db, *c);
     T * t = (T *) o;
@@ -468,7 +468,7 @@ void dbTable<T>::destroy( T * t )
     uint id = page->_page_addr + offset;
 
     // Add to freelist
-    _dbObject * o = (_dbObject *) t;
+    _dbFreeObject * o = (_dbFreeObject *) t;
     pushQ(_free_list, o);
 
     if ( id == _bottom_idx )
@@ -586,7 +586,7 @@ void dbTable<T>::writePage( dbOStream & stream, const dbTablePage * page ) const
         {
             char allocated = 0;
             stream << allocated;
-            _dbObject * o = (_dbObject *) t;
+            _dbFreeObject * o = (_dbFreeObject *) t;
             stream << o->_next;
             stream << o->_prev;
         }
@@ -608,7 +608,7 @@ void dbTable<T>::readPage( dbIStream & stream, dbTablePage * page )
         if ( ! allocated )
         {
             t->_oid = (uint) ((char *) t - page->_objects);
-            _dbObject * o = (_dbObject *) t;
+            _dbFreeObject * o = (_dbFreeObject *) t;
             stream >> o->_next;
             stream >> o->_prev;
         }
@@ -667,7 +667,7 @@ void dbTable<T>::copy_page( uint page_id, dbTablePage * page )
         }
         else
         {
-            *((_dbObject *) o) = *((_dbObject *) t);
+            *((_dbFreeObject *) o) = *((_dbFreeObject *) t);
         }
     }
 }

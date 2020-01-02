@@ -74,9 +74,9 @@ class dbArrayTable : public dbObjectTable
 
     void resizePageTbl();
     void newPage();
-    void pushQ( uint & Q, _dbObject * e );
-    _dbObject * popQ( uint & Q );
-    void unlinkQ( uint & Q, _dbObject * e );
+    void pushQ( uint & Q, _dbFreeObject * e );
+    _dbFreeObject * popQ( uint & Q );
+    void unlinkQ( uint & Q, _dbFreeObject * e );
 
     dbArrayTable( _dbDatabase * db, dbObject * owner, GetObjTbl_t m, dbObjectType type,
                   uint array_size, uint page_size = 128, uint page_shift = 7);

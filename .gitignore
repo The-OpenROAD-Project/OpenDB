@@ -62,13 +62,3 @@ src/sylib/liberty_parser.cpp
 src/sylib/liberty_parser.h
 src/sylib/liberty_parser.output
 src/sylib/token.cpp
-
-zrouter/bin
-zrouter/src/ade.log
-zrouter/src/ldir
-zrouter/src/logs
-zrouter/src/main/cvs_version.h
-zrouter/src/ModuleTemplate/TMP_tcl/TMP_Tcl.cpp
-zrouter/src/ModuleTemplate/TMP_tcl/TMP_Tcl.h
-zrouter/src/SHAPES/PDN_tcl/PDN_Tcl.cpp
-zrouter/src/SHAPES/PDN_tcl/PDN_Tcl.h

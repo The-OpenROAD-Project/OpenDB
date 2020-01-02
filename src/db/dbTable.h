@@ -70,9 +70,9 @@ class dbTable : public dbObjectTable, public dbIterator
 
     void resizePageTbl();
     void newPage();
-    void pushQ( uint & Q, _dbObject * e );
-    _dbObject * popQ( uint & Q );
-    void unlinkQ( uint & Q, _dbObject * e );
+    void pushQ( uint & Q, _dbFreeObject * e );
+    _dbFreeObject * popQ( uint & Q );
+    void unlinkQ( uint & Q, _dbFreeObject * e );
 
     dbTable( _dbDatabase * db, dbObject * owner,
               dbObjectTable * (dbObject::*m)(dbObjectType),

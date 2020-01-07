@@ -20,25 +20,26 @@
 //
 // THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
 // AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
-// IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
-// DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE
-// FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
-// DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR
-// SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
-// CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
-// OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
-// OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+// IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
+// ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE
+// LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
+// CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
+// SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
+// INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
+// CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
+// ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
+// POSSIBILITY OF SUCH DAMAGE.
 
 #ifndef ADS_DEFIN_ROW_H
 #define ADS_DEFIN_ROW_H
 
 #include <string.h>
-#include <vector>
 #include <map>
+#include <vector>
 
 #include "ads.h"
-#include "definIRow.h"
 #include "definBase.h"
+#include "definIRow.h"
 
 namespace odb {
 
@@ -48,45 +49,42 @@ class dbRow;
 
 class definRow : public definIRow, public definBase
 {
-    struct ltstr
+  struct ltstr
+  {
+    bool operator()(const char* s1, const char* s2) const
     {
-        bool operator()(const char * s1, const char * s2) const
-        {
-            return strcmp(s1,s2) < 0;
-        }
-    };
-
-    typedef std::map<const char *, dbSite *, ltstr> SiteMap;
-    SiteMap              _sites;
-    std::vector<dbLib *> _libs;
-    dbRow *              _cur_row;
-
-    /// Row interface methods
-    virtual void begin( const char * name,
-                        const char * site,
-                        int origin_x, int origin_y,
-                        defOrient orient,
-                        defRow direction,
-                        int num_sites,
-                        int spacing );
-    virtual void property( const char * name, const char * value );
-    virtual void property( const char * name, int value );
-    virtual void property( const char * name, double value );
-    virtual void end();
-    
-    dbSite * getSite( const char * name );
-    
-  public:
-    definRow();
-    virtual ~definRow();
-    void init();
-    void setLibs( std::vector<dbLib *> & libs )
-    {
-        _libs = libs;
+      return strcmp(s1, s2) < 0;
     }
-    
+  };
+
+  typedef std::map<const char*, dbSite*, ltstr> SiteMap;
+  SiteMap                                       _sites;
+  std::vector<dbLib*>                           _libs;
+  dbRow*                                        _cur_row;
+
+  /// Row interface methods
+  virtual void begin(const char* name,
+                     const char* site,
+                     int         origin_x,
+                     int         origin_y,
+                     defOrient   orient,
+                     defRow      direction,
+                     int         num_sites,
+                     int         spacing);
+  virtual void property(const char* name, const char* value);
+  virtual void property(const char* name, int value);
+  virtual void property(const char* name, double value);
+  virtual void end();
+
+  dbSite* getSite(const char* name);
+
+ public:
+  definRow();
+  virtual ~definRow();
+  void init();
+  void setLibs(std::vector<dbLib*>& libs) { _libs = libs; }
 };
-    
-} // namespace
+
+}  // namespace odb
 
 #endif

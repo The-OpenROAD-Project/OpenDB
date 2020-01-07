@@ -20,14 +20,15 @@
 //
 // THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
 // AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
-// IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
-// DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE
-// FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
-// DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR
-// SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
-// CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
-// OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
-// OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+// IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
+// ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE
+// LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
+// CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
+// SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
+// INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
+// CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
+// ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
+// POSSIBILITY OF SUCH DAMAGE.
 
 #ifndef ADS_DEFIN_IBLOCKAGE_H
 #define ADS_DEFIN_IBLOCKAGE_H
@@ -38,25 +39,25 @@
 
 class definIBlockage
 {
-  public:
-    // Routing Blockage interface methods
-    virtual void blockageRoutingBegin( const char * layer ) {}
-    virtual void blockageRoutingComponent( const char * comp ) {}
-    virtual void blockageRoutingSlots() {}
-    virtual void blockageRoutingFills() {}
-    virtual void blockageRoutingPushdown() {}
-    virtual void blockageRoutingMinSpacing(int spacing) {}
-    virtual void blockageRoutingEffectiveWidth(int width) {}
-    virtual void blockageRoutingRect( int x1, int y1, int x2, int y2 ) {}
-    virtual void blockageRoutingPolygon( std::vector<defPoint> & points ) {}
-    virtual void blockageRoutingEnd() {}
+ public:
+  // Routing Blockage interface methods
+  virtual void blockageRoutingBegin(const char* layer) {}
+  virtual void blockageRoutingComponent(const char* comp) {}
+  virtual void blockageRoutingSlots() {}
+  virtual void blockageRoutingFills() {}
+  virtual void blockageRoutingPushdown() {}
+  virtual void blockageRoutingMinSpacing(int spacing) {}
+  virtual void blockageRoutingEffectiveWidth(int width) {}
+  virtual void blockageRoutingRect(int x1, int y1, int x2, int y2) {}
+  virtual void blockageRoutingPolygon(std::vector<defPoint>& points) {}
+  virtual void blockageRoutingEnd() {}
 
-    // Placement Blockage interface methods
-    virtual void blockagePlacementBegin() {}
-    virtual void blockagePlacementComponent( const char * comp ) {}
-    virtual void blockagePlacementPushdown() {}
-    virtual void blockagePlacementRect( int x1, int y1, int x2, int y2 ) {}
-    virtual void blockagePlacementEnd() {}
+  // Placement Blockage interface methods
+  virtual void blockagePlacementBegin() {}
+  virtual void blockagePlacementComponent(const char* comp) {}
+  virtual void blockagePlacementPushdown() {}
+  virtual void blockagePlacementRect(int x1, int y1, int x2, int y2) {}
+  virtual void blockagePlacementEnd() {}
 };
-    
+
 #endif

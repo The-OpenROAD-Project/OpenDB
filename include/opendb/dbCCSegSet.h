@@ -20,14 +20,15 @@
 //
 // THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
 // AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
-// IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
-// DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE
-// FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
-// DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR
-// SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
-// CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
-// OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
-// OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+// IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
+// ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE
+// LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
+// CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
+// SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
+// INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
+// CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
+// ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
+// POSSIBILITY OF SUCH DAMAGE.
 
 #ifndef ADS_DB_CCSEG_SET_H
 #define ADS_DB_CCSEG_SET_H
@@ -41,158 +42,131 @@ class dbCCSeg;
 template <>
 class dbSetIterator<dbCCSeg>
 {
-    friend class dbSet<dbCCSeg>;
-    
-    dbIterator * _itr;
-    uint         _cur;
-    uint         _pid;
+  friend class dbSet<dbCCSeg>;
 
-    dbSetIterator( dbIterator * itr, uint id, uint pid )
-    {
-        _itr = itr;
-        _cur = id;
-        _pid = pid;
-    }
+  dbIterator* _itr;
+  uint        _cur;
+  uint        _pid;
 
-  public:
-    dbSetIterator()
-    {
-        _itr = NULL;
-        _cur = 0;
-        _pid = 0;
-    }
+  dbSetIterator(dbIterator* itr, uint id, uint pid)
+  {
+    _itr = itr;
+    _cur = id;
+    _pid = pid;
+  }
 
-    dbSetIterator( const dbSetIterator & it )
-    {
-        _itr = it._itr;
-        _cur = it._cur;
-        _pid = it._pid;
-    }
+ public:
+  dbSetIterator()
+  {
+    _itr = NULL;
+    _cur = 0;
+    _pid = 0;
+  }
 
-    bool operator==( const dbSetIterator<dbCCSeg> & it )
-    {
-        return (_itr == it._itr) && (_cur == it._cur) && (_pid == it._pid);
-    }
+  dbSetIterator(const dbSetIterator& it)
+  {
+    _itr = it._itr;
+    _cur = it._cur;
+    _pid = it._pid;
+  }
 
-    bool operator!=( const dbSetIterator<dbCCSeg> & it )
-    {
-        return (_itr != it._itr) || (_cur != it._cur) || (_pid != it._pid);
-    }
-    
-    dbCCSeg * operator*()
-    {
-        return (dbCCSeg *) _itr->getObject(_cur);
-    }
+  bool operator==(const dbSetIterator<dbCCSeg>& it)
+  {
+    return (_itr == it._itr) && (_cur == it._cur) && (_pid == it._pid);
+  }
 
-    dbCCSeg * operator->()
-    {
-        return (dbCCSeg *) _itr->getObject(_cur);
-    }
+  bool operator!=(const dbSetIterator<dbCCSeg>& it)
+  {
+    return (_itr != it._itr) || (_cur != it._cur) || (_pid != it._pid);
+  }
 
-    dbSetIterator<dbCCSeg> & operator++()
-    {
-        _cur = _itr->next(_cur,_pid);
-        return *this;
-    }
+  dbCCSeg* operator*() { return (dbCCSeg*) _itr->getObject(_cur); }
 
-    dbSetIterator<dbCCSeg> operator++(int)
-    {
-        dbSetIterator it(*this);
-        _cur = _itr->next(_cur,_pid);
-        return it;
-    }
+  dbCCSeg* operator->() { return (dbCCSeg*) _itr->getObject(_cur); }
+
+  dbSetIterator<dbCCSeg>& operator++()
+  {
+    _cur = _itr->next(_cur, _pid);
+    return *this;
+  }
+
+  dbSetIterator<dbCCSeg> operator++(int)
+  {
+    dbSetIterator it(*this);
+    _cur = _itr->next(_cur, _pid);
+    return it;
+  }
 };
 
 template <>
 class dbSet<dbCCSeg>
 {
-    dbIterator * _itr;
-    dbObject *   _parent;
-    uint         _pid;
-    
-  public:
-    typedef dbSetIterator<dbCCSeg> iterator;
-    
-    dbSet()
-    {
-        _itr = NULL;
-        _parent = NULL;
-        _pid = 0;
-    }
+  dbIterator* _itr;
+  dbObject*   _parent;
+  uint        _pid;
 
-    dbSet( dbObject * parent, dbIterator * itr )
-    {
-        _parent = parent;
-        _itr = itr;
-        _pid = parent->getId();
-    }
+ public:
+  typedef dbSetIterator<dbCCSeg> iterator;
 
-    dbSet( const dbSet<dbCCSeg> & c )
-    {
-        _itr = c._itr;
-        _parent = c._parent;
-        _pid = c._pid;
-    }
+  dbSet()
+  {
+    _itr    = NULL;
+    _parent = NULL;
+    _pid    = 0;
+  }
 
-    ///
-    /// Returns the number of items in this set.
-    ///
-    uint size()
-    {
-        return _itr->size(_parent);
-    }
+  dbSet(dbObject* parent, dbIterator* itr)
+  {
+    _parent = parent;
+    _itr    = itr;
+    _pid    = parent->getId();
+  }
 
-    ///
-    /// Return a begin() iterator.
-    ///
-    iterator begin()
-    {
-        return iterator( _itr, _itr->begin(_parent), _pid );
-    }
+  dbSet(const dbSet<dbCCSeg>& c)
+  {
+    _itr    = c._itr;
+    _parent = c._parent;
+    _pid    = c._pid;
+  }
 
-    ///
-    /// Return an end() iterator.
-    ///
-    iterator end()
-    {
-        return iterator( _itr, _itr->end(_parent), _pid );
-    }
+  ///
+  /// Returns the number of items in this set.
+  ///
+  uint size() { return _itr->size(_parent); }
 
-    ///
-    /// Returns the maximum number sequential elements the this set
-    /// may iterate.
-    ///
-    uint sequential()
-    {
-        return _itr->sequential();
-    }
+  ///
+  /// Return a begin() iterator.
+  ///
+  iterator begin() { return iterator(_itr, _itr->begin(_parent), _pid); }
 
-    ///
-    /// Returns true if this set is reversible.
-    ///
-    bool reversible()
-    {
-        return _itr->reversible();
-    }
+  ///
+  /// Return an end() iterator.
+  ///
+  iterator end() { return iterator(_itr, _itr->end(_parent), _pid); }
 
-    ///
-    /// Returns true if the is iterated in the reverse order that
-    /// it was created.
-    ///
-    bool orderReversed()
-    {
-        return _itr->orderReversed();
-    }
+  ///
+  /// Returns the maximum number sequential elements the this set
+  /// may iterate.
+  ///
+  uint sequential() { return _itr->sequential(); }
 
-    ///
-    /// Reverse the order of this set.
-    ///
-    void reverse()
-    {
-        _itr->reverse(_parent);
-    }
+  ///
+  /// Returns true if this set is reversible.
+  ///
+  bool reversible() { return _itr->reversible(); }
+
+  ///
+  /// Returns true if the is iterated in the reverse order that
+  /// it was created.
+  ///
+  bool orderReversed() { return _itr->orderReversed(); }
+
+  ///
+  /// Reverse the order of this set.
+  ///
+  void reverse() { _itr->reverse(_parent); }
 };
 
-} // namespace
+}  // namespace odb
 
 #endif

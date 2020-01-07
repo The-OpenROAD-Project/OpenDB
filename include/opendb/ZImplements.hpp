@@ -20,14 +20,15 @@
 //
 // THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
 // AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
-// IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
-// DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE
-// FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
-// DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR
-// SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
-// CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
-// OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
-// OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+// IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
+// ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE
+// LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
+// CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
+// SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
+// INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
+// CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
+// ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
+// POSSIBILITY OF SUCH DAMAGE.
 
 #ifndef ADS_ZIMPLEMENTS_HPP
 #define ADS_ZIMPLEMENTS_HPP
@@ -47,53 +48,50 @@
 namespace odb {
 
 template <class CLASS, class INTERFACE>
-ZImplements<CLASS,INTERFACE>::~ZImplements()
+ZImplements<CLASS, INTERFACE>::~ZImplements()
 {
 }
 
 template <class CLASS, class INTERFACE>
-uint ZImplements<CLASS,INTERFACE>::AddRef()
+uint ZImplements<CLASS, INTERFACE>::AddRef()
 {
-    return _ref_cnt.inc();
+  return _ref_cnt.inc();
 }
 
 template <class CLASS, class INTERFACE>
-uint ZImplements<CLASS,INTERFACE>::Release()
+uint ZImplements<CLASS, INTERFACE>::Release()
 {
-    int cnt = _ref_cnt.dec();
-    
-    if ( cnt == 0 )
-    {
-        _context._session->_ns->removeZObject((ZObject *) this);
-        delete this;
-    }
+  int cnt = _ref_cnt.dec();
 
-    return cnt;
+  if (cnt == 0) {
+    _context._session->_ns->removeZObject((ZObject*) this);
+    delete this;
+  }
+
+  return cnt;
 }
 
 template <class CLASS, class INTERFACE>
-int ZImplements<CLASS,INTERFACE>::QueryInterface( ZInterfaceID iid, void ** p )
-{ 
-    if ( iid == (ZInterfaceID) ZObject::ZIID )
-    {
-        ZObject * o = (ZObject *) this;
-        o->AddRef();
-        *p = o; 
-        return Z_OK;
-    }
-    
-    else if ( iid == (ZInterfaceID) INTERFACE::ZIID )
-    {
-        INTERFACE * o = (INTERFACE *) this;
-        o->AddRef();
-        *p = o; 
-        return Z_OK;
-    }
-    
-    *p = NULL;
-    return Z_ERROR_NO_INTERFACE;
+int ZImplements<CLASS, INTERFACE>::QueryInterface(ZInterfaceID iid, void** p)
+{
+  if (iid == (ZInterfaceID) ZObject::ZIID) {
+    ZObject* o = (ZObject*) this;
+    o->AddRef();
+    *p = o;
+    return Z_OK;
+  }
+
+  else if (iid == (ZInterfaceID) INTERFACE::ZIID) {
+    INTERFACE* o = (INTERFACE*) this;
+    o->AddRef();
+    *p = o;
+    return Z_OK;
+  }
+
+  *p = NULL;
+  return Z_ERROR_NO_INTERFACE;
 }
 
-}
+}  // namespace odb
 
 #endif

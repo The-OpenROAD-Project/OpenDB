@@ -20,72 +20,74 @@
 //
 // THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
 // AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
-// IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
-// DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE
-// FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
-// DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR
-// SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
-// CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
-// OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
-// OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+// IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
+// ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE
+// LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
+// CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
+// SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
+// INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
+// CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
+// ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
+// POSSIBILITY OF SUCH DAMAGE.
 
 #include "dbTechLayerItr.h"
+#include "dbTable.h"
 #include "dbTech.h"
 #include "dbTechLayer.h"
-#include "dbTable.h"
 
 namespace odb {
 
 bool dbTechLayerItr::reversible()
 {
-    return false;
+  return false;
 }
 
 bool dbTechLayerItr::orderReversed()
 {
-    return false;
+  return false;
 }
 
-void dbTechLayerItr::reverse(dbObject * parent)
+void dbTechLayerItr::reverse(dbObject* parent)
 {
 }
 
 uint dbTechLayerItr::sequential()
 {
-    return 0;
+  return 0;
 }
 
-uint dbTechLayerItr::size( dbObject * parent )
+uint dbTechLayerItr::size(dbObject* parent)
 {
-    uint id;
-    uint cnt = 0;
+  uint id;
+  uint cnt = 0;
 
-    for( id = dbTechLayerItr::begin(parent); id != dbTechLayerItr::end(parent); id = dbTechLayerItr::next(id) )
-        ++cnt;
-   
-    return cnt; 
+  for (id = dbTechLayerItr::begin(parent); id != dbTechLayerItr::end(parent);
+       id = dbTechLayerItr::next(id))
+    ++cnt;
+
+  return cnt;
 }
 
-uint dbTechLayerItr::begin( dbObject * parent )
+uint dbTechLayerItr::begin(dbObject* parent)
 {
-    _dbTech * tech = (_dbTech *) parent;
-    return (uint) tech->_bottom;
+  _dbTech* tech = (_dbTech*) parent;
+  return (uint) tech->_bottom;
 }
 
-uint dbTechLayerItr::end( dbObject * parent )
+uint dbTechLayerItr::end(dbObject* parent)
 {
-    return 0;
+  return 0;
 }
 
-uint dbTechLayerItr::next( uint id, ... )
+uint dbTechLayerItr::next(uint id, ...)
 {
-    _dbTechLayer * layer = _layer_tbl->getPtr(id);
-    return layer->_upper;
+  _dbTechLayer* layer = _layer_tbl->getPtr(id);
+  return layer->_upper;
 }
 
-dbObject * dbTechLayerItr::getObject( uint id, ... )
+dbObject* dbTechLayerItr::getObject(uint id, ...)
 {
-    return _layer_tbl->getPtr(id);
+  return _layer_tbl->getPtr(id);
 }
 
-} // namespace
+}  // namespace odb

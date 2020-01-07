@@ -20,19 +20,20 @@
 //
 // THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
 // AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
-// IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
-// DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE
-// FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
-// DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR
-// SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
-// CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
-// OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
-// OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+// IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
+// ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE
+// LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
+// CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
+// SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
+// INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
+// CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
+// ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
+// POSSIBILITY OF SUCH DAMAGE.
 
-#include <stdlib.h>
-#include <stdio.h>
-#include <ctype.h>
 #include "definRow.h"
+#include <ctype.h>
+#include <stdio.h>
+#include <stdlib.h>
 #include "db.h"
 #include "dbShape.h"
 
@@ -44,162 +45,172 @@ definRow::definRow()
 
 definRow::~definRow()
 {
-    SiteMap::iterator sitr;
+  SiteMap::iterator sitr;
 
-    for( sitr = _sites.begin(); sitr != _sites.end(); ++sitr )
-        free( (void *) (*sitr).first );
+  for (sitr = _sites.begin(); sitr != _sites.end(); ++sitr)
+    free((void*) (*sitr).first);
 }
 
 void definRow::init()
 {
-    definBase::init();
-    _libs.clear();
+  definBase::init();
+  _libs.clear();
 
-    SiteMap::iterator sitr;
+  SiteMap::iterator sitr;
 
-    for( sitr = _sites.begin(); sitr != _sites.end(); ++sitr )
-        free( (void *) (*sitr).first );
+  for (sitr = _sites.begin(); sitr != _sites.end(); ++sitr)
+    free((void*) (*sitr).first);
 
-    _sites.clear();
-    _cur_row = NULL;
+  _sites.clear();
+  _cur_row = NULL;
 }
 
-dbSite *
-definRow::getSite( const char * name )
+dbSite* definRow::getSite(const char* name)
 {
-    SiteMap::iterator mitr;
+  SiteMap::iterator mitr;
 
-    mitr = _sites.find( name );
+  mitr = _sites.find(name);
 
-    if ( mitr != _sites.end() )
-    {
-        dbSite * site = (*mitr).second;
-        return site;
+  if (mitr != _sites.end()) {
+    dbSite* site = (*mitr).second;
+    return site;
+  }
+
+  std::vector<dbLib*>::iterator litr;
+
+  for (litr = _libs.begin(); litr != _libs.end(); ++litr) {
+    dbLib* lib = *litr;
+
+    dbSite* site = lib->findSite(name);
+
+    if (site) {
+      const char* n = strdup(name);
+      assert(n);
+      _sites[n] = site;
+      return site;
     }
+  }
 
-    std::vector<dbLib *>::iterator litr;
-
-    for( litr = _libs.begin(); litr != _libs.end(); ++litr )
-    {
-        dbLib * lib = * litr;
-
-        dbSite * site = lib->findSite( name );
-
-        if ( site )
-        {
-            const char * n = strdup(name);
-            assert(n);
-            _sites[n] = site;
-            return site;
-        }
-    }
-
-    return NULL;
+  return NULL;
 }
 
-void definRow::begin( const char * name,
-                      const char * site_name,
-                      int x, int y,
-                      defOrient orient,
-                      defRow direction,
-                      int num_sites,
-                      int spacing )
+void definRow::begin(const char* name,
+                     const char* site_name,
+                     int         x,
+                     int         y,
+                     defOrient   orient,
+                     defRow      direction,
+                     int         num_sites,
+                     int         spacing)
 {
+  dbSite* site = getSite(site_name);
 
-    dbSite * site = getSite(site_name);
+  if (site == NULL) {
+    notice(0,
+           "error: undefined site (%s) referenced in row (%s) statement.\n",
+           site_name,
+           name);
+    ++_errors;
+    return;
+  }
 
-    if ( site == NULL )
-    {
-        notice(0,"error: undefined site (%s) referenced in row (%s) statement.\n", site_name, name );
-        ++_errors;
-        return;
-    }
+  dbOrientType ornt;
 
-    dbOrientType ornt;
-    
-    switch (orient)
-    {
-        case DEF_ORIENT_N:
-            ornt = dbOrientType::R0;
-            break;
-        case DEF_ORIENT_S: 
-            ornt = dbOrientType::R180;
-            break;
-        case DEF_ORIENT_E: 
-            ornt = dbOrientType::R270;
-            break;
-        case DEF_ORIENT_W: 
-            ornt = dbOrientType::R90;
-            break;
-        case DEF_ORIENT_FN: 
-            ornt = dbOrientType::MY;
-            break;
-        case DEF_ORIENT_FS: 
-            ornt = dbOrientType::MX;
-            break;
-        case DEF_ORIENT_FE: 
-            ornt = dbOrientType::MYR90;
-            break;
-        case DEF_ORIENT_FW: 
-            ornt = dbOrientType::MXR90;
-            break;
-    }
+  switch (orient) {
+    case DEF_ORIENT_N:
+      ornt = dbOrientType::R0;
+      break;
+    case DEF_ORIENT_S:
+      ornt = dbOrientType::R180;
+      break;
+    case DEF_ORIENT_E:
+      ornt = dbOrientType::R270;
+      break;
+    case DEF_ORIENT_W:
+      ornt = dbOrientType::R90;
+      break;
+    case DEF_ORIENT_FN:
+      ornt = dbOrientType::MY;
+      break;
+    case DEF_ORIENT_FS:
+      ornt = dbOrientType::MX;
+      break;
+    case DEF_ORIENT_FE:
+      ornt = dbOrientType::MYR90;
+      break;
+    case DEF_ORIENT_FW:
+      ornt = dbOrientType::MXR90;
+      break;
+  }
 
-    if ( direction == DEF_VERTICAL )
-        _cur_row = dbRow::create( _block, name, site, dbdist(x), dbdist(y), ornt,
-                       dbRowDir::VERTICAL, num_sites, dbdist(spacing) );
-    else
-        _cur_row = dbRow::create( _block, name, site, dbdist(x), dbdist(y), ornt,
-                       dbRowDir::HORIZONTAL, num_sites, dbdist(spacing) );
+  if (direction == DEF_VERTICAL)
+    _cur_row = dbRow::create(_block,
+                             name,
+                             site,
+                             dbdist(x),
+                             dbdist(y),
+                             ornt,
+                             dbRowDir::VERTICAL,
+                             num_sites,
+                             dbdist(spacing));
+  else
+    _cur_row = dbRow::create(_block,
+                             name,
+                             site,
+                             dbdist(x),
+                             dbdist(y),
+                             ornt,
+                             dbRowDir::HORIZONTAL,
+                             num_sites,
+                             dbdist(spacing));
 }
-  void definRow::property( const char * name, const char * value )
+void definRow::property(const char* name, const char* value)
 {
-    if ( _cur_row == NULL )
-        return;
+  if (_cur_row == NULL)
+    return;
 
-    dbProperty * p = dbProperty::find(_cur_row,name);
-    if ( p )
-        dbProperty::destroy(p);
+  dbProperty* p = dbProperty::find(_cur_row, name);
+  if (p)
+    dbProperty::destroy(p);
 
-    dbStringProperty::create(_cur_row,name,value);
+  dbStringProperty::create(_cur_row, name, value);
 }
 
-void definRow::property( const char * name, int value )
+void definRow::property(const char* name, int value)
 {
-    if ( _cur_row == NULL )
-        return;
+  if (_cur_row == NULL)
+    return;
 
-    dbProperty * p = dbProperty::find(_cur_row,name);
-    if ( p )
-        dbProperty::destroy(p);
+  dbProperty* p = dbProperty::find(_cur_row, name);
+  if (p)
+    dbProperty::destroy(p);
 
-    dbIntProperty::create(_cur_row,name,value);
+  dbIntProperty::create(_cur_row, name, value);
 }
 
-void definRow::property( const char * name, double value )
+void definRow::property(const char* name, double value)
 {
-    if ( _cur_row == NULL )
-        return;
+  if (_cur_row == NULL)
+    return;
 
-    dbProperty * p = dbProperty::find(_cur_row,name);
+  dbProperty* p = dbProperty::find(_cur_row, name);
 
-    if ( p )
-        dbProperty::destroy(p);
+  if (p)
+    dbProperty::destroy(p);
 
-    dbDoubleProperty::create(_cur_row,name,value);
+  dbDoubleProperty::create(_cur_row, name, value);
 }
 
 void definRow::end()
 {
-    if ( _cur_row )
-    {
-        dbSet<dbProperty> props = dbProperty::getProperties(_cur_row);
+  if (_cur_row) {
+    dbSet<dbProperty> props = dbProperty::getProperties(_cur_row);
 
-        if ( !props.empty() && props.orderReversed() )
-            props.reverse();
-    }
+    if (!props.empty() && props.orderReversed())
+      props.reverse();
+  }
 
-    _cur_row = NULL;
-}  
+  _cur_row = NULL;
+}
 
-} // namespace
+}  // namespace odb

@@ -20,14 +20,15 @@
 //
 // THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
 // AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
-// IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
-// DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE
-// FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
-// DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR
-// SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
-// CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
-// OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
-// OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+// IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
+// ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE
+// LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
+// CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
+// SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
+// INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
+// CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
+// ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
+// POSSIBILITY OF SUCH DAMAGE.
 
 /* Utility to convert numbers to base-100 for efficient transfer across
 ** the network (for zui)
@@ -36,54 +37,48 @@
 
 #include "b100.h"
 
-void b100(int num, FILE *fp)
+void b100(int num, FILE* fp)
 {
-    int st = num;
-    int d1;
+  int st = num;
+  int d1;
 
-    if( num == INT_MIN )
-    {
-        fputs("L@LK1",fp);
-        return;
-    }
+  if (num == INT_MIN) {
+    fputs("L@LK1", fp);
+    return;
+  }
 
-    if ( num < 0 )
-    {
-        fputc(B100_MINUS,fp);
-        st = -num;
-    }
+  if (num < 0) {
+    fputc(B100_MINUS, fp);
+    st = -num;
+  }
 
-    while(1)
-    {
-        d1 =  st % 100;
-        fputc(B100_START+d1,fp);
-        if( (st /= 100) == 0) break;
-    } 
+  while (1) {
+    d1 = st % 100;
+    fputc(B100_START + d1, fp);
+    if ((st /= 100) == 0)
+      break;
+  }
 }
 
-char *unb100(char *enc, int *resout)
+char* unb100(char* enc, int* resout)
 {
-    char *ptr = enc;
-    int res = 0;
-    int flag = 0;
-    int factor=1;
-    if ( *ptr == B100_MINUS )
-    {
-        flag = 1;
-        ptr++;
-    }
-    while( *ptr >= B100_START )
-    {
-        res = res + (*ptr++-B100_START)*factor;
-        factor *= 100;
-    }
-    if( flag )
-    {
-        res = -res;
-    }
-    *resout = res;
+  char* ptr    = enc;
+  int   res    = 0;
+  int   flag   = 0;
+  int   factor = 1;
+  if (*ptr == B100_MINUS) {
+    flag = 1;
+    ptr++;
+  }
+  while (*ptr >= B100_START) {
+    res = res + (*ptr++ - B100_START) * factor;
+    factor *= 100;
+  }
+  if (flag) {
+    res = -res;
+  }
+  *resout = res;
 
-    // next position to read
-    return ptr;
+  // next position to read
+  return ptr;
 }
-

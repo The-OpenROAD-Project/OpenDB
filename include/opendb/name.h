@@ -20,67 +20,66 @@
 //
 // THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
 // AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
-// IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
-// DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE
-// FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
-// DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR
-// SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
-// CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
-// OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
-// OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+// IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
+// ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE
+// LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
+// CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
+// SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
+// INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
+// CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
+// ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
+// POSSIBILITY OF SUCH DAMAGE.
 
-#ifndef NAME_H 
-#define NAME_H 
+#ifndef NAME_H
+#define NAME_H
 
-#include <stdlib.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 
 #include "atypes.h"
-#include "util.h"
 #include "misc_global.h"
+#include "util.h"
 
 class Ath__nameBucket
 {
-private:
-	char *_name;
-	uint _tag;
+ private:
+  char* _name;
+  uint  _tag;
 
-public:
-	void set(char *name, uint tag);
-	void deallocWord();
+ public:
+  void set(char* name, uint tag);
+  void deallocWord();
 
-	friend class Ath__nameTable;
+  friend class Ath__nameTable;
 };
 
 class Ath__nameTable
 {
-private:
-	AthHash<int> *_hashTable;
-	AthPool<Ath__nameBucket> *_bucketPool;
-	// int *nameMap; // TODO
-	
-	void allocName(char *name, uint nameId, bool hash=false);
-	uint addName(char *name, uint dataId);
+ private:
+  AthHash<int>*             _hashTable;
+  AthPool<Ath__nameBucket>* _bucketPool;
+  // int *nameMap; // TODO
 
-public:
-	
-	~Ath__nameTable();
-	Ath__nameTable(uint n, char *zero=NULL);
+  void allocName(char* name, uint nameId, bool hash = false);
+  uint addName(char* name, uint dataId);
 
-	void writeDB(FILE *fp, char *nameType);
-	void readDB(FILE *fp);
-	void addData(uint poolId, uint dataId);
+ public:
+  ~Ath__nameTable();
+  Ath__nameTable(uint n, char* zero = NULL);
 
-	uint addNewName(char *name, uint dataId);
-	char *getName(uint poolId);
-	uint getDataId(int poolId);
-	uint getTagId(char *name);
-	uint getDataId(char *name, uint ignoreFlag=0, uint exitFlag=0, int *nn=0);
+  void writeDB(FILE* fp, char* nameType);
+  void readDB(FILE* fp);
+  void addData(uint poolId, uint dataId);
+
+  uint  addNewName(char* name, uint dataId);
+  char* getName(uint poolId);
+  uint  getDataId(int poolId);
+  uint  getTagId(char* name);
+  uint  getDataId(char* name,
+                  uint  ignoreFlag = 0,
+                  uint  exitFlag   = 0,
+                  int*  nn         = 0);
 };
 
 #endif
-
-		
-	

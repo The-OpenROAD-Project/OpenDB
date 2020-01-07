@@ -20,65 +20,68 @@
 //
 // THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
 // AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
-// IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
-// DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE
-// FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
-// DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR
-// SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
-// CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
-// OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
-// OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+// IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
+// ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE
+// LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
+// CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
+// SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
+// INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
+// CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
+// ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
+// POSSIBILITY OF SUCH DAMAGE.
 
 #include "dbTarget.h"
+#include "db.h"
 #include "dbDatabase.h"
 #include "dbLib.h"
-#include "dbTech.h"
-#include "dbTechLayer.h"
-#include "dbMaster.h"
 #include "dbMTerm.h"
+#include "dbMaster.h"
 #include "dbTable.h"
 #include "dbTable.hpp"
-#include "db.h"
+#include "dbTech.h"
+#include "dbTechLayer.h"
 
 namespace odb {
 
 template class dbTable<_dbTarget>;
 
-bool _dbTarget::operator==( const _dbTarget & rhs ) const
+bool _dbTarget::operator==(const _dbTarget& rhs) const
 {
-    if( _point != rhs._point )
-        return false;
-    
-    if( _mterm != rhs._mterm )
-        return false;
-    
-    if( _layer != rhs._layer )
-        return false;
-    
-    if( _next != rhs._next )
-        return false;
-    
-    return true;
+  if (_point != rhs._point)
+    return false;
+
+  if (_mterm != rhs._mterm)
+    return false;
+
+  if (_layer != rhs._layer)
+    return false;
+
+  if (_next != rhs._next)
+    return false;
+
+  return true;
 }
 
-void _dbTarget::differences( dbDiff & diff, const char * field, const _dbTarget & rhs ) const
+void _dbTarget::differences(dbDiff&          diff,
+                            const char*      field,
+                            const _dbTarget& rhs) const
 {
-    DIFF_BEGIN
-    DIFF_FIELD(_point);
-    DIFF_FIELD(_mterm);
-    DIFF_FIELD(_layer);
-    DIFF_FIELD(_next);
-    DIFF_END
+  DIFF_BEGIN
+  DIFF_FIELD(_point);
+  DIFF_FIELD(_mterm);
+  DIFF_FIELD(_layer);
+  DIFF_FIELD(_next);
+  DIFF_END
 }
 
-void _dbTarget::out( dbDiff & diff, char side, const char * field ) const
+void _dbTarget::out(dbDiff& diff, char side, const char* field) const
 {
-    DIFF_OUT_BEGIN
-    DIFF_OUT_FIELD(_point);
-    DIFF_OUT_FIELD(_mterm);
-    DIFF_OUT_FIELD(_layer);
-    DIFF_OUT_FIELD(_next);
-    DIFF_END
+  DIFF_OUT_BEGIN
+  DIFF_OUT_FIELD(_point);
+  DIFF_OUT_FIELD(_mterm);
+  DIFF_OUT_FIELD(_layer);
+  DIFF_OUT_FIELD(_next);
+  DIFF_END
 }
 
 ////////////////////////////////////////////////////////////////////
@@ -87,98 +90,90 @@ void _dbTarget::out( dbDiff & diff, char side, const char * field ) const
 //
 ////////////////////////////////////////////////////////////////////
 
-dbMaster *
-dbTarget::getMaster()
+dbMaster* dbTarget::getMaster()
 {
-    return (dbMaster *) getOwner();
+  return (dbMaster*) getOwner();
 }
 
-dbMTerm *
-dbTarget::getMTerm()
+dbMTerm* dbTarget::getMTerm()
 {
-    _dbTarget * target = (_dbTarget *) this;
-    _dbMaster * master = (_dbMaster *) getOwner();
-    return (dbMTerm *) master->_mterm_tbl->getPtr( target->_mterm );
+  _dbTarget* target = (_dbTarget*) this;
+  _dbMaster* master = (_dbMaster*) getOwner();
+  return (dbMTerm*) master->_mterm_tbl->getPtr(target->_mterm);
 }
 
-dbTechLayer *
-dbTarget::getTechLayer()
+dbTechLayer* dbTarget::getTechLayer()
 {
-    _dbTarget * target = (_dbTarget *) this;
-    dbDatabase * db = (dbDatabase *) getDatabase();
-    _dbTech * tech = (_dbTech *) db->getTech();
-    return (dbTechLayer *) tech->_layer_tbl->getPtr( target->_layer );
+  _dbTarget*  target = (_dbTarget*) this;
+  dbDatabase* db     = (dbDatabase*) getDatabase();
+  _dbTech*    tech   = (_dbTech*) db->getTech();
+  return (dbTechLayer*) tech->_layer_tbl->getPtr(target->_layer);
 }
 
-adsPoint
-dbTarget::getPoint()
+adsPoint dbTarget::getPoint()
 {
-    _dbTarget * target = (_dbTarget *) this;
-    return target->_point;
+  _dbTarget* target = (_dbTarget*) this;
+  return target->_point;
 }
 
-dbTarget *
-dbTarget::create( dbMTerm * mterm_, dbTechLayer * layer_, adsPoint point )
+dbTarget* dbTarget::create(dbMTerm* mterm_, dbTechLayer* layer_, adsPoint point)
 {
-    _dbMaster * master = (_dbMaster *) mterm_->getOwner();
-    _dbMTerm * mterm = (_dbMTerm *) mterm_;
-    _dbTechLayer * layer = (_dbTechLayer *) layer_;
+  _dbMaster*    master = (_dbMaster*) mterm_->getOwner();
+  _dbMTerm*     mterm  = (_dbMTerm*) mterm_;
+  _dbTechLayer* layer  = (_dbTechLayer*) layer_;
 
-    _dbTarget * target = master->_target_tbl->create();
-    target->_point = point;
-    target->_mterm = mterm->getOID();
-    target->_layer = layer->getOID();
-    target->_next = mterm->_targets;
-    mterm->_targets = target->getOID();
-    return (dbTarget *) target;
+  _dbTarget* target = master->_target_tbl->create();
+  target->_point    = point;
+  target->_mterm    = mterm->getOID();
+  target->_layer    = layer->getOID();
+  target->_next     = mterm->_targets;
+  mterm->_targets   = target->getOID();
+  return (dbTarget*) target;
 }
 
-void dbTarget::destroy( dbTarget * target_ )
+void dbTarget::destroy(dbTarget* target_)
 {
-    _dbTarget * target = (_dbTarget *) target_;
-    _dbMaster * master = (_dbMaster *) target->getOwner();
+  _dbTarget* target = (_dbTarget*) target_;
+  _dbMaster* master = (_dbMaster*) target->getOwner();
 
-    // unlink target from the mterm
-    _dbMTerm * mterm = (_dbMTerm *) master->_mterm_tbl->getPtr(target->_mterm);
-    uint tid = target->getOID();
-    uint id = mterm->_targets;
-    _dbTarget * p = 0;
+  // unlink target from the mterm
+  _dbMTerm*  mterm = (_dbMTerm*) master->_mterm_tbl->getPtr(target->_mterm);
+  uint       tid   = target->getOID();
+  uint       id    = mterm->_targets;
+  _dbTarget* p     = 0;
 
-    while( id )
-    {
-        _dbTarget * t = master->_target_tbl->getPtr(id);
-        
-        if ( id == tid )
-        {
-            if ( p == NULL )
-                mterm->_targets = t->_next;
-            else
-                p->_next = t->_next;
+  while (id) {
+    _dbTarget* t = master->_target_tbl->getPtr(id);
 
-            break;
-        }
+    if (id == tid) {
+      if (p == NULL)
+        mterm->_targets = t->_next;
+      else
+        p->_next = t->_next;
 
-        id = t->_next;
-        p = t;
+      break;
     }
-    
-    dbProperty::destroyProperties(target);
-    master->_target_tbl->destroy(target);
+
+    id = t->_next;
+    p  = t;
+  }
+
+  dbProperty::destroyProperties(target);
+  master->_target_tbl->destroy(target);
 }
 
-dbSet<dbTarget>::iterator dbTarget::destroy( dbSet<dbTarget>::iterator & itr )
+dbSet<dbTarget>::iterator dbTarget::destroy(dbSet<dbTarget>::iterator& itr)
 {
-    dbTarget * t = *itr;
-    dbSet<dbTarget>::iterator next = ++itr;
-    destroy( t );
-    return next;
+  dbTarget*                 t    = *itr;
+  dbSet<dbTarget>::iterator next = ++itr;
+  destroy(t);
+  return next;
 }
 
-dbTarget *
-dbTarget::getTarget( dbMaster * master_, uint dbid_ )
+dbTarget* dbTarget::getTarget(dbMaster* master_, uint dbid_)
 {
-    _dbMaster * master = (_dbMaster *) master_;
-    return (dbTarget *) master->_target_tbl->getPtr(dbid_);
+  _dbMaster* master = (_dbMaster*) master_;
+  return (dbTarget*) master->_target_tbl->getPtr(dbid_);
 }
 
-} // namespace
+}  // namespace odb

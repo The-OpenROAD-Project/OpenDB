@@ -20,14 +20,15 @@
 //
 // THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
 // AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
-// IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
-// DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE
-// FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
-// DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR
-// SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
-// CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
-// OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
-// OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+// IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
+// ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE
+// LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
+// CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
+// SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
+// INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
+// CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
+// ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
+// POSSIBILITY OF SUCH DAMAGE.
 
 #include "definBase.h"
 #include "db.h"
@@ -36,36 +37,36 @@ namespace odb {
 
 definBase::definBase()
 {
-    _tech = NULL;
-    _block = NULL;
-    _errors = 0;
-    _dist_factor = 10;
+  _tech        = NULL;
+  _block       = NULL;
+  _errors      = 0;
+  _dist_factor = 10;
 }
 
 void definBase::init()
 {
-    _tech = NULL;
-    _block = NULL;
-    _errors = 0;
-    _dist_factor = 10;
+  _tech        = NULL;
+  _block       = NULL;
+  _errors      = 0;
+  _dist_factor = 10;
 }
 
-void definBase::units( int d )
+void definBase::units(int d)
 {
-    int dbu = _tech->getDbUnitsPerMicron();
-    _dist_factor = dbu / d;
+  int dbu      = _tech->getDbUnitsPerMicron();
+  _dist_factor = dbu / d;
 }
 
-void definBase::setTech( dbTech * tech )
+void definBase::setTech(dbTech* tech)
 {
-    _tech = tech;
-    int dbu = _tech->getDbUnitsPerMicron();
-    _dist_factor = dbu / 100;
+  _tech        = tech;
+  int dbu      = _tech->getDbUnitsPerMicron();
+  _dist_factor = dbu / 100;
 }
 
-void definBase::setBlock( dbBlock * block )
+void definBase::setBlock(dbBlock* block)
 {
-    _block = block;
+  _block = block;
 }
 
-} // namespace
+}  // namespace odb

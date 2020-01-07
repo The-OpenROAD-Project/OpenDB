@@ -20,14 +20,15 @@
 //
 // THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
 // AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
-// IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
-// DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE
-// FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
-// DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR
-// SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
-// CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
-// OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
-// OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+// IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
+// ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE
+// LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
+// CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
+// SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
+// INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
+// CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
+// ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
+// POSSIBILITY OF SUCH DAMAGE.
 
 #include "definPropDefs.h"
 #include "db.h"
@@ -36,145 +37,143 @@ namespace odb {
 
 void definPropDefs::beginDefinitions()
 {
-    _defs = NULL;
+  _defs = NULL;
 }
 
 void definPropDefs::endDefinitions()
 {
-    if ( _defs == NULL )
-        return;
+  if (_defs == NULL)
+    return;
 
-    dbSet<dbProperty> objects = dbProperty::getProperties(_defs);
+  dbSet<dbProperty> objects = dbProperty::getProperties(_defs);
 
-    if ( objects.orderReversed() )
-        objects.reverse();
-    
-    dbSet<dbProperty>::iterator itr;
+  if (objects.orderReversed())
+    objects.reverse();
 
-    for( itr = objects.begin(); itr != objects.end(); ++itr )
-    {
-        dbSet<dbProperty> props = dbProperty::getProperties(*itr);
+  dbSet<dbProperty>::iterator itr;
 
-        if ( props.orderReversed() )
-            props.reverse();
-    }
+  for (itr = objects.begin(); itr != objects.end(); ++itr) {
+    dbSet<dbProperty> props = dbProperty::getProperties(*itr);
+
+    if (props.orderReversed())
+      props.reverse();
+  }
 }
 
-void definPropDefs::begin( defObjectType obj_type, const char * name, defPropType prop_type )
+void definPropDefs::begin(defObjectType obj_type,
+                          const char*   name,
+                          defPropType   prop_type)
 {
-    if ( _defs == NULL )
-    {
-        _defs = dbProperty::find( _block, "__ADS_DEF_PROPERTY_DEFINITIONS__" );
+  if (_defs == NULL) {
+    _defs = dbProperty::find(_block, "__ADS_DEF_PROPERTY_DEFINITIONS__");
 
-        if ( _defs == NULL )
-            _defs = dbIntProperty::create( _block, "__ADS_DEF_PROPERTY_DEFINITIONS__", 0 );
-    }
-    
-    const char * otype;
-    
-    switch(obj_type)
-    {
-        case DEF_COMPONENT:
-            otype = "COMPONENT";
-            break;
-            
-        case DEF_COMPONENTPIN:
-            otype = "COMPONENTPIN";
-            break;
-            
-        case DEF_DESIGN:
-            otype = "DESIGN";
-            break;
-            
-        case DEF_GROUP:
-            otype = "GROUP";
-            break;
-            
-        case DEF_NET:
-            otype = "NET";
-            break;
-            
-        case DEF_REGION:
-            otype = "REGION";
-            break;
-            
-        case DEF_ROW:
-            otype = "ROW";
-            break;
-            
-        case DEF_SPECIALNET:
-            otype = "SPECIALNET";
-            break;
-            
-        case DEF_NONDEFAULTRULE:
-            otype = "NONDEFAULTRULE";
-           break;
+    if (_defs == NULL)
+      _defs = dbIntProperty::create(
+          _block, "__ADS_DEF_PROPERTY_DEFINITIONS__", 0);
+  }
 
-        default:
-            assert(0);
-    }
+  const char* otype;
 
-    dbProperty * obj = dbProperty::find( _defs, otype );
+  switch (obj_type) {
+    case DEF_COMPONENT:
+      otype = "COMPONENT";
+      break;
 
-    if ( obj == NULL )
-    {
-        if ( obj == NULL )
-            obj = dbIntProperty::create( _defs, otype, 0 );
-    }
+    case DEF_COMPONENTPIN:
+      otype = "COMPONENTPIN";
+      break;
 
-    _prop = dbProperty::find( obj, name );
+    case DEF_DESIGN:
+      otype = "DESIGN";
+      break;
 
-    if ( _prop )
-        dbProperty::destroy(_prop);
+    case DEF_GROUP:
+      otype = "GROUP";
+      break;
 
-    switch(prop_type)
-    {
-        case DEF_INTEGER:
-            _prop = dbIntProperty::create( obj, name, 0 );
-            break;
-        
-        case DEF_REAL:
-            _prop = dbDoubleProperty::create( obj, name, 0.0 );
-            break;
-        
-        case DEF_STRING:
-            _prop = dbStringProperty::create( obj, name, "" );
-            break;
+    case DEF_NET:
+      otype = "NET";
+      break;
 
-        default:
-            assert(0);
-    }
+    case DEF_REGION:
+      otype = "REGION";
+      break;
+
+    case DEF_ROW:
+      otype = "ROW";
+      break;
+
+    case DEF_SPECIALNET:
+      otype = "SPECIALNET";
+      break;
+
+    case DEF_NONDEFAULTRULE:
+      otype = "NONDEFAULTRULE";
+      break;
+
+    default:
+      assert(0);
+  }
+
+  dbProperty* obj = dbProperty::find(_defs, otype);
+
+  if (obj == NULL) {
+    if (obj == NULL)
+      obj = dbIntProperty::create(_defs, otype, 0);
+  }
+
+  _prop = dbProperty::find(obj, name);
+
+  if (_prop)
+    dbProperty::destroy(_prop);
+
+  switch (prop_type) {
+    case DEF_INTEGER:
+      _prop = dbIntProperty::create(obj, name, 0);
+      break;
+
+    case DEF_REAL:
+      _prop = dbDoubleProperty::create(obj, name, 0.0);
+      break;
+
+    case DEF_STRING:
+      _prop = dbStringProperty::create(obj, name, "");
+      break;
+
+    default:
+      assert(0);
+  }
 }
 
-void definPropDefs::value( const char * value )
+void definPropDefs::value(const char* value)
 {
-    dbStringProperty::create( _prop, "VALUE", value );
+  dbStringProperty::create(_prop, "VALUE", value);
 }
 
-void definPropDefs::value( int value )
+void definPropDefs::value(int value)
 {
-    dbIntProperty::create( _prop, "VALUE", value );
+  dbIntProperty::create(_prop, "VALUE", value);
 }
 
-void definPropDefs::value( double value )
+void definPropDefs::value(double value)
 {
-    dbDoubleProperty::create( _prop, "VALUE", value );
+  dbDoubleProperty::create(_prop, "VALUE", value);
 }
 
-void definPropDefs::range( int minV, int maxV )
+void definPropDefs::range(int minV, int maxV)
 {
-    dbIntProperty::create( _prop, "MIN", minV );
-    dbIntProperty::create( _prop, "MAX", maxV );
+  dbIntProperty::create(_prop, "MIN", minV);
+  dbIntProperty::create(_prop, "MAX", maxV);
 }
 
-void definPropDefs::range( double minV, double maxV )
+void definPropDefs::range(double minV, double maxV)
 {
-    dbDoubleProperty::create( _prop, "MIN", minV );
-    dbDoubleProperty::create( _prop, "MAX", maxV );
+  dbDoubleProperty::create(_prop, "MIN", minV);
+  dbDoubleProperty::create(_prop, "MAX", maxV);
 }
 
 void definPropDefs::end()
 {
 }
 
-} // namespace
+}  // namespace odb

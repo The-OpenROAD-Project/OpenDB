@@ -30,1299 +30,1377 @@
  OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 
-%{
+%
+{
+#include <assert.h>
 #include <stdio.h>
 #include <stdlib.h>
-#include <assert.h>
 #include "def.h"
-#include "definTypes.h"
+#include "def_parser.hpp"
 #include "definIBlockage.h"
 #include "definIComponent.h"
 #include "definIFill.h"
 #include "definIGCell.h"
 #include "definINet.h"
+#include "definINonDefaultRule.h"
 #include "definIPin.h"
+#include "definIPinProps.h"
+#include "definIPropDefs.h"
 #include "definIReader.h"
+#include "definIRegion.h"
 #include "definIRow.h"
 #include "definISNet.h"
 #include "definITracks.h"
 #include "definIVia.h"
-#include "definIRegion.h"
-#include "definINonDefaultRule.h"
-#include "definIPropDefs.h"
-#include "definIPinProps.h"
-#include "def_parser.hpp"
+#include "definTypes.h"
 
-// Default readers.
-static definIBlockage  default_blockageR;
-static definIComponent default_componentR;
-static definIFill      default_fillR;
-static definIGCell     default_gcellR;
-static definINet       default_netR;
-static definIPin       default_pinR;
-static definIReader    default_readerR;
-static definIRow       default_rowR;
-static definISNet      default_snetR;
-static definITracks    default_tracksR;
-static definIVia       default_viaR;
-static definIRegion    default_regionR;
-static definINonDefaultRule default_non_default_ruleR;
-static definIPropDefs default_prop_defsR;
-static definIPinProps default_pin_propsR;
+  // Default readers.
+  static definIBlockage       default_blockageR;
+  static definIComponent      default_componentR;
+  static definIFill           default_fillR;
+  static definIGCell          default_gcellR;
+  static definINet            default_netR;
+  static definIPin            default_pinR;
+  static definIReader         default_readerR;
+  static definIRow            default_rowR;
+  static definISNet           default_snetR;
+  static definITracks         default_tracksR;
+  static definIVia            default_viaR;
+  static definIRegion         default_regionR;
+  static definINonDefaultRule default_non_default_ruleR;
+  static definIPropDefs       default_prop_defsR;
+  static definIPinProps       default_pin_propsR;
 
-static definIBlockage * blockageR = NULL;
-static definIComponent * componentR = NULL;
-static definIFill * fillR = NULL;
-static definIGCell * gcellR = NULL;
-static definINet * netR = NULL;
-static definIPin * pinR = NULL;
-static definIReader * readerR = NULL;
-static definIRow * rowR = NULL;
-static definISNet * snetR = NULL;
-static definITracks * tracksR = NULL;
-static definIVia * viaR = NULL;
-static definIRegion * regionR = NULL;
-static definINonDefaultRule * non_default_ruleR = NULL;
-static definIPropDefs * prop_defsR = NULL;
-static definIPinProps * pin_propsR = NULL;
+  static definIBlockage*       blockageR         = NULL;
+  static definIComponent*      componentR        = NULL;
+  static definIFill*           fillR             = NULL;
+  static definIGCell*          gcellR            = NULL;
+  static definINet*            netR              = NULL;
+  static definIPin*            pinR              = NULL;
+  static definIReader*         readerR           = NULL;
+  static definIRow*            rowR              = NULL;
+  static definISNet*           snetR             = NULL;
+  static definITracks*         tracksR           = NULL;
+  static definIVia*            viaR              = NULL;
+  static definIRegion*         regionR           = NULL;
+  static definINonDefaultRule* non_default_ruleR = NULL;
+  static definIPropDefs*       prop_defsR        = NULL;
+  static definIPinProps*       pin_propsR        = NULL;
 
 #define MAX_TOKEN_LEN 2048
 
-static int ignore_id_error = 0;
-void deferror( const char * msg );
+  static int ignore_id_error = 0;
+  void       deferror(const char* msg);
 
-static int cur_x;
-static int cur_y;
-static defPoint cur_point;
+  static int      cur_x;
+  static int      cur_y;
+  static defPoint cur_point;
 
-inline int is_keyword( int type )
-{
-    return (type > _DEF_KEYWORD_BASE_);
-}
+  inline int is_keyword(int type) { return (type > _DEF_KEYWORD_BASE_); }
 
-struct token
-{
-    int          _line;
-    int          _tid;
-    char *       _text;
-    token *      _free_next;
-    token *      _alloc_next;
+  struct token
+  {
+    int    _line;
+    int    _tid;
+    char*  _text;
+    token* _free_next;
+    token* _alloc_next;
 
-    operator const char *() { return _text; }
-};
+    operator const char*() { return _text; }
+  };
 
-struct prop
-{
-    token *     _name;
+  struct prop
+  {
+    token*      _name;
     defPropType _type;
 
-    union {
-        token * _str_val;
-        int     _int_val;
-        double  _flt_val;
+    union
+    {
+      token* _str_val;
+      int    _int_val;
+      double _flt_val;
     } _value;
-};
+  };
 
-static void release( token * t );
-static token * create( int tid );
-static token * createQ( int tid );
+  static void   release(token * t);
+  static token* create(int tid);
+  static token* createQ(int tid);
 
-static void addComponentProps( std::vector<prop *> * props );
-static void addComponentPinProps( std::vector<prop *> * props );
-static void addNetProps( std::vector<prop *> * props );
-static void addSNetProps( std::vector<prop *> * props );
-static void addNonDefaultRuleProps( std::vector<prop *> * props );
-static void addRegionProps( std::vector<prop *> * props );
-static void addRowProps( std::vector<prop *> * props );
+  static void addComponentProps(std::vector<prop*> * props);
+  static void addComponentPinProps(std::vector<prop*> * props);
+  static void addNetProps(std::vector<prop*> * props);
+  static void addSNetProps(std::vector<prop*> * props);
+  static void addNonDefaultRuleProps(std::vector<prop*> * props);
+  static void addRegionProps(std::vector<prop*> * props);
+  static void addRowProps(std::vector<prop*> * props);
 
-static struct token * freelist = NULL;
-static struct token * alloclist = NULL;
+  static struct token* freelist  = NULL;
+  static struct token* alloclist = NULL;
 
-inline void release( token * tk )
-{
-    assert( tk->_line >= 0 );
-    tk->_line = -1;
+  inline void release(token * tk)
+  {
+    assert(tk->_line >= 0);
+    tk->_line      = -1;
     tk->_free_next = freelist;
-    freelist = tk;
-}
+    freelist       = tk;
+  }
 
-inline void freeProps( std::vector<prop *> * props )
-{
+  inline void freeProps(std::vector<prop*> * props)
+  {
     std::vector<prop*>::iterator itr;
 
-    for( itr = props->begin(); itr != props->end(); ++itr )
-    {
-        prop * p = *itr;
-        release(p->_name);
+    for (itr = props->begin(); itr != props->end(); ++itr) {
+      prop* p = *itr;
+      release(p->_name);
 
-        if ( p->_type == DEF_STRING )
-            release(p->_value._str_val);
-        delete p;
+      if (p->_type == DEF_STRING)
+        release(p->_value._str_val);
+      delete p;
     }
 
     delete props;
+  }
+
+  %
 }
 
-%}
-
-%union 
+% union
 {
-    struct token * _token;
-    struct point { int _x, _y; }  _point;
-    double         _double;
-    int            _int;
-    int            _tid;
-    std::vector<defPoint> * _points;
-    std::vector<struct prop *> * _props;
-    struct prop * _prop;
+  struct token* _token;
+  struct point
+  {
+    int _x, _y;
+  } _point;
+  double                     _double;
+  int                        _int;
+  int                        _tid;
+  std::vector<defPoint>*     _points;
+  std::vector<struct prop*>* _props;
+  struct prop*               _prop;
 }
 
-%token IDENT
-%token QSTRING
-%token <_int> NUM_INT
-%token <_double> NUM_DOUBLE
-%token HISTORY_TEXT
+    % token IDENT % token QSTRING % token<_int> NUM_INT
+    % token<_double>                            NUM_DOUBLE
+    % token                                     HISTORY_TEXT
 
-//
-// _DEF_KEYWORD_BASE_ marks the begining of the keyword tokens.
-// DO NOT ADD NON-KEYWORD-TOKENS beyond this point, unless you
-// modify the keyword-dection logic in "is_keyword(int)".
-//
-%token _DEF_KEYWORD_BASE_
-%token ANALOG_K
-%token ANTENNAMODEL_K
-%token ANTENNAPINDIFFAREA_K
-%token ANTENNAPINGATEAREA_K
-%token ANTENNAPINMAXAREACAR_K
-%token ANTENNAPINMAXCUTCAR_K
-%token ANTENNAPINMAXSIDEAREACAR_K
-%token ANTENNAPINPARTIALCUTAREA_K
-%token ANTENNAPINPARTIALMETALAREA_K
-%token ANTENNAPINPARTIALMETALSIDEAREA_K
-%token BALANCED_K
-%token BEGINEXT_K
-%token BITS_K
-%token BLOCKAGES_K
-%token BUSBITCHARS_K
-%token BY_K
-%token CLOCK_K
-%token COMMONSCANPINS_K
-%token COMPONENTPIN_K
-%token COMPONENTS_K
-%token COMPONENT_K
-%token COVER_K
-%token DESIGN_K
-%token DIEAREA_K
-%token DIRECTION_K
-%token DISTANCE_K
-%token DIST_K
-%token DIVIDERCHAR_K
-%token DO_K
-%token E_K
-%token EEQMASTER_K
-%token ENDEXT_K
-%token END_K
-%token ESTCAP_K
-%token FE_K
-%token FEEDTHRU_K
-%token FENCE_K
-%token FILLS_K
-%token FIXEDBUMP_K
-%token FIXED_K
-%token FLOATING_K
-%token FN_K
-%token FOREIGN_K
-%token FREQUENCY_K
-%token FS_K
-%token FW_K
-%token GCELLGRID_K
-%token GROUND_K
-%token GROUPS_K
-%token GROUP_K
-%token GUIDE_K
-%token HISTORY_K
-%token INOUT_K
-%token INPUT_K
-%token INTEGER_K
-%token IN_K
-%token LAYER_K
-%token MAXBITS_K
-%token MICRONS_K
-%token MUSTJOIN_K
-%token N_K
-%token NAMESCASESENSITIVE_K
-%token NETLIST_K
-%token NETS_K
-%token NET_K
-%token NEW_K
-%token NONDEFAULTRULE_K
-%token NOSHIELD_K
-%token OFF_K
-%token ON_K
-%token ORDERED_K
-%token ORIGINAL_K
-%token OUTPUT_K
-%token OUT_K
-%token OXIDE1_K
-%token OXIDE2_K
-%token OXIDE3_K
-%token OXIDE4_K
-%token PARTITION_K
-%token PATTERNNAME_K
-%token PATTERN_K
-%token PINPROPERTIES_K
-%token PINS_K
-%token PLACED_K
-%token PLACEMENT_K
-%token POWER_K
-%token PROPERTYDEFINITIONS_K
-%token PROPERTY_K
-%token PUSHDOWN_K
-%token RANGE_K
-%token REAL_K
-%token RECT_K
-%token REGIONS_K
-%token REGION_K
-%token RESET_K
-%token ROUTED_K
-%token ROW_K
-%token S_K
-%token SCANCHAINS_K
-%token SCAN_K
-%token SHAPE_K
-%token SHIELDNET_K
-%token SHIELD_K
-%token SIGNAL_K
-%token SLOTS_K
-%token SOURCE_K
-%token SPECIALNETS_K
-%token SPECIALNET_K
-%token SPECIAL_K
-%token START_K
-%token STEINER_K
-%token STEP_K
-%token STOP_K
-%token STRING_K
-%token SUBNET_K
-%token SYNTHESIZED_K
-%token TAPERRULE_K
-%token TAPER_K
-%token TECHNOLOGY_K
-%token TEST_K
-%token TIEOFF_K
-%token TIMING_K
-%token TRACKS_K
-%token TRUNK_K
-%token TYPE_K
-%token UNITS_K
-%token UNPLACED_K
-%token USER_K
-%token USE_K
-%token VERSION_K
-%token VIAS_K
-%token VOLTAGE_K
-%token VPIN_K
-%token WEIGHT_K
-%token WIREDLOGIC_K
-%token XTALK_K
-%token W_K
-%token X_K
-%token Y_K
-%token POLYGON_K
-%token SPACING_K
-%token DESIGNRULEWIDTH_K
-%token NETEXPR_K
-%token SUPPLYSENSITIVITY_K
-%token GROUNDSENSITIVITY_K
-%token VIARULE_K
-%token CUTSIZE_K
-%token LAYERS_K
-%token CUTSPACING_K
-%token ENCLOSURE_K
-%token ROWCOL_K
-%token ORIGIN_K
-%token OFFSET_K
-%token HARDSPACING_K
-%token WIDTH_K
-%token DIAGWIDTH_K
-%token WIREEXT_K
-%token MINCUTS_K
-%token NONDEFAULTRULES_K
-%token VIA_K
-%token HALO_K
-%token STYLES_K
-%token STYLE_K
-%token PORT_K
-%token K_ALIGN K_BOTTOMLEFT K_COMPSMASKSHIFT K_COMPS K_COMP_GEN K_EQUAL K_EXCEPTPGNET K_HORIZONTAL K_MASK K_MASKSHIFT  K_MAX K_MIN K_POLYGON K_ROUTEHALO K_ROWS K_SOFT K_TOPRIGHT K_VERTICAL PARTIAL_K K_FPC K_MAXHALFPERIMETER K_MAXX K_MAXY K_SAMEMASK K_VIRTUAL K_OPC
+    //
+    // _DEF_KEYWORD_BASE_ marks the begining of the keyword tokens.
+    // DO NOT ADD NON-KEYWORD-TOKENS beyond this point, unless you
+    // modify the keyword-dection logic in "is_keyword(int)".
+    //
+    % token _DEF_KEYWORD_BASE_ % token ANALOG_K % token ANTENNAMODEL_K
+    % token ANTENNAPINDIFFAREA_K % token ANTENNAPINGATEAREA_K
+    % token ANTENNAPINMAXAREACAR_K % token ANTENNAPINMAXCUTCAR_K
+    % token ANTENNAPINMAXSIDEAREACAR_K % token ANTENNAPINPARTIALCUTAREA_K
+    % token                                    ANTENNAPINPARTIALMETALAREA_K
+    % token ANTENNAPINPARTIALMETALSIDEAREA_K % token BALANCED_K
+    % token BEGINEXT_K % token BITS_K % token BLOCKAGES_K % token BUSBITCHARS_K
+    % token BY_K % token CLOCK_K % token COMMONSCANPINS_K % token COMPONENTPIN_K
+    % token COMPONENTS_K % token COMPONENT_K % token COVER_K % token DESIGN_K
+    % token DIEAREA_K % token DIRECTION_K % token DISTANCE_K % token DIST_K
+    % token DIVIDERCHAR_K % token DO_K % token E_K % token EEQMASTER_K
+    % token ENDEXT_K % token END_K % token ESTCAP_K % token FE_K
+    % token FEEDTHRU_K % token FENCE_K % token FILLS_K % token FIXEDBUMP_K
+    % token FIXED_K % token FLOATING_K % token FN_K % token FOREIGN_K
+    % token FREQUENCY_K % token FS_K % token FW_K % token GCELLGRID_K
+    % token GROUND_K % token GROUPS_K % token GROUP_K % token GUIDE_K
+    % token HISTORY_K % token INOUT_K % token INPUT_K % token INTEGER_K
+    % token IN_K % token LAYER_K % token MAXBITS_K % token MICRONS_K
+    % token MUSTJOIN_K % token N_K % token NAMESCASESENSITIVE_K
+    % token NETLIST_K % token NETS_K % token NET_K % token NEW_K
+    % token NONDEFAULTRULE_K % token NOSHIELD_K % token OFF_K % token ON_K
+    % token ORDERED_K % token ORIGINAL_K % token OUTPUT_K % token OUT_K
+    % token OXIDE1_K % token OXIDE2_K % token OXIDE3_K % token OXIDE4_K
+    % token PARTITION_K % token PATTERNNAME_K % token PATTERN_K
+    % token PINPROPERTIES_K % token PINS_K % token PLACED_K % token PLACEMENT_K
+    % token POWER_K % token PROPERTYDEFINITIONS_K % token PROPERTY_K
+    % token PUSHDOWN_K % token RANGE_K % token REAL_K % token RECT_K
+    % token REGIONS_K % token REGION_K % token RESET_K % token ROUTED_K
+    % token ROW_K % token S_K % token SCANCHAINS_K % token SCAN_K
+    % token SHAPE_K % token SHIELDNET_K % token SHIELD_K % token SIGNAL_K
+    % token SLOTS_K % token SOURCE_K % token SPECIALNETS_K % token SPECIALNET_K
+    % token SPECIAL_K % token START_K % token STEINER_K % token STEP_K
+    % token STOP_K % token STRING_K % token SUBNET_K % token SYNTHESIZED_K
+    % token TAPERRULE_K % token TAPER_K % token TECHNOLOGY_K % token TEST_K
+    % token TIEOFF_K % token TIMING_K % token TRACKS_K % token TRUNK_K
+    % token TYPE_K % token UNITS_K % token UNPLACED_K % token USER_K
+    % token USE_K % token VERSION_K % token VIAS_K % token VOLTAGE_K
+    % token VPIN_K % token WEIGHT_K % token WIREDLOGIC_K % token XTALK_K
+    % token W_K % token X_K % token Y_K % token POLYGON_K % token SPACING_K
+    % token DESIGNRULEWIDTH_K % token NETEXPR_K % token SUPPLYSENSITIVITY_K
+    % token GROUNDSENSITIVITY_K % token VIARULE_K % token CUTSIZE_K
+    % token LAYERS_K % token CUTSPACING_K % token ENCLOSURE_K % token ROWCOL_K
+    % token ORIGIN_K % token OFFSET_K % token HARDSPACING_K % token WIDTH_K
+    % token DIAGWIDTH_K % token WIREEXT_K % token MINCUTS_K
+    % token NONDEFAULTRULES_K % token VIA_K % token HALO_K % token STYLES_K
+    % token STYLE_K % token PORT_K
+    % token K_ALIGN K_BOTTOMLEFT K_COMPSMASKSHIFT K_COMPS K_COMP_GEN K_EQUAL
+        K_EXCEPTPGNET K_HORIZONTAL K_MASK K_MASKSHIFT K_MAX K_MIN K_POLYGON
+            K_ROUTEHALO K_ROWS K_SOFT K_TOPRIGHT K_VERTICAL PARTIAL_K K_FPC
+                K_MAXHALFPERIMETER K_MAXX K_MAXY K_SAMEMASK K_VIRTUAL K_OPC
 
+    % type<_token> qstring % type<_token> ident % type<_point> point
+    % type<_double> number % type<_int> integer % type<_tid> defDir
+    % type<_tid> defOrient % type<_points> defPointList
+    % type<_int> defNetSource % type<_int> defSpecialNetSource
+    % type<_int> defPropertyType % type<_int> defPropertyObjectType
+    % type<_prop> defPropertyNameValue % type<_props> defProperty
+    % type<_props>                                    defPropertyValues
+    % type<_int>                                      same_mask
 
-%type <_token> qstring
-%type <_token> ident
-%type <_point> point
-%type <_double> number
-%type <_int> integer
-%type <_tid> defDir
-%type <_tid> defOrient
-%type <_points> defPointList
-%type <_int> defNetSource
-%type <_int> defSpecialNetSource
-%type <_int> defPropertyType
-%type <_int> defPropertyObjectType
-%type <_prop> defPropertyNameValue
-%type <_props> defProperty
-%type <_props> defPropertyValues
-%type <_int> same_mask
+    // TODO check
+    % type<_tid> source_type % type<_int> pin_via_mask_opt
 
-// TODO check
-%type <_tid> source_type
-%type <_int> pin_via_mask_opt
+    % %
 
-%%
+    defFile : defHeader defStatements END_K DESIGN_K;
 
-defFile
-    :   defHeader defStatements END_K DESIGN_K
-    ;
+defHeader : VERSION_K ident ';'
+{
+  release($2);
+}
+defHeaderOpts;
 
-defHeader
-    :   VERSION_K ident ';' { release( $2 ); }
-        defHeaderOpts
-    ;
+defHeaderOpts : /* nothing */
+                | defHeaderOpts defHeaderOpt;
 
-defHeaderOpts
-    :    /* nothing */
-    |    defHeaderOpts defHeaderOpt
-    ;
+defHeaderOpt : DIVIDERCHAR_K qstring ';'
+{
+  release($2);
+}
+| NAMESCASESENSITIVE_K case_sens_stmt ';' | BUSBITCHARS_K qstring ';'
+{
+  release($2);
+}
+| DESIGN_K ident ';'
+{
+  release($2);
+};
 
-defHeaderOpt
-    :    DIVIDERCHAR_K qstring ';' { release($2); }
-    |    NAMESCASESENSITIVE_K case_sens_stmt ';'
-    |    BUSBITCHARS_K qstring ';' { release($2); }
-    |    DESIGN_K ident ';'        { release( $2 ); } 
-    ;
+case_sens_stmt : ON_K
+{
+  deflex_casesens = true;
+}
+| OFF_K
+{
+  deflex_casesens = false;
+};
 
-case_sens_stmt
-    :    ON_K  { deflex_casesens = true; }
-    |    OFF_K { deflex_casesens = false; }
-    ;
+defStatements : /* nothing */
+                | defStatements rule;
 
-defStatements
-    :    /* nothing */
-    |    defStatements rule
-    ;
+rule : TECHNOLOGY_K ident ';'
+{
+  release($2);
+}
+| UNITS_K DISTANCE_K MICRONS_K integer ';'
+{
+  readerR->units($4);
+}
+| defHistory ';' | defPropertyDefinitions | DIEAREA_K defPointList ';'
+{
+  readerR->dieArea(*$2);
+  delete $2;
+}
+| row_rule | tracks_rule | gcellgrid | via_section | regions_section
+    | comps_section | pin_rule | pin_props_section | blockage_section | defSlots
+    | fill_section | snets_section | nets_section | defScanChains
+    | groups_section | defExtension | defNonDefaultRules | defStyles
+    | comps_maskShift_section | floorplan_contraints_section;
 
-rule
-    :    TECHNOLOGY_K ident ';' { release( $2 ); }
-    |    UNITS_K DISTANCE_K MICRONS_K integer ';' { readerR->units($4); }
-    |    defHistory ';'
-    |    defPropertyDefinitions
-    |    DIEAREA_K defPointList ';' { readerR->dieArea( *$2 ); delete $2; }
-    |    row_rule
-    |    tracks_rule
-    |    gcellgrid
-    |    via_section
-    |    regions_section
-    |    comps_section
-    |    pin_rule
-    |    pin_props_section
-    |    blockage_section
-    |    defSlots
-    |    fill_section
-    |    snets_section
-    |    nets_section
-    |    defScanChains
-    |    groups_section
-    |    defExtension
-    |    defNonDefaultRules
-    |    defStyles
-    |    comps_maskShift_section
-    |    floorplan_contraints_section
-    ;
+comps_maskShift_section : K_COMPSMASKSHIFT layer_statement ';' {/* TODO */};
 
-comps_maskShift_section 
-    : K_COMPSMASKSHIFT  layer_statement ';'
-    { /* TODO */ }
-    ;
+layer_statement :  // empty
+                   | layer_statement maskLayer;
 
-layer_statement 
-    : // empty 
-    | layer_statement maskLayer
-    ;
-         
-maskLayer
-    : ident
-    { /* TODO */ }
-    ;
+maskLayer : ident{/* TODO */};
 
-floorplan_contraints_section
-    : fp_start fp_stmts END_K K_FPC
-    { /* TODO */ }
-    ;
+floorplan_contraints_section : fp_start fp_stmts END_K K_FPC{/* TODO */};
 
-fp_start
-    : K_FPC NUM_DOUBLE ';'
-    { /* TODO */ }
-    ;
+fp_start : K_FPC NUM_DOUBLE ';' {/* TODO */};
 
-fp_stmts
-    : // empty 
-    | fp_stmts fp_stmt
-    {}
-    ;
+fp_stmts :  // empty
+            | fp_stmts fp_stmt{};
 
-fp_stmt
-    : '-' { /* TODO */ } QSTRING h_or_v
-    { /* TODO */ }
-    constraint_type constrain_what_list ';'
-    { /* TODO */ }
-    ;
+fp_stmt : '-'
+{ /* TODO */
+}
+QSTRING h_or_v
+{ /* TODO */
+}
+constraint_type constrain_what_list ';' {/* TODO */};
 
-h_or_v
-    : K_HORIZONTAL 
-    { /* TODO */ }
-    | K_VERTICAL
-    { /* TODO */ }
-    ;
+h_or_v : K_HORIZONTAL{/* TODO */} | K_VERTICAL{/* TODO */};
 
-constraint_type
-    : K_ALIGN
-    { /* TODO  */ }
-    | K_MAX NUM_INT
-    { /* TODO */ }
-    | K_MIN NUM_INT
-    { /* TODO */}
-    | K_EQUAL NUM_INT
-    { /* TODO */ }
-    ;
+constraint_type : K_ALIGN{/* TODO  */} | K_MAX NUM_INT{/* TODO */}
+                  | K_MIN NUM_INT{/* TODO */}
+                  | K_EQUAL NUM_INT{/* TODO */};
 
-constrain_what_list
-    : // empty 
-    | constrain_what_list constrain_what
-    ;
+constrain_what_list :  // empty
+                       | constrain_what_list constrain_what;
 
-constrain_what
-    :      '+' K_BOTTOMLEFT
-    { /* TODO */}
-    row_or_comp_list 
-    |       '+' K_TOPRIGHT
-    { /* TODO */ }
-    row_or_comp_list 
-    ;
+constrain_what : '+' K_BOTTOMLEFT
+{ /* TODO */
+}
+row_or_comp_list | '+' K_TOPRIGHT
+{ /* TODO */
+}
+row_or_comp_list;
 
-row_or_comp_list
-	: // empty 
-    | row_or_comp_list row_or_comp
-	;
+row_or_comp_list :  // empty
+                    | row_or_comp_list row_or_comp;
 
-row_or_comp
-    : '(' K_ROWS  { /* TODO */ } QSTRING ')' // was T_STRING
-    {  /* TODO */ }
-    |    '(' K_COMPS { /* TODO */ } QSTRING ')'
-    { /* TODO */ }
-    ;
+row_or_comp : '(' K_ROWS
+{ /* TODO */
+}
+QSTRING ')'  // was T_STRING
+    {/* TODO */}
+    | '(' K_COMPS
+{ /* TODO */
+}
+QSTRING ')' {/* TODO */};
 
-defHistory
-    :    HISTORY_K {deflex_history();} HISTORY_TEXT
-    ;
+defHistory : HISTORY_K
+{
+  deflex_history();
+}
+HISTORY_TEXT;
 
-defPropertyDefinitions
-    :    PROPERTYDEFINITIONS_K { prop_defsR->beginDefinitions(); } defPropertyDefinitionList END_K PROPERTYDEFINITIONS_K { prop_defsR->endDefinitions(); }
-    ;
+defPropertyDefinitions : PROPERTYDEFINITIONS_K
+{
+  prop_defsR->beginDefinitions();
+}
+defPropertyDefinitionList END_K PROPERTYDEFINITIONS_K
+{
+  prop_defsR->endDefinitions();
+};
 
-defPropertyDefinitionList
-    :   /* nothing */
-    |    defPropertyDefinitionList defPropertyDefinition
-    ;
-    
-defPropertyDefinition
-    :    defPropertyObjectType { deflex_kid = ANY_ID; } ident { deflex_kid = 0; } defPropertyType 
-         {
-             prop_defsR->begin((defObjectType) $1, *$3, (defPropType) $5);
-         }
-         defPropertyDefinitionRange defPropertyDefinitionValue ';'
-         {
-             prop_defsR->end();
-             release($3);
-         }
-    ;
+defPropertyDefinitionList : /* nothing */
+                            | defPropertyDefinitionList defPropertyDefinition;
 
-defPropertyDefinitionRange
-    : /* nothing */
-    |    RANGE_K NUM_INT NUM_INT { prop_defsR->range($2,$3); }
-    |    RANGE_K NUM_DOUBLE NUM_DOUBLE { prop_defsR->range($2,$3); }
-    ;
-
-defPropertyDefinitionValue
-    : /* nothing */
-    |    NUM_INT { prop_defsR->value($1); }
-    |    NUM_DOUBLE { prop_defsR->value($1); }
-    |    qstring { prop_defsR->value(*$1); release($1); }
-    ;
-
-defPropertyObjectType
-    : COMPONENT_K      { $$ = DEF_COMPONENT; }
-    | COMPONENTPIN_K   { $$ = DEF_COMPONENTPIN; }
-    | DESIGN_K         { $$ = DEF_DESIGN; }
-    | GROUP_K          { $$ = DEF_GROUP; }
-    | NET_K            { $$ = DEF_NET; }
-    | REGION_K         { $$ = DEF_REGION; }
-    | ROW_K            { $$ = DEF_ROW; }
-    | SPECIALNET_K     { $$ = DEF_SPECIALNET; }
-    | NONDEFAULTRULE_K { $$ = DEF_NONDEFAULTRULE; }
-    ;
-
+defPropertyDefinition : defPropertyObjectType
+{
+  deflex_kid = ANY_ID;
+}
+ident
+{
+  deflex_kid = 0;
+}
 defPropertyType
-    : INTEGER_K { $$ = DEF_INTEGER; }
-    | REAL_K { $$ = DEF_REAL; }
-    | STRING_K { $$ = DEF_STRING; }
-    ;
+{
+  prop_defsR->begin((defObjectType) $1, *$3, (defPropType) $5);
+}
+defPropertyDefinitionRange defPropertyDefinitionValue ';'
+{
+  prop_defsR->end();
+  release($3);
+};
 
-defProperty
-    :    PROPERTY_K defPropertyValues { $$ = $2; }
-    ;
+defPropertyDefinitionRange : /* nothing */
+                             | RANGE_K NUM_INT NUM_INT
+{
+  prop_defsR->range($2, $3);
+}
+| RANGE_K NUM_DOUBLE NUM_DOUBLE
+{
+  prop_defsR->range($2, $3);
+};
 
-defPropertyValues
-    :    defPropertyNameValue { $$ = new std::vector<prop*>; $$->push_back($1); }
-    |    defPropertyValues defPropertyNameValue { $$ = $1; $$->push_back($2); }
-    ;
+defPropertyDefinitionValue : /* nothing */
+                             | NUM_INT
+{
+  prop_defsR->value($1);
+}
+| NUM_DOUBLE
+{
+  prop_defsR->value($1);
+}
+| qstring
+{
+  prop_defsR->value(*$1);
+  release($1);
+};
 
-defPropertyNameValue
-    :    { deflex_kid = ANY_ID; } ident { deflex_kid = 0; $<_prop>$ = new prop; } defPropertyValue
-         { $$ = $<_prop>3; $$->_name = $2; } 
-    ;
+defPropertyObjectType : COMPONENT_K
+{
+  $$ = DEF_COMPONENT;
+}
+| COMPONENTPIN_K
+{
+  $$ = DEF_COMPONENTPIN;
+}
+| DESIGN_K
+{
+  $$ = DEF_DESIGN;
+}
+| GROUP_K
+{
+  $$ = DEF_GROUP;
+}
+| NET_K
+{
+  $$ = DEF_NET;
+}
+| REGION_K
+{
+  $$ = DEF_REGION;
+}
+| ROW_K
+{
+  $$ = DEF_ROW;
+}
+| SPECIALNET_K
+{
+  $$ = DEF_SPECIALNET;
+}
+| NONDEFAULTRULE_K
+{
+  $$ = DEF_NONDEFAULTRULE;
+};
 
+defPropertyType : INTEGER_K
+{
+  $$ = DEF_INTEGER;
+}
+| REAL_K
+{
+  $$ = DEF_REAL;
+}
+| STRING_K
+{
+  $$ = DEF_STRING;
+};
+
+defProperty : PROPERTY_K defPropertyValues
+{
+  $$ = $2;
+};
+
+defPropertyValues : defPropertyNameValue
+{
+  $$ = new std::vector<prop*>;
+  $$->push_back($1);
+}
+| defPropertyValues defPropertyNameValue
+{
+  $$ = $1;
+  $$->push_back($2);
+};
+
+defPropertyNameValue:
+{
+  deflex_kid = ANY_ID;
+}
+ident
+{
+  deflex_kid = 0;
+  $<_prop> $ = new prop;
+}
 defPropertyValue
-    :    NUM_INT    
-         { 
-             $<_prop>0->_type = DEF_INTEGER;
-             $<_prop>0->_value._int_val = $1;
-         }
-    |    NUM_DOUBLE
-         { 
-             $<_prop>0->_type = DEF_REAL;
-             $<_prop>0->_value._flt_val = $1;
-         }
-    |    qstring
-         { 
-             $<_prop>0->_type = DEF_STRING;
-             $<_prop>0->_value._str_val = $1;
-         }
-    ;
+{
+  $$        = $<_prop> 3;
+  $$->_name = $2;
+};
 
-row_rule
-    :    ROW_K ident ident integer integer defOrient 
-         {
-             rowR->begin( *$2, *$3, $4, $5, (defOrient) $6, DEF_HORIZONTAL, 1, 0 );
-             release($2);
-             release($3);
-         }
-         defRowProperties { rowR->end(); } ';'
+defPropertyValue : NUM_INT
+{
+  $<_prop> 0->_type           = DEF_INTEGER;
+  $<_prop> 0->_value._int_val = $1;
+}
+| NUM_DOUBLE
+{
+  $<_prop> 0->_type           = DEF_REAL;
+  $<_prop> 0->_value._flt_val = $1;
+}
+| qstring
+{
+  $<_prop> 0->_type           = DEF_STRING;
+  $<_prop> 0->_value._str_val = $1;
+};
 
-    |    ROW_K ident ident integer integer defOrient
-         DO_K integer BY_K integer
-         {
-             if ( $10 == 1 )
-             {
-                 rowR->begin( *$2, *$3, $4, $5, (defOrient) $6, DEF_HORIZONTAL, $8, 0 );
-             }
-             else if ( $8 == 1 )
-             {
-                 rowR->begin( *$2, *$3, $4, $5, (defOrient) $6, DEF_VERTICAL, $10, 0 );
-             }
-             else
-             {
-                 deferror("invalid row statement, statement contains illegal (multi-row) step pattern");
-             }
-             release($2);
-             release($3);
-         }
-         defRowProperties { rowR->end(); } ';'
-    |    ROW_K ident ident integer integer defOrient
-         DO_K integer BY_K integer STEP_K integer integer
-         {
-             if ( $10 == 1 )
-             {
-                 rowR->begin( *$2, *$3, $4, $5, (defOrient) $6, DEF_HORIZONTAL, $8, $12 );
-             }
-             else if ( $8 == 1 )
-             {
-                 rowR->begin( *$2, *$3, $4, $5, (defOrient) $6, DEF_VERTICAL, $10, $13 );
-             }
-             else
-             {
-                 deferror("invalid row statement, statement contains illegal (multi-row) step pattern");
-             }
-             release($2);
-             release($3);
-         }
-         defRowProperties { rowR->end(); } ';'
-    ;
-
+row_rule : ROW_K ident ident integer integer defOrient
+{
+  rowR->begin(*$2, *$3, $4, $5, (defOrient) $6, DEF_HORIZONTAL, 1, 0);
+  release($2);
+  release($3);
+}
 defRowProperties
-    :    /* nothing */
-    |   defRowProperties '+' defProperty { addRowProps($3); }
-    ;
+{
+  rowR->end();
+}
+';'
 
-tracks_rule
-    :    TRACKS_K defDir integer DO_K integer STEP_K integer 
-             { tracksR->tracksBegin((defDirection) $2, $3, $5, $7); } 
-	track_mask_statement
-	defTrackLayers ';'
-         {
-             tracksR->tracksEnd();
-         }
-    ;
+    | ROW_K ident ident integer integer defOrient DO_K integer BY_K integer
+{
+  if ($10 == 1) {
+    rowR->begin(*$2, *$3, $4, $5, (defOrient) $6, DEF_HORIZONTAL, $8, 0);
+  } else if ($8 == 1) {
+    rowR->begin(*$2, *$3, $4, $5, (defOrient) $6, DEF_VERTICAL, $10, 0);
+  } else {
+    deferror(
+        "invalid row statement, statement contains illegal (multi-row) step "
+        "pattern");
+  }
+  release($2);
+  release($3);
+}
+defRowProperties
+{
+  rowR->end();
+}
+';'
+    | ROW_K ident ident integer integer defOrient DO_K integer BY_K integer
+        STEP_K integer integer
+{
+  if ($10 == 1) {
+    rowR->begin(*$2, *$3, $4, $5, (defOrient) $6, DEF_HORIZONTAL, $8, $12);
+  } else if ($8 == 1) {
+    rowR->begin(*$2, *$3, $4, $5, (defOrient) $6, DEF_VERTICAL, $10, $13);
+  } else {
+    deferror(
+        "invalid row statement, statement contains illegal (multi-row) step "
+        "pattern");
+  }
+  release($2);
+  release($3);
+}
+defRowProperties
+{
+  rowR->end();
+}
+';';
 
- track_mask_statement:
-     | K_MASK integer same_mask
-     { // TODO look at 58 track_mask_statement
-     }
+defRowProperties : /* nothing */
+                   | defRowProperties '+' defProperty
+{
+  addRowProps($3);
+};
 
- same_mask:
-     // empty
-     { $$=0; }
-     | K_SAMEMASK
-     { $$=1; }
+tracks_rule : TRACKS_K defDir integer DO_K integer STEP_K integer
+{
+  tracksR->tracksBegin((defDirection) $2, $3, $5, $7);
+}
+track_mask_statement defTrackLayers ';'
+{
+  tracksR->tracksEnd();
+};
 
-defDir
-    :    X_K { $$ = DEF_X; }
-    |    Y_K { $$ = DEF_Y; }
-    ;
+track_mask_statement : | K_MASK integer same_mask
+{  // TODO look at 58 track_mask_statement
+}
 
-defTrackLayers
-    :    /* nothing */
-    |   defTrackLayers LAYER_K defTrackLayerNames
-    ;
+same_mask:
+// empty
+{
+  $$ = 0;
+}
+| K_SAMEMASK
+{
+  $$ = 1;
+}
 
-defTrackLayerNames
-    : ident { tracksR->tracksLayer(*$1); release($1); }
-    | defTrackLayerNames ident { tracksR->tracksLayer(*$2); release($2); }
-    ;
+defDir : X_K
+{
+  $$ = DEF_X;
+}
+| Y_K
+{
+  $$ = DEF_Y;
+};
 
-gcellgrid
-    :   GCELLGRID_K defDir integer DO_K integer STEP_K integer ';'
-            { gcellR->gcell( (defDirection) $2, $3, $5, $7 ); }
-    ;
+defTrackLayers : /* nothing */
+                 | defTrackLayers LAYER_K defTrackLayerNames;
 
-via_section
-    :   VIAS_K integer ';' defViaList END_K VIAS_K
-    	{
-	}
-    ;
+defTrackLayerNames : ident
+{
+  tracksR->tracksLayer(*$1);
+  release($1);
+}
+| defTrackLayerNames ident
+{
+  tracksR->tracksLayer(*$2);
+  release($2);
+};
 
-defViaList
-    :    /* nothing */
-    |    defViaList defVia
-    ;
+gcellgrid : GCELLGRID_K defDir integer DO_K integer STEP_K integer ';'
+{
+  gcellR->gcell((defDirection) $2, $3, $5, $7);
+};
 
-defVia
-    :    '-' ident { viaR->viaBegin( *$2); } defViaDef ';' { viaR->viaEnd(); release($2); }
-    ;
+via_section : VIAS_K integer ';' defViaList END_K VIAS_K{};
 
-defViaDef
-    :    /* nothing */
-    |    defViaRule
-    |    defViaGeoms
+defViaList : /* nothing */
+             | defViaList defVia;
 
-    /* <= 5.5 DEF */
-    |    '+' PATTERNNAME_K ident { viaR->viaPattern(*$3); release($3); } defViaRects
-    ;
+defVia : '-' ident
+{
+  viaR->viaBegin(*$2);
+}
+defViaDef ';'
+{
+  viaR->viaEnd();
+  release($2);
+};
 
-defViaGeoms
-    : defViaGeom
-    | defViaGeoms defViaGeom
-    ;
+defViaDef : /* nothing */
+            | defViaRule
+            | defViaGeoms
 
-defViaGeom
-    :    '+' RECT_K ident '(' integer integer ')' '(' integer integer ')'
-         {
-             viaR->viaRect( *$3, $5, $6, $9, $10 );
-             release($3);
-         }
-    |    '+' RECT_K ident '+' K_MASK integer '(' integer integer ')' '(' integer integer ')'
-         {
-         }
-    |    '+' POLYGON_K ident defPointList
-         {
-             delete $4;
-             release($3);
-         }
-    |    '+' POLYGON_K ident  '+' K_MASK integer defPointList
-         {
-	 /* TODO */
-         }
-    ;
+            /* <= 5.5 DEF */
+            | '+' PATTERNNAME_K ident
+{
+  viaR->viaPattern(*$3);
+  release($3);
+}
+defViaRects;
 
-mask: 
-    |
-       '+' K_MASK integer
-      { /* TODO */}
+defViaGeoms : defViaGeom | defViaGeoms defViaGeom;
 
+defViaGeom : '+' RECT_K ident '(' integer integer ')' '(' integer integer ')'
+{
+  viaR->viaRect(*$3, $5, $6, $9, $10);
+  release($3);
+}
+| '+' RECT_K ident '+' K_MASK integer '(' integer integer ')' '(' integer
+                                                  integer ')' {}
+    | '+' POLYGON_K ident defPointList
+{
+  delete $4;
+  release($3);
+}
+| '+' POLYGON_K ident '+' K_MASK integer defPointList{
+    /* TODO */
+};
 
-defViaRects
-    : defViaRect
-    | defViaRects defViaRect
-    ;
+mask : | '+' K_MASK integer
+{ /* TODO */
+}
 
-defViaRect
-    :    '+' RECT_K ident '(' integer integer ')' '(' integer integer ')'
-         {
-             viaR->viaRect( *$3, $5, $6, $9, $10 );
-             release($3);
-         }
-       |    '+' RECT_K ident '+' K_MASK integer '(' integer integer ')' '(' integer integer ')'
-         {
-         }
-    ;
+defViaRects : defViaRect | defViaRects defViaRect;
 
-defViaRule
-    :    '+' VIARULE_K ident { viaR->viaRule(*$3); release($3); } defViaOpts
-    ;
+defViaRect : '+' RECT_K ident '(' integer integer ')' '(' integer integer ')'
+{
+  viaR->viaRect(*$3, $5, $6, $9, $10);
+  release($3);
+}
+| '+' RECT_K ident '+' K_MASK integer '(' integer integer ')' '(' integer
+                                                  integer ')' {};
 
-defViaOpts
-    : defViaOpt
-    | defViaOpts defViaOpt
-    ;
+defViaRule : '+' VIARULE_K ident
+{
+  viaR->viaRule(*$3);
+  release($3);
+}
+defViaOpts;
 
-defViaOpt
-    :    '+' CUTSIZE_K NUM_INT NUM_INT { viaR->viaCutSize( $3, $4 ); }
-    |    '+' LAYERS_K ident ident ident { viaR->viaLayers(*$3, *$4, *$5); release($3); release($4); release($5); }
-    |    '+' CUTSPACING_K NUM_INT NUM_INT { viaR->viaCutSpacing( $3, $4 ); }
-    |    '+' ENCLOSURE_K NUM_INT NUM_INT NUM_INT NUM_INT { viaR->viaEnclosure( $3, $4, $5, $6 ); }
-    |    '+' ROWCOL_K NUM_INT NUM_INT { viaR->viaRowCol( $3, $4 ); }
-    |    '+' ORIGIN_K NUM_INT NUM_INT { viaR->viaOrigin( $3, $4 ); }
-    |    '+' OFFSET_K NUM_INT NUM_INT NUM_INT NUM_INT { viaR->viaOffset( $3, $4, $5, $6 ); }
-    |    '+' PATTERN_K ident { viaR->viaPattern(*$3); release($3); }
-    ;
+defViaOpts : defViaOpt | defViaOpts defViaOpt;
 
-regions_section
-    :    REGIONS_K integer ';' defRegionList END_K REGIONS_K
-    ;
+defViaOpt : '+' CUTSIZE_K NUM_INT NUM_INT
+{
+  viaR->viaCutSize($3, $4);
+}
+| '+' LAYERS_K ident ident ident
+{
+  viaR->viaLayers(*$3, *$4, *$5);
+  release($3);
+  release($4);
+  release($5);
+}
+| '+' CUTSPACING_K NUM_INT NUM_INT
+{
+  viaR->viaCutSpacing($3, $4);
+}
+| '+' ENCLOSURE_K NUM_INT NUM_INT NUM_INT NUM_INT
+{
+  viaR->viaEnclosure($3, $4, $5, $6);
+}
+| '+' ROWCOL_K NUM_INT NUM_INT
+{
+  viaR->viaRowCol($3, $4);
+}
+| '+' ORIGIN_K NUM_INT NUM_INT
+{
+  viaR->viaOrigin($3, $4);
+}
+| '+' OFFSET_K NUM_INT NUM_INT NUM_INT NUM_INT
+{
+  viaR->viaOffset($3, $4, $5, $6);
+}
+| '+' PATTERN_K ident
+{
+  viaR->viaPattern(*$3);
+  release($3);
+};
 
-defRegionList
-    :    /* nothing */
-    |    defRegionList defRegion
-    ;
+regions_section : REGIONS_K integer ';' defRegionList END_K REGIONS_K;
 
-defRegion
-    :    '-' ident 
-         {
-             regionR->begin(*$2);
-         }
-         defRegionRects defRegionOpts ';'
-         {
-             release($2);
-             regionR->end();
-         }
-    ;
+defRegionList : /* nothing */
+                | defRegionList defRegion;
 
-defRegionRects
-    :    defRegionRect 
-    |    defRegionRects defRegionRect
-    ;
+defRegion : '-' ident
+{
+  regionR->begin(*$2);
+}
+defRegionRects defRegionOpts ';'
+{
+  release($2);
+  regionR->end();
+};
 
-defRegionRect
-    :    point point { regionR->boundary( $1._x, $1._y, $2._x, $2._y ); }
-    ;
+defRegionRects : defRegionRect | defRegionRects defRegionRect;
 
-defRegionOpts
-    :    /* nothing */
-    |    defRegionOpts defRegionOpt
-    ;
-    
-defRegionOpt
-    :    '+' TYPE_K defRegionType 
-    |    '+' defProperty { addRegionProps($2); }
-    ;
+defRegionRect : point point
+{
+  regionR->boundary($1._x, $1._y, $2._x, $2._y);
+};
 
-defRegionType
-    :     FENCE_K { regionR->type( DEF_FENCE ); }
-    |     GUIDE_K { regionR->type( DEF_GUIDE ); }
-    ;
+defRegionOpts : /* nothing */
+                | defRegionOpts defRegionOpt;
 
-comps_section
-    :    COMPONENTS_K integer ';' comps_rule END_K COMPONENTS_K
-    ;
+defRegionOpt : '+' TYPE_K defRegionType | '+' defProperty
+{
+  addRegionProps($2);
+};
 
-comps_rule
-    :    /* nothing */
-    |    comps_rule defComponent
-    ;
+defRegionType : FENCE_K
+{
+  regionR->type(DEF_FENCE);
+}
+| GUIDE_K
+{
+  regionR->type(DEF_GUIDE);
+};
 
-defComponent
-    :    '-' ident ident { componentR->begin( *$2, *$3 ); } comp_options ';'
-         {
-             componentR->end();
-             release($2);
-             release($3);
-         }
-    ;
+comps_section : COMPONENTS_K integer ';' comps_rule END_K COMPONENTS_K;
 
-comp_options
-    :    /* nothing */
-    |    comp_options comp_option
-    ;
+comps_rule : /* nothing */
+             | comps_rule defComponent;
+
+defComponent : '-' ident ident
+{
+  componentR->begin(*$2, *$3);
+}
+comp_options ';'
+{
+  componentR->end();
+  release($2);
+  release($3);
+};
+
+comp_options : /* nothing */
+               | comp_options comp_option;
 
 // TODO Region : is it obsolete??????
 // TODO EEQMASTER_K ????
 
-comp_option
-    :    '+' EEQMASTER_K ident               { release($3); }
-    |    '+' SOURCE_K source_type            { componentR->source( (defSource) $3 ); }
-    |    '+' FOREIGN_K ident point defOrient { release($3); }
-    |    comp_type
-    |  	'+' K_MASKSHIFT integer { /* TODO */ }
-    |    '+' WEIGHT_K NUM_INT                { componentR->weight( $3 ); }
-    |    '+' REGION_K ident                  { componentR->region( *$3 ); release($3); }
-    /* TODO |    '+' HALO_K integer integer integer integer {  } */
-    |    '+' defProperty { addComponentProps($2); }
-    |    comp_generate
-    |	 comp_halo
-    |	 comp_routehalo
-    |    comp_extension_stmt
+comp_option : '+' EEQMASTER_K ident
+{
+  release($3);
+}
+| '+' SOURCE_K source_type
+{
+  componentR->source((defSource) $3);
+}
+| '+' FOREIGN_K ident point defOrient
+{
+  release($3);
+}
+| comp_type | '+' K_MASKSHIFT integer{/* TODO */} | '+' WEIGHT_K NUM_INT
+{
+  componentR->weight($3);
+}
+| '+' REGION_K ident
+{
+  componentR->region(*$3);
+  release($3);
+}
+/* TODO |    '+' HALO_K integer integer integer integer {  } */
+| '+' defProperty
+{
+  addComponentProps($2);
+}
+| comp_generate | comp_halo | comp_routehalo | comp_extension_stmt;
+
+comp_extension_stmt : defExtension;
+
+comp_type : '+' FIXED_K point defOrient
+{
+  componentR->placement(DEF_PLACEMENT_FIXED, $3._x, $3._y, (defOrient) $4);
+}
+| '+' COVER_K point defOrient
+{
+  componentR->placement(DEF_PLACEMENT_COVER, $3._x, $3._y, (defOrient) $4);
+}
+| '+' PLACED_K point defOrient
+{
+  componentR->placement(DEF_PLACEMENT_PLACED, $3._x, $3._y, (defOrient) $4);
+}
+| '+' UNPLACED_K point defOrient
+{
+  componentR->placement(DEF_PLACEMENT_UNPLACED, $3._x, $3._y, (defOrient) $4);
+}
+| '+' UNPLACED_K
+{
+  componentR->placement(DEF_PLACEMENT_UNPLACED, 0, 0, DEF_ORIENT_N);
+};
+
+// Adding 'no_num' modification, otherwise the token will be parsed as number
+// (double).
+maskShift : '+' K_MASKSHIFT
+{ /* TODO */
+}
+ident{} | '+' K_MASKSHIFT
+{ /* TODO */
+}
+integer
+
     ;
 
-comp_extension_stmt : defExtension ;
+comp_generate : '+' K_COMP_GEN
+{ /* TODO  */
+}
+ident opt_pattern{/* TODO */};
 
-comp_type
-    :    '+' FIXED_K point defOrient         { componentR->placement( DEF_PLACEMENT_FIXED, $3._x, $3._y, (defOrient) $4 ); }
-    |    '+' COVER_K point defOrient         { componentR->placement( DEF_PLACEMENT_COVER, $3._x, $3._y, (defOrient) $4 ); }
-    |    '+' PLACED_K point defOrient        { componentR->placement( DEF_PLACEMENT_PLACED, $3._x, $3._y, (defOrient) $4 ); }
-    |    '+' UNPLACED_K point defOrient      { componentR->placement( DEF_PLACEMENT_UNPLACED, $3._x, $3._y, (defOrient) $4 ); }
-    |    '+' UNPLACED_K                      { componentR->placement( DEF_PLACEMENT_UNPLACED, 0, 0, DEF_ORIENT_N ); }
-	;
+opt_pattern :
+    // empty
+    {/* TODO */}
+    | ident{/* TODO */};
 
-// Adding 'no_num' modification, otherwise the token will be parsed as number (double). 
-maskShift
-	: '+' K_MASKSHIFT { /* TODO */ } ident
-        {
+comp_halo : '+' HALO_K  // 5.7
+{                       /* TODO */
+}
+halo_soft NUM_INT NUM_INT NUM_INT NUM_INT{
+    /* TODO */
+};
+
+halo_soft :  // 5.7
+             | K_SOFT{
+                 /* TODO  */
+             };
+
+// 5.7
+comp_routehalo : '+' K_ROUTEHALO NUM_INT
+{ /* TODO */
+}
+ident ident{/* TODO */};
+
+defOrient : N_K
+{
+  $$ = DEF_ORIENT_N;
+}
+| S_K
+{
+  $$ = DEF_ORIENT_S;
+}
+| E_K
+{
+  $$ = DEF_ORIENT_E;
+}
+| W_K
+{
+  $$ = DEF_ORIENT_W;
+}
+| FN_K
+{
+  $$ = DEF_ORIENT_FN;
+}
+| FS_K
+{
+  $$ = DEF_ORIENT_FS;
+}
+| FE_K
+{
+  $$ = DEF_ORIENT_FE;
+}
+| FW_K
+{
+  $$ = DEF_ORIENT_FW;
+};
+
+source_type : NETLIST_K
+{
+  $$ = DEF_NETLIST;
+}
+| DIST_K
+{
+  $$ = DEF_DIST;
+}
+| USER_K
+{
+  $$ = DEF_USER;
+}
+| TIMING_K
+{
+  $$ = DEF_TIMING;
+};
+
+pin_rule : PINS_K integer
+{
+  pinR->pinsBegin($2);
+}
+';' defPinList END_K PINS_K
+{
+  pinR->pinsEnd();
+};
+
+defPinList : /* nothing */
+             | defPinList defPin;
+
+defPin : '-' ident '+' NET_K ident
+{
+  pinR->pinBegin(*$2, *$5);
+}
+defPinOpts ';'
+{
+  pinR->pinEnd();
+  release($2);
+  release($5);
+};
+
+defPinOpts : /* nothing */
+             | defPinOpts defPinOpt;
+
+defPinOpt : '+' SPECIAL_K
+{
+  pinR->pinSpecial();
+}
+| '+' DIRECTION_K defPinDirection | '+' USE_K defPinUse | '+' NETEXPR_K qstring
+{
+  release($3);
+}
+| '+' SUPPLYSENSITIVITY_K ident
+{
+  pinR->pinSupplyPin(*$3);
+  release($3);
+}
+| '+' GROUNDSENSITIVITY_K ident
+{
+  pinR->pinGroundPin(*$3);
+  release($3);
+}
+| '+' ANTENNAPINPARTIALMETALAREA_K number  defPinLayerOpt
+    | '+' ANTENNAPINPARTIALMETALSIDEAREA_K number defPinLayerOpt
+    | '+' ANTENNAPINPARTIALCUTAREA_K number defPinLayerOpt
+    | '+' ANTENNAPINDIFFAREA_K number defPinLayerOpt
+    | '+' ANTENNAMODEL_K              defPinOxide
+    | '+' ANTENNAPINGATEAREA_K number defPinLayerOpt
+    | '+' ANTENNAPINMAXAREACAR_K number LAYER_K ident
+{
+  release($5);
+}
+| '+' ANTENNAPINMAXSIDEAREACAR_K number LAYER_K ident
+{
+  release($5);
+}
+| '+' ANTENNAPINMAXCUTCAR_K number LAYER_K ident
+{
+  release($5);
+}
+| '+' PORT_K  // 5.7
+    | '+' LAYER_K ident defPinGeomOpt point point
+{
+  pinR->pinRect(*$3, $5._x, $5._y, $6._x, $6._y);
+  release($3);
+}
+| '+' LAYER_K ident K_MASK integer defPinGeomOpt point point{
+    /* TODO pinR->pinRect( *$3, $5._x, $5._y, $6._x, $6._y ); release($3); */}
+    | '+' POLYGON_K ident defPinGeomOpt defPointList
+{
+  pinR->pinPolygon(*$5);
+  delete $5;
+  release($3);
+}
+| '+' POLYGON_K ident K_MASK integer defPinGeomOpt defPointList{
+    /* TODO pinR->pinPolygon( *$5 ); delete $5; release($3); */}
+    | '+' COVER_K point defOrient
+{
+  pinR->pinPlacement(DEF_PLACEMENT_COVER, $3._x, $3._y, (defOrient) $4);
+}
+| '+' FIXED_K point defOrient
+{
+  pinR->pinPlacement(DEF_PLACEMENT_FIXED, $3._x, $3._y, (defOrient) $4);
+}
+| '+' PLACED_K point defOrient
+{
+  pinR->pinPlacement(DEF_PLACEMENT_PLACED, $3._x, $3._y, (defOrient) $4);
+}
+| '+' VIA_K
+{ /* TODO defData->dumb_mode = 1; */
+}
+ident pin_via_mask_opt '(' NUM_INT NUM_INT ')'  // 5.7
+    {
+        /*
+        if (defData->VersionNum < 5.7) {
+          if (defData->callbacks->PinCbk || defData->callbacks->PinExtCbk) {
+            if ((defData->pinWarnings++ < defData->settings->PinWarnings) &&
+                (defData->pinWarnings++ < defData->settings->PinExtWarnings)) {
+              defData->defMsg = (char*)malloc(1000);
+              sprintf (defData->defMsg,
+                 "The PIN VIA statement is available in version 5.7 and
+        later.\nHowever, your DEF file is defined with version %g.",
+        defData->VersionNum); defData->defError(6556, defData->defMsg);
+              free(defData->defMsg);
+              CHKERR();
+            }
+          }
+        } else {
+          if (defData->callbacks->PinCbk || defData->callbacks->PinExtCbk) {
+            if (defData->hasPort)
+               defData->Pin.addPortVia($4, (int)$7,
+                                           (int)$8, $5);
+            else
+               defData->Pin.addVia($4, (int)$7,
+                                           (int)$8, $5);
+          }
         }
-       | '+' K_MASKSHIFT { /* TODO */ } integer
+                   */
+    };
 
-	;
+pin_via_mask_opt:  // empty
+{
+  $$ = 0;
+}
+| K_MASK NUM_INT
+{ /* TODO */
+}
 
-comp_generate
-	:    '+' K_COMP_GEN {/* TODO  */} ident
-    opt_pattern {/* TODO */}
-	 ;
+defPinGeomOpt : /* nothing */
+                | SPACING_K NUM_INT
+{
+  pinR->pinMinSpacing($2);
+}
+| DESIGNRULEWIDTH_K NUM_INT
+{
+  pinR->pinEffectiveWidth($2);
+};
 
-opt_pattern 
-	:
-		// empty 
-		{ /* TODO */}
-    | ident
-		{ /* TODO */ }
-	;
+defPinDirection : INPUT_K
+{
+  pinR->pinDirection(DEF_IO_INPUT);
+}
+| OUTPUT_K
+{
+  pinR->pinDirection(DEF_IO_OUTPUT);
+}
+| INOUT_K
+{
+  pinR->pinDirection(DEF_IO_INOUT);
+}
+| FEEDTHRU_K
+{
+  pinR->pinDirection(DEF_IO_FEEDTHRU);
+};
 
-comp_halo
-	: '+' HALO_K                    // 5.7 
-        { /* TODO */
-        }
-        halo_soft NUM_INT NUM_INT NUM_INT NUM_INT 
-        { /* TODO */
-        }
-	;
+defPinUse : ANALOG_K
+{
+  pinR->pinUse(DEF_SIG_ANALOG);
+}
+| CLOCK_K
+{
+  pinR->pinUse(DEF_SIG_CLOCK);
+}
+| GROUND_K
+{
+  pinR->pinUse(DEF_SIG_GROUND);
+}
+| POWER_K
+{
+  pinR->pinUse(DEF_SIG_POWER);
+}
+| RESET_K
+{
+  pinR->pinUse(DEF_SIG_RESET);
+}
+| SCAN_K
+{
+  pinR->pinUse(DEF_SIG_SCAN);
+}
+| SIGNAL_K
+{
+  pinR->pinUse(DEF_SIG_SIGNAL);
+}
+| TIEOFF_K
+{
+  pinR->pinUse(DEF_SIG_TIEOFF);
+};
 
-halo_soft: // 5.7 
-    | K_SOFT
-    { /* TODO  */
-    }
-    ;
+defPinOxide : OXIDE1_K | OXIDE2_K | OXIDE3_K | OXIDE4_K;
 
-// 5.7 
-comp_routehalo
-    : '+' K_ROUTEHALO NUM_INT { /* TODO */} ident ident
-    { /* TODO */ }
-    ;
-
-
-defOrient
-    :    N_K  { $$ = DEF_ORIENT_N; }
-    |    S_K  { $$ = DEF_ORIENT_S; }
-    |    E_K  { $$ = DEF_ORIENT_E; }
-    |    W_K  { $$ = DEF_ORIENT_W; }
-    |    FN_K { $$ = DEF_ORIENT_FN; }
-    |    FS_K { $$ = DEF_ORIENT_FS; }
-    |    FE_K { $$ = DEF_ORIENT_FE; }
-    |    FW_K { $$ = DEF_ORIENT_FW; }
-    ;
-
-source_type
-    : NETLIST_K  { $$ = DEF_NETLIST; }
-    | DIST_K     { $$ = DEF_DIST; }
-    | USER_K     { $$ = DEF_USER; }
-    | TIMING_K    { $$ = DEF_TIMING; }
-    ;
-
-pin_rule
-    :    PINS_K integer { pinR->pinsBegin($2); } ';' defPinList END_K PINS_K { pinR->pinsEnd(); }
-    ;
-
-defPinList
-    :    /* nothing */
-    |    defPinList defPin
-    ;
-
-defPin
-    :    '-' ident '+' NET_K ident { pinR->pinBegin( *$2, *$5 ); } defPinOpts ';'
-         {
-             pinR->pinEnd();
-             release($2);
-             release($5);
-         }
-    ;
-
-defPinOpts
-    :    /* nothing */
-    |    defPinOpts defPinOpt
-    ;
-
-defPinOpt
-    :    '+' SPECIAL_K	{ pinR->pinSpecial(); }
-    |    '+' DIRECTION_K defPinDirection
-    |    '+' USE_K defPinUse
-    |    '+' NETEXPR_K qstring { release($3); }
-    |    '+' SUPPLYSENSITIVITY_K ident { pinR->pinSupplyPin(*$3); release($3); }
-    |    '+' GROUNDSENSITIVITY_K ident { pinR->pinGroundPin(*$3); release($3); }
-    |    '+' ANTENNAPINPARTIALMETALAREA_K number defPinLayerOpt
-    |    '+' ANTENNAPINPARTIALMETALSIDEAREA_K number defPinLayerOpt
-    |    '+' ANTENNAPINPARTIALCUTAREA_K number defPinLayerOpt
-    |    '+' ANTENNAPINDIFFAREA_K number defPinLayerOpt
-    |    '+' ANTENNAMODEL_K defPinOxide
-    |    '+' ANTENNAPINGATEAREA_K number defPinLayerOpt
-    |    '+' ANTENNAPINMAXAREACAR_K number LAYER_K ident            { release($5); }
-    |    '+' ANTENNAPINMAXSIDEAREACAR_K number LAYER_K ident        { release($5); }
-    |    '+' ANTENNAPINMAXCUTCAR_K number LAYER_K ident             { release($5); }
-    |    '+' PORT_K // 5.7
-    |    '+' LAYER_K ident defPinGeomOpt point point { pinR->pinRect( *$3, $5._x, $5._y, $6._x, $6._y ); release($3); }
-    |    '+' LAYER_K ident  K_MASK integer defPinGeomOpt point point { 
-		/* TODO pinR->pinRect( *$3, $5._x, $5._y, $6._x, $6._y ); release($3); */ }
-    |    '+' POLYGON_K ident defPinGeomOpt defPointList { pinR->pinPolygon( *$5 ); delete $5; release($3); }
-    |    '+' POLYGON_K ident  K_MASK integer defPinGeomOpt defPointList { 
-			/* TODO pinR->pinPolygon( *$5 ); delete $5; release($3); */ }
-    |    '+' COVER_K point defOrient   { pinR->pinPlacement( DEF_PLACEMENT_COVER, $3._x, $3._y, (defOrient) $4 ); }
-    |    '+' FIXED_K point defOrient   { pinR->pinPlacement( DEF_PLACEMENT_FIXED, $3._x, $3._y, (defOrient) $4 ); }
-    |    '+' PLACED_K point defOrient  { pinR->pinPlacement( DEF_PLACEMENT_PLACED, $3._x, $3._y, (defOrient) $4 ); }
-    |    '+' VIA_K { /* TODO defData->dumb_mode = 1; */ } ident pin_via_mask_opt '(' NUM_INT NUM_INT ')'   // 5.7
-           { /*
-             if (defData->VersionNum < 5.7) {
-               if (defData->callbacks->PinCbk || defData->callbacks->PinExtCbk) {
-                 if ((defData->pinWarnings++ < defData->settings->PinWarnings) &&
-                     (defData->pinWarnings++ < defData->settings->PinExtWarnings)) {
-                   defData->defMsg = (char*)malloc(1000);
-                   sprintf (defData->defMsg,
-                      "The PIN VIA statement is available in version 5.7 and later.\nHowever, your DEF file is defined with version %g.", defData->VersionNum);
-                   defData->defError(6556, defData->defMsg);
-                   free(defData->defMsg);
-                   CHKERR();
-                 }
-               }
-             } else {
-               if (defData->callbacks->PinCbk || defData->callbacks->PinExtCbk) {
-                 if (defData->hasPort)
-                    defData->Pin.addPortVia($4, (int)$7,
-                                                (int)$8, $5);
-                 else
-                    defData->Pin.addVia($4, (int)$7,
-                                                (int)$8, $5);
-               }
-             }
- 			*/
-           }
-    ;
-
-pin_via_mask_opt
-    :  // empty 
-    { $$ = 0; }
-    | K_MASK NUM_INT
-    { /* TODO */
-    }
-
-defPinGeomOpt
-    : /* nothing */
-    | SPACING_K NUM_INT { pinR->pinMinSpacing($2); }
-    | DESIGNRULEWIDTH_K NUM_INT { pinR->pinEffectiveWidth($2); }
-    ;
-
-defPinDirection
-    :    INPUT_K    { pinR->pinDirection( DEF_IO_INPUT ); }
-    |    OUTPUT_K   { pinR->pinDirection( DEF_IO_OUTPUT ); }
-    |    INOUT_K    { pinR->pinDirection( DEF_IO_INOUT ); }
-    |    FEEDTHRU_K { pinR->pinDirection( DEF_IO_FEEDTHRU ); }
-    ;
-
-defPinUse
-    :    ANALOG_K { pinR->pinUse( DEF_SIG_ANALOG ); }
-    |    CLOCK_K  { pinR->pinUse( DEF_SIG_CLOCK ); }
-    |    GROUND_K { pinR->pinUse( DEF_SIG_GROUND ); } 
-    |    POWER_K  { pinR->pinUse( DEF_SIG_POWER ); }
-    |    RESET_K  { pinR->pinUse( DEF_SIG_RESET ); }
-    |    SCAN_K   { pinR->pinUse( DEF_SIG_SCAN ); }
-    |    SIGNAL_K { pinR->pinUse( DEF_SIG_SIGNAL ); }
-    |    TIEOFF_K { pinR->pinUse( DEF_SIG_TIEOFF ); }
-    ;
-
-defPinOxide
-    :    OXIDE1_K | OXIDE2_K | OXIDE3_K | OXIDE4_K
-    ;
-
-defPinLayerOpt
-    :    /* nothing */
-    |    LAYER_K ident { release($2); }
-    ;
+defPinLayerOpt : /* nothing */
+                 | LAYER_K ident
+{
+  release($2);
+};
 
 pin_props_section
-    :    PINPROPERTIES_K integer ';' defPinPropertyList END_K PINPROPERTIES_K
-    ;
+    : PINPROPERTIES_K integer ';' defPinPropertyList END_K PINPROPERTIES_K;
 
-defPinPropertyList
-    :    /* nothing */
-    |    defPinPropertyList defPinProperty
-    ;
+defPinPropertyList : /* nothing */
+                     | defPinPropertyList defPinProperty;
 
-defPinProperty
-    :    '-' ident ident 
-         {
-             pin_propsR->begin( *$2, *$3);
-             release($2);
-             release($3);
-         }
-         defPinPropertyValues ';'
-         {
-             pin_propsR->end();
-         }
-    ;
+defPinProperty : '-' ident ident
+{
+  pin_propsR->begin(*$2, *$3);
+  release($2);
+  release($3);
+}
+defPinPropertyValues ';'
+{
+  pin_propsR->end();
+};
 
-defPinPropertyValues
-    :    /* nothing */
-    |    defPinPropertyValues '+' defProperty { addComponentPinProps($3); }
-    ;
+defPinPropertyValues : /* nothing */
+                       | defPinPropertyValues '+' defProperty
+{
+  addComponentPinProps($3);
+};
 
-blockage_section
-    :    BLOCKAGES_K integer ';' blockage_defs END_K BLOCKAGES_K
-    ;
+blockage_section : BLOCKAGES_K integer ';' blockage_defs END_K BLOCKAGES_K;
 
-blockage_defs
-    :    /* nothing */
-    |    blockage_defs blockage_rule
-    ;
+blockage_defs : /* nothing */
+                | blockage_defs blockage_rule;
 
-blockage_defs: // empty 
-      | blockage_defs blockage_def
-      ;
+blockage_defs :  // empty
+                 | blockage_defs blockage_def;
 
-blockage_def: // TODO : why rectPoly_blockage since you have rectPoly_blockage_rules
-		blockage_rule rectPoly_blockage rectPoly_blockage_rules
-      ';'
-      { /* TODO */
-      }
+blockage_def
+    :  // TODO : why rectPoly_blockage since you have rectPoly_blockage_rules
+       blockage_rule rectPoly_blockage rectPoly_blockage_rules ';'
+{ /* TODO */
+}
 
+blockage_rule : '-' LAYER_K ident
+{
+  blockageR->blockageRoutingBegin(*$3);
+}
+layer_blockage_rules defBlockageRoutingGeoms ';'
+{
+  blockageR->blockageRoutingEnd();
+  release($3);
+}
+| '-' PLACEMENT_K
+{
+  blockageR->blockagePlacementBegin();
+}
+placement_comp_rules defBlockagePlacementRects ';'
+{
+  blockageR->blockagePlacementEnd();
+};
 
-blockage_rule
-    :    '-' LAYER_K ident { blockageR->blockageRoutingBegin(*$3); } 
-		layer_blockage_rules defBlockageRoutingGeoms ';' 
-         { 
-             blockageR->blockageRoutingEnd();
-             release($3); 
-         }
-    |    '-' PLACEMENT_K { blockageR->blockagePlacementBegin(); } 
-		placement_comp_rules defBlockagePlacementRects ';'
-         { 
-             blockageR->blockagePlacementEnd();
-         }
-    ;
+layer_blockage_rules : /* nothing */
+                       | layer_blockage_rules layer_blockage_rule;
 
-layer_blockage_rules
-    :    /* nothing */
-    |    layer_blockage_rules layer_blockage_rule
-    ;
+layer_blockage_rule : '+' SPACING_K NUM_INT
+{
+  blockageR->blockageRoutingMinSpacing($3);
+}
+| '+' DESIGNRULEWIDTH_K NUM_INT
+{
+  blockageR->blockageRoutingEffectiveWidth($3);
+}
+| mask_blockage_rule | comp_blockage_rule;
 
-layer_blockage_rule
-    :    '+' SPACING_K  NUM_INT { blockageR->blockageRoutingMinSpacing($3); }
-    |    '+' DESIGNRULEWIDTH_K  NUM_INT { blockageR->blockageRoutingEffectiveWidth($3); }
-	|    mask_blockage_rule
-	|	 comp_blockage_rule
-    ;
+mask_blockage_rule : '+' K_MASK NUM_INT{
+                         /* TODO */
+                     };
 
-mask_blockage_rule: 
-      '+' K_MASK NUM_INT
-      { /* TODO */
-      } 
-	  ;
+comp_blockage_rule : '+' COMPONENT_K ident
+{
+  blockageR->blockageRoutingComponent(*$3);
+  release($3);
+}
+| '+' SLOTS_K
+{
+  blockageR->blockageRoutingSlots();
+}
+| '+' FILLS_K
+{
+  blockageR->blockageRoutingFills();
+}
+| '+' PUSHDOWN_K
+{
+  blockageR->blockageRoutingPushdown();
+}
+| '+' K_EXCEPTPGNET  // 5.7
+    {/* TODO  */};
 
-comp_blockage_rule
-    :    '+' COMPONENT_K ident { blockageR->blockageRoutingComponent(*$3); release($3); }
-    |    '+' SLOTS_K           { blockageR->blockageRoutingSlots(); }
-    |    '+' FILLS_K           { blockageR->blockageRoutingFills(); }
-    |    '+' PUSHDOWN_K        { blockageR->blockageRoutingPushdown(); }
-	|    '+' K_EXCEPTPGNET              // 5.7 
-    { /* TODO  */ }
-	;
+defBlockageRoutingGeoms : defBlockageRoutingGeom
+                          | defBlockageRoutingGeoms defBlockageRoutingGeom;
 
-defBlockageRoutingGeoms
-    :    defBlockageRoutingGeom
-    |    defBlockageRoutingGeoms defBlockageRoutingGeom
-    ;
+defBlockageRoutingGeom : RECT_K point point
+{
+  blockageR->blockageRoutingRect($2._x, $2._y, $3._x, $3._y);
+}
+| POLYGON_K defPointList
+{
+  blockageR->blockageRoutingPolygon(*$2);
+  delete $2;
+};
 
-defBlockageRoutingGeom
-    :    RECT_K point point             { blockageR->blockageRoutingRect( $2._x, $2._y, $3._x, $3._y ); }
-    |    POLYGON_K defPointList  { blockageR->blockageRoutingPolygon( *$2 ); delete $2; }
-    ;
+defPointList : '(' integer integer ')'
+{
+  $$           = new std::vector<defPoint>;
+  cur_point._x = $2;
+  cur_point._y = $3;
+  $$->push_back(cur_point);
+}
+| defPointList defPoint
+{
+  $1->push_back(cur_point);
+  $$ = $1;
+};
 
-defPointList
-    : '(' integer integer ')'  
-      { 
-          $$ = new std::vector<defPoint>; 
-          cur_point._x = $2;
-          cur_point._y = $3;
-          $$->push_back( cur_point );
-      }
-    | defPointList defPoint { $1->push_back( cur_point ); $$ = $1; }
-    ;
+defPoint : '(' integer integer ')'
+{
+  cur_point._x = $2;
+  cur_point._y = $3;
+}
+| '(' '*' integer ')'
+{
+  cur_point._y = $3;
+}
+| '(' integer '*' ')'
+{
+  cur_point._x = $2;
+}
+| '(' '*' '*' ')' {};
 
-defPoint
-    :    '(' integer integer ')' { cur_point._x = $2; cur_point._y = $3; }
-    |    '(' '*' integer ')'     { cur_point._y = $3; }
-    |    '(' integer '*' ')'     { cur_point._x = $2; }
-    |    '(' '*' '*' ')'         { }
-    ;
+placement_comp_rules : /* nothing */
+                       | placement_comp_rules placement_comp_rule;
 
-placement_comp_rules
-    :    /* nothing */
-    |    placement_comp_rules placement_comp_rule
-    ;
+placement_comp_rule : '+' COMPONENT_K ident
+{
+  blockageR->blockagePlacementComponent(*$3);
+  release($3);
+}
+| '+' PUSHDOWN_K
+{
+  blockageR->blockagePlacementPushdown();
+}
 
-placement_comp_rule
-    :    '+' COMPONENT_K ident { blockageR->blockagePlacementComponent(*$3); release($3); }
-    |    '+' PUSHDOWN_K        { blockageR->blockagePlacementPushdown(); }
+| '+' K_SOFT  // 5.7
+    {/* TODO */}
+    | '+' PARTIAL_K NUM_DOUBLE  // 5.7
+    {/* TODO */};
 
-	| '+' K_SOFT                  // 5.7
-      { /* TODO */ }
-      | '+' PARTIAL_K NUM_DOUBLE         // 5.7
-      { /* TODO */ }
-    ;
+defBlockagePlacementRects : RECT_K point point
+{
+  blockageR->blockagePlacementRect($2._x, $2._y, $3._x, $3._y);
+}
+| defBlockageRoutingGeoms RECT_K point point
+{
+  blockageR->blockagePlacementRect($3._x, $3._y, $4._x, $4._y);
+};
 
-defBlockagePlacementRects
-    :    RECT_K point point                         { blockageR->blockagePlacementRect( $2._x, $2._y, $3._x, $3._y ); }
-    |    defBlockageRoutingGeoms RECT_K point point { blockageR->blockagePlacementRect( $3._x, $3._y, $4._x, $4._y ); }
-    ;
+defSlots : SLOTS_K integer ';' defSlotList END_K SLOTS_K;
 
-defSlots
-    :    SLOTS_K integer ';' defSlotList END_K SLOTS_K
-    ;
+defSlotList : /* nothing */
+              | defSlotList defSlot;
 
-defSlotList
-    :    /* nothing */
-    |    defSlotList defSlot
-    ;
+defSlot : '-' LAYER_K ident defSlotGeoms ';'
+{
+  release($3);
+};
 
-defSlot
-    :    '-' LAYER_K ident defSlotGeoms ';' { release($3); }
-    ;
+defSlotGeoms : defSlotGeom | defSlotGeoms defSlotGeom;
 
-defSlotGeoms
-    :    defSlotGeom
-    |    defSlotGeoms defSlotGeom
-    ;
+defSlotGeom : RECT_K point point | POLYGON_K defPointList
+{
+  delete $2;
+};
 
-defSlotGeom
-    :    RECT_K point point
-    |    POLYGON_K defPointList { delete $2; }
-    ;
+fill_section : FILLS_K integer ';' defFillList END_K FILLS_K;
 
-fill_section
-    :    FILLS_K integer ';' defFillList END_K FILLS_K
-    ;
+defFillList : /* nothing */
+              // |    defFillList fill_rule_1
+              | defFillList fill_def;
 
-defFillList
-    :    /* nothing */
-    // |    defFillList fill_rule_1
-    |    defFillList fill_def
-    ;
+fill_rule_1 : '-' LAYER_K ident
+{
+  fillR->fillBegin(*$3);
+}
+defFillGeoms ';'
+{
+  fillR->fillEnd();
+  release($3);
+};
 
-fill_rule_1
-    :    '-' LAYER_K ident { fillR->fillBegin(*$3); } defFillGeoms ';' { fillR->fillEnd(); release($3); }
-    ;
+defFillGeoms : defFillGeom | defFillGeoms defFillGeom;
 
-defFillGeoms
-    :    defFillGeom
-    |    defFillGeoms defFillGeom
-    ;
-
-defFillGeom
-    :    RECT_K point point { fillR->fillRect( $2._x, $2._y, $3._x, $3._y ); }
-    |    POLYGON_K defPointList { fillR->fillPolygon(*$2); delete $2; }
-    ;
-
+defFillGeom : RECT_K point point
+{
+  fillR->fillRect($2._x, $2._y, $3._x, $3._y);
+}
+| POLYGON_K defPointList
+{
+  fillR->fillPolygon(*$2);
+  delete $2;
+};
 
 // ------------------------------- FILLS Section -------------------------------
 
+fill_def : fill_rule geom_fill_rules ';' {/* TODO  */} | '-' VIA_K
+{ /* TODO */
+}
+ident  // 5.7
+{      /* TODO */
+}
+fill_via_mask_opc_opt fill_via_pt ';'
 
-fill_def: fill_rule geom_fill_rules ';'
-      { /* TODO  */ }
-      | '-' VIA_K { /* TODO */  } ident  // 5.7
-      { /* TODO */ }
-      fill_via_mask_opc_opt fill_via_pt ';'
+    fill_rule : '-' LAYER_K
+{ /* TODO */
+}
+ident
+{ /* TODO */
+}
+fill_layer_mask_opc_opt geom_fill  // 5.7
 
-fill_rule: '-' LAYER_K { /* TODO */ } ident
-      { /* TODO */ }
-      fill_layer_mask_opc_opt geom_fill            // 5.7
+                                             geom_fill_rules :  // empty
+                           | geom_fill_rules geom_fill;
 
-geom_fill_rules: // empty
-      | geom_fill_rules geom_fill
-      ;
+geom_fill : RECT_K point point{/* TODO */} | POLYGON_K
+{
+}
+firstPt nextPt nextPt otherPts
+{ /* TODO */
+}
 
-geom_fill: RECT_K point point
-      { /* TODO */ }
-      | POLYGON_K
-      {
-      }
-      firstPt nextPt nextPt otherPts
-      { /* TODO */ }
-
-fill_layer_mask_opc_opt: // empty
-    | fill_layer_mask_opc_opt opt_mask_opc_l
-    ;
-opt_mask_opc_l: fill_layer_opc
-    | fill_mask
-    ;
-
-// 5.7
-fill_layer_opc:
-      '+' K_OPC
-      { /* TODO */ }
-
-fill_via_pt: firstPt otherPts
-    { /* TODO */ }
-
-
-fill_via_mask_opc_opt: // empty
-    | fill_via_mask_opc_opt opt_mask_opc
-    ;
-opt_mask_opc: fill_via_opc
-    | fill_viaMask
-    ;
-
-
+fill_layer_mask_opc_opt :  // empty
+                           | fill_layer_mask_opc_opt opt_mask_opc_l;
+opt_mask_opc_l : fill_layer_opc | fill_mask;
 
 // 5.7
-fill_via_opc:
-      '+' K_OPC
-      { /* TODO */ }
+fill_layer_opc : '+' K_OPC
+{ /* TODO */
+}
 
-fill_mask:
-      '+' K_MASK integer
-      { /* TODO */ }
+fill_via_pt : firstPt otherPts
+{ /* TODO */
+}
 
-fill_viaMask:
-      '+' K_MASK integer
-      { /* TODO */ }
-// ----------------------------------------- FILLS Section END -----------------------------------------
+fill_via_mask_opc_opt :  // empty
+                         | fill_via_mask_opc_opt opt_mask_opc;
+opt_mask_opc : fill_via_opc | fill_viaMask;
 
+// 5.7
+fill_via_opc : '+' K_OPC
+{ /* TODO */
+}
 
-rectPoly_blockage_rules: // empty -------------------------------------------------- TODO
-      | rectPoly_blockage_rules rectPoly_blockage
-      ;
-  
+fill_mask : '+' K_MASK integer
+{ /* TODO */
+}
+
+fill_viaMask : '+' K_MASK integer
+{ /* TODO */
+}
+// ----------------------------------------- FILLS Section END
+// -----------------------------------------
+
+rectPoly_blockage_rules
+    :  // empty -------------------------------------------------- TODO
+       | rectPoly_blockage_rules rectPoly_blockage;
+
 rectPoly_blockage: RECT_K point point
       {
 	  /*
@@ -1330,132 +1408,230 @@ rectPoly_blockage: RECT_K point point
           defData->Blockage.addRect($2.x, $2.y, $3.x, $3.y); */
       }
       | K_POLYGON
-      {
-	  /*
+{
+  /*
+if (defData->callbacks->BlockageCbk) {
+    defData->Geometries.Reset();
+}
+        */
+}
+firstPt nextPt nextPt otherPts
+{ /*
+  if (defData->callbacks->BlockageCbk) {
+    if (defData->VersionNum >= 5.6) {  // only 5.6 and beyond
+      if (defData->Blockage.hasLayer()) {  // only in layer
+        if (defData->callbacks->BlockageCbk)
+          defData->Blockage.addPolygon(&defData->Geometries);
+      } else {
         if (defData->callbacks->BlockageCbk) {
-            defData->Geometries.Reset();
-        }
-		*/
-      }
-      firstPt nextPt nextPt otherPts
-      { /*
-        if (defData->callbacks->BlockageCbk) {
-          if (defData->VersionNum >= 5.6) {  // only 5.6 and beyond
-            if (defData->Blockage.hasLayer()) {  // only in layer
-              if (defData->callbacks->BlockageCbk)
-                defData->Blockage.addPolygon(&defData->Geometries);
-            } else {
-              if (defData->callbacks->BlockageCbk) {
-                if (defData->blockageWarnings++ < defData->settings->BlockageWarnings) {
-                  defData->defError(6544, "A POLYGON statement is defined in the BLOCKAGE statement,\nbut it is not defined in the BLOCKAGE LAYER statement.\nUpdate your DEF file to either remove the POLYGON statement from the BLOCKAGE statement or\ndefine the POLYGON statement in a BLOCKAGE LAYER statement.");
-                  CHKERR();
-                }
-              }
-            }
+          if (defData->blockageWarnings++ < defData->settings->BlockageWarnings)
+  { defData->defError(6544, "A POLYGON statement is defined in the BLOCKAGE
+  statement,\nbut it is not defined in the BLOCKAGE LAYER statement.\nUpdate
+  your DEF file to either remove the POLYGON statement from the BLOCKAGE
+  statement or\ndefine the POLYGON statement in a BLOCKAGE LAYER statement.");
+            CHKERR();
           }
         }
-		*/
       }
+    }
+  }
+          */
+}
 
+firstPt : point
+{ /* TODO */
+}
 
+nextPt : point
+{ /* TODO */
+}
 
+otherPts :  // empty
+            | otherPts nextPt;
 
-firstPt: point
-          { /* TODO */ }
+point : '(' integer integer ')'
+{
+  $$._x = $2;
+  $$._y = $3;
+};
 
-nextPt: point
-          { /* TODO */ }
+snets_section : SPECIALNETS_K integer ';' defSpecialNetList END_K SPECIALNETS_K;
 
-otherPts: // empty
-        | otherPts nextPt
-        ;
+defSpecialNetList : /* nothing */
+                    | defSpecialNetList defSpecialNet;
 
-point
-    :    '(' integer integer ')'
-          {
-              $$._x = $2;
-              $$._y = $3;
-          }
-    ;
-
-snets_section
-    :    SPECIALNETS_K integer ';' defSpecialNetList END_K SPECIALNETS_K
-    ;
-
-defSpecialNetList
-    :    /* nothing */
-    |    defSpecialNetList defSpecialNet
-    ;
-
-defSpecialNet
-    :    '-' ident { snetR->begin(*$2); } defSpecialNetConnections defSpecialNetOpts ';' { snetR->end(); release($2); }
-    ;
+defSpecialNet : '-' ident
+{
+  snetR->begin(*$2);
+}
+defSpecialNetConnections defSpecialNetOpts ';'
+{
+  snetR->end();
+  release($2);
+};
 
 defSpecialNetConnections
-    :    /* nothing */
-    |    defSpecialNetConnections '(' defSpecialNetConnection ')'
-    ;
+    : /* nothing */
+      | defSpecialNetConnections '(' defSpecialNetConnection ')';
 
-defSpecialNetConnection
-    :    ident ident                     { snetR->connection(*$1,*$2, false); release($1); release($2); }
-    |    ident ident '+' SYNTHESIZED_K   { snetR->connection(*$1,*$2, true); release($1); release($2); }
-    |    '*' ident                       { snetR->connection("*",*$2, false); release($2); }
-    |    '*' ident '+' SYNTHESIZED_K     { snetR->connection("*",*$2, true); release($2); }
-    ;
+defSpecialNetConnection : ident ident
+{
+  snetR->connection(*$1, *$2, false);
+  release($1);
+  release($2);
+}
+| ident ident '+' SYNTHESIZED_K
+{
+  snetR->connection(*$1, *$2, true);
+  release($1);
+  release($2);
+}
+| '*' ident
+{
+  snetR->connection("*", *$2, false);
+  release($2);
+}
+| '*' ident '+' SYNTHESIZED_K
+{
+  snetR->connection("*", *$2, true);
+  release($2);
+};
 
-defSpecialNetOpts
-    :    /* nothing */
-    |    defSpecialNetOpts defSpecialNetOpt
-    ;
+defSpecialNetOpts : /* nothing */
+                    | defSpecialNetOpts defSpecialNetOpt;
 
-defSpecialNetOpt
-    :    '+' VOLTAGE_K number
-    |    snet_width
-    |    '+' defSpecialNetWiring
-    |    '+' SOURCE_K defSpecialNetSource { snetR->source( (defSource) $3) ;}
-    |    '+' FIXEDBUMP_K { snetR->fixedbump(); }
-    |    '+' ORIGINAL_K ident { release($3); }
-    |    '+' USE_K defSpecialNetUse
-    |    '+' PATTERN_K defSpecialNetPattern
-    |    '+' ESTCAP_K number
-    |    '+' WEIGHT_K NUM_INT { snetR->weight($3); }
-    |    '+' defProperty { addSNetProps($2); }
-    ;
+defSpecialNetOpt : '+' VOLTAGE_K  number | snet_width | '+' defSpecialNetWiring
+                   | '+' SOURCE_K defSpecialNetSource
+{
+  snetR->source((defSource) $3);
+}
+| '+' FIXEDBUMP_K
+{
+  snetR->fixedbump();
+}
+| '+' ORIGINAL_K ident
+{
+  release($3);
+}
+| '+' USE_K defSpecialNetUse | '+' PATTERN_K defSpecialNetPattern
+    | '+' ESTCAP_K number | '+' WEIGHT_K NUM_INT
+{
+  snetR->weight($3);
+}
+| '+' defProperty
+{
+  addSNetProps($2);
+};
 
-snet_width: '+' WIDTH_K { /* TODO */ } ident integer
-            { /* TODO */ }
+snet_width : '+' WIDTH_K
+{ /* TODO */
+}
+ident integer
+{ /* TODO */
+}
 
-defSpecialNetSource
-    : DIST_K     { $$ = DEF_DIST; }
-    | NETLIST_K  { $$ = DEF_NETLIST; }
-    | TIMING_K   { $$ = DEF_TIMING; }
-    | USER_K     { $$ = DEF_USER; }
-    ;
+defSpecialNetSource : DIST_K
+{
+  $$ = DEF_DIST;
+}
+| NETLIST_K
+{
+  $$ = DEF_NETLIST;
+}
+| TIMING_K
+{
+  $$ = DEF_TIMING;
+}
+| USER_K
+{
+  $$ = DEF_USER;
+};
 
-defSpecialNetUse
-    :    ANALOG_K { snetR->use( DEF_SIG_ANALOG ); }
-    |    CLOCK_K  { snetR->use( DEF_SIG_CLOCK ); }
-    |    GROUND_K { snetR->use( DEF_SIG_GROUND ); } 
-    |    POWER_K  { snetR->use( DEF_SIG_POWER ); }
-    |    RESET_K  { snetR->use( DEF_SIG_RESET ); }
-    |    SCAN_K   { snetR->use( DEF_SIG_SCAN ); }
-    |    SIGNAL_K { snetR->use( DEF_SIG_SIGNAL ); }
-    |    TIEOFF_K { snetR->use( DEF_SIG_TIEOFF ); }
-    ;
+defSpecialNetUse : ANALOG_K
+{
+  snetR->use(DEF_SIG_ANALOG);
+}
+| CLOCK_K
+{
+  snetR->use(DEF_SIG_CLOCK);
+}
+| GROUND_K
+{
+  snetR->use(DEF_SIG_GROUND);
+}
+| POWER_K
+{
+  snetR->use(DEF_SIG_POWER);
+}
+| RESET_K
+{
+  snetR->use(DEF_SIG_RESET);
+}
+| SCAN_K
+{
+  snetR->use(DEF_SIG_SCAN);
+}
+| SIGNAL_K
+{
+  snetR->use(DEF_SIG_SIGNAL);
+}
+| TIEOFF_K
+{
+  snetR->use(DEF_SIG_TIEOFF);
+};
 
-defSpecialNetPattern
-    :    BALANCED_K | STEINER_K | TRUNK_K | WIREDLOGIC_K
-    ;
+defSpecialNetPattern : BALANCED_K | STEINER_K | TRUNK_K | WIREDLOGIC_K;
 
-defSpecialNetWiring
-    :    COVER_K        { snetR->wire( DEF_WIRE_COVER, NULL ); }  defSpecialNetPathList { snetR->wireEnd(); }
-    |    FIXED_K        { snetR->wire( DEF_WIRE_FIXED, NULL ); }  defSpecialNetPathList { snetR->wireEnd(); }
-    |    ROUTED_K       { snetR->wire( DEF_WIRE_ROUTED, NULL ); } defSpecialNetPathList { snetR->wireEnd(); }
-    |    SHIELD_K ident { snetR->wire( DEF_WIRE_SHIELD, *$2 ); }  defSpecialNetPathList { snetR->wireEnd(); release($2); }
-    |    RECT_K ident point point { snetR->rect( *$2, $3._x, $3._y, $4._x, $4._y ); release($2); }
-    |    POLYGON_K ident defPointList { snetR->polygon( *$2, *$3 ); release($2); delete $3; }
-    |    VIA_K { /* TODO */ } ident defOrient  '(' NUM_INT NUM_INT ')'  '(' NUM_INT NUM_INT ')'
-    |    SHAPE_K ident '+' VIA_K ident '(' NUM_INT NUM_INT ')'  '(' NUM_INT NUM_INT ')' // TODO
+defSpecialNetWiring : COVER_K
+{
+  snetR->wire(DEF_WIRE_COVER, NULL);
+}
+defSpecialNetPathList
+{
+  snetR->wireEnd();
+}
+| FIXED_K
+{
+  snetR->wire(DEF_WIRE_FIXED, NULL);
+}
+defSpecialNetPathList
+{
+  snetR->wireEnd();
+}
+| ROUTED_K
+{
+  snetR->wire(DEF_WIRE_ROUTED, NULL);
+}
+defSpecialNetPathList
+{
+  snetR->wireEnd();
+}
+| SHIELD_K ident
+{
+  snetR->wire(DEF_WIRE_SHIELD, *$2);
+}
+defSpecialNetPathList
+{
+  snetR->wireEnd();
+  release($2);
+}
+| RECT_K ident point point
+{
+  snetR->rect(*$2, $3._x, $3._y, $4._x, $4._y);
+  release($2);
+}
+| POLYGON_K ident defPointList
+{
+  snetR->polygon(*$2, *$3);
+  release($2);
+  delete $3;
+}
+| VIA_K
+{ /* TODO */
+}
+ident defOrient '(' NUM_INT NUM_INT ')' '(' NUM_INT NUM_INT ')'
+    | SHAPE_K ident '+' VIA_K ident '(' NUM_INT NUM_INT ')' '(' NUM_INT
+                                                NUM_INT ')'  // TODO
     ;
 
 snet_other_option: 
@@ -1465,222 +1641,481 @@ snet_other_option:
 	  /* TODO */
           }
      | '+' K_MASK integer
-          {
-	  /* TODO */
-          }
+{
+  /* TODO */
+}
 
-defSpecialNetPathList
-    :    defSpecialNetPath
-    |    defSpecialNetPathList NEW_K defSpecialNetPath
-	/* TODO
-	| '+' VIA_K { defData->dumb_mode = 1; } T_STRING orient_pt
-        */
+defSpecialNetPathList : defSpecialNetPath
+                        | defSpecialNetPathList NEW_K defSpecialNetPath
+    /* TODO
+    | '+' VIA_K { defData->dumb_mode = 1; } T_STRING orient_pt
+    */
     ;
 
-defSpecialNetPath
-    :    ident integer { snetR->path( *$1, $2 ); } defSpecialNetWireShapeOpts defSpecialNetPathPoints 
-             { snetR->pathEnd(); deflex_kid = 0; release($1); }
-    |    defSpecialNetWireShapeOpts '+' RECT_K ident  '(' NUM_INT NUM_INT ')'  '(' NUM_INT NUM_INT ')'  /* TODO */
-    |    defSpecialNetWireShapeOpts '+' RECT_K ident defSpecialNetPathPoints  /* TODO */
-    |    defSpecialNetWireShapeOpts '+' POLYGON_K ident defPointList  /* TODO */
-    |    defSpecialNetWireShapeOpts '+' VIA_K ident defOrient  '(' NUM_INT NUM_INT ')'  '(' NUM_INT NUM_INT ')'
-    |    defSpecialNetWireShapeOpts '+' VIA_K ident '(' NUM_INT NUM_INT ')'  '(' NUM_INT NUM_INT ')'
-    ;
+defSpecialNetPath : ident integer
+{
+  snetR->path(*$1, $2);
+}
+defSpecialNetWireShapeOpts defSpecialNetPathPoints
+{
+  snetR->pathEnd();
+  deflex_kid = 0;
+  release($1);
+}
+| defSpecialNetWireShapeOpts '+' RECT_K ident '(' NUM_INT
+        NUM_INT ')' '(' NUM_INT                NUM_INT ')' /* TODO */
+    | defSpecialNetWireShapeOpts '+' RECT_K    ident
+                                               defSpecialNetPathPoints /* TODO */
+    | defSpecialNetWireShapeOpts '+' POLYGON_K ident defPointList /* TODO */
+    | defSpecialNetWireShapeOpts '+' VIA_K           ident
+        defOrient '(' NUM_INT NUM_INT ')' '(' NUM_INT NUM_INT ')'
+    | defSpecialNetWireShapeOpts '+' VIA_K            ident '(' NUM_INT
+        NUM_INT ')' '(' NUM_INT NUM_INT ')';
 
 defSpecialNetWireShapeOpts
-    :    /* nothing */
-    | defSpecialNetWireShapeOpts defSpecialNetWireShapeOpt
-    ;
+    : /* nothing */
+      | defSpecialNetWireShapeOpts defSpecialNetWireShapeOpt;
 
+defSpecialNetWireShapeOpt : '+' SHAPE_K ident
+{
+  snetR->pathShape(*$3);
+  release($3);
+}
+| '+' K_MASK integer{/* TODO */} | '+' STYLE_K integer
+{
+  snetR->pathStyle($3);
+};
 
-defSpecialNetWireShapeOpt
-    :    '+' SHAPE_K ident { snetR->pathShape( *$3 ); release($3); }
-    |    '+' K_MASK integer { /* TODO */ }
-    |    '+' STYLE_K integer { snetR->pathStyle( $3 ); }
-    ;
+defSpecialNetPathPoints : '(' integer integer ')'
+{
+  cur_x = $2;
+  cur_y = $3;
+  snetR->pathPoint(cur_x, cur_y);
+  deflex_kid = SNET_PATH_ID;
+}
+| '(' integer integer integer ')'
+{
+  cur_x = $2;
+  cur_y = $3;
+  snetR->pathPoint(cur_x, cur_y, $4);
+  deflex_kid = SNET_PATH_ID;
+}
+| defSpecialNetPathPoints defSpecialNetPathPoint;
 
-defSpecialNetPathPoints
-    :    '(' integer integer ')' { cur_x = $2; cur_y = $3; snetR->pathPoint( cur_x, cur_y ); deflex_kid = SNET_PATH_ID; }
-    |    '(' integer integer integer ')' { cur_x = $2; cur_y = $3; snetR->pathPoint( cur_x, cur_y, $4 ); deflex_kid = SNET_PATH_ID; }
-    |    defSpecialNetPathPoints defSpecialNetPathPoint
-    ;
+defSpecialNetPathPoint : '(' integer integer ')'
+{
+  cur_x = $2;
+  cur_y = $3;
+  snetR->pathPoint(cur_x, cur_y);
+}
+| '(' '*' integer ')'
+{
+  cur_y = $3;
+  snetR->pathPoint(cur_x, cur_y);
+}
+| '(' integer '*' ')'
+{
+  cur_x = $2;
+  snetR->pathPoint(cur_x, cur_y);
+}
+| '(' '*' '*' ')'
+{
+  deferror("illegal colinear point");
+}
+| '(' integer integer integer ')'
+{
+  cur_x = $2;
+  cur_y = $3;
+  snetR->pathPoint(cur_x, cur_y, $4);
+}
+| '(' '*' integer integer ')'
+{
+  cur_y = $3;
+  snetR->pathPoint(cur_x, cur_y, $4);
+}
+| '(' integer '*' integer ')'
+{
+  cur_x = $2;
+  snetR->pathPoint(cur_x, cur_y, $4);
+}
+| '(' '*' '*' integer ')'
+{
+  deferror("illegal colinear point");
+}
+| ident
+{
+  snetR->pathVia(*$1);
+  release($1);
+}
+| ident DO_K
+{
+  deflex_kid = 0;
+}
+integer BY_K integer STEP_K
+{
+  deflex_kid = SNET_PATH_ID;
+}
+integer integer
+{
+  snetR->pathViaArray(*$1, $4, $6, $9, $10);
+  release($1);
+};
 
-defSpecialNetPathPoint
-    :    '(' integer integer ')' { cur_x = $2; cur_y = $3; snetR->pathPoint( cur_x, cur_y ); }
-    |    '(' '*' integer ')'     { cur_y = $3; snetR->pathPoint( cur_x, cur_y ); }
-    |    '(' integer '*' ')'     { cur_x = $2; snetR->pathPoint( cur_x, cur_y ); }
-    |    '(' '*' '*' ')'         { deferror("illegal colinear point"); }
-    |    '(' integer integer integer ')' { cur_x = $2; cur_y = $3; snetR->pathPoint( cur_x, cur_y, $4 ); }
-    |    '(' '*' integer integer ')'     { cur_y = $3; snetR->pathPoint( cur_x, cur_y, $4 ); }
-    |    '(' integer '*' integer ')'     { cur_x = $2; snetR->pathPoint( cur_x, cur_y, $4 ); }
-    |    '(' '*' '*' integer ')'         { deferror("illegal colinear point"); }
-    |    ident                   { snetR->pathVia( *$1 ); release($1); }
-    |    ident DO_K { deflex_kid = 0; } integer BY_K integer STEP_K { deflex_kid = SNET_PATH_ID;} integer integer
-         {
-             snetR->pathViaArray( *$1, $4, $6, $9, $10 );
-             release($1);
-         }
-    ;
+nets_section : NETS_K integer ';' defNetList END_K NETS_K;
 
-nets_section
-    :    NETS_K integer ';' defNetList END_K NETS_K
-    ;
+defNetList : /* nothing */
+             | defNetList defNet;
 
-defNetList
-    :    /* nothing */
-    |    defNetList defNet
-    ;
+defNet : '-'
+{
+  deflex_kid = NET_ID;
+}
+MUSTJOIN_K
+{
+  deflex_kid = 0;
+}
+'(' ident ident ')'
+{
+  netR->beginMustjoin(*$6, *$7);
+}
+defNetOpts ';'
+{
+  netR->end();
+  release($6);
+  release($7);
+}
+| '-'
+{
+  deflex_kid = NET_ID;
+}
+ident
+{
+  deflex_kid = 0;
+  netR->begin(*$3);
+}
+defNetConnections defNetOpts ';'
+{
+  netR->end();
+  release($3);
+};
 
-defNet
-    :    '-' { deflex_kid = NET_ID; }  
-	    MUSTJOIN_K  { deflex_kid = 0; } '(' ident ident ')' { netR->beginMustjoin( *$6, *$7 ); } 
-	    defNetOpts ';'
-         {
-             netR->end();
-             release($6);
-             release($7);
-         }
-    |    '-' { deflex_kid = NET_ID; } ident  { deflex_kid = 0; netR->begin(*$3); } 
-	     defNetConnections defNetOpts ';'
-         {
-             netR->end();
-             release($3);
-         }
-    ;
+defNetConnections : /* nothing */
+                    | defNetConnections defNetConnection;
 
-defNetConnections
-    :    /* nothing */
-    |    defNetConnections defNetConnection
-    ;
+defNetConnection : '(' ident ident ')'
+{
+  netR->connection(*$2, *$3);
+  release($2);
+  release($3);
+}
+| '(' ident ident '+' SYNTHESIZED_K ')'
+{
+  netR->connection(*$2, *$3);
+  release($2);
+  release($3);
+};
 
-defNetConnection
-    :    '(' ident ident ')'
-         {
-             netR->connection( *$2, *$3 );
-             release($2);
-             release($3);
-         }
-    |    '(' ident ident '+' SYNTHESIZED_K ')'
-         {
-             netR->connection( *$2, *$3 );
-             release($2);
-             release($3);
-         }
-    ;
+defNetOpts : /* nothing */
+             | defNetOpts net_option;
 
-defNetOpts
-    :    /* nothing */
-    |    defNetOpts net_option
-    ;
+net_option : '+' SHIELDNET_K ident
+{
+  release($3);
+}
+| '+' defNetVPin | '+' defSubNet | '+' XTALK_K NUM_INT
+{
+  netR->xtalk($3);
+}
+| '+' NONDEFAULTRULE_K ident
+{
+  netR->nonDefaultRule(*$3);
+  release($3);
+}
+| '+' defNetWire | '+' SOURCE_K defNetSource
+{
+  netR->source((defSource) $3);
+}
+| '+' FIXEDBUMP_K
+{
+  netR->fixedbump();
+}
+| '+' FREQUENCY_K number | '+' ORIGINAL_K ident
+{
+  release($3);
+}
+| '+' USE_K defNetUse | '+' STYLE_K NUM_INT{/* TODO */}
+    | '+' PATTERN_K defNetPattern | '+' ESTCAP_K number | '+' WEIGHT_K NUM_INT
+{
+  netR->weight($3);
+}
+| '+' defProperty
+{
+  addNetProps($2);
+};
 
-net_option
-    :    '+' SHIELDNET_K ident { release($3); }
-    |    '+' defNetVPin
-    |    '+' defSubNet
-    |    '+' XTALK_K NUM_INT { netR->xtalk($3); }
-    |    '+' NONDEFAULTRULE_K ident { netR->nonDefaultRule(*$3); release($3); }
-    |    '+' defNetWire
-    |    '+' SOURCE_K defNetSource { netR->source((defSource)$3); }
-    |    '+' FIXEDBUMP_K { netR->fixedbump(); }
-    |    '+' FREQUENCY_K number
-    |    '+' ORIGINAL_K ident { release($3); }
-    |    '+' USE_K defNetUse
-	|    '+' STYLE_K NUM_INT
-            { /* TODO */ }
-    |    '+' PATTERN_K defNetPattern
-    |    '+' ESTCAP_K number
-    |    '+' WEIGHT_K NUM_INT { netR->weight($3); }
-    |    '+' defProperty { addNetProps($2); }
-    ;
+defNetSource : DIST_K
+{
+  $$ = DEF_DIST;
+}
+| NETLIST_K
+{
+  $$ = DEF_NETLIST;
+}
+| TEST_K
+{
+  $$ = DEF_TEST;
+}
+| TIMING_K
+{
+  $$ = DEF_TIMING;
+}
+| USER_K
+{
+  $$ = DEF_USER;
+};
 
-defNetSource
-    : DIST_K    { $$ = DEF_DIST; }
-    | NETLIST_K { $$ = DEF_NETLIST; }
-    | TEST_K    { $$ = DEF_TEST; }
-    | TIMING_K  { $$ = DEF_TIMING; }
-    | USER_K    { $$ = DEF_USER; }
-    ;
+defNetUse : ANALOG_K
+{
+  netR->use(DEF_SIG_ANALOG);
+}
+| CLOCK_K
+{
+  netR->use(DEF_SIG_CLOCK);
+}
+| GROUND_K
+{
+  netR->use(DEF_SIG_GROUND);
+}
+| POWER_K
+{
+  netR->use(DEF_SIG_POWER);
+}
+| RESET_K
+{
+  netR->use(DEF_SIG_RESET);
+}
+| SCAN_K
+{
+  netR->use(DEF_SIG_SCAN);
+}
+| SIGNAL_K
+{
+  netR->use(DEF_SIG_SIGNAL);
+}
+| TIEOFF_K
+{
+  netR->use(DEF_SIG_TIEOFF);
+};
 
-defNetUse
-    :    ANALOG_K { netR->use( DEF_SIG_ANALOG ); }
-    |    CLOCK_K  { netR->use( DEF_SIG_CLOCK ); }
-    |    GROUND_K { netR->use( DEF_SIG_GROUND ); } 
-    |    POWER_K  { netR->use( DEF_SIG_POWER ); }
-    |    RESET_K  { netR->use( DEF_SIG_RESET ); }
-    |    SCAN_K   { netR->use( DEF_SIG_SCAN ); }
-    |    SIGNAL_K { netR->use( DEF_SIG_SIGNAL ); }
-    |    TIEOFF_K { netR->use( DEF_SIG_TIEOFF ); }
-    ;
+defNetPattern : BALANCED_K | STEINER_K | TRUNK_K | WIREDLOGIC_K;
 
-defNetPattern
-    :    BALANCED_K | STEINER_K | TRUNK_K | WIREDLOGIC_K
-    ;
-
-defNetWire
-    :    COVER_K    { netR->wire( DEF_WIRE_COVER ); }    defNetPathList { netR->wireEnd(); }
-    |    FIXED_K    { netR->wire( DEF_WIRE_FIXED ); }    defNetPathList { netR->wireEnd(); }
-    |    ROUTED_K   { netR->wire( DEF_WIRE_ROUTED ); }   defNetPathList { netR->wireEnd(); }
-    |    NOSHIELD_K { netR->wire( DEF_WIRE_NOSHIELD ); } defNetPathList { netR->wireEnd(); }
-    ;
-
+defNetWire : COVER_K
+{
+  netR->wire(DEF_WIRE_COVER);
+}
 defNetPathList
-    :    defNetPath
-    |    defNetPathList NEW_K defNetPath
-    ;
+{
+  netR->wireEnd();
+}
+| FIXED_K
+{
+  netR->wire(DEF_WIRE_FIXED);
+}
+defNetPathList
+{
+  netR->wireEnd();
+}
+| ROUTED_K
+{
+  netR->wire(DEF_WIRE_ROUTED);
+}
+defNetPathList
+{
+  netR->wireEnd();
+}
+| NOSHIELD_K
+{
+  netR->wire(DEF_WIRE_NOSHIELD);
+}
+defNetPathList
+{
+  netR->wireEnd();
+};
 
-defNetPath
-    :    ident                                   { netR->path( *$1 ); }                                       defNetPathPoints { netR->pathEnd(); deflex_kid = 0; release($1); }
-    |    ident TAPER_K                           { netR->pathTaper( *$1 ); }                                  defNetPathPoints { netR->pathEnd(); deflex_kid = 0; release($1); }
-    |    ident TAPERRULE_K ident                 { netR->pathTaperRule( *$1, *$3 ); }                         defNetPathPoints { netR->pathEnd(); deflex_kid = 0; release($1); release($3); }
-    |    ident STYLE_K integer                   { netR->path( *$1 ); netR->pathStyle($3); }               defNetPathPoints { netR->pathEnd(); deflex_kid = 0; release($1); }
-    |    ident TAPER_K STYLE_K integer           { netR->pathTaper( *$1 );  netR->pathStyle($4);}          defNetPathPoints { netR->pathEnd(); deflex_kid = 0; release($1); }
-    |    ident TAPERRULE_K ident STYLE_K integer { netR->pathTaperRule( *$1, *$3 ); netR->pathStyle($5); } defNetPathPoints { netR->end(); deflex_kid = 0; release($1); release($3); }
+defNetPathList : defNetPath | defNetPathList NEW_K defNetPath;
 
-    ;
+defNetPath : ident
+{
+  netR->path(*$1);
+}
+defNetPathPoints
+{
+  netR->pathEnd();
+  deflex_kid = 0;
+  release($1);
+}
+| ident TAPER_K
+{
+  netR->pathTaper(*$1);
+}
+defNetPathPoints
+{
+  netR->pathEnd();
+  deflex_kid = 0;
+  release($1);
+}
+| ident TAPERRULE_K ident
+{
+  netR->pathTaperRule(*$1, *$3);
+}
+defNetPathPoints
+{
+  netR->pathEnd();
+  deflex_kid = 0;
+  release($1);
+  release($3);
+}
+| ident STYLE_K integer
+{
+  netR->path(*$1);
+  netR->pathStyle($3);
+}
+defNetPathPoints
+{
+  netR->pathEnd();
+  deflex_kid = 0;
+  release($1);
+}
+| ident TAPER_K STYLE_K integer
+{
+  netR->pathTaper(*$1);
+  netR->pathStyle($4);
+}
+defNetPathPoints
+{
+  netR->pathEnd();
+  deflex_kid = 0;
+  release($1);
+}
+| ident TAPERRULE_K ident STYLE_K integer
+{
+  netR->pathTaperRule(*$1, *$3);
+  netR->pathStyle($5);
+}
+defNetPathPoints
+{
+  netR->end();
+  deflex_kid = 0;
+  release($1);
+  release($3);
+}
 
-defNetPathPoints 
-    :    '(' integer integer ')'         { deflex_kid = NET_PATH_ID; cur_x = $2; cur_y = $3; netR->pathPoint( cur_x, cur_y ); }
-    |    '(' integer integer integer ')' { deflex_kid = NET_PATH_ID; cur_x = $2; cur_y = $3; netR->pathPoint( cur_x, cur_y, $4 ); }
-    | defNetPathPoints defNetPathPoint
+;
+
+defNetPathPoints : '(' integer integer ')'
+{
+  deflex_kid = NET_PATH_ID;
+  cur_x      = $2;
+  cur_y      = $3;
+  netR->pathPoint(cur_x, cur_y);
+}
+| '(' integer integer integer ')'
+{
+  deflex_kid = NET_PATH_ID;
+  cur_x      = $2;
+  cur_y      = $3;
+  netR->pathPoint(cur_x, cur_y, $4);
+}
+| defNetPathPoints defNetPathPoint
     //| defNetPathPoint defNetPathPoints
     ;
 
-defNetPathPoint
-    : {}
-    |    '(' integer integer ')'         { cur_x = $2; cur_y = $3; netR->pathPoint( cur_x, cur_y ); }
-    |    '(' integer integer integer integer ')' { cur_x = $2; cur_y = $3; netR->pathPoint( cur_x, cur_y, $4 ); }
-    |    '(' integer integer integer ')' { cur_x = $2; cur_y = $3; netR->pathPoint( cur_x, cur_y, $4 ); }
-    |    '(' '*' integer ')'             { cur_y = $3; netR->pathPoint( cur_x, cur_y ); }
-    |    '(' '*' integer integer ')'     { cur_y = $3; netR->pathPoint( cur_x, cur_y, $4 ); }
-    |    '(' integer '*' ')'             { cur_x = $2; netR->pathPoint( cur_x, cur_y ); }
-    |    '(' integer '*' integer ')'     { cur_x = $2; netR->pathPoint( cur_x, cur_y, $4 ); }
-    |    '(' '*' '*' ')'                 { netR->pathPoint( cur_x, cur_y ); }
-    |    '(' '*' '*' integer ')'         { netR->pathPoint( cur_x, cur_y, $4 ); }
-    |    ident                           { netR->pathVia(*$1); release($1); }
-    |    ident defOrient                 { netR->pathVia(*$1,$2); release($1); }
-    // |    rect_statement
-    |    K_VIRTUAL defNetPathPoint RECT_K defNetPathPoint {  /* TODO cur_x = $2; cur_y = $3; netR->pathPoint( cur_x, cur_y ); */ }
-    |    K_VIRTUAL defNetPathPoint  { /* TODO cur_x = $2; cur_y = $3; netR->pathPoint( cur_x, cur_y ); */ }
-    |    K_MASK  integer ident  /* TO VERIFY maybe does not exits*/   { /* TODO cur_x = $2; cur_y = $3; netR->pathPoint( cur_x, cur_y ); */ }
-    |    K_MASK integer  defNetPathPoint { netR->wireEnd();/* TODO cur_x = $2; cur_y = $3; netR->pathPoint( cur_x, cur_y ); */ }
-    ;
+defNetPathPoint : {} | '(' integer integer ')'
+{
+  cur_x = $2;
+  cur_y = $3;
+  netR->pathPoint(cur_x, cur_y);
+}
+| '(' integer integer integer integer ')'
+{
+  cur_x = $2;
+  cur_y = $3;
+  netR->pathPoint(cur_x, cur_y, $4);
+}
+| '(' integer integer integer ')'
+{
+  cur_x = $2;
+  cur_y = $3;
+  netR->pathPoint(cur_x, cur_y, $4);
+}
+| '(' '*' integer ')'
+{
+  cur_y = $3;
+  netR->pathPoint(cur_x, cur_y);
+}
+| '(' '*' integer integer ')'
+{
+  cur_y = $3;
+  netR->pathPoint(cur_x, cur_y, $4);
+}
+| '(' integer '*' ')'
+{
+  cur_x = $2;
+  netR->pathPoint(cur_x, cur_y);
+}
+| '(' integer '*' integer ')'
+{
+  cur_x = $2;
+  netR->pathPoint(cur_x, cur_y, $4);
+}
+| '(' '*' '*' ')'
+{
+  netR->pathPoint(cur_x, cur_y);
+}
+| '(' '*' '*' integer ')'
+{
+  netR->pathPoint(cur_x, cur_y, $4);
+}
+| ident
+{
+  netR->pathVia(*$1);
+  release($1);
+}
+| ident defOrient
+{
+  netR->pathVia(*$1, $2);
+  release($1);
+}
+// |    rect_statement
+| K_VIRTUAL defNetPathPoint RECT_K defNetPathPoint{
+    /* TODO cur_x = $2; cur_y = $3; netR->pathPoint( cur_x, cur_y ); */}
+    | K_VIRTUAL defNetPathPoint{
+        /* TODO cur_x = $2; cur_y = $3; netR->pathPoint( cur_x, cur_y ); */}
+    | K_MASK integer ident /* TO VERIFY maybe does not exits*/ {
+        /* TODO cur_x = $2; cur_y = $3; netR->pathPoint( cur_x, cur_y ); */}
+    | K_MASK integer defNetPathPoint
+{
+  netR->wireEnd(); /* TODO cur_x = $2; cur_y = $3; netR->pathPoint( cur_x, cur_y
+                      ); */
+};
 
-// ----------------------------------- Dimitris: add <path_item:> section minus first rule ----------- 11/11/19 -----------------------
+// ----------------------------------- Dimitris: add <path_item:> section minus
+// first rule ----------- 11/11/19 -----------------------
 virtual_statement :
     // K_VIRTUAL virtual_pt
     K_VIRTUAL defNetPathPoint
-    { /* TODO */ }
+{ /* TODO */
+}
 
-rect_statement :
-    {}
+rect_statement : {}
 
-    | RECT_K rect_pts
-    { /* TODO */ }
+                 | RECT_K rect_pts
+{ /* TODO */
+}
 
-rect_pts :
-    '(' integer integer integer integer ')'
-    { /* TODO */ }
-
+rect_pts : '(' integer integer integer integer ')'
+{ /* TODO */
+}
 
 path_item:
 /* covered as the first rule under defNetPath
@@ -1720,739 +2155,811 @@ path_item:
       { /* TODO */}
    | virtual_statement
    | rect_statement
-   | K_MASK integer RECT_K { /* TODO */ } '(' integer integer integer integer ')'
-    { /* TODO */ }
-   | K_MASK integer
-    { /* TODO */ }
+   | K_MASK integer RECT_K
+{ /* TODO */
+}
+'(' integer integer integer integer ')' {/* TODO */} | K_MASK integer
+{ /* TODO */
+}
 
-defNetPathPoint
-  | defNetPathPoint
-    { /* TODO */ }
+defNetPathPoint | defNetPathPoint
+{ /* TODO */
+}
 
 // END  Dimitris: add <path_item:> section minus first rule  11/11/19
 
-defNetVPin
-    :    VPIN_K ident point point                                   { release($2); }
-    |    VPIN_K ident point point defNetVPinPlacement               { release($2); }
-    |    VPIN_K ident LAYER_K ident point point                     { release($2); release($4); }
-    |    VPIN_K ident LAYER_K ident point point defNetVPinPlacement { release($2); release($4);}
-    ;
+defNetVPin : VPIN_K ident point point
+{
+  release($2);
+}
+| VPIN_K ident point point defNetVPinPlacement
+{
+  release($2);
+}
+| VPIN_K ident LAYER_K ident point point
+{
+  release($2);
+  release($4);
+}
+| VPIN_K ident LAYER_K ident point point defNetVPinPlacement
+{
+  release($2);
+  release($4);
+};
 
-defNetVPinPlacement
-    :    PLACED_K point ident  { release($3); }
-    |    FIXED_K point ident   { release($3); }
-    |    COVER_K point ident   { release($3); }
-    ;
+defNetVPinPlacement : PLACED_K point ident
+{
+  release($3);
+}
+| FIXED_K point ident
+{
+  release($3);
+}
+| COVER_K point ident
+{
+  release($3);
+};
 
-defSubNet
-    :    SUBNET_K ident defSubNetConnections defSubNetOpts defSubNetWires { release($2); }
-    ;
+defSubNet : SUBNET_K ident defSubNetConnections defSubNetOpts defSubNetWires
+{
+  release($2);
+};
 
-defSubNetConnections
-    :    /* nothing */
-    |    defSubNetConnections defSubNetConnection
-    ;
+defSubNetConnections : /* nothing */
+                       | defSubNetConnections defSubNetConnection;
 
-defSubNetConnection
-    :    '(' ident ident ')' { release($2); release($3);}
-    ;
+defSubNetConnection : '(' ident ident ')'
+{
+  release($2);
+  release($3);
+};
 
-defSubNetOpts
-    :    /* nothing */
-    |    defSubNetOpts defSubNetOpt
-    ;
+defSubNetOpts : /* nothing */
+                | defSubNetOpts defSubNetOpt;
 
-defSubNetOpt
-    :    NONDEFAULTRULE_K ident { release($2); }
-    ;
+defSubNetOpt : NONDEFAULTRULE_K ident
+{
+  release($2);
+};
 
-defSubNetWires
-    :    /* nothing */
-    |    defSubNetWires defSubNetWire
-    ;
+defSubNetWires : /* nothing */
+                 | defSubNetWires defSubNetWire;
 
-defSubNetWire
-    :    COVER_K defSubNetPathList
-    |    FIXED_K defSubNetPathList
-    |    ROUTED_K defSubNetPathList
-    |    NOSHIELD_K defSubNetPathList
-    ;
+defSubNetWire : COVER_K defSubNetPathList | FIXED_K defSubNetPathList
+                | ROUTED_K                          defSubNetPathList
+                | NOSHIELD_K                        defSubNetPathList;
 
-defSubNetPathList
-    :    defSubNetPath
-    |    defSubNetPathList NEW_K defSubNetPath
-    ;
+defSubNetPathList : defSubNetPath | defSubNetPathList NEW_K defSubNetPath;
 
-defSubNetPath
-    :    ident defSubNetPathPoints                   { deflex_kid = 0; release($1); }
-    |    ident TAPER_K defSubNetPathPoints           { deflex_kid = 0; release($1); }
-    |    ident TAPERRULE_K ident defSubNetPathPoints { deflex_kid = 0; release($1); release($3); }
-    |    ident STYLE_K integer defSubNetPathPoints   { deflex_kid = 0; release($1); }
-    |    ident TAPER_K STYLE_K integer defSubNetPathPoints { deflex_kid = 0; release($1); }
-    |    ident TAPERRULE_K ident STYLE_K integer defSubNetPathPoints { deflex_kid = 0; release($1); release($3); }
-    ;
+defSubNetPath : ident defSubNetPathPoints
+{
+  deflex_kid = 0;
+  release($1);
+}
+| ident TAPER_K defSubNetPathPoints
+{
+  deflex_kid = 0;
+  release($1);
+}
+| ident TAPERRULE_K ident defSubNetPathPoints
+{
+  deflex_kid = 0;
+  release($1);
+  release($3);
+}
+| ident STYLE_K integer defSubNetPathPoints
+{
+  deflex_kid = 0;
+  release($1);
+}
+| ident TAPER_K STYLE_K integer defSubNetPathPoints
+{
+  deflex_kid = 0;
+  release($1);
+}
+| ident TAPERRULE_K ident STYLE_K integer defSubNetPathPoints
+{
+  deflex_kid = 0;
+  release($1);
+  release($3);
+};
 
-defSubNetPathPoints
-    :    '(' integer integer ')'         { deflex_kid = NET_PATH_ID; }
-    |    '(' integer integer integer ')' { deflex_kid = NET_PATH_ID; }
-    |    defSubNetPathPoints defSubNetPathPoint
-    ;
+defSubNetPathPoints : '(' integer integer ')'
+{
+  deflex_kid = NET_PATH_ID;
+}
+| '(' integer integer integer ')'
+{
+  deflex_kid = NET_PATH_ID;
+}
+| defSubNetPathPoints defSubNetPathPoint;
 
-defSubNetPathPoint
-    :    '(' integer integer ')'
-    |    '(' integer integer integer ')'
-    |    '(' '*' integer ')'
-    |    '(' '*' integer integer ')'
-    |    '(' integer '*' ')'
-    |    '(' integer '*' integer ')'
-    |    '(' '*' '*' ')'
-    |    '(' '*' '*' integer ')'
-    |    ident            { release($1); }
-    |    ident defOrient  { release($1); }
-    ;
+defSubNetPathPoint : '(' integer integer ')' | '(' integer integer integer ')'
+                     | '(' '*' integer ')'
+                     | '(' '*' integer integer ')'
+                     | '(' integer '*' ')'
+                     | '(' integer '*' integer ')'
+                     | '(' '*' '*' ')'
+                     | '(' '*' '*' integer ')'
+                     | ident
+{
+  release($1);
+}
+| ident defOrient
+{
+  release($1);
+};
 
-defScanChains
-    :    SCANCHAINS_K integer ';' defScanChainList END_K SCANCHAINS_K
-    ;
+defScanChains : SCANCHAINS_K integer ';' defScanChainList END_K SCANCHAINS_K;
 
-defScanChainList
-    :    /* nothing */
-    |    defScanChainList defScanChain
-    ;
+defScanChainList : /* nothing */
+                   | defScanChainList defScanChain;
 
-defScanChain
-    :    '-' ident defScanChainOpts ';'  { release($2); }
-    ;
+defScanChain : '-' ident defScanChainOpts ';'
+{
+  release($2);
+};
 
-defScanChainOpts
-    :     defScanChainOpt
-    |     defScanChainOpts defScanChainOpt
-    ;
+defScanChainOpts : defScanChainOpt | defScanChainOpts defScanChainOpt;
 
-defScanChainOpt
-    :    '+' PARTITION_K ident  { release($3); }
-    |    '+' PARTITION_K ident MAXBITS_K integer  { release($3); }
-    |    '+' COMMONSCANPINS_K defScanChainCommonPinsOpt
-    |    '+' START_K ident { deflex_kid = ANY_ID; } defScanChainOptPin { deflex_kid = 0; release($3); }
-    |    '+' FLOATING_K defScanComponentList
-    |    '+' ORDERED_K defScanComponentList
-    |    '+' STOP_K ident { deflex_kid = ANY_ID; } defScanChainOptPin { deflex_kid = 0; release($3); }
-    ;
-
-defScanChainCommonPinsOpt
-    :    /* nothing */
-    |    defScanPinIn
-    |    defScanPinOut
-    |    defScanPinIn defScanPinOut
-    |    defScanPinOut defScanPinIn
-    ;
-
+defScanChainOpt : '+' PARTITION_K ident
+{
+  release($3);
+}
+| '+' PARTITION_K ident MAXBITS_K integer
+{
+  release($3);
+}
+| '+' COMMONSCANPINS_K defScanChainCommonPinsOpt | '+' START_K ident
+{
+  deflex_kid = ANY_ID;
+}
 defScanChainOptPin
-    :    /* nothing */
-    |    ident { release($1); }
-    ;
+{
+  deflex_kid = 0;
+  release($3);
+}
+| '+' FLOATING_K defScanComponentList | '+' ORDERED_K defScanComponentList
+    | '+' STOP_K                                      ident
+{
+  deflex_kid = ANY_ID;
+}
+defScanChainOptPin
+{
+  deflex_kid = 0;
+  release($3);
+};
 
-defScanPinIn
-    :    '(' IN_K ident ')' { release($3); }
-    ;
+defScanChainCommonPinsOpt : /* nothing */
+                            | defScanPinIn
+                            | defScanPinOut
+                            | defScanPinIn  defScanPinOut
+                            | defScanPinOut defScanPinIn;
 
-defScanPinOut
-    :    '(' OUT_K ident ')' { release($3); }
-    ;
+defScanChainOptPin : /* nothing */
+                     | ident
+{
+  release($1);
+};
 
-defScanBits
-    :    '(' BITS_K integer ')'
-    ;
+defScanPinIn : '(' IN_K ident ')'
+{
+  release($3);
+};
 
-defScanComponentList
-    :    defScanComponent
-    |    defScanComponentList defScanComponent
-    ;
+defScanPinOut : '(' OUT_K ident ')'
+{
+  release($3);
+};
 
-defScanComponent
-    :    { deflex_kid = ANY_ID; } ident { deflex_kid = 0; } defScanComponentOpts
-         {
-             release($2);
-         }
-    ;
+defScanBits : '(' BITS_K integer ')';
 
+defScanComponentList : defScanComponent | defScanComponentList defScanComponent;
+
+defScanComponent:
+{
+  deflex_kid = ANY_ID;
+}
+ident
+{
+  deflex_kid = 0;
+}
 defScanComponentOpts
-    :    /* nothing */
-    |    defScanComponentOpts defScanComponentOpt
-    ;
+{
+  release($2);
+};
 
-defScanComponentOpt
-    :    defScanPinIn
-    |    defScanPinOut
-    |    defScanBits
-    ;
+defScanComponentOpts : /* nothing */
+                       | defScanComponentOpts defScanComponentOpt;
 
-groups_section
-    :    GROUPS_K integer ';' defGroupList END_K GROUPS_K
-    ;
+defScanComponentOpt : defScanPinIn | defScanPinOut | defScanBits;
 
-defGroupList
-    : /* nothing */
-    | defGroupList defGroup
-    ;
+groups_section : GROUPS_K integer ';' defGroupList END_K GROUPS_K;
 
-defGroup
-    :    '-' ident { deflex_kid = ANY_ID; regionR->begin(*$2,true); } defGroupCompList { deflex_kid = 0; } defGroupOpts ';' { release($2); regionR->end(); }
-    ;
+defGroupList : /* nothing */
+               | defGroupList defGroup;
 
+defGroup : '-' ident
+{
+  deflex_kid = ANY_ID;
+  regionR->begin(*$2, true);
+}
 defGroupCompList
-    :    ident { regionR->inst(*$1); release($1); }
-    |    defGroupCompList ident { regionR->inst(*$2); release($2); }
-    ;
+{
+  deflex_kid = 0;
+}
+defGroupOpts ';'
+{
+  release($2);
+  regionR->end();
+};
 
-defGroupOpts
-    :    /* nothing */
-    |    defGroupOpts group_option
-    ;
+defGroupCompList : ident
+{
+  regionR->inst(*$1);
+  release($1);
+}
+| defGroupCompList ident
+{
+  regionR->inst(*$2);
+  release($2);
+};
 
-group_option
-    :	 '+' K_SOFT group_soft_options { }
-    |    '+' REGION_K ident { regionR->parent(*$3); release($3); }
-    |    '+' REGION_K '(' integer integer ')' '(' integer integer ')' { /* TODO */ }
-    |    '+' defProperty { addRegionProps($2); }
-    |    defExtension { /* TODO */ }
-    ;
+defGroupOpts : /* nothing */
+               | defGroupOpts group_option;
 
-group_soft_options: // empty
-      | group_soft_options group_soft_option
-      { }
+group_option : '+' K_SOFT group_soft_options{} | '+' REGION_K ident
+{
+  regionR->parent(*$3);
+  release($3);
+}
+| '+' REGION_K '(' integer integer ')' '(' integer integer ')' {/* TODO */}
+    | '+' defProperty
+{
+  addRegionProps($2);
+}
+| defExtension{/* TODO */};
 
-group_soft_option: K_MAXX NUM_INT
-      {
-      }
-      | K_MAXY NUM_INT
-      {
-      }
-      | K_MAXHALFPERIMETER NUM_INT
-      {
-      }
-	;
+group_soft_options :  // empty
+                      | group_soft_options group_soft_option
+{
+}
 
-defExtension
-    :    BEGINEXT_K {deflex_extension();} ENDEXT_K
-    ;
+group_soft_option : K_MAXX NUM_INT{} | K_MAXY NUM_INT{}
+                    | K_MAXHALFPERIMETER      NUM_INT{};
 
-defNonDefaultRules
-    : NONDEFAULTRULES_K integer { non_default_ruleR->beginRules($2); }
-          ';' defNonDefaultRuleList END_K { non_default_ruleR->endRules(); }
-          NONDEFAULTRULES_K
-    ;
+defExtension : BEGINEXT_K
+{
+  deflex_extension();
+}
+ENDEXT_K;
 
-defNonDefaultRuleList
-    : /* nothing */
-    | defNonDefaultRuleList defNonDefaultRule
-    ;
+defNonDefaultRules : NONDEFAULTRULES_K integer
+{
+  non_default_ruleR->beginRules($2);
+}
+';' defNonDefaultRuleList END_K
+{
+  non_default_ruleR->endRules();
+}
+NONDEFAULTRULES_K;
 
-defNonDefaultRule
-    : '-' ident { non_default_ruleR->beginRule(*$2); release($2); } defNonDefaultRuleAttrs ';' { non_default_ruleR->endRule(); }
-        {
-	}
-    ;
+defNonDefaultRuleList : /* nothing */
+                        | defNonDefaultRuleList defNonDefaultRule;
 
-defNonDefaultRuleAttrs
-    : /* nothing */
-    | defNonDefaultRuleAttrs defNonDefaultRuleAttr
-    ;
+defNonDefaultRule : '-' ident
+{
+  non_default_ruleR->beginRule(*$2);
+  release($2);
+}
+defNonDefaultRuleAttrs ';'
+{
+  non_default_ruleR->endRule();
+}
+{};
 
-defNonDefaultRuleAttr
-    : '+' HARDSPACING_K { non_default_ruleR->hardSpacing(); }
+defNonDefaultRuleAttrs : /* nothing */
+                         | defNonDefaultRuleAttrs defNonDefaultRuleAttr;
 
-    | '+' LAYER_K ident WIDTH_K NUM_DOUBLE { non_default_ruleR->beginLayerRule(*$3, $5 ); }
-         defNonDefaultRuleLayerAttrOpts { release($3); non_default_ruleR->endLayerRule(); }
-    | '+' VIA_K ident { non_default_ruleR->via(*$3); release($3); }
-    | '+' VIARULE_K ident { non_default_ruleR->viaRule(*$3); release($3); }
-    | '+' MINCUTS_K ident integer { non_default_ruleR->minCuts(*$3,$4); release($3); }
-    | '+' defProperty { addNonDefaultRuleProps($2); }
-    ;
+defNonDefaultRuleAttr : '+' HARDSPACING_K
+{
+  non_default_ruleR->hardSpacing();
+}
+
+| '+' LAYER_K ident WIDTH_K NUM_DOUBLE
+{
+  non_default_ruleR->beginLayerRule(*$3, $5);
+}
+defNonDefaultRuleLayerAttrOpts
+{
+  release($3);
+  non_default_ruleR->endLayerRule();
+}
+| '+' VIA_K ident
+{
+  non_default_ruleR->via(*$3);
+  release($3);
+}
+| '+' VIARULE_K ident
+{
+  non_default_ruleR->viaRule(*$3);
+  release($3);
+}
+| '+' MINCUTS_K ident integer
+{
+  non_default_ruleR->minCuts(*$3, $4);
+  release($3);
+}
+| '+' defProperty
+{
+  addNonDefaultRuleProps($2);
+};
 
 defNonDefaultRuleLayerAttrOpts
     : /* nothing */
-    |  defNonDefaultRuleLayerAttrOpts defNonDefaultRuleLayerAttrOpt
-    ;
+      | defNonDefaultRuleLayerAttrOpts defNonDefaultRuleLayerAttrOpt;
 
-defNonDefaultRuleLayerAttrOpt
-    : DIAGWIDTH_K NUM_DOUBLE
-    | SPACING_K NUM_DOUBLE { non_default_ruleR->spacing($2); }
-    | WIREEXT_K NUM_DOUBLE { non_default_ruleR->wireExt($2); }
-    ;
+defNonDefaultRuleLayerAttrOpt : DIAGWIDTH_K NUM_DOUBLE | SPACING_K NUM_DOUBLE
+{
+  non_default_ruleR->spacing($2);
+}
+| WIREEXT_K NUM_DOUBLE
+{
+  non_default_ruleR->wireExt($2);
+};
 
-defStyles
-    : STYLES_K integer ';' defStyleTable END_K STYLES_K
-    ;
+defStyles : STYLES_K integer ';' defStyleTable END_K STYLES_K;
 
-defStyleTable
-    : defStyle
-    | defStyleTable defStyle
-    ;
+defStyleTable : defStyle | defStyleTable defStyle;
 
-defStyle
-    : '-' STYLE_K integer defPointList ';'
-      {
-      }
-    ;
+defStyle : '-' STYLE_K integer defPointList ';' {};
 
-point
-    :    '(' integer integer ')'
-          { 
-             $$._x = $2;
-             $$._y = $3;
-          }
-    ;
+point : '(' integer integer ')'
+{
+  $$._x = $2;
+  $$._y = $3;
+};
 
-integer
-    :    NUM_INT
-    ;
+integer : NUM_INT;
 
-number
-    :    NUM_INT { $$ = (double) $1; }
-    |    NUM_DOUBLE
-    ;
+number : NUM_INT
+{
+  $$ = (double) $1;
+}
+| NUM_DOUBLE;
 
-qstring
-    :    QSTRING { $$ = createQ(QSTRING); }
-    ;
+qstring : QSTRING
+{
+  $$ = createQ(QSTRING);
+};
 
-ident
-    :    IDENT   { $$ = create(IDENT); }
-    |    NUM_INT { $$ = create(IDENT); }
-    |    NUM_DOUBLE { $$ = create(IDENT); }
-    |    { ignore_id_error = true; } error 
-         { 
-             /*
-              * If the grammer was expecting a identifier and we received a keyword ,
-              * accept the token and continue. This approach works when there is no keyword
-              * and identifier colision. Where there is an identifier colision, the scanner must
-              * be told to return a identifier. See the varible "deflex_kid". There are a couple
-              * of places in the grammer where the "ident" rule occurs as an optional reduction.
-              * These case also require the deflex_kid set to ANY_ID.
-              */
+ident : IDENT
+{
+  $$ = create(IDENT);
+}
+| NUM_INT
+{
+  $$ = create(IDENT);
+}
+| NUM_DOUBLE
+{
+  $$ = create(IDENT);
+}
+|
+{
+  ignore_id_error = true;
+}
+error
+{
+  /*
+   * If the grammer was expecting a identifier and we received a keyword ,
+   * accept the token and continue. This approach works when there is no keyword
+   * and identifier colision. Where there is an identifier colision, the scanner
+   * must be told to return a identifier. See the varible "deflex_kid". There
+   * are a couple of places in the grammer where the "ident" rule occurs as an
+   * optional reduction. These case also require the deflex_kid set to ANY_ID.
+   */
 
-             if ( is_keyword(yychar) )
-             {
+  if (is_keyword(yychar)) {
 #if YYDEBUG
-                 if ( defdebug )
-                     printf("KID (%s)\n", deftext );
+    if (defdebug)
+      printf("KID (%s)\n", deftext);
 #endif
-                $$ = create(IDENT);
-                 yyerrok; 
-                 yyclearin; 
-             }
-             else
-             {
-                 ignore_id_error = false;
-                 deferror("parse error");
-             }
-         }
-    ;
-%%
+    $$ = create(IDENT);
+    yyerrok;
+    yyclearin;
+  } else {
+    ignore_id_error = false;
+    deferror("parse error");
+  }
+};
+% %
 
-void defparse_init( FILE * file )
+    void defparse_init(FILE* file)
 {
-    extern FILE * defin;
-    defin = file;
-    deflex_init();
-    blockageR = &default_blockageR;
-    componentR = &default_componentR;
-    fillR = &default_fillR;
-    gcellR = & default_gcellR;
-    netR = &default_netR;
-    pinR = &default_pinR;
-    readerR = &default_readerR;
-    rowR = &default_rowR;
-    snetR = &default_snetR;
-    tracksR = &default_tracksR;
-    viaR = &default_viaR;
-    regionR = &default_regionR;
-    non_default_ruleR = &default_non_default_ruleR;
-    prop_defsR = &default_prop_defsR;
-    pin_propsR = &default_pin_propsR;
-	// defdebug= 1;
+  extern FILE* defin;
+  defin = file;
+  deflex_init();
+  blockageR         = &default_blockageR;
+  componentR        = &default_componentR;
+  fillR             = &default_fillR;
+  gcellR            = &default_gcellR;
+  netR              = &default_netR;
+  pinR              = &default_pinR;
+  readerR           = &default_readerR;
+  rowR              = &default_rowR;
+  snetR             = &default_snetR;
+  tracksR           = &default_tracksR;
+  viaR              = &default_viaR;
+  regionR           = &default_regionR;
+  non_default_ruleR = &default_non_default_ruleR;
+  prop_defsR        = &default_prop_defsR;
+  pin_propsR        = &default_pin_propsR;
+  // defdebug= 1;
 }
 
-void defin_set_IBlockage( definIBlockage * blockage )
+void defin_set_IBlockage(definIBlockage* blockage)
 {
-    blockageR = blockage;
+  blockageR = blockage;
 }
 
-void defin_set_IComponent( definIComponent * component )
+void defin_set_IComponent(definIComponent* component)
 {
-    componentR = component;
+  componentR = component;
 }
 
-void defin_set_IFill( definIFill * fill )
+void defin_set_IFill(definIFill* fill)
 {
-    fillR = fill;
+  fillR = fill;
 }
 
-void defin_set_IGCell( definIGCell * gcell )
+void defin_set_IGCell(definIGCell* gcell)
 {
-    gcellR = gcell;
+  gcellR = gcell;
 }
 
-void defin_set_INet( definINet * net )
+void defin_set_INet(definINet* net)
 {
-    netR = net;
+  netR = net;
 }
 
-void defin_set_IPin( definIPin * pin )
+void defin_set_IPin(definIPin* pin)
 {
-    pinR = pin;
+  pinR = pin;
 }
 
-void defin_set_IReader( definIReader * reader )
+void defin_set_IReader(definIReader* reader)
 {
-    readerR = reader;
+  readerR = reader;
 }
 
-void defin_set_IRow( definIRow * row )
+void defin_set_IRow(definIRow* row)
 {
-    rowR = row;
+  rowR = row;
 }
 
-void defin_set_ISNet( definISNet * snet )
+void defin_set_ISNet(definISNet* snet)
 {
-    snetR = snet;
+  snetR = snet;
 }
 
-void defin_set_ITracks( definITracks * tracks )
+void defin_set_ITracks(definITracks* tracks)
 {
-    tracksR = tracks;
+  tracksR = tracks;
 }
 
-void defin_set_IVia( definIVia * via )
+void defin_set_IVia(definIVia* via)
 {
-    viaR = via;
+  viaR = via;
 }
 
-void defin_set_IRegion( definIRegion * region )
+void defin_set_IRegion(definIRegion* region)
 {
-    regionR = region;
+  regionR = region;
 }
 
-void defin_set_INonDefaultRule( definINonDefaultRule * rule )
+void defin_set_INonDefaultRule(definINonDefaultRule* rule)
 {
-    non_default_ruleR = rule;
+  non_default_ruleR = rule;
 }
 
-void defin_set_IPropDefs( definIPropDefs * defs )
+void defin_set_IPropDefs(definIPropDefs* defs)
 {
-    prop_defsR = defs;
+  prop_defsR = defs;
 }
 
-void defin_set_IPinProps( definIPinProps * props )
+void defin_set_IPinProps(definIPinProps* props)
 {
-    pin_propsR = props;
+  pin_propsR = props;
 }
 
 void defparse_done()
 {
-    int i = 0;
-    token * tk = alloclist;
-    token * next;
+  int    i  = 0;
+  token* tk = alloclist;
+  token* next;
 
-    while( tk )
-   {
-        next = tk->_alloc_next;
+  while (tk) {
+    next = tk->_alloc_next;
 
 #ifndef NDEBUG
-        if ( tk->_line >= 0 )
-            fprintf(stderr, "deflex: token leaked from line %d with value %s\n", tk->_line, tk->_text );
+    if (tk->_line >= 0)
+      fprintf(stderr,
+              "deflex: token leaked from line %d with value %s\n",
+              tk->_line,
+              tk->_text);
 #endif
 
-        free( (void *) tk->_text );
-        free( (void *) tk );
-        tk = next;
-        ++i;
-    }
+    free((void*) tk->_text);
+    free((void*) tk);
+    tk = next;
+    ++i;
+  }
 
-    alloclist = NULL;
-    freelist = NULL;
-    deflex_done();
+  alloclist = NULL;
+  freelist  = NULL;
+  deflex_done();
 }
 
-void deferror( const char * msg )
+void deferror(const char* msg)
 {
-    if ( ignore_id_error )
-    {
-         ignore_id_error = 0;
-         return;
-    }
+  if (ignore_id_error) {
+    ignore_id_error = 0;
+    return;
+  }
 
-    char buffer[BUFSIZ];
-    snprintf( buffer, BUFSIZ, "DEF:%d: %s, reading %s\n", deflex_lineno, msg, deftext);
-    readerR->error(buffer);
+  char buffer[BUFSIZ];
+  snprintf(
+      buffer, BUFSIZ, "DEF:%d: %s, reading %s\n", deflex_lineno, msg, deftext);
+  readerR->error(buffer);
 }
 
-token * create( int tid )
+token* create(int tid)
 {
-    token * tk = freelist;
+  token* tk = freelist;
 
-    if ( tk != NULL )
-    {
-        freelist = tk->_free_next;
-    }
-    else
-    {
-        tk = (token *) malloc(sizeof(token));
-        assert(tk);
-        tk->_text = (char *) malloc(MAX_TOKEN_LEN);
-        assert(tk->_text);
-        tk->_free_next = NULL;
-        tk->_alloc_next = alloclist;
-        alloclist = tk;
-    }
+  if (tk != NULL) {
+    freelist = tk->_free_next;
+  } else {
+    tk = (token*) malloc(sizeof(token));
+    assert(tk);
+    tk->_text = (char*) malloc(MAX_TOKEN_LEN);
+    assert(tk->_text);
+    tk->_free_next  = NULL;
+    tk->_alloc_next = alloclist;
+    alloclist       = tk;
+  }
 
-    tk->_line = deflex_lineno;
-    tk->_tid = tid;
+  tk->_line = deflex_lineno;
+  tk->_tid  = tid;
 
-    char * p = deftext;
-    char * t = tk->_text;
-    char * limit = t + MAX_TOKEN_LEN;
-    while( (t < limit) && ((*t++ = *p++) != '\0') );
+  char* p     = deftext;
+  char* t     = tk->_text;
+  char* limit = t + MAX_TOKEN_LEN;
+  while ((t < limit) && ((*t++ = *p++) != '\0'))
+    ;
 
-    if ( t == limit )
-    {
-        tk->_text[MAX_TOKEN_LEN-1] = 0;
-        fprintf(stderr, "deflex:%d: exceeded maximum string length\n", deflex_lineno );
-    }
+  if (t == limit) {
+    tk->_text[MAX_TOKEN_LEN - 1] = 0;
+    fprintf(
+        stderr, "deflex:%d: exceeded maximum string length\n", deflex_lineno);
+  }
 
-    return tk;
+  return tk;
 }
 
-token * createQ( int tid )
+token* createQ(int tid)
 {
-    token * tk = freelist;
+  token* tk = freelist;
 
-    if ( tk != NULL )
-    {
-        freelist = tk->_free_next;
-    }
-    else
-    {
-        tk = (token *) malloc(sizeof(token));
-        assert(tk);
-        tk->_text = (char *) malloc(MAX_TOKEN_LEN);
-        assert(tk->_text);
-        tk->_free_next = NULL;
-        tk->_alloc_next = alloclist;
-        alloclist = tk;
-    }
+  if (tk != NULL) {
+    freelist = tk->_free_next;
+  } else {
+    tk = (token*) malloc(sizeof(token));
+    assert(tk);
+    tk->_text = (char*) malloc(MAX_TOKEN_LEN);
+    assert(tk->_text);
+    tk->_free_next  = NULL;
+    tk->_alloc_next = alloclist;
+    alloclist       = tk;
+  }
 
-    tk->_line = deflex_lineno;
-    tk->_tid = tid;
+  tk->_line = deflex_lineno;
+  tk->_tid  = tid;
 
-    assert( deftext[0] == '"' );
-    char * p = deftext + 1;
-    char * t = tk->_text;
-    char * limit = t + MAX_TOKEN_LEN;
-    while( (t < limit) && ((*t++ = *p++) != '\0') );
+  assert(deftext[0] == '"');
+  char* p     = deftext + 1;
+  char* t     = tk->_text;
+  char* limit = t + MAX_TOKEN_LEN;
+  while ((t < limit) && ((*t++ = *p++) != '\0'))
+    ;
 
-    if ( t == limit )
-    {
-        tk->_text[MAX_TOKEN_LEN-1] = 0;
-        fprintf(stderr, "deflex:%d: exceeded maximum string length\n", deflex_lineno );
-    }
+  if (t == limit) {
+    tk->_text[MAX_TOKEN_LEN - 1] = 0;
+    fprintf(
+        stderr, "deflex:%d: exceeded maximum string length\n", deflex_lineno);
+  }
 
-    --t;
-    --t;
-    assert( *t == '"' );
-    *t = '\0';
-    return tk;
+  --t;
+  --t;
+  assert(*t == '"');
+  *t = '\0';
+  return tk;
 }
 
 void defparse_linecnt()
 {
-    readerR->line(deflex_lineno);
+  readerR->line(deflex_lineno);
 }
 
-void addComponentProps( std::vector<prop *> * props )
+void addComponentProps(std::vector<prop*>* props)
 {
-    std::vector<prop *>::iterator itr;
+  std::vector<prop*>::iterator itr;
 
-    for( itr = props->begin(); itr != props->end(); ++itr )
-    {
-        prop * p = *itr;
+  for (itr = props->begin(); itr != props->end(); ++itr) {
+    prop* p = *itr;
 
-        switch( p->_type )
-        {
-            case DEF_INTEGER:
-                componentR->property( p->_name->_text, p->_value._int_val );
-                break;
+    switch (p->_type) {
+      case DEF_INTEGER:
+        componentR->property(p->_name->_text, p->_value._int_val);
+        break;
 
-            case DEF_REAL:
-                componentR->property( p->_name->_text, p->_value._flt_val );
-                break;
+      case DEF_REAL:
+        componentR->property(p->_name->_text, p->_value._flt_val);
+        break;
 
-            case DEF_STRING:
-                componentR->property( p->_name->_text, p->_value._str_val->_text );
-                break;
-        }
+      case DEF_STRING:
+        componentR->property(p->_name->_text, p->_value._str_val->_text);
+        break;
     }
+  }
 
-    freeProps(props);
+  freeProps(props);
 }
 
-void addComponentPinProps( std::vector<prop *> * props )
-{ 
-    std::vector<prop *>::iterator itr;
-
-    for( itr = props->begin(); itr != props->end(); ++itr )
-    {
-        prop * p = *itr;
-
-        switch( p->_type )
-        {
-            case DEF_INTEGER:
-                pin_propsR->property( p->_name->_text, p->_value._int_val );
-                break;
-
-            case DEF_REAL:
-                pin_propsR->property( p->_name->_text, p->_value._flt_val );
-                break;
-
-            case DEF_STRING:
-                pin_propsR->property( p->_name->_text, p->_value._str_val->_text );
-                break;
-        }
-    }
-
-    freeProps(props);
-}
-
-void addNetProps( std::vector<prop *> * props )
+void addComponentPinProps(std::vector<prop*>* props)
 {
-    std::vector<prop *>::iterator itr;
+  std::vector<prop*>::iterator itr;
 
-    for( itr = props->begin(); itr != props->end(); ++itr )
-    {
-        prop * p = *itr;
+  for (itr = props->begin(); itr != props->end(); ++itr) {
+    prop* p = *itr;
 
-        switch( p->_type )
-        {
-            case DEF_INTEGER:
-                netR->property( p->_name->_text, p->_value._int_val );
-                break;
+    switch (p->_type) {
+      case DEF_INTEGER:
+        pin_propsR->property(p->_name->_text, p->_value._int_val);
+        break;
 
-            case DEF_REAL:
-                netR->property( p->_name->_text, p->_value._flt_val );
-                break;
+      case DEF_REAL:
+        pin_propsR->property(p->_name->_text, p->_value._flt_val);
+        break;
 
-            case DEF_STRING:
-                netR->property( p->_name->_text, p->_value._str_val->_text );
-                break;
-        }
+      case DEF_STRING:
+        pin_propsR->property(p->_name->_text, p->_value._str_val->_text);
+        break;
     }
+  }
 
-    freeProps(props);
+  freeProps(props);
 }
 
-void addSNetProps( std::vector<prop *> * props )
+void addNetProps(std::vector<prop*>* props)
 {
-    std::vector<prop *>::iterator itr;
+  std::vector<prop*>::iterator itr;
 
-    for( itr = props->begin(); itr != props->end(); ++itr )
-    {
-        prop * p = *itr;
+  for (itr = props->begin(); itr != props->end(); ++itr) {
+    prop* p = *itr;
 
-        switch( p->_type )
-        {
-            case DEF_INTEGER:
-                snetR->property( p->_name->_text, p->_value._int_val );
-                break;
+    switch (p->_type) {
+      case DEF_INTEGER:
+        netR->property(p->_name->_text, p->_value._int_val);
+        break;
 
-            case DEF_REAL:
-                snetR->property( p->_name->_text, p->_value._flt_val );
-                break;
+      case DEF_REAL:
+        netR->property(p->_name->_text, p->_value._flt_val);
+        break;
 
-            case DEF_STRING:
-                snetR->property( p->_name->_text, p->_value._str_val->_text );
-                break;
-        }
+      case DEF_STRING:
+        netR->property(p->_name->_text, p->_value._str_val->_text);
+        break;
     }
+  }
 
-    freeProps(props);
+  freeProps(props);
 }
 
-void addNonDefaultRuleProps( std::vector<prop *> * props )
-{  
-    std::vector<prop *>::iterator itr;
-
-    for( itr = props->begin(); itr != props->end(); ++itr )
-    {
-        prop * p = *itr;
-
-        switch( p->_type )
-        {
-            case DEF_INTEGER:
-                non_default_ruleR->property( p->_name->_text, p->_value._int_val );
-                break;
-
-            case DEF_REAL:
-                non_default_ruleR->property( p->_name->_text, p->_value._flt_val );
-                break;
-
-            case DEF_STRING:
-                non_default_ruleR->property( p->_name->_text, p->_value._str_val->_text );
-                break;
-        }
-    }
-    freeProps(props);
-}
-
-void addRegionProps( std::vector<prop *> * props )
+void addSNetProps(std::vector<prop*>* props)
 {
-   std::vector<prop *>::iterator itr;
+  std::vector<prop*>::iterator itr;
 
-    for( itr = props->begin(); itr != props->end(); ++itr )
-    {
-        prop * p = *itr;
+  for (itr = props->begin(); itr != props->end(); ++itr) {
+    prop* p = *itr;
 
-        switch( p->_type )
-        {
-            case DEF_INTEGER:
-                regionR->property( p->_name->_text, p->_value._int_val );
-                break;
+    switch (p->_type) {
+      case DEF_INTEGER:
+        snetR->property(p->_name->_text, p->_value._int_val);
+        break;
 
-            case DEF_REAL:
-                regionR->property( p->_name->_text, p->_value._flt_val );
-                break;
+      case DEF_REAL:
+        snetR->property(p->_name->_text, p->_value._flt_val);
+        break;
 
-            case DEF_STRING:
-                regionR->property( p->_name->_text, p->_value._str_val->_text );
-                break;
-        }
+      case DEF_STRING:
+        snetR->property(p->_name->_text, p->_value._str_val->_text);
+        break;
     }
-    freeProps(props);
+  }
+
+  freeProps(props);
 }
 
-void addRowProps( std::vector<prop *> * props )
+void addNonDefaultRuleProps(std::vector<prop*>* props)
 {
-    std::vector<prop *>::iterator itr;
+  std::vector<prop*>::iterator itr;
 
-    for( itr = props->begin(); itr != props->end(); ++itr )
-    {
-        prop * p = *itr;
+  for (itr = props->begin(); itr != props->end(); ++itr) {
+    prop* p = *itr;
 
-        switch( p->_type )
-        {
-            case DEF_INTEGER:
-                rowR->property( p->_name->_text, p->_value._int_val );
-                break;
+    switch (p->_type) {
+      case DEF_INTEGER:
+        non_default_ruleR->property(p->_name->_text, p->_value._int_val);
+        break;
 
-            case DEF_REAL:
-                rowR->property( p->_name->_text, p->_value._flt_val );
-                break;
+      case DEF_REAL:
+        non_default_ruleR->property(p->_name->_text, p->_value._flt_val);
+        break;
 
-            case DEF_STRING:
-                rowR->property( p->_name->_text, p->_value._str_val->_text );
-                break;
-        }
+      case DEF_STRING:
+        non_default_ruleR->property(p->_name->_text, p->_value._str_val->_text);
+        break;
     }
-    freeProps(props);
+  }
+  freeProps(props);
 }
 
+void addRegionProps(std::vector<prop*>* props)
+{
+  std::vector<prop*>::iterator itr;
+
+  for (itr = props->begin(); itr != props->end(); ++itr) {
+    prop* p = *itr;
+
+    switch (p->_type) {
+      case DEF_INTEGER:
+        regionR->property(p->_name->_text, p->_value._int_val);
+        break;
+
+      case DEF_REAL:
+        regionR->property(p->_name->_text, p->_value._flt_val);
+        break;
+
+      case DEF_STRING:
+        regionR->property(p->_name->_text, p->_value._str_val->_text);
+        break;
+    }
+  }
+  freeProps(props);
+}
+
+void addRowProps(std::vector<prop*>* props)
+{
+  std::vector<prop*>::iterator itr;
+
+  for (itr = props->begin(); itr != props->end(); ++itr) {
+    prop* p = *itr;
+
+    switch (p->_type) {
+      case DEF_INTEGER:
+        rowR->property(p->_name->_text, p->_value._int_val);
+        break;
+
+      case DEF_REAL:
+        rowR->property(p->_name->_text, p->_value._flt_val);
+        break;
+
+      case DEF_STRING:
+        rowR->property(p->_name->_text, p->_value._str_val->_text);
+        break;
+    }
+  }
+  freeProps(props);
+}

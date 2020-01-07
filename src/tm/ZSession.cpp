@@ -20,43 +20,44 @@
 //
 // THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
 // AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
-// IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
-// DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE
-// FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
-// DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR
-// SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
-// CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
-// OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
-// OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+// IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
+// ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE
+// LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
+// CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
+// SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
+// INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
+// CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
+// ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
+// POSSIBILITY OF SUCH DAMAGE.
 
 #include "ZSession.h"
-#include "ZNamespace.h"
 #include "ZException.h"
+#include "ZNamespace.h"
 
 namespace odb {
 
-ZSession::ZSession( ZArgs * in, ZArgs * out ) : ZTechModule<ZSession>(in,out)
+ZSession::ZSession(ZArgs* in, ZArgs* out) : ZTechModule<ZSession>(in, out)
 {
-    _ns = new ZNamespace();
+  _ns = new ZNamespace();
 
-    if ( _ns == NULL )
-        throw ZOutOfMemory();
+  if (_ns == NULL)
+    throw ZOutOfMemory();
 
-    ZOut_ZSession_ZSession * out_args = (ZOut_ZSession_ZSession *) out;
-    
-    char address[32];
+  ZOut_ZSession_ZSession* out_args = (ZOut_ZSession_ZSession*) out;
+
+  char address[32];
 
 #ifdef ATHENA_64BIT
-    snprintf( address, 32, "0x%llx", (uint64) this );
+  snprintf(address, 32, "0x%llx", (uint64) this);
 #else
-    snprintf( address, 32, "0x%x", (uint) this );
+  snprintf(address, 32, "0x%x", (uint) this);
 #endif
-    
-    out_args->session(address);
+
+  out_args->session(address);
 }
 
 ZSession::~ZSession()
 {
 }
 
-}
+}  // namespace odb

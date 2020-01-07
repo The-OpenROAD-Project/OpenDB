@@ -20,21 +20,22 @@
 //
 // THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
 // AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
-// IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
-// DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE
-// FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
-// DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR
-// SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
-// CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
-// OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
-// OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+// IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
+// ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE
+// LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
+// CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
+// SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
+// INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
+// CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
+// ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
+// POSSIBILITY OF SUCH DAMAGE.
 
 #include "dbCCSegItr.h"
-#include "dbBlock.h"
-#include "dbCapNode.h"
-#include "dbCCSeg.h"
-#include "dbTable.h"
 #include <stdarg.h>
+#include "dbBlock.h"
+#include "dbCCSeg.h"
+#include "dbCapNode.h"
+#include "dbTable.h"
 
 namespace odb {
 
@@ -46,73 +47,73 @@ namespace odb {
 
 bool dbCCSegItr::reversible()
 {
-    return true;
+  return true;
 }
 
 bool dbCCSegItr::orderReversed()
 {
-    return true;
+  return true;
 }
 
-void dbCCSegItr::reverse(dbObject * parent)
+void dbCCSegItr::reverse(dbObject* parent)
 {
-    _dbCapNode * node = (_dbCapNode *) parent;
-    uint id = node->_cc_segs;
-    uint pid = parent->getId();
-    uint list = 0;
+  _dbCapNode* node = (_dbCapNode*) parent;
+  uint        id   = node->_cc_segs;
+  uint        pid  = parent->getId();
+  uint        list = 0;
 
-    while( id !=  0 )
-    {
-        _dbCCSeg * seg =  _seg_tbl->getPtr(id);
-        uint n = seg->next(pid);
-        seg->next(pid) = list;
-        list = id; 
-        id = n;
-    }
+  while (id != 0) {
+    _dbCCSeg* seg  = _seg_tbl->getPtr(id);
+    uint      n    = seg->next(pid);
+    seg->next(pid) = list;
+    list           = id;
+    id             = n;
+  }
 
-    node->_cc_segs = list;
+  node->_cc_segs = list;
 }
 
 uint dbCCSegItr::sequential()
 {
-    return 0;
+  return 0;
 }
 
-uint dbCCSegItr::size( dbObject * parent )
+uint dbCCSegItr::size(dbObject* parent)
 {
-    uint id;
-    uint cnt = 0;
+  uint id;
+  uint cnt = 0;
 
-    for( id = dbCCSegItr::begin(parent); id != dbCCSegItr::end(parent); id = dbCCSegItr::next(id) )
-        ++cnt;
-   
-    return cnt; 
+  for (id = dbCCSegItr::begin(parent); id != dbCCSegItr::end(parent);
+       id = dbCCSegItr::next(id))
+    ++cnt;
+
+  return cnt;
 }
 
-uint dbCCSegItr::begin( dbObject * parent)
+uint dbCCSegItr::begin(dbObject* parent)
 {
-    _dbCapNode * node = (_dbCapNode *) parent;
-    return node->_cc_segs;
+  _dbCapNode* node = (_dbCapNode*) parent;
+  return node->_cc_segs;
 }
 
-uint dbCCSegItr::end( dbObject * parent )
+uint dbCCSegItr::end(dbObject* parent)
 {
-    return 0;
+  return 0;
 }
 
-uint dbCCSegItr::next( uint id, ... )
+uint dbCCSegItr::next(uint id, ...)
 {
-    va_list ap;
-    va_start(ap,id);
-    uint pid = va_arg(ap, uint);
-    va_end(ap);
-    _dbCCSeg * seg = _seg_tbl->getPtr(id);
-    return seg->next(pid);
+  va_list ap;
+  va_start(ap, id);
+  uint pid = va_arg(ap, uint);
+  va_end(ap);
+  _dbCCSeg* seg = _seg_tbl->getPtr(id);
+  return seg->next(pid);
 }
 
-dbObject * dbCCSegItr::getObject( uint id, ... )
+dbObject* dbCCSegItr::getObject(uint id, ...)
 {
-    return _seg_tbl->getPtr(id);
+  return _seg_tbl->getPtr(id);
 }
 
-} // namespace
+}  // namespace odb

@@ -20,14 +20,15 @@
 //
 // THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
 // AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
-// IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
-// DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE
-// FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
-// DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR
-// SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
-// CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
-// OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
-// OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+// IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
+// ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE
+// LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
+// CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
+// SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
+// INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
+// CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
+// ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
+// POSSIBILITY OF SUCH DAMAGE.
 
 #ifndef ADS_DEFIN_IVIA_H
 #define ADS_DEFIN_IVIA_H
@@ -38,25 +39,27 @@
 
 class definIVia
 {
-  public:
-    // Via interface methods
-    virtual void viaBegin( const char * name ) {}
+ public:
+  // Via interface methods
+  virtual void viaBegin(const char* name) {}
 
-    // generated via
-    virtual void viaRule( const char * rule ) {}
-    virtual void viaCutSize( int xSize, int ySize ) {}
-    virtual void viaLayers(  const char * bottom, const char * cut, const char * top ) {}
-    virtual void viaCutSpacing( int xSpacing, int ySpacing ) {}
-    virtual void viaEnclosure( int xBot, int yBot, int xTop, int yTop ) {}
-    virtual void viaRowCol( int numCutRows, int numCutCols ) {}
-    virtual void viaOrigin( int xOffset, int yOffset ) {}
-    virtual void viaOffset( int xBot, int yBot, int xTop, int yTop ) {}
-    virtual void viaPattern( const char * pattern ) {}
+  // generated via
+  virtual void viaRule(const char* rule) {}
+  virtual void viaCutSize(int xSize, int ySize) {}
+  virtual void viaLayers(const char* bottom, const char* cut, const char* top)
+  {
+  }
+  virtual void viaCutSpacing(int xSpacing, int ySpacing) {}
+  virtual void viaEnclosure(int xBot, int yBot, int xTop, int yTop) {}
+  virtual void viaRowCol(int numCutRows, int numCutCols) {}
+  virtual void viaOrigin(int xOffset, int yOffset) {}
+  virtual void viaOffset(int xBot, int yBot, int xTop, int yTop) {}
+  virtual void viaPattern(const char* pattern) {}
 
-    // fixed VIA
-    virtual void viaRect( const char * layer, int x1, int y1, int x2, int y2 ) {}
-    virtual void viaPolygon( std::vector<defPoint> & points ) {}
-    virtual void viaEnd() {}
+  // fixed VIA
+  virtual void viaRect(const char* layer, int x1, int y1, int x2, int y2) {}
+  virtual void viaPolygon(std::vector<defPoint>& points) {}
+  virtual void viaEnd() {}
 };
-    
+
 #endif

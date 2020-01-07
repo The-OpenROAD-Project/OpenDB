@@ -20,20 +20,21 @@
 //
 // THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
 // AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
-// IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
-// DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE
-// FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
-// DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR
-// SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
-// CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
-// OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
-// OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+// IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
+// ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE
+// LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
+// CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
+// SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
+// INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
+// CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
+// ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
+// POSSIBILITY OF SUCH DAMAGE.
 
 #include "dbTargetItr.h"
-#include "dbMaster.h"
 #include "dbMTerm.h"
-#include "dbTarget.h"
+#include "dbMaster.h"
 #include "dbTable.h"
+#include "dbTarget.h"
 
 namespace odb {
 
@@ -45,68 +46,68 @@ namespace odb {
 
 bool dbTargetItr::reversible()
 {
-    return true;
+  return true;
 }
 
 bool dbTargetItr::orderReversed()
 {
-    return true;
+  return true;
 }
 
-void dbTargetItr::reverse(dbObject * parent)
+void dbTargetItr::reverse(dbObject* parent)
 {
-    _dbMTerm * mterm = (_dbMTerm *) parent;
-    uint id = mterm->_targets;
-    uint list = 0;
+  _dbMTerm* mterm = (_dbMTerm*) parent;
+  uint      id    = mterm->_targets;
+  uint      list  = 0;
 
-    while( id !=  0 )
-    {
-        _dbTarget * target =  _target_tbl->getPtr(id);
-        uint n = target->_next;
-        target->_next = list;
-        list = id; 
-        id = n;
-    }
+  while (id != 0) {
+    _dbTarget* target = _target_tbl->getPtr(id);
+    uint       n      = target->_next;
+    target->_next     = list;
+    list              = id;
+    id                = n;
+  }
 
-    mterm->_targets = list;
+  mterm->_targets = list;
 }
 
 uint dbTargetItr::sequential()
 {
-    return 0;
+  return 0;
 }
 
-uint dbTargetItr::size( dbObject * parent )
+uint dbTargetItr::size(dbObject* parent)
 {
-    uint id;
-    uint cnt = 0;
+  uint id;
+  uint cnt = 0;
 
-    for( id = dbTargetItr::begin(parent); id != dbTargetItr::end(parent); id = dbTargetItr::next(id) )
-        ++cnt;
-   
-    return cnt; 
+  for (id = dbTargetItr::begin(parent); id != dbTargetItr::end(parent);
+       id = dbTargetItr::next(id))
+    ++cnt;
+
+  return cnt;
 }
 
-uint dbTargetItr::begin( dbObject * parent )
+uint dbTargetItr::begin(dbObject* parent)
 {
-    _dbMTerm * mterm = (_dbMTerm *) parent;
-    return mterm->_targets;
+  _dbMTerm* mterm = (_dbMTerm*) parent;
+  return mterm->_targets;
 }
 
-uint dbTargetItr::end( dbObject * parent )
+uint dbTargetItr::end(dbObject* parent)
 {
-    return 0;
+  return 0;
 }
 
-uint dbTargetItr::next( uint id, ... )
+uint dbTargetItr::next(uint id, ...)
 {
-    _dbTarget * target = _target_tbl->getPtr(id);
-    return target->_next;
+  _dbTarget* target = _target_tbl->getPtr(id);
+  return target->_next;
 }
 
-dbObject * dbTargetItr::getObject( uint id, ... )
+dbObject* dbTargetItr::getObject(uint id, ...)
 {
-    return _target_tbl->getPtr(id);
+  return _target_tbl->getPtr(id);
 }
 
-} // namespace
+}  // namespace odb

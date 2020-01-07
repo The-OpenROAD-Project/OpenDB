@@ -20,14 +20,15 @@
 //
 // THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
 // AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
-// IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
-// DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE
-// FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
-// DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR
-// SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
-// CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
-// OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
-// OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+// IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
+// ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE
+// LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
+// CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
+// SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
+// INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
+// CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
+// ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
+// POSSIBILITY OF SUCH DAMAGE.
 
 #ifndef ADS_DEFIN_HASH_H
 #define ADS_DEFIN_HASH_H
@@ -36,25 +37,29 @@
 
 struct hashEntry
 {
-    const char * _key;
-    int          _value;
-    hashEntry() { _key = NULL; _value = 0; }
+  const char* _key;
+  int         _value;
+  hashEntry()
+  {
+    _key   = NULL;
+    _value = 0;
+  }
 };
-    
+
 class hashTable
 {
-    std::vector<hashEntry> _hash_tbl;
-    void resizeTable();
-    void insert( const char * key, int value, bool alloc_key );
-    
-public:
-    ~hashTable();
-    hashTable();
-    hashTable(int size);
+  std::vector<hashEntry> _hash_tbl;
+  void                   resizeTable();
+  void                   insert(const char* key, int value, bool alloc_key);
 
-    void setSize(int size);
-    void insert( const char * key, int value ) { insert( key, value, true ); }
-    bool find( const char * key, int & value ) const;
+ public:
+  ~hashTable();
+  hashTable();
+  hashTable(int size);
+
+  void setSize(int size);
+  void insert(const char* key, int value) { insert(key, value, true); }
+  bool find(const char* key, int& value) const;
 };
 
 #include "hash.hpp"

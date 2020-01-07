@@ -20,25 +20,26 @@
 //
 // THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
 // AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
-// IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
-// DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE
-// FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
-// DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR
-// SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
-// CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
-// OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
-// OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+// IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
+// ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE
+// LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
+// CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
+// SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
+// INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
+// CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
+// ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
+// POSSIBILITY OF SUCH DAMAGE.
 
 #ifndef ADS_DB_INST_H
 #define ADS_DB_INST_H
 
 #include "ads.h"
-#include "dbTypes.h"
 #include "dbId.h"
 #include "dbObject.h"
+#include "dbTypes.h"
 
 #ifndef ADS_DB_VECTOR_H
-#include "dbVector.h"                // disconnect the child-iterm
+#include "dbVector.h"  // disconnect the child-iterm
 
 #endif
 
@@ -59,63 +60,62 @@ class dbDiff;
 
 struct _dbInstFlags
 {
-    dbOrientType::Value      _orient      : 4;
-    dbPlacementStatus::Value _status      : 4;
-    uint                     _user_flag_1 : 1;
-    uint                     _user_flag_2 : 1;
-    uint                     _user_flag_3 : 1;
-    uint                     _size_only   : 1;
-    uint                     _dont_touch  : 1;
-    uint                     _dont_size   : 1;
-    dbSourceType::Value      _source      : 4;
-    uint                     _eco_create  : 1;
-    uint                     _eco_destroy : 1;
-    uint                     _eco_modify  : 1;
-    uint                     _input_cone  : 1;
-    uint                     _inside_cone : 1;
-    uint                     _level       : 9;
+  dbOrientType::Value      _orient : 4;
+  dbPlacementStatus::Value _status : 4;
+  uint                     _user_flag_1 : 1;
+  uint                     _user_flag_2 : 1;
+  uint                     _user_flag_3 : 1;
+  uint                     _size_only : 1;
+  uint                     _dont_touch : 1;
+  uint                     _dont_size : 1;
+  dbSourceType::Value      _source : 4;
+  uint                     _eco_create : 1;
+  uint                     _eco_destroy : 1;
+  uint                     _eco_modify : 1;
+  uint                     _input_cone : 1;
+  uint                     _inside_cone : 1;
+  uint                     _level : 9;
 };
 
 class _dbInst : public dbObject
 {
-  public:
+ public:
+  enum Field  // dbJournalField name
+  {
+    FLAGS,
+    ORIGIN,
+    INVALIDATETIMING
+  };
 
-    enum Field  // dbJournalField name
-    {
-        FLAGS,
-        ORIGIN,
-        INVALIDATETIMING
-    };
+  _dbInstFlags     _flags;
+  char*            _name;
+  int              _x;
+  int              _y;
+  int              _weight;
+  dbId<_dbInst>    _next_entry;
+  dbId<_dbInstHdr> _inst_hdr;
+  dbId<_dbBox>     _bbox;
+  dbId<_dbRegion>  _region;
+  dbId<_dbInst>    _region_next;
+  dbId<_dbInst>    _region_prev;
+  dbId<_dbHier>    _hierarchy;
+  dbVector<uint>   _iterms;
+  dbId<_dbBox>     _halo;
 
-    _dbInstFlags     _flags;
-    char *           _name;
-    int              _x;
-    int              _y;
-    int              _weight;
-    dbId<_dbInst>    _next_entry;
-    dbId<_dbInstHdr> _inst_hdr;
-    dbId<_dbBox>     _bbox;
-    dbId<_dbRegion>  _region;
-    dbId<_dbInst>    _region_next;
-    dbId<_dbInst>    _region_prev;
-    dbId<_dbHier>    _hierarchy;
-    dbVector< uint>  _iterms;
-    dbId<_dbBox>     _halo;
+  _dbInst(_dbDatabase*);
+  _dbInst(_dbDatabase*, const _dbInst& i);
+  ~_dbInst();
 
-    _dbInst( _dbDatabase * );
-    _dbInst( _dbDatabase *, const _dbInst & i );
-    ~_dbInst();
-
-    bool operator==( const _dbInst & rhs ) const;
-    bool operator!=( const _dbInst & rhs ) const { return ! operator==(rhs); }
-    bool operator<( const _dbInst & rhs ) const;
-    void differences( dbDiff & diff, const char * field, const _dbInst & rhs ) const;
-    void out( dbDiff & diff, char side, const char * field ) const;
+  bool operator==(const _dbInst& rhs) const;
+  bool operator!=(const _dbInst& rhs) const { return !operator==(rhs); }
+  bool operator<(const _dbInst& rhs) const;
+  void differences(dbDiff& diff, const char* field, const _dbInst& rhs) const;
+  void out(dbDiff& diff, char side, const char* field) const;
 };
 
-dbOStream & operator<<( dbOStream & stream,  const _dbInst & inst );
-dbIStream & operator>>( dbIStream & stream, _dbInst & inst );
+dbOStream& operator<<(dbOStream& stream, const _dbInst& inst);
+dbIStream& operator>>(dbIStream& stream, _dbInst& inst);
 
-} // namespace
+}  // namespace odb
 
 #endif

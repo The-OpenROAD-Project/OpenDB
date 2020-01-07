@@ -20,41 +20,84 @@
 //
 // THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
 // AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
-// IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
-// DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE
-// FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
-// DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR
-// SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
-// CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
-// OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
-// OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+// IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
+// ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE
+// LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
+// CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
+// SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
+// INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
+// CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
+// ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
+// POSSIBILITY OF SUCH DAMAGE.
 
 #include <stdio.h>
 
 #include <tcl.h>
 
-
 #define ZROUTER_VERSION "1.0"
 
-void ZrouterInit_zui(Tcl_Interp *interp);
+void ZrouterInit_zui(Tcl_Interp* interp);
 
-int AthInitZroute	(ClientData cdata, Tcl_Interp *interp, int objc, Tcl_Obj *CONST objv[]);
-int AthReadLef		(ClientData cdata, Tcl_Interp *interp, int objc, Tcl_Obj *CONST objv[]);
-int AthReadLefMacros(ClientData cdata, Tcl_Interp *interp, int objc, Tcl_Obj *CONST objv[]);
-int AthReadDef		(ClientData cdata, Tcl_Interp *interp, int objc, Tcl_Obj *CONST objv[]);
-int AthReadDefTiles	(ClientData cdata, Tcl_Interp *interp, int objc, Tcl_Obj *CONST objv[]);
-int AthMakeTiles	(ClientData cdata, Tcl_Interp *interp, int objc, Tcl_Obj *CONST objv[]);
-int AthAssignTracks	(ClientData cdata, Tcl_Interp *interp, int objc, Tcl_Obj *CONST objv[]);
-int AthGetTiles		(ClientData cdata, Tcl_Interp *interp, int objc, Tcl_Obj *CONST objv[]);
+int AthInitZroute(ClientData  cdata,
+                  Tcl_Interp* interp,
+                  int         objc,
+                  Tcl_Obj* CONST objv[]);
+int AthReadLef(ClientData  cdata,
+               Tcl_Interp* interp,
+               int         objc,
+               Tcl_Obj* CONST objv[]);
+int AthReadLefMacros(ClientData  cdata,
+                     Tcl_Interp* interp,
+                     int         objc,
+                     Tcl_Obj* CONST objv[]);
+int AthReadDef(ClientData  cdata,
+               Tcl_Interp* interp,
+               int         objc,
+               Tcl_Obj* CONST objv[]);
+int AthReadDefTiles(ClientData  cdata,
+                    Tcl_Interp* interp,
+                    int         objc,
+                    Tcl_Obj* CONST objv[]);
+int AthMakeTiles(ClientData  cdata,
+                 Tcl_Interp* interp,
+                 int         objc,
+                 Tcl_Obj* CONST objv[]);
+int AthAssignTracks(ClientData  cdata,
+                    Tcl_Interp* interp,
+                    int         objc,
+                    Tcl_Obj* CONST objv[]);
+int AthGetTiles(ClientData  cdata,
+                Tcl_Interp* interp,
+                int         objc,
+                Tcl_Obj* CONST objv[]);
 
-//int AthGetChip_zui	(ClientData cdata, Tcl_Interp *interp, int objc, Tcl_Obj *CONST objv[]);
+// int AthGetChip_zui	(ClientData cdata, Tcl_Interp *interp, int objc, Tcl_Obj
+// *CONST objv[]);
 
-//int zui_get			(ClientData cdata, Tcl_Interp *interp, int objc, Tcl_Obj *CONST objv[]);
-//int zui_chipAttr_get(ClientData cdata, Tcl_Interp *interp, int objc, Tcl_Obj *CONST objv[]);
-int AthLayersPrint	(ClientData cdata, Tcl_Interp *interp, int objc, Tcl_Obj *CONST objv[]);
-int AthPinsAssign	(ClientData cdata, Tcl_Interp *interp, int objc, Tcl_Obj *CONST objv[]);
-int AthBusMake		(ClientData cdata, Tcl_Interp *interp, int objc, Tcl_Obj *CONST objv[]);
-int AthTilesRoute	(ClientData cdata, Tcl_Interp *interp, int objc, Tcl_Obj *CONST objv[]);
-int AthDbRead		(ClientData cdata, Tcl_Interp *interp, int objc, Tcl_Obj *CONST objv[]);
-int AthDbWrite		(ClientData cdata, Tcl_Interp *interp, int objc, Tcl_Obj *CONST objv[]);
-
+// int zui_get			(ClientData cdata, Tcl_Interp *interp, int objc,
+// Tcl_Obj *CONST objv[]); int zui_chipAttr_get(ClientData cdata, Tcl_Interp
+// *interp, int objc, Tcl_Obj *CONST objv[]);
+int AthLayersPrint(ClientData  cdata,
+                   Tcl_Interp* interp,
+                   int         objc,
+                   Tcl_Obj* CONST objv[]);
+int AthPinsAssign(ClientData  cdata,
+                  Tcl_Interp* interp,
+                  int         objc,
+                  Tcl_Obj* CONST objv[]);
+int AthBusMake(ClientData  cdata,
+               Tcl_Interp* interp,
+               int         objc,
+               Tcl_Obj* CONST objv[]);
+int AthTilesRoute(ClientData  cdata,
+                  Tcl_Interp* interp,
+                  int         objc,
+                  Tcl_Obj* CONST objv[]);
+int AthDbRead(ClientData  cdata,
+              Tcl_Interp* interp,
+              int         objc,
+              Tcl_Obj* CONST objv[]);
+int AthDbWrite(ClientData  cdata,
+               Tcl_Interp* interp,
+               int         objc,
+               Tcl_Obj* CONST objv[]);

@@ -20,133 +20,131 @@
 //
 // THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
 // AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
-// IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
-// DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE
-// FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
-// DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR
-// SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
-// CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
-// OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
-// OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+// IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
+// ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE
+// LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
+// CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
+// SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
+// INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
+// CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
+// ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
+// POSSIBILITY OF SUCH DAMAGE.
 
 #include "dbSBox.h"
-#include "dbDatabase.h"
-#include "dbBox.h"
+#include "db.h"
 #include "dbBlock.h"
-#include "dbVia.h"
+#include "dbBox.h"
+#include "dbDatabase.h"
 #include "dbSWire.h"
-#include "dbTech.h"
-#include "dbTechVia.h"
-#include "dbTechLayer.h"
 #include "dbTable.h"
 #include "dbTable.hpp"
-#include "db.h"
+#include "dbTech.h"
+#include "dbTechLayer.h"
+#include "dbTechVia.h"
+#include "dbVia.h"
 
 namespace odb {
 
 template class dbTable<_dbSBox>;
 
-bool _dbSBox::operator==( const _dbSBox & rhs ) const
+bool _dbSBox::operator==(const _dbSBox& rhs) const
 {
-    if( _sflags._wire_type != rhs._sflags._wire_type )
-        return false;
+  if (_sflags._wire_type != rhs._sflags._wire_type)
+    return false;
 
-    if ( _dbBox::operator!=( rhs ) )
-        return false;
+  if (_dbBox::operator!=(rhs))
+    return false;
 
+  return true;
+}
+
+int _dbSBox::equal(const _dbSBox& rhs) const
+{
+  if (_sflags._wire_type != rhs._sflags._wire_type)
+    return false;
+
+  return _dbBox::equal(rhs);
+}
+
+bool _dbSBox::operator<(const _dbSBox& rhs) const
+{
+  if (_sflags._wire_type < rhs._sflags._wire_type)
     return true;
+
+  if (_sflags._wire_type > rhs._sflags._wire_type)
+    return false;
+
+  return _dbBox::operator<(rhs);
 }
 
-int _dbSBox::equal( const _dbSBox & rhs ) const
+void _dbSBox::differences(dbDiff&        diff,
+                          const char*    field,
+                          const _dbSBox& rhs) const
 {
-    if( _sflags._wire_type != rhs._sflags._wire_type )
-        return false;
+  if (diff.deepDiff())
+    return;
 
-    return _dbBox::equal( rhs );
+  DIFF_BEGIN
+  DIFF_FIELD(_sflags._wire_type);
+  DIFF_FIELD(_flags._owner_type);
+  DIFF_FIELD(_flags._is_tech_via);
+  DIFF_FIELD(_flags._is_block_via);
+  DIFF_FIELD(_flags._layer_id);
+  DIFF_FIELD(_flags._via_id);
+  DIFF_FIELD(_rect);
+  DIFF_FIELD_NO_DEEP(_owner);
+  DIFF_FIELD_NO_DEEP(_next_box);
+  DIFF_END
 }
 
-bool _dbSBox::operator<( const _dbSBox & rhs ) const
+void _dbSBox::out(dbDiff& diff, char side, const char* field) const
 {
-    if( _sflags._wire_type < rhs._sflags._wire_type )
-        return true;
-
-    if( _sflags._wire_type > rhs._sflags._wire_type )
-        return false;
-
-    return _dbBox::operator<( rhs );
-}
-
-void _dbSBox::differences( dbDiff & diff, const char * field, const _dbSBox & rhs ) const
-{
-    if (  diff.deepDiff() )
-        return;
-
-    DIFF_BEGIN
-    DIFF_FIELD(_sflags._wire_type);
-    DIFF_FIELD(_flags._owner_type);
-    DIFF_FIELD(_flags._is_tech_via);
-    DIFF_FIELD(_flags._is_block_via);
-    DIFF_FIELD(_flags._layer_id);
-    DIFF_FIELD(_flags._via_id);
-    DIFF_FIELD(_rect);
-    DIFF_FIELD_NO_DEEP(_owner);
-    DIFF_FIELD_NO_DEEP(_next_box);
+  if (!diff.deepDiff()) {
+    DIFF_OUT_BEGIN
+    DIFF_OUT_FIELD(_sflags._wire_type);
+    DIFF_OUT_FIELD(_flags._owner_type);
+    DIFF_OUT_FIELD(_flags._is_tech_via);
+    DIFF_OUT_FIELD(_flags._is_block_via);
+    DIFF_OUT_FIELD(_flags._layer_id);
+    DIFF_OUT_FIELD(_flags._via_id);
+    DIFF_OUT_FIELD(_rect);
+    DIFF_OUT_FIELD(_owner);
     DIFF_END
-}
+  } else {
+    DIFF_OUT_BEGIN
+    DIFF_OUT_FIELD(_sflags._wire_type);
 
-void _dbSBox::out( dbDiff & diff, char side, const char * field ) const
-{
-    if ( ! diff.deepDiff() )
-    {
-        DIFF_OUT_BEGIN
-        DIFF_OUT_FIELD(_sflags._wire_type);
-        DIFF_OUT_FIELD(_flags._owner_type);
-        DIFF_OUT_FIELD(_flags._is_tech_via);
-        DIFF_OUT_FIELD(_flags._is_block_via);
-        DIFF_OUT_FIELD(_flags._layer_id);
-        DIFF_OUT_FIELD(_flags._via_id);
-        DIFF_OUT_FIELD(_rect);
-        DIFF_OUT_FIELD(_owner);
-        DIFF_END
+    switch (getType()) {
+      case BLOCK_VIA: {
+        int x, y;
+        getViaXY(x, y);
+        _dbVia* via = getBlockVia();
+        diff.report("%c BLOCK-VIA %s (%d %d)\n", side, via->_name, x, y);
+        break;
+      }
+
+      case TECH_VIA: {
+        int x, y;
+        getViaXY(x, y);
+        _dbTechVia* via = getTechVia();
+        diff.report("%c TECH-VIA %s (%d %d)\n", side, via->_name, x, y);
+        break;
+      }
+
+      case BOX: {
+        //_dbTechLayer * lay = getTechLayer();
+        diff.report("%c BOX (%d %d) (%d %d)\n",
+                    side,
+                    _rect.xMin(),
+                    _rect.yMin(),
+                    _rect.xMax(),
+                    _rect.yMax());
+        break;
+      }
     }
-    else
-    {
-         DIFF_OUT_BEGIN
-         DIFF_OUT_FIELD(_sflags._wire_type);
 
-         switch( getType() )
-         {
-             case BLOCK_VIA:
-             {
-                 int x, y;
-                 getViaXY(x,y);
-                 _dbVia * via = getBlockVia();
-                 diff.report("%c BLOCK-VIA %s (%d %d)\n", side, via->_name, x, y );
-                 break;
-             }
-            
-             case TECH_VIA:
-             {
-                 int x, y;
-                 getViaXY(x,y);
-                 _dbTechVia * via = getTechVia();
-                 diff.report("%c TECH-VIA %s (%d %d)\n", side, via->_name, x, y );
-                 break;
-             }
-            
-             case BOX:
-             {
-                 //_dbTechLayer * lay = getTechLayer();
-                 diff.report("%c BOX (%d %d) (%d %d)\n", side,
-                                   _rect.xMin(), _rect.yMin(),
-                                   _rect.xMax(), _rect.yMax() );
-                 break;
-             }
-         }
-
-         DIFF_END
-    }
-    
+    DIFF_END
+  }
 }
 
 ////////////////////////////////////////////////////////////////////
@@ -154,150 +152,155 @@ void _dbSBox::out( dbDiff & diff, char side, const char * field ) const
 // dbSBox - Methods
 //
 ////////////////////////////////////////////////////////////////////
-    
+
 dbWireShapeType dbSBox::getWireShapeType()
 {
-    _dbSBox * box = (_dbSBox *) this;
-    return  dbWireShapeType( box->_sflags._wire_type );
+  _dbSBox* box = (_dbSBox*) this;
+  return dbWireShapeType(box->_sflags._wire_type);
 }
 
 dbSBox::Direction dbSBox::getDirection()
 {
-    _dbSBox * box = (_dbSBox *) this;
-    return (dbSBox::Direction) box->_sflags._direction;
+  _dbSBox* box = (_dbSBox*) this;
+  return (dbSBox::Direction) box->_sflags._direction;
 }
 
-dbSWire * dbSBox::getSWire()
+dbSWire* dbSBox::getSWire()
 {
-    return (dbSWire *) getBoxOwner();
+  return (dbSWire*) getBoxOwner();
 }
 
-dbSBox *
-dbSBox::create( dbSWire * wire_, dbTechLayer * layer_,
-               int x1, int y1, int x2, int y2,
-               dbWireShapeType type,
-                Direction dir )
+dbSBox* dbSBox::create(dbSWire*        wire_,
+                       dbTechLayer*    layer_,
+                       int             x1,
+                       int             y1,
+                       int             x2,
+                       int             y2,
+                       dbWireShapeType type,
+                       Direction       dir)
 {
-    _dbSWire * wire = (_dbSWire *) wire_;
-    _dbBlock * block = (_dbBlock *) wire->getOwner();
-    _dbSBox * box = block->_sbox_tbl->create();
+  _dbSWire* wire  = (_dbSWire*) wire_;
+  _dbBlock* block = (_dbBlock*) wire->getOwner();
+  _dbSBox*  box   = block->_sbox_tbl->create();
 
-    uint dx;
-    if ( x2 > x1 )
-        dx = x2-x1;
-    else
-        dx = x1-x2;
+  uint dx;
+  if (x2 > x1)
+    dx = x2 - x1;
+  else
+    dx = x1 - x2;
 
-    uint dy;
-    if ( y2 > y1 )
-        dy = y2-y1;
-    else
-        dy = y1-y2;
+  uint dy;
+  if (y2 > y1)
+    dy = y2 - y1;
+  else
+    dy = y1 - y2;
 
-    switch( dir )
-    {
-        case UNDEFINED:
-            if ( (dx & 1) && (dy & 1) ) // both odd
-                return NULL;
-            
-            break;
-            
-        case HORIZONTAL:
-            if ( dy & 1 ) // dy odd
-                return NULL;
-            break;
-            
-        case VERTICAL:
-            if ( dx & 1 ) // dy odd
-                return NULL;
-            break;
-    }
-        
-    box->_flags._layer_id = layer_->getOID();
-    box->_flags._owner_type = dbBoxOwner::SWIRE;
-    box->_owner = wire->getOID();
-    box->_rect.init(x1,y1,x2,y2);
-    box->_sflags._wire_type = type.getValue();
-    box->_sflags._direction = dir;
-
-    // link box to wire
-    box->_next_box = (uint) wire->_wires;
-    wire->_wires = box->getOID();
-
-    block->add_rect( box->_rect );
-    return (dbSBox *) box;
-}
-
-dbSBox *
-dbSBox::create( dbSWire * wire_, dbVia * via_, int x, int y,
-                dbWireShapeType type )
-{
-    _dbSWire * wire = (_dbSWire *) wire_;
-    _dbVia * via = (_dbVia *) via_;
-    _dbBlock * block = (_dbBlock *) wire->getOwner();
-
-    if ( via->_bbox == 0 )
+  switch (dir) {
+    case UNDEFINED:
+      if ((dx & 1) && (dy & 1))  // both odd
         return NULL;
-    
-    _dbBox * vbbox = block->_box_tbl->getPtr(via->_bbox);
-    int xmin = vbbox->_rect.xMin() + x;
-    int ymin = vbbox->_rect.yMin() + y;
-    int xmax = vbbox->_rect.xMax() + x;
-    int ymax = vbbox->_rect.yMax() + y;
-    _dbSBox * box = block->_sbox_tbl->create();
-    box->_flags._owner_type = dbBoxOwner::SWIRE;
-    box->_owner = wire->getOID();
-    box->_rect.init(xmin, ymin, xmax, ymax);
-    box->_flags._is_block_via = 1;
-    box->_flags._via_id = via->getOID();
-    box->_sflags._wire_type = type.getValue();
 
-    // link box to wire
-    box->_next_box = (uint) wire->_wires;
-    wire->_wires = box->getOID();
+      break;
 
-    block->add_rect( box->_rect );
-    return (dbSBox *) box;
-}
-
-dbSBox * 
-dbSBox::create( dbSWire * wire_, dbTechVia * via_, int x, int y,
-                dbWireShapeType type )
-{
-    _dbSWire * wire = (_dbSWire *) wire_;
-    _dbTechVia * via = (_dbTechVia *) via_;
-    _dbBlock * block = (_dbBlock *) wire->getOwner();
-
-    if ( via->_bbox == 0 )
+    case HORIZONTAL:
+      if (dy & 1)  // dy odd
         return NULL;
-    
-    _dbTech * tech = (_dbTech *) via_->getOwner();
-    _dbBox * vbbox = tech->_box_tbl->getPtr(via->_bbox);
-    int xmin = vbbox->_rect.xMin() + x;
-    int ymin = vbbox->_rect.yMin() + y;
-    int xmax = vbbox->_rect.xMax() + x;
-    int ymax = vbbox->_rect.yMax() + y;
-    _dbSBox * box = block->_sbox_tbl->create();
-    box->_flags._owner_type = dbBoxOwner::SWIRE;
-    box->_owner = wire->getOID();
-    box->_rect.init(xmin, ymin, xmax, ymax);
-    box->_flags._is_tech_via = 1;
-    box->_flags._via_id = via->getOID();
-    box->_sflags._wire_type = type.getValue();
+      break;
 
-    // link box to wire
-    box->_next_box = (uint) wire->_wires;
-    wire->_wires = box->getOID();
+    case VERTICAL:
+      if (dx & 1)  // dy odd
+        return NULL;
+      break;
+  }
 
-    block->add_rect( box->_rect );
-    return (dbSBox *) box;
+  box->_flags._layer_id   = layer_->getOID();
+  box->_flags._owner_type = dbBoxOwner::SWIRE;
+  box->_owner             = wire->getOID();
+  box->_rect.init(x1, y1, x2, y2);
+  box->_sflags._wire_type = type.getValue();
+  box->_sflags._direction = dir;
+
+  // link box to wire
+  box->_next_box = (uint) wire->_wires;
+  wire->_wires   = box->getOID();
+
+  block->add_rect(box->_rect);
+  return (dbSBox*) box;
 }
 
-dbSBox *
-dbSBox::getSBox( dbBlock * block_, uint dbid_ )
+dbSBox* dbSBox::create(dbSWire*        wire_,
+                       dbVia*          via_,
+                       int             x,
+                       int             y,
+                       dbWireShapeType type)
 {
-    _dbBlock * block = (_dbBlock *) block_;
-    return (dbSBox *) block->_sbox_tbl->getPtr( dbid_ );
+  _dbSWire* wire  = (_dbSWire*) wire_;
+  _dbVia*   via   = (_dbVia*) via_;
+  _dbBlock* block = (_dbBlock*) wire->getOwner();
+
+  if (via->_bbox == 0)
+    return NULL;
+
+  _dbBox*  vbbox          = block->_box_tbl->getPtr(via->_bbox);
+  int      xmin           = vbbox->_rect.xMin() + x;
+  int      ymin           = vbbox->_rect.yMin() + y;
+  int      xmax           = vbbox->_rect.xMax() + x;
+  int      ymax           = vbbox->_rect.yMax() + y;
+  _dbSBox* box            = block->_sbox_tbl->create();
+  box->_flags._owner_type = dbBoxOwner::SWIRE;
+  box->_owner             = wire->getOID();
+  box->_rect.init(xmin, ymin, xmax, ymax);
+  box->_flags._is_block_via = 1;
+  box->_flags._via_id       = via->getOID();
+  box->_sflags._wire_type   = type.getValue();
+
+  // link box to wire
+  box->_next_box = (uint) wire->_wires;
+  wire->_wires   = box->getOID();
+
+  block->add_rect(box->_rect);
+  return (dbSBox*) box;
 }
 
-} // namespace
+dbSBox* dbSBox::create(dbSWire*        wire_,
+                       dbTechVia*      via_,
+                       int             x,
+                       int             y,
+                       dbWireShapeType type)
+{
+  _dbSWire*   wire  = (_dbSWire*) wire_;
+  _dbTechVia* via   = (_dbTechVia*) via_;
+  _dbBlock*   block = (_dbBlock*) wire->getOwner();
+
+  if (via->_bbox == 0)
+    return NULL;
+
+  _dbTech* tech           = (_dbTech*) via_->getOwner();
+  _dbBox*  vbbox          = tech->_box_tbl->getPtr(via->_bbox);
+  int      xmin           = vbbox->_rect.xMin() + x;
+  int      ymin           = vbbox->_rect.yMin() + y;
+  int      xmax           = vbbox->_rect.xMax() + x;
+  int      ymax           = vbbox->_rect.yMax() + y;
+  _dbSBox* box            = block->_sbox_tbl->create();
+  box->_flags._owner_type = dbBoxOwner::SWIRE;
+  box->_owner             = wire->getOID();
+  box->_rect.init(xmin, ymin, xmax, ymax);
+  box->_flags._is_tech_via = 1;
+  box->_flags._via_id      = via->getOID();
+  box->_sflags._wire_type  = type.getValue();
+
+  // link box to wire
+  box->_next_box = (uint) wire->_wires;
+  wire->_wires   = box->getOID();
+
+  block->add_rect(box->_rect);
+  return (dbSBox*) box;
+}
+
+dbSBox* dbSBox::getSBox(dbBlock* block_, uint dbid_)
+{
+  _dbBlock* block = (_dbBlock*) block_;
+  return (dbSBox*) block->_sbox_tbl->getPtr(dbid_);
+}
+
+}  // namespace odb

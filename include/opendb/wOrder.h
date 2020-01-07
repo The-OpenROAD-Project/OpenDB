@@ -20,14 +20,15 @@
 //
 // THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
 // AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
-// IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
-// DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE
-// FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
-// DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR
-// SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
-// CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
-// OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
-// OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+// IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
+// ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE
+// LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
+// CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
+// SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
+// INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
+// CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
+// ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
+// POSSIBILITY OF SUCH DAMAGE.
 
 #ifndef WORDER_H
 #define WORDER_H
@@ -39,19 +40,24 @@ namespace odb {
 class dbBlock;
 class dbNet;
 
-void orderWires(dbBlock *b, bool force, int maxLrngth = 0);
-void orderWires(dbBlock *b,const char *net_name_or_id,bool force, bool verbose = false, bool quiet = false, int cutLength = 0, int maxLength = 0);
-void orderWires(dbNet *net, bool force, bool verbose = false);
+void orderWires(dbBlock* b, bool force, int maxLrngth = 0);
+void orderWires(dbBlock*    b,
+                const char* net_name_or_id,
+                bool        force,
+                bool        verbose   = false,
+                bool        quiet     = false,
+                int         cutLength = 0,
+                int         maxLength = 0);
+void orderWires(dbNet* net, bool force, bool verbose = false);
 
 // for the tiler
-void orderWiresTableInit(dbBlock *block);
-void orderWiresTableAdd(dbNet *net,dbWire *wire);
-void orderWiresTableRun(dbNet *net = NULL,bool verbose = false);
+void orderWiresTableInit(dbBlock* block);
+void orderWiresTableAdd(dbNet* net, dbWire* wire);
+void orderWiresTableRun(dbNet* net = NULL, bool verbose = false);
 void orderWiresTableFree();
 
-void findDisconnects(dbBlock *block, bool verbose);
+void findDisconnects(dbBlock* block, bool verbose);
 
-} // namespace
+}  // namespace odb
 
 #endif
-

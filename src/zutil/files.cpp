@@ -20,87 +20,79 @@
 //
 // THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
 // AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
-// IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
-// DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE
-// FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
-// DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR
-// SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
-// CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
-// OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
-// OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+// IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
+// ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE
+// LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
+// CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
+// SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
+// INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
+// CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
+// ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
+// POSSIBILITY OF SUCH DAMAGE.
 
-#include <stdlib.h>
 #include <stdio.h>
+#include <stdlib.h>
 #include <string.h>
 #include "logger.h"
 
-
-FILE* ATH__openFile(const char *name, const char* type)
+FILE* ATH__openFile(const char* name, const char* type)
 {
-	FILE* a= fopen(name, type);
-	
-	if (a==NULL) {
-		fprintf(stderr, "Cannot open file %s for \"%s\"\n", 
-			name, type);
-		fprintf(stdout, "\nExiting ...\n");
-		exit(0);
-	}
-	return a;
+  FILE* a = fopen(name, type);
 
+  if (a == NULL) {
+    fprintf(stderr, "Cannot open file %s for \"%s\"\n", name, type);
+    fprintf(stdout, "\nExiting ...\n");
+    exit(0);
+  }
+  return a;
 }
-void ATH__closeFile(FILE *fp)
+void ATH__closeFile(FILE* fp)
 {
-	if (fp==NULL) {
-		return;
-	}
-	fclose(fp);
+  if (fp == NULL) {
+    return;
+  }
+  fclose(fp);
 }
-
 
 namespace odb {
 /*
-   replace_string - finds instances of the search char, replaces with 
+   replace_string - finds instances of the search char, replaces with
                     "replace" string
 */
 
-char *replace_string(const char *start, char search, const char *replace)
+char* replace_string(const char* start, char search, const char* replace)
 {
-    static char *buffer;
-    static int buf_size=0;
+  static char* buffer;
+  static int   buf_size = 0;
 
-    int len = strlen(start);
-    if ( len == 0 ) return (char*)start;
+  int len = strlen(start);
+  if (len == 0)
+    return (char*) start;
 
-    if ( buf_size < 2 * len )
-    {
-        free(buffer);
-        // use 2* as a general approximation
-        buf_size = 2 * len;
-        buffer = (char*)malloc(buf_size);
+  if (buf_size < 2 * len) {
+    free(buffer);
+    // use 2* as a general approximation
+    buf_size = 2 * len;
+    buffer   = (char*) malloc(buf_size);
+  }
+
+  char* sptr = (char*) start;
+  char* dptr = buffer;
+  char* cptr;
+
+  while (*sptr) {
+    if ((*sptr) == search) {
+      cptr = (char*) replace;
+      while (*cptr) {
+        *dptr++ = *cptr++;
+      }
+    } else {
+      *dptr++ = *sptr;
     }
-
-    char *sptr= (char *)start;
-    char *dptr= buffer;
-    char *cptr;
-
-    while( *sptr )
-    {
-        if( (*sptr) == search )
-        {
-            cptr = (char *)replace;
-            while( *cptr )
-            {
-                *dptr++ = *cptr++;
-            }
-        }
-        else
-        {
-            *dptr++ = *sptr;
-        }
-        sptr++;
-    }
-    *dptr = '\0';
-    return buffer;
+    sptr++;
+  }
+  *dptr = '\0';
+  return buffer;
 }
 
-}
+}  // namespace odb

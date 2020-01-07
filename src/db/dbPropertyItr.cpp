@@ -20,14 +20,15 @@
 //
 // THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
 // AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
-// IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
-// DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE
-// FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
-// DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR
-// SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
-// CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
-// OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
-// OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+// IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
+// ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE
+// LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
+// CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
+// SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
+// INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
+// CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
+// ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
+// POSSIBILITY OF SUCH DAMAGE.
 
 #include "dbPropertyItr.h"
 #include "dbProperty.h"
@@ -43,73 +44,72 @@ namespace odb {
 
 bool dbPropertyItr::reversible()
 {
-    return true;
+  return true;
 }
 
 bool dbPropertyItr::orderReversed()
 {
-    return true;
+  return true;
 }
 
-void dbPropertyItr::reverse(dbObject * parent)
+void dbPropertyItr::reverse(dbObject* parent)
 {
-    dbObjectTable * table = parent->getTable();
-    uint id = table->getPropList(parent->getOID());
+  dbObjectTable* table = parent->getTable();
+  uint           id    = table->getPropList(parent->getOID());
 
-    if ( id )
-    {
-        uint list = 0;
+  if (id) {
+    uint list = 0;
 
-        while( id !=  0 )
-        {
-            _dbProperty * p =  _prop_tbl->getPtr(id);
-            uint n = p->_next;
-            p->_next = list;
-            list = id; 
-            id = n;
-        }
-
-        table->setPropList(parent->getOID(), list);
+    while (id != 0) {
+      _dbProperty* p = _prop_tbl->getPtr(id);
+      uint         n = p->_next;
+      p->_next       = list;
+      list           = id;
+      id             = n;
     }
+
+    table->setPropList(parent->getOID(), list);
+  }
 }
 
 uint dbPropertyItr::sequential()
 {
-    return 0;
+  return 0;
 }
 
-uint dbPropertyItr::size( dbObject * parent )
+uint dbPropertyItr::size(dbObject* parent)
 {
-    uint id;
-    uint cnt = 0;
+  uint id;
+  uint cnt = 0;
 
-    for( id = dbPropertyItr::begin(parent); id != dbPropertyItr::end(parent); id = dbPropertyItr::next(id) )
-        ++cnt;
-   
-    return cnt; 
+  for (id = dbPropertyItr::begin(parent); id != dbPropertyItr::end(parent);
+       id = dbPropertyItr::next(id))
+    ++cnt;
+
+  return cnt;
 }
 
-uint dbPropertyItr::begin( dbObject * parent )
+uint dbPropertyItr::begin(dbObject* parent)
 {
-    dbObjectTable * table = parent->getTable();
-    uint id = table->getPropList(parent->getOID());
-    return id;
+  dbObjectTable* table = parent->getTable();
+  uint           id    = table->getPropList(parent->getOID());
+  return id;
 }
 
-uint dbPropertyItr::end( dbObject * parent )
+uint dbPropertyItr::end(dbObject* parent)
 {
-    return 0;
+  return 0;
 }
 
-uint dbPropertyItr::next( uint id, ... )
+uint dbPropertyItr::next(uint id, ...)
 {
-    _dbProperty * prop = _prop_tbl->getPtr(id);
-    return prop->_next;
+  _dbProperty* prop = _prop_tbl->getPtr(id);
+  return prop->_next;
 }
 
-dbObject * dbPropertyItr::getObject( uint id, ... )
+dbObject* dbPropertyItr::getObject(uint id, ...)
 {
-    return _prop_tbl->getPtr(id);
+  return _prop_tbl->getPtr(id);
 }
 
-} // namespace
+}  // namespace odb

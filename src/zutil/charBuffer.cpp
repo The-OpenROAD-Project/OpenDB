@@ -20,70 +20,68 @@
 //
 // THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
 // AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
-// IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
-// DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE
-// FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
-// DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR
-// SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
-// CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
-// OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
-// OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+// IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
+// ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE
+// LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
+// CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
+// SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
+// INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
+// CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
+// ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
+// POSSIBILITY OF SUCH DAMAGE.
 
 #include "charBuffer.h"
 #include "logger.h"
 
-
-
 void charStore::resetLineCnt()
 {
-	_buf_cnt= 0;
+  _buf_cnt = 0;
 }
-void charStore::allocate(char **old, int start, int total)
+void charStore::allocate(char** old, int start, int total)
 {
-	_buffer_storage= (char **) realloc(old, total*sizeof(char*));
-	if (_buffer_storage==NULL)
-		odb::error(0, "Cannot allocate charStore::allocate %d words\n", total);
+  _buffer_storage = (char**) realloc(old, total * sizeof(char*));
+  if (_buffer_storage == NULL)
+    odb::error(0, "Cannot allocate charStore::allocate %d words\n", total);
 
-	for (int ii= start; ii<total; ii++)
-		_buffer_storage[ii]= new char[1024];
+  for (int ii = start; ii < total; ii++)
+    _buffer_storage[ii] = new char[1024];
 }
 charStore::charStore(int n)
 {
-	_buf_cnt= 0;
-	_bufAlloCnt= n;
-	allocate(NULL, 0, n);
+  _buf_cnt    = 0;
+  _bufAlloCnt = n;
+  allocate(NULL, 0, n);
 }
 charStore::~charStore()
 {
-	for (int ii= 0; ii<_buf_cnt; ii++)
-		delete [] _buffer_storage[ii];
+  for (int ii = 0; ii < _buf_cnt; ii++)
+    delete[] _buffer_storage[ii];
 
-	free(_buffer_storage);
+  free(_buffer_storage);
 }
-bool charStore::storeLine(char *buf)
+bool charStore::storeLine(char* buf)
 {
-	if (buf==NULL)
-		return true;
+  if (buf == NULL)
+    return true;
 
-	if (_buf_cnt==_bufAlloCnt) {
-		_bufAlloCnt *= 2;
-		allocate(_buffer_storage, _buf_cnt, _bufAlloCnt);
-	}
-	strcpy(_buffer_storage[_buf_cnt], buf);
-	_buf_cnt++;
-	return true;
+  if (_buf_cnt == _bufAlloCnt) {
+    _bufAlloCnt *= 2;
+    allocate(_buffer_storage, _buf_cnt, _bufAlloCnt);
+  }
+  strcpy(_buffer_storage[_buf_cnt], buf);
+  _buf_cnt++;
+  return true;
 }
 int charStore::getLineCnt()
 {
-	return _buf_cnt;
+  return _buf_cnt;
 }
-char *charStore::getStoredLine(int ii)
+char* charStore::getStoredLine(int ii)
 {
-	if (ii>=_buf_cnt) {
-		odb::error(0, "charStore::getStoredLine %d out-of-bound\n", ii);
-		return NULL;
-	}
+  if (ii >= _buf_cnt) {
+    odb::error(0, "charStore::getStoredLine %d out-of-bound\n", ii);
+    return NULL;
+  }
 
-	return _buffer_storage[ii];
+  return _buffer_storage[ii];
 }
-

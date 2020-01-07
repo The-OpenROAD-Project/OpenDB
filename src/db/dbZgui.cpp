@@ -20,80 +20,78 @@
 //
 // THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
 // AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
-// IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
-// DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE
-// FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
-// DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR
-// SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
-// CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
-// OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
-// OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+// IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
+// ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE
+// LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
+// CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
+// SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
+// INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
+// CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
+// ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
+// POSSIBILITY OF SUCH DAMAGE.
 
 #include "dbZgui.h"
-#include "ZImplements.hpp"
 #include "ZFactory.h"
+#include "ZImplements.hpp"
 #include "db.h"
 #include "dbSearch.h"
 
 DECLARE_ZFACTORY(ZguiDb, IZgui)
 
-
 namespace odb {
-
 
 DECLARE_IMPLEMENTATION(ZguiDb, IZgui)
 
-
 ZguiDb::ZguiDb()
 {
-	_dcr= NULL;
-	_blockSearch= NULL;
+  _dcr         = NULL;
+  _blockSearch = NULL;
 }
 ZguiDb::~ZguiDb()
 {
 }
 
-void ZguiDb::setGuiContext(void *x, void *blk)
+void ZguiDb::setGuiContext(void* x, void* blk)
 {
-	_blockSearch= (dbBlockSearch *) x;
+  _blockSearch = (dbBlockSearch*) x;
 }
 void ZguiDb::setDcr(ZPtr<IZdcr> z)
 {
-	_dcr= z;
+  _dcr = z;
 }
-char* ZguiDb::makeName(const char *name)
-{	
-	uint len= strlen(name);
-	char *a= new char[len+1];
-	strcpy(a, name);
-	return a;
-}
-char *ZguiDb::setName(const char *name)
-{	
-	_name= makeName(name);
-	return _name;
-}
-char *ZguiDb::getName()
-{	
-	return _name;
-}
-void ZguiDb::init(const char *name)
+char* ZguiDb::makeName(const char* name)
 {
-	//ZALLOCATED(_zui);
+  uint  len = strlen(name);
+  char* a   = new char[len + 1];
+  strcpy(a, name);
+  return a;
+}
+char* ZguiDb::setName(const char* name)
+{
+  _name = makeName(name);
+  return _name;
+}
+char* ZguiDb::getName()
+{
+  return _name;
+}
+void ZguiDb::init(const char* name)
+{
+  // ZALLOCATED(_zui);
 
-	_name= makeName(name);
+  _name = makeName(name);
 }
-uint ZguiDb::getBbox(int *x1, int *y1, int *x2, int *y2)
+uint ZguiDb::getBbox(int* x1, int* y1, int* x2, int* y2)
 {
-	return _blockSearch->getBbox(x1, y1, x2, y2);
+  return _blockSearch->getBbox(x1, y1, x2, y2);
 }
 void ZguiDb::chip_get(ZPtr<IZdcr> dcr)
 {
-	_blockSearch->chip_get(dcr); // 1 is 
+  _blockSearch->chip_get(dcr);  // 1 is
 }
 void ZguiDb::inspect(ZPtr<IZdcr> dcr)
-{	
-	_blockSearch->inspect(dcr);
+{
+  _blockSearch->inspect(dcr);
 }
 
-} // namespace
+}  // namespace odb

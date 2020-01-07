@@ -36,6 +36,7 @@
 #include "ads.h"
 #include "adsDList.h"
 #include "dbTypes.h"
+#include "geom.h"
 
 namespace odb {
 

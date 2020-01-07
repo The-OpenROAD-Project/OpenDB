@@ -33,6 +33,8 @@
 #ifndef ADS_DB_EXTCONTROL_H
 #define ADS_DB_EXTCONTROL_H
 
+#include "db.h"
+
 namespace odb {
 
 class dbExtControl : public dbObject

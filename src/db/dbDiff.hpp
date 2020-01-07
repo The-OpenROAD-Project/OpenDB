@@ -34,6 +34,7 @@
 #define ADS_DB_DB_DIFF_HPP
 
 #include <algorithm>
+#include "dbSet.h"
 
 namespace odb {
 //

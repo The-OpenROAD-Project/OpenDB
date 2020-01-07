@@ -35,6 +35,7 @@
 
 #include "ads.h"
 #include "dbMap.h"
+#include "db.h"
 
 #include <list>
 #include <map>

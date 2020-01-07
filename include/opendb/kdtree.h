@@ -36,6 +36,7 @@
 #ifndef _KDTREE_H
 #define _KDTREE_H
 #include "darr.h"
+#include "hash.h"
 enum Cuttype
 {
   X,

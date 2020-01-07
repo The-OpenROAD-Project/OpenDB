@@ -244,17 +244,7 @@ dbOStream & operator<<( dbOStream & stream, const _dbLib & lib )
 dbIStream & operator>>( dbIStream & stream, _dbLib & lib )
 {
     stream >> lib._lef_units;
-
-    if ( stream.getDatabase()->isSchema(ADS_DB_DEF_5_6) )
-        stream >> lib._dbu_per_micron;
-    else
-    {
-        if ( lib._lef_units <= 1000 )
-            lib._dbu_per_micron = 1000;
-        else
-            lib._dbu_per_micron = 2000;
-    }
-
+    stream >> lib._dbu_per_micron;
     stream >> lib._hier_delimeter;
     stream >> lib._left_bus_delimeter;
     stream >> lib._right_bus_delimeter;
@@ -264,27 +254,8 @@ dbIStream & operator>>( dbIStream & stream, _dbLib & lib )
     stream >> lib._site_hash;
     stream >> *lib._master_tbl;
     stream >> *lib._site_tbl;
-
-    if ( stream.getDatabase()->isSchema(ADS_DB_PROPERTIES) )
-    {
-        stream >> *lib._prop_tbl;
-        stream >> *lib._name_cache;
-    }
-
-    if ( stream.getDatabase()->isLessThanSchema(ADS_DB_TRANSFORM_FIX) )
-    {
-        dbSet<dbMaster> masters(&lib, lib._master_tbl);
-        dbSet<dbMaster>::iterator itr;
-
-        for( itr = masters.begin(); itr != masters.end(); ++itr )
-        {
-            dbMaster * master = *itr;
-            int x,y;
-            master->getOrigin(x,y);
-            dbTransform t(adsPoint(x,y));
-            master->transform(t);
-        }
-    }
+    stream >> *lib._prop_tbl;
+    stream >> *lib._name_cache;
 
     return stream;
 }

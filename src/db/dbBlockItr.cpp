@@ -49,7 +49,7 @@ bool dbBlockItr::orderReversed()
 void dbBlockItr::reverse(dbObject * parent)
 {
     _dbBlock * block = (_dbBlock *) parent;
-    std::reverse( block->_children_v1.begin(), block->_children_v1.end());
+    std::reverse( block->_children.begin(), block->_children.end());
 }
 
 uint dbBlockItr::sequential()
@@ -60,7 +60,7 @@ uint dbBlockItr::sequential()
 uint dbBlockItr::size( dbObject * parent )
 {
     _dbBlock * block = (_dbBlock *) parent;
-    return block->_children_v1.size();
+    return block->_children.size();
 }
 
 uint dbBlockItr::begin( dbObject * )
@@ -71,7 +71,7 @@ uint dbBlockItr::begin( dbObject * )
 uint dbBlockItr::end( dbObject * parent )
 {
     _dbBlock * block = (_dbBlock *) parent;
-    return block->_children_v1.size();
+    return block->_children.size();
 }
 
 uint dbBlockItr::next( uint id, ... )
@@ -89,7 +89,7 @@ dbObject * dbBlockItr::getObject( uint id, ... )
     va_start(ap,id);
     _dbBlock * parent = (_dbBlock *) va_arg(ap, dbObject *);
     va_end(ap);
-    uint cid = parent->_children_v1[id];
+    uint cid = parent->_children[id];
     return _block_tbl->getPtr(cid);
 }
 

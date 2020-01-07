@@ -103,14 +103,10 @@ dbIStream & operator>>( dbIStream & stream, _dbTechNonDefaultRule & rule )
     stream >> rule._vias;
     stream >> rule._samenet_rules;
     stream >> rule._samenet_matrix;
-
-    if ( stream.getDatabase()->isSchema(ADS_DB_DEF_5_6) )
-    {
-        stream >> rule._use_vias;
-        stream >> rule._use_rules;
-        stream >> rule._cut_layers;
-        stream >> rule._min_cuts;
-    }
+    stream >> rule._use_vias;
+    stream >> rule._use_rules;
+    stream >> rule._cut_layers;
+    stream >> rule._min_cuts;
 
     return stream;
 }

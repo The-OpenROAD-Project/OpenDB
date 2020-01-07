@@ -1082,9 +1082,9 @@ class dbBlock : public dbObject
     ///
     bool extCornersAreIndependent();
 
-    ///^M
+    ///
     /// Get the number of corners kept n this block
-    ///^M
+    ///
     int getCornersPerBlock();
 
     ///
@@ -1120,27 +1120,27 @@ class dbBlock : public dbObject
     void setCornerCount(int cornerCnt, int extDbCnt, const char *name_list);
     void setCornerCount(int cnt);
 
-    ///^M
+    ///
     /// Set the number of corners kept in this block
-    ///^M
+    ///
     void setCornersPerBlock(int cornersPerBlock);
 
-    ///^M
+    ///
     /// Initialize the parasitics value tables
-    ///^M
+    ///
     void initParasiticsValueTables();
 
-    ///^M
+    ///
     /// create child block for one extraction corner
-    ///^M
+    ///
     dbBlock *createExtCornerBlock(uint corner);
-    ///^M
+    ///
     /// find child block for one extraction corner
-    ///^M
+    ///
     dbBlock *findExtCornerBlock(uint corner);
-    ///^M
+    ///
     /// get extraction data block for one extraction corner
-    ///^M
+    ///
     dbBlock *getExtCornerBlock(uint corner);
 
     ///
@@ -1243,22 +1243,22 @@ class dbBlock : public dbObject
     ///
     // void resetNetSdb();
 
-    /// ^M
+    /// 
     /// Get search database module for fast area searches on signal nets
-    ///^M
+    ///
     //    ZPtr<ISdb> getSignalNetSdb();
-    /// ^M^M
+    /// 
     /// Get search database module for fast area searches on signal nets
     /// Generate netSdb if it does not exist
-    /// ^M
+    /// 
     //    ZPtr<ISdb> getSignalNetSdb(ZContext & context, dbTech *tech);
 
     /// 
     /// Get search database module for fast area searches on physical objects
     ///
 	// ZPtr<ISdb> getNetSdb();
-    /// ^M
-    /// Get search database module for fast area searches on physical objects^M
+    /// 
+    /// Get search database module for fast area searches on physical objects
     /// Generate netSdb if it does not exist
     /// 
 	// ZPtr<ISdb> getNetSdb(ZContext & context, dbTech *tech);
@@ -1616,6 +1616,14 @@ class dbBTerm : public dbObject
     /// Get the net of this block-terminal.
     ///
     dbNet * getNet();
+
+    /// Disconnect the block-terminal from it's net.
+    ///
+    void disconnect();
+
+    /// Connect the block-terminal to net.
+    ///
+    void connect(dbNet * net);
 
     ///
     /// Get the block of this block-terminal.
@@ -3964,7 +3972,7 @@ class dbCapNode : public dbObject
     void addGndCap(double *gndcap, double *totalcap);
 
     /// Add the gndCap to *gndcap and *totalcap, ccCap to *totalcap
-    ///^M
+    ///
     void addGndTotalCap(double *gndcap, double *totalcap, double MillerMult);
 
     ///
@@ -3972,9 +3980,9 @@ class dbCapNode : public dbObject
     ///
     void getGndCap(double *gndcap, double *totalcap);
 
-    ///^M
+    ///
     /// Get the gndCap to *gndcap and *totalcap, ccCap to *totalcap
-    ///^M
+    ///
     void getGndTotalCap(double *gndcap, double *totalcap, double MillerMult);
 
     ///

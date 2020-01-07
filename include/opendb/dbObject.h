@@ -36,10 +36,6 @@
 
 namespace odb {
 
-#ifndef DB_PRIVATE
-#define DB_PRIVATE public
-#endif
-
 ///
 /// When adding a new database object, you must add a dbObjectType enumerator and
 /// edit dbObject.cpp and assign an unique "character" code for its database-name.
@@ -124,9 +120,14 @@ class dbDatabase;
 
 class dbObject
 {
-  DB_PRIVATE:
+  private:
     uint _oid;
     
+  protected:
+    dbObject() {}
+    ~dbObject() {}
+
+  public:
     // These functions are all inlines, so the cannot be called public
     _dbDatabase * getDatabase() const;
     dbObjectTable * getTable() const;
@@ -136,8 +137,6 @@ class dbObject
     uint getOID() const;
 
   public:
-    dbObject() {}
-    ~dbObject() {}
     dbObjectType getObjectType() const;
     dbDatabase * getDb() const;
     uint getId() const;
@@ -146,7 +145,7 @@ class dbObject
     const char * getObjName() const;
     static dbObject * resolveDbName( dbDatabase * db, const char * name );
     static const char * getObjName( dbObjectType type );
-    friend class dbObjectTable;
+    template<class T> friend class dbTable;
 };
 
 } // namespace

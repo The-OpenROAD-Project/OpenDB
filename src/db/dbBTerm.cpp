@@ -245,54 +245,20 @@ dbOStream & operator<<( dbOStream & stream, const _dbBTerm & bterm )
 
 dbIStream & operator>>( dbIStream & stream, _dbBTerm & bterm )
 {
-    struct _dbBTermPin bp;
-    
     uint * bit_field = (uint *) &bterm._flags;
     stream >> *bit_field;
     stream >> bterm._ext_id;
-
-    if ( stream.getDatabase()->isLessThanSchema(ADS_DB_HIER_INST_SCHEMA) )
-    {
-        bp._bterm = &bterm;
-        bp._status = (dbPlacementStatus::Value) bterm._flags._status;
-        bp._orient = (dbOrientType::Value) bterm._flags._orient;
-        stream >> bp._x;
-        stream >> bp._y;
-        bterm._flags._status = 0;
-        bterm._flags._orient = 0;
-    }
-    
     stream >> bterm._name;
     stream >> bterm._next_entry;
     stream >> bterm._net;
-
-    if ( stream.getDatabase()->isLessThanSchema(ADS_DB_HIER_INST_SCHEMA) )
-    {
-        stream >> bp._pin;
-    }
-    
     stream >> bterm._next_bterm;
     stream >> bterm._prev_bterm;
-
-    if ( stream.getDatabase()->isSchema(ADS_DB_HIER_INST_SCHEMA) )
-    {
-        stream >> bterm._parent_block;
-        stream >> bterm._parent_iterm;
-        stream >> bterm._bpins;
-    }
-
-    if ( stream.getDatabase()->isSchema(ADS_DB_DEF_5_6) )
-    {
-        stream >> bterm._ground_pin;
-        stream >> bterm._supply_pin;
-    }
+    stream >> bterm._parent_block;
+    stream >> bterm._parent_iterm;
+    stream >> bterm._bpins;
+    stream >> bterm._ground_pin;
+    stream >> bterm._supply_pin;
     
-    if ( stream.getDatabase()->isLessThanSchema(ADS_DB_HIER_INST_SCHEMA) )
-    {
-        _dbBlock * block = (_dbBlock *) bterm.getOwner();
-        block->_bterm_pins->push_back(bp);
-    }
-        
     return stream;
 }
 
@@ -402,10 +368,37 @@ uint dbBTerm::getExtId()
 dbNet *
 dbBTerm::getNet()
 {
+    _dbBTerm* bterm = (_dbBTerm*)this;
+    if (bterm->_net)
+    {
+      _dbBlock* block = (_dbBlock*)getOwner();
+      _dbNet* net = block->_net_tbl->getPtr(bterm->_net);
+      return (dbNet*)net;
+    }
+    else
+      return nullptr;
+}
+
+void
+dbBTerm::connect(dbNet * net_)
+{
     _dbBTerm * bterm = (_dbBTerm *) this;
-    _dbBlock * block = (_dbBlock *) getOwner();
-    _dbNet * net = block->_net_tbl->getPtr(bterm->_net);
-    return (dbNet *) net;
+    _dbNet * net = (_dbNet *) net_;
+    _dbBlock * block = (_dbBlock *) net->getOwner();
+    if (bterm->_net)
+      bterm->disconnectNet(bterm, block);
+    bterm->connectNet(net, block);
+}
+
+void
+dbBTerm::disconnect()
+{
+    _dbBTerm* bterm = (_dbBTerm*)this;
+    if (bterm->_net)
+    {
+      _dbBlock* block = (_dbBlock*)bterm->getOwner();
+      bterm->disconnectNet(bterm, block);
+    }
 }
 
 dbSet<dbBPin>
@@ -555,18 +548,23 @@ dbBTerm::create( dbNet * net_, const char * name )
     ZALLOCATED(bterm->_name);
     block->_bterm_hash.insert(bterm);
 
-    bterm->_net = net->getOID();
+    bterm->connectNet(net, block);
 
+    return (dbBTerm *) bterm;
+}
+
+void _dbBTerm::connectNet( _dbNet * net ,
+			   _dbBlock * block)
+{
+    _net = net->getOID();
     if ( net->_bterms != 0 )
     {
         _dbBTerm * tail = block->_bterm_tbl->getPtr( net->_bterms );
-        bterm->_next_bterm = net->_bterms;
-        bterm->_prev_bterm = 0;
-        tail->_prev_bterm = bterm->getOID();
+        _next_bterm = net->_bterms;
+        _prev_bterm = 0;
+        tail->_prev_bterm = getOID();
     }
-
-    net->_bterms = bterm->getOID();
-    return (dbBTerm *) bterm;
+    net->_bterms = getOID();
 }
 
 void dbBTerm::destroy( dbBTerm * bterm_ )
@@ -586,6 +584,16 @@ void dbBTerm::destroy( dbBTerm * bterm_ )
     // remove from hash-table
     block->_bterm_hash.remove( bterm );
 
+    bterm->disconnectNet(bterm, block);
+
+    dbProperty::destroyProperties(bterm);
+    block->_bterm_tbl->destroy(bterm);
+}
+
+void
+_dbBTerm::disconnectNet( _dbBTerm * bterm,
+			 _dbBlock * block )
+{
     // unlink bterm from the net
     _dbNet * net = block->_net_tbl->getPtr(bterm->_net);
     uint id = bterm->getOID();
@@ -614,9 +622,7 @@ void dbBTerm::destroy( dbBTerm * bterm_ )
             prev->_next_bterm = bterm->_next_bterm;
         }
     }
-
-    dbProperty::destroyProperties(bterm);
-    block->_bterm_tbl->destroy(bterm);
+    _net = 0;
 }
 
 dbSet<dbBTerm>::iterator dbBTerm::destroy( dbSet<dbBTerm>::iterator & itr )

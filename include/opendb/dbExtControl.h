@@ -60,12 +60,12 @@ class dbExtControl : public dbObject
     uint                       _CCnoPowerTarget;
     bool                       _usingMetalPlanes;
     char *                     _ruleFileName;
-	char *						_extractedCornerList;
-    char *						_derivedCornerList;
-    char *						_cornerIndexList;
-    char *						_resFactorList;
-    char *						_gndcFactorList;
-    char *						_ccFactorList;
+    char *                     _extractedCornerList;
+    char *                     _derivedCornerList;
+    char *                     _cornerIndexList;
+    char *                     _resFactorList;
+    char *                     _gndcFactorList;
+    char *                     _ccFactorList;
 
 
     dbExtControl();

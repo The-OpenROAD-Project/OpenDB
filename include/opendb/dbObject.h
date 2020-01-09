@@ -149,6 +149,8 @@ class dbObject
   static const char* getObjName(dbObjectType type);
   template <class T>
   friend class dbTable;
+  template <class T>
+  friend class dbArrayTable;
 };
 
 }  // namespace odb

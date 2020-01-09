@@ -586,7 +586,7 @@ void dbTechLayerSpacingRule::writeLef(lefout& writer) const
               writer.lefdist(rmin),
               writer.lefdist(rmax));
   } else if (getCutLayer4Spacing(rulely)) {
-    fprintf(writer.out(), "LAYER %s ", (const char*) rulely->getName());
+    fprintf(writer.out(), "LAYER %s ", rulely->getName().c_str());
   } else if (getAdjacentCuts(numcuts, length_or_influence, cut_spacing)) {
     fprintf(writer.out(),
             "ADJACENTCUTS %d WITHIN %g ",

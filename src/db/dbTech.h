@@ -58,7 +58,6 @@ class _dbTechViaLayerRule;
 class _dbTechViaGenerateRule;
 class _dbBox;
 class _dbDatabase;
-class dbString;
 class dbTechLayerItr;
 class dbBoxItr;
 class dbIStream;

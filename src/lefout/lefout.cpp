@@ -30,11 +30,11 @@
 // ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 // POSSIBILITY OF SUCH DAMAGE.
 
-#include "lefout.h"
 #include <stdio.h>
 #include <algorithm>
 #include "db.h"
 #include "dbTransform.h"
+#include "lefout.h"
 
 using namespace odb;
 
@@ -53,7 +53,7 @@ void lefout::writeBoxes(void* boxes, const char* indent)
       assert(via);
       int x, y;
       box->getViaXY(x, y);
-      dbString n = via->getName();
+      std::string n = via->getName();
       fprintf(_out,
               "%sVIA %g %g %s ;\n",
               indent,
@@ -67,14 +67,14 @@ void lefout::writeBoxes(void* boxes, const char* indent)
       int x2 = box->xMax();
       int y2 = box->yMax();
 
-      dbString n;
+      std::string n;
       if (_use_alias && layer->hasAlias())
         n = layer->getAlias();
       else
         n = layer->getName();
 
       if (cur_layer != layer) {
-        dbString n;
+        std::string n;
 
         if (_use_alias && layer->hasAlias())
           n = layer->getAlias();
@@ -233,7 +233,7 @@ void lefout::writeTech(dbTech* tech)
 
 void lefout::writeNonDefaultRule(dbTech* tech, dbTechNonDefaultRule* rule)
 {
-  dbString name = rule->getName();
+  std::string name = rule->getName();
   fprintf(_out, "\nNONDEFAULTRULE %s\n", name.c_str());
 
   if (rule->getHardSpacing())
@@ -271,8 +271,8 @@ void lefout::writeNonDefaultRule(dbTech* tech, dbTechNonDefaultRule* rule)
 
   std::vector<dbTechVia*>::iterator uvitr;
   for (uvitr = use_vias.begin(); uvitr != use_vias.end(); ++uvitr) {
-    dbTechVia* via   = *uvitr;
-    dbString   vname = via->getName();
+    dbTechVia*  via   = *uvitr;
+    std::string vname = via->getName();
     fprintf(_out, "USEVIA %s ;\n", vname.c_str());
   }
 
@@ -282,7 +282,7 @@ void lefout::writeNonDefaultRule(dbTech* tech, dbTechNonDefaultRule* rule)
   std::vector<dbTechViaGenerateRule*>::iterator uvritr;
   for (uvritr = use_rules.begin(); uvritr != use_rules.end(); ++uvritr) {
     dbTechViaGenerateRule* rule  = *uvritr;
-    dbString               rname = rule->getName();
+    std::string            rname = rule->getName();
     fprintf(_out, "USEVIARULE %s ;\n", rname.c_str());
   }
 
@@ -294,7 +294,7 @@ void lefout::writeNonDefaultRule(dbTech* tech, dbTechNonDefaultRule* rule)
     int          count;
 
     if (rule->getMinCuts(layer, count)) {
-      dbString lname = layer->getName();
+      std::string lname = layer->getName();
       fprintf(_out, "MINCUTS %s %d ;\n", lname.c_str(), count);
     }
   }
@@ -305,7 +305,7 @@ void lefout::writeNonDefaultRule(dbTech* tech, dbTechNonDefaultRule* rule)
 void lefout::writeLayerRule(dbTechLayerRule* rule)
 {
   dbTechLayer* layer = rule->getLayer();
-  dbString     name;
+  std::string  name;
   if (_use_alias && layer->hasAlias())
     name = layer->getAlias();
   else
@@ -336,7 +336,7 @@ void lefout::writeLayerRule(dbTechLayerRule* rule)
 
 void lefout::writeTechViaRule(dbTechViaRule* rule)
 {
-  dbString name = rule->getName();
+  std::string name = rule->getName();
   fprintf(_out, "\nVIARULE %s\n", name.c_str());
 
   uint idx;
@@ -344,7 +344,7 @@ void lefout::writeTechViaRule(dbTechViaRule* rule)
   for (idx = 0; idx < rule->getViaLayerRuleCount(); ++idx) {
     dbTechViaLayerRule* layrule = rule->getViaLayerRule(idx);
     dbTechLayer*        layer   = layrule->getLayer();
-    dbString            lname   = layer->getName();
+    std::string         lname   = layer->getName();
     fprintf(_out, "    LAYER %s ;\n", lname.c_str());
 
     if (layrule->getDirection() == dbTechLayerDir::VERTICAL)
@@ -360,8 +360,8 @@ void lefout::writeTechViaRule(dbTechViaRule* rule)
   }
 
   for (idx = 0; idx < rule->getViaCount(); ++idx) {
-    dbTechVia* via   = rule->getVia(idx);
-    dbString   vname = via->getName();
+    dbTechVia*  via   = rule->getVia(idx);
+    std::string vname = via->getName();
     fprintf(_out, "    VIA %s ;\n", vname.c_str());
   }
 
@@ -370,7 +370,7 @@ void lefout::writeTechViaRule(dbTechViaRule* rule)
 
 void lefout::writeTechViaGenerateRule(dbTechViaGenerateRule* rule)
 {
-  dbString name = rule->getName();
+  std::string name = rule->getName();
 
   if (rule->isDefault())
     fprintf(_out, "\nVIARULE %s GENERATE DEFAULT\n", name.c_str());
@@ -382,7 +382,7 @@ void lefout::writeTechViaGenerateRule(dbTechViaGenerateRule* rule)
   for (idx = 0; idx < rule->getViaLayerRuleCount(); ++idx) {
     dbTechViaLayerRule* layrule = rule->getViaLayerRule(idx);
     dbTechLayer*        layer   = layrule->getLayer();
-    dbString            lname   = layer->getName();
+    std::string         lname   = layer->getName();
     fprintf(_out, "    LAYER %s ;\n", lname.c_str());
 
     if (layrule->getDirection() == dbTechLayerDir::VERTICAL)
@@ -445,13 +445,13 @@ void lefout::writeSameNetRule(dbTechSameNetRule* rule)
   dbTechLayer* l1 = rule->getLayer1();
   dbTechLayer* l2 = rule->getLayer2();
 
-  dbString n1;
+  std::string n1;
   if (_use_alias && l1->hasAlias())
     n1 = l1->getAlias();
   else
     n1 = l1->getName();
 
-  dbString n2;
+  std::string n2;
   if (_use_alias && l2->hasAlias())
     n2 = l2->getAlias();
   else
@@ -473,7 +473,7 @@ void lefout::writeSameNetRule(dbTechSameNetRule* rule)
 
 void lefout::writeLayer(dbTechLayer* layer)
 {
-  dbString name;
+  std::string name;
   if (_use_alias && layer->hasAlias())
     name = layer->getAlias();
   else
@@ -567,7 +567,7 @@ void lefout::writeLayer(dbTechLayer* layer)
 }
 void lefout::writeVia(dbTechVia* via)
 {
-  dbString name = via->getName();
+  std::string name = via->getName();
 
   if (via->isDefault())
     fprintf(_out, "\nVIA %s DEFAULT\n", name.c_str());
@@ -586,7 +586,7 @@ void lefout::writeVia(dbTechVia* via)
     dbSet<dbBox> boxes = via->getBoxes();
     writeBoxes(&boxes, "    ");
   } else {
-    dbString rname = rule->getName();
+    std::string rname = rule->getName();
     fprintf(_out, "\n    VIARULE %s \n", rname.c_str());
 
     dbViaParams P;
@@ -596,9 +596,9 @@ void lefout::writeVia(dbTechVia* via)
             " + CUTSIZE %g %g ",
             lefdist(P.getXCutSize()),
             lefdist(P.getYCutSize()));
-    dbString top = P.getTopLayer()->getName();
-    dbString bot = P.getBottomLayer()->getName();
-    dbString cut = P.getCutLayer()->getName();
+    std::string top = P.getTopLayer()->getName();
+    std::string bot = P.getBottomLayer()->getName();
+    std::string cut = P.getCutLayer()->getName();
     fprintf(_out, " + LAYERS %s %s %s ", bot.c_str(), cut.c_str(), top.c_str());
     fprintf(_out,
             " + CUTSPACING %g %g ",
@@ -629,7 +629,7 @@ void lefout::writeVia(dbTechVia* via)
               lefdist(P.getXTopOffset()),
               lefdist(P.getYTopOffset()));
 
-    dbString pname = via->getPattern();
+    std::string pname = via->getPattern();
     if (strcmp(pname.c_str(), "") != 0)
       fprintf(_out, " + PATTERNNAME %s", pname.c_str());
   }
@@ -661,7 +661,7 @@ void lefout::writeLib(dbLib* lib)
 
 void lefout::writeSite(dbSite* site)
 {
-  dbString n = site->getName();
+  std::string n = site->getName();
 
   fprintf(_out, "SITE %s\n", n.c_str());
   dbSiteClass sclass = site->getClass();
@@ -693,7 +693,7 @@ void lefout::writeSite(dbSite* site)
 
 void lefout::writeMaster(dbMaster* master)
 {
-  dbString name = master->getName();
+  std::string name = master->getName();
 
   if (_use_master_ids)
     fprintf(_out, "\nMACRO M%u\n", master->getMasterId());
@@ -710,7 +710,7 @@ void lefout::writeMaster(dbMaster* master)
     fprintf(_out, "    ORIGIN %g %g ;\n", lefdist(x), lefdist(y));
 
   if (master->getEEQ()) {
-    dbString eeq = master->getEEQ()->getName();
+    std::string eeq = master->getEEQ()->getName();
     if (_use_master_ids)
       fprintf(_out, "    EEQ M%u ;\n", master->getEEQ()->getMasterId());
     else
@@ -718,7 +718,7 @@ void lefout::writeMaster(dbMaster* master)
   }
 
   if (master->getLEQ()) {
-    dbString leq = master->getLEQ()->getName();
+    std::string leq = master->getLEQ()->getName();
     if (_use_master_ids)
       fprintf(_out, "    LEQ M%u ;\n", master->getLEQ()->getMasterId());
     else
@@ -753,7 +753,7 @@ void lefout::writeMaster(dbMaster* master)
   }
 
   if (master->getSite()) {
-    dbString site = master->getSite()->getName();
+    std::string site = master->getSite()->getName();
     fprintf(_out, "    SITE %s ;\n", site.c_str());
   }
 
@@ -786,7 +786,7 @@ void lefout::writeMaster(dbMaster* master)
 
 void lefout::writeMTerm(dbMTerm* mterm)
 {
-  dbString name = mterm->getName();
+  std::string name = mterm->getName();
 
   fprintf(_out, "    PIN %s\n", name.c_str());
   fprintf(_out, "        DIRECTION %s ; \n", mterm->getIoType().getString());

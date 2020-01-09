@@ -48,7 +48,6 @@ class _dbTech;
 class _dbMaster;
 class _dbSite;
 class _dbDatabase;
-class dbString;
 class dbIStream;
 class dbOStream;
 class dbDiff;

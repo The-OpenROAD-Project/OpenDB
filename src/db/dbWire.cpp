@@ -210,18 +210,18 @@ void out(dbDiff& diff, char side, dbShape* s)
 {
   switch (s->getType()) {
     case dbShape::VIA: {
-      dbVia*   v = s->getVia();
-      dbString n = v->getName();
-      int      x, y;
+      dbVia*      v = s->getVia();
+      std::string n = v->getName();
+      int         x, y;
       s->getViaXY(x, y);
       diff.report("%c VIA %s (%d %d)\n", side, n.c_str(), x, y);
       break;
     }
 
     case dbShape::TECH_VIA: {
-      dbTechVia* v = s->getTechVia();
-      dbString   n = v->getName();
-      int        x, y;
+      dbTechVia*  v = s->getTechVia();
+      std::string n = v->getName();
+      int         x, y;
       s->getViaXY(x, y);
       diff.report("%c VIA %s (%d %d)\n", side, n.c_str(), x, y);
       break;
@@ -229,7 +229,7 @@ void out(dbDiff& diff, char side, dbShape* s)
 
     case dbShape::SEGMENT: {
       dbTechLayer* l = s->getTechLayer();
-      dbString     n = l->getName();
+      std::string  n = l->getName();
       diff.report("%c BOX %s (%d %d) (%d %d)\n",
                   side,
                   n.c_str(),
@@ -1779,9 +1779,9 @@ void dbWire::copy(dbWire*        dst,
         dbRtEdge* edge = *itr;
 
         if (edge->getType() == dbRtEdge::VIA) {
-          dbVia*   src_via = ((dbRtVia*) edge)->getVia();
-          dbString name    = src_via->getName();
-          dbVia*   dst_via = dst_block->findVia(name.c_str());
+          dbVia*      src_via = ((dbRtVia*) edge)->getVia();
+          std::string name    = src_via->getName();
+          dbVia*      dst_via = dst_block->findVia(name.c_str());
 
           // duplicate src-via in dst-block if needed
           if (dst_via == NULL)

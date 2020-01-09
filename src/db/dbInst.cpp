@@ -377,11 +377,10 @@ void _dbInst::out(dbDiff& diff, char side, const char* field) const
 //
 ////////////////////////////////////////////////////////////////////
 
-dbString dbInst::getName()
+std::string dbInst::getName()
 {
   _dbInst* inst = (_dbInst*) this;
-  dbString str(inst->_name);
-  return str;
+  return inst->_name;
 }
 
 const char* dbInst::getConstName()

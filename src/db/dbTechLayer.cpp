@@ -535,12 +535,12 @@ dbObjectTable* _dbTechLayer::getObjectTable(dbObjectType type)
 //
 ////////////////////////////////////////////////////////////////////
 
-dbString dbTechLayer::getName()
+std::string dbTechLayer::getName()
 {
   _dbTechLayer* layer = (_dbTechLayer*) this;
-  dbString      n(layer->_name);
-  return n;
+  return layer->_name;
 }
+
 const char* dbTechLayer::getConstName()
 {
   _dbTechLayer* layer = (_dbTechLayer*) this;
@@ -553,17 +553,15 @@ bool dbTechLayer::hasAlias()
   return layer->_flags._has_alias == 1;
 }
 
-dbString dbTechLayer::getAlias()
+std::string dbTechLayer::getAlias()
 {
   _dbTechLayer* layer = (_dbTechLayer*) this;
 
   if (layer->_alias == NULL) {
-    dbString n("");
-    return n;
+    return "";
   }
 
-  dbString n(layer->_alias);
-  return n;
+  return layer->_alias;
 }
 
 void dbTechLayer::setAlias(const char* alias)
@@ -1349,10 +1347,10 @@ void dbProperty::GetProperties(dbTechLayer *layer)
     for( itr = props.begin(); itr != props.end(); ++itr )
     {
         dbProperty * prop = *itr;
-        dbString name = prop->getName();
-        dbString value = prop->getName();
+        std::string name = prop->getName();
+        std::string value = prop->getName();
         dbStringProperty * p = (dbStringProperty *) prop;
-            dbString v = p->getValue();
+        std::string v = p->getValue();
 
         fprintf(out, "PROPERTY %s ", name.c_str() );
 */

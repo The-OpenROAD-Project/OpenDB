@@ -30,9 +30,9 @@
 // ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 // POSSIBILITY OF SUCH DAMAGE.
 
-#include "dbFlatten.h"
 #include "db.h"
 #include "dbCapNode.h"
+#include "dbFlatten.h"
 #include "dbInst.h"
 #include "dbNet.h"
 #include "dbObstruction.h"
@@ -70,7 +70,7 @@ bool dbFlatten::flatten(dbBlock* block, int level)
     if (p != NULL)
       dbProperty::destroy(p);
 
-    dbString name = block->getName();
+    std::string name = block->getName();
     bterm_map = dbStringProperty::create(block, "_ADS_BTERM_MAP", name.c_str());
   }
 
@@ -127,7 +127,7 @@ bool dbFlatten::flatten(dbBlock*    parent,
     return true;
 
   if (bterm_map) {
-    dbString    name = child->getName();
+    std::string name = child->getName();
     std::string propName("_ADS_BTERM_MAP");
     propName += "_";
     propName += name.c_str();
@@ -166,9 +166,9 @@ bool dbFlatten::flatten(dbBlock*    parent,
   dbSet<dbVia>           vias = child->getVias();
   dbSet<dbVia>::iterator vitr;
   for (vitr = vias.begin(); vitr != vias.end(); ++vitr) {
-    dbVia*   v    = *vitr;
-    dbString name = v->getName();
-    _via_map[v]   = parent->findVia(name.c_str());
+    dbVia*      v    = *vitr;
+    std::string name = v->getName();
+    _via_map[v]      = parent->findVia(name.c_str());
   }
 
   ////////////////////////////
@@ -262,7 +262,7 @@ bool dbFlatten::flatten(dbBlock*    parent,
   }
 
   if (_create_boundary_regions) {
-    std::string name = (const char*) child->getParentInst()->getName();
+    std::string name = child->getParentInst()->getName();
     name += _hier_d;
     name += "ADS_BLOCK_REGION";
     dbRegion* block_region = dbRegion::create(parent, name.c_str());
@@ -315,9 +315,9 @@ node
 */
 bool dbFlatten::copyInst(dbBlock* parent, dbInst* child, dbInst* grandchild)
 {
-  std::string name = (const char*) child->getName();
+  std::string name = child->getName();
   name += _hier_d;
-  name += (const char*) grandchild->getName();
+  name += grandchild->getName();
 
   dbInst* inst = dbInst::create(parent, grandchild->getMaster(), name.c_str());
   _inst_map[grandchild] = inst;
@@ -377,9 +377,9 @@ dbNet* dbFlatten::copyNet(dbBlock* parent_block, dbNet* child_net)
 
   // internal net, export up hierarchy
   dbInst*     inst = child_net->getBlock()->getParentInst();
-  std::string name = (const char*) inst->getName();
+  std::string name = inst->getName();
   name += _hier_d;
-  name += (const char*) child_net->getName();
+  name += child_net->getName();
   dbNet* net = dbNet::create(parent_block, name.c_str());
 
   if (net == NULL) {
@@ -816,8 +816,8 @@ void dbFlatten::fixWire(dbVector<unsigned char>& opcodes,
           opcodes[i] = WOP_NOP;
           data[i]    = 0;
         } else {
-          dbBTerm* bterm = dbBTerm::getBTerm(src, data[i]);
-          dbString name  = bterm->getName();
+          dbBTerm*    bterm = dbBTerm::getBTerm(src, data[i]);
+          std::string name  = bterm->getName();
           dbIntProperty::create(bterm_map, name.c_str(), _next_bterm_map_id);
           opcodes[i] = WOP_BTERM_MAP;
           data[i]    = _next_bterm_map_id;
@@ -993,9 +993,9 @@ void dbFlatten::copyRegion(dbBlock*  parent_block,
                            dbRegion* parent_region,
                            dbRegion* src)
 {
-  std::string name = (const char*) child_inst->getName();
+  std::string name = child_inst->getName();
   name += _hier_d;
-  name += (const char*) src->getName();
+  name += src->getName();
 
   dbRegion* dst;
 
@@ -1047,9 +1047,9 @@ dbTechNonDefaultRule* dbFlatten::copyNonDefaultRule(
     dbInst*               child_inst,
     dbTechNonDefaultRule* src_rule)
 {
-  std::string name = (const char*) child_inst->getName();
+  std::string name = child_inst->getName();
   name += _hier_d;
-  name += (const char*) src_rule->getName();
+  name += src_rule->getName();
 
   dbTechNonDefaultRule* dst_rule
       = dbTechNonDefaultRule::create(parent, name.c_str());

@@ -22,6 +22,3 @@ WRAP_OBJECT_STREAM(dbTransform)
 WRAP_OBJECT_STREAM(_dbViaParams)
 WRAP_OBJECT_STREAM(dbRtNodeEdgeIterator)
 
-%rename(equal) odb::dbString::operator=(const char *);
-%rename(equal) odb::dbString::operator=(const dbString &);
-

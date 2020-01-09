@@ -287,12 +287,12 @@ dbObjectTable* _dbLib::getObjectTable(dbObjectType type)
 //
 ////////////////////////////////////////////////////////////////////
 
-dbString dbLib::getName()
+std::string dbLib::getName()
 {
   _dbLib*  lib = (_dbLib*) this;
-  dbString n(lib->_name);
-  return n;
+  return lib->_name;
 }
+
 const char* dbLib::getConstName()
 {
   _dbLib* lib = (_dbLib*) this;

@@ -606,11 +606,10 @@ void set_symmetric_diff(dbDiff&                 diff,
 //
 ////////////////////////////////////////////////////////////////////
 
-dbString dbNet::getName()
+std::string dbNet::getName()
 {
   _dbNet*  net = (_dbNet*) this;
-  dbString str(net->_name);
-  return str;
+  return net->_name;
 }
 
 const char* dbNet::getConstName()
@@ -2868,7 +2867,7 @@ dbNet::createTerms4SingleNet(int x1, int y1, int x2, int y2, dbTechLayer *inly)
   std::pair<dbBTerm *,dbBTerm *> retpr;
   retpr.first = retpr.second = NULL;
 
-  dbString term_str(this->getName());
+  std::string term_str(this->getName());
   term_str = term_str + "_BL";
   dbBTerm *blterm = dbBTerm::create(this, term_str.c_str());
 

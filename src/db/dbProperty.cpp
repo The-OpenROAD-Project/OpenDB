@@ -358,13 +358,12 @@ dbProperty::Type dbProperty::getType()
   return (dbProperty::Type) prop->_flags._type;
 }
 
-dbString dbProperty::getName()
+std::string dbProperty::getName()
 {
   _dbProperty*  prop  = (_dbProperty*) this;
   _dbNameCache* cache = _dbProperty::getNameCache(this);
   const char*   name  = cache->getName(prop->_name);
-  dbString      s(name);
-  return s;
+  return name;
 }
 
 dbObject* dbProperty::getPropOwner()
@@ -533,11 +532,10 @@ dbBoolProperty* dbBoolProperty::find(dbObject* object, const char* name)
 // string property
 /////////////////////////////////////////////
 
-dbString dbStringProperty::getValue()
+std::string dbStringProperty::getValue()
 {
   _dbProperty* prop = (_dbProperty*) this;
-  dbString     s(prop->_value._str_val);
-  return s;
+  return prop->_value._str_val;
 }
 
 void dbStringProperty::setValue(const char* value)
@@ -643,7 +641,7 @@ void dbProperty::writePropValue(dbProperty* prop, FILE* out)
   switch (prop->getType()) {
     case dbProperty::STRING_PROP: {
       dbStringProperty* p = (dbStringProperty*) prop;
-      dbString          v = p->getValue();
+      std::string       v = p->getValue();
       fprintf(out, "\"%s\" ", v.c_str());
       break;
     }
@@ -673,7 +671,7 @@ void dbProperty::writeProperties(dbObject* object, FILE* out)
 
   for (itr = props.begin(); itr != props.end(); ++itr) {
     dbProperty* prop = *itr;
-    dbString    name = prop->getName();
+    std::string name = prop->getName();
     fprintf(out, "    PROPERTY %s ", name.c_str());
     writePropValue(prop, out);
     fprintf(out, "\n");
@@ -689,11 +687,11 @@ void dbProperty::writeProperties( dbTechLayer * object, FILE *out )
     for( itr = props.begin(); itr != props.end(); ++itr )
     {
         dbProperty * prop = *itr;
-        dbString name = prop->getName();
+        std::string name = prop->getName();
 
         to get value of a  string type:
              dbStringProperty * p = (dbStringProperty *) prop;
-            dbString v = p->getValue();
+            std::string v = p->getValue();
         look function dbProperty::writePropValue on how to retrieve int and
 double values
     }

@@ -194,7 +194,7 @@ dbInst* dbCreateNetUtil::updateInst(dbInst* inst0,
           if (strcmp(inst0->getConstName(), "MILOS_SETUP_26415_2")==0) {
                   int x1,y1;
                   inst0->getOrigin(x1,y1);
-                  dbString orient1 = inst0->getOrient().getString();
+                  std::string orient1 = inst0->getOrient().getString();
 
               notice(0, "----> updateInst: %s Orientation %s Location %d %d\n",
                   inst0->getConstName(), orient1.c_str(), x1, y1);
@@ -250,7 +250,7 @@ bool dbCreateNetUtil::printEcoInstVerbose(FILE*       fp,
   int x2, y2;
   inst->getLocation(x2, y2);
 
-  dbString orient1 = inst->getOrient().getString();
+  std::string orient1 = inst->getOrient().getString();
 
   fprintf(fp,
           "%s %d %s Orient %s Loc %d %d Origin %d %d  W %d H %d  Coords %d %d  "
@@ -312,7 +312,7 @@ uint dbCreateNetUtil::printEcoInst(dbInst* ecoInst, dbBlock* srcBlock, FILE* fp)
     if (_useLocation)
       origInst->getLocation(x1, y1);
 
-    dbString orient1 = origInst->getOrient().getString();
+    std::string orient1 = origInst->getOrient().getString();
 
     if (_milosFormat) {
       fprintf(fp,
@@ -365,13 +365,13 @@ uint dbCreateNetUtil::printEcoInst(dbInst* ecoInst, dbBlock* srcBlock, FILE* fp)
   // if (r0!=r1) { // different bboxes
   int x0, y0;
   ecoInst->getOrigin(x0, y0);
-  dbString orient = ecoInst->getOrient().getString();
+  std::string orient = ecoInst->getOrient().getString();
   int      x1, y1;
   origInst->getOrigin(x1, y1);
   if (_useLocation)
     origInst->getLocation(x1, y1);
 
-  dbString orient1 = origInst->getOrient().getString();
+  std::string orient1 = origInst->getOrient().getString();
 
   if (_milosFormat) {
     fprintf(fp,
@@ -1097,7 +1097,7 @@ dbNet* dbCreateNetUtil::createNetSingleWire(const char*    netName,
   int          minWidth = layer->getWidth();
 
   if (width < (int) minWidth) {
-    dbString ln = layer->getName();
+    std::string ln = layer->getName();
     warning(0,
             "Cannot create net %s, because wire width (%d) is lessthan "
             "minWidth (%d) on layer %s\n",
@@ -1544,7 +1544,7 @@ std::pair<dbBTerm*, dbBTerm*> dbCreateNetUtil::createTerms4SingleNet(
   std::pair<dbBTerm*, dbBTerm*> retpr;
   retpr.first = retpr.second = NULL;
 
-  dbString term_str(net->getName());
+  std::string term_str(net->getName());
   term_str        = term_str + "_BL";
   dbBTerm* blterm = dbBTerm::create(net, term_str.c_str());
 

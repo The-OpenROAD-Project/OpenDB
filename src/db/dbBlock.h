@@ -93,7 +93,6 @@ class _dbTechLayerRule;
 class _dbTechNonDefaultRule;
 class dbJournal;
 
-class dbString;
 class dbNetBTermItr;
 class dbBPinItr;
 class dbNetITermItr;

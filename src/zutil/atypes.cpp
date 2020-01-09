@@ -279,17 +279,18 @@ bool Ath__associateArray::getFlag(uint n)
 void Ath__associateArray::printAll(char* buff)
 {
   buff[0] = 0;
+  uint pos = 0;
   for (uint ii = 1; ii < _cnt; ii++) {
-    sprintf(buff, "%s %s \"%s\" ", buff, _nameTable[ii], _wordTable[ii]);
+    pos += sprintf(&buff[pos], "%s \"%s\" ", _nameTable[ii], _wordTable[ii]);
   }
 }
 void Ath__associateArray::getNameList(char* buff)
 {
   buff[0] = 0;
+  uint pos = 0;
   for (uint ii = 0; ii < _cnt; ii++) {
-    sprintf(buff, "%s %s %s ", buff, _nameTable[ii], _nameTable[ii]);
+    pos += sprintf(&buff[pos], "%s %s ", _nameTable[ii], _nameTable[ii]);
   }
-  // sprintf(buff, "%s %s", buff, "\0");
 }
 uint Ath__associateArray::getTableIndex(char* word)
 {

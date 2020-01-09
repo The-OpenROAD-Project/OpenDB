@@ -26,50 +26,15 @@ include_directories(${TCL_INCLUDE_PATH})
 ################################# Targets ##################################
 ############################################################################
 
-# db
-if(NOT TARGET opendb)
-    add_subdirectory(src/db)
-endif()
-
-# defin
-if(NOT TARGET defin)
-    add_subdirectory(src/defin)
-endif()
-
-# defout
-if(NOT TARGET defout)
-    add_subdirectory(src/defout)
-endif()
-
-# lef
-if(NOT TARGET lef)
-    add_subdirectory(src/lef)
-endif()
-
-# lefin
-if(NOT TARGET lefin)
-    add_subdirectory(src/lefin)
-endif()
-
-# lefout
-if(NOT TARGET lefout)
-    add_subdirectory(src/lefout)
-endif()
-
-# zutil
-if(NOT TARGET zutil)
-    add_subdirectory(src/zutil)
-endif()
-
-# zlib
-if(NOT TARGET zlib)
-    add_subdirectory(src/zlib)
-endif()
-
-# tm
-if(NOT TARGET tm)
-    add_subdirectory(src/tm)
-endif()
+add_subdirectory(src/db)
+add_subdirectory(src/defin)
+add_subdirectory(src/defout)
+add_subdirectory(src/lef)
+add_subdirectory(src/lefin)
+add_subdirectory(src/lefout)
+add_subdirectory(src/zutil)
+add_subdirectory(src/zlib)
+add_subdirectory(src/tm)
 
 ############################################################################
 ################################# SWIG #####################################

@@ -226,12 +226,12 @@ dbIStream& operator>>(dbIStream& stream, _dbTechVia& via)
 //
 ////////////////////////////////////////////////////////////////////
 
-dbString dbTechVia::getName()
+std::string dbTechVia::getName()
 {
   _dbTechVia* via = (_dbTechVia*) this;
-  dbString    n(via->_name);
-  return n;
+  return via->_name;
 }
+
 const char* dbTechVia::getConstName()
 {
   _dbTechVia* via = (_dbTechVia*) this;
@@ -356,17 +356,15 @@ dbTechViaGenerateRule* dbTechVia::getViaGenerateRule()
   return (dbTechViaGenerateRule*) rule;
 }
 
-dbString dbTechVia::getPattern()
+std::string dbTechVia::getPattern()
 {
   _dbTechVia* via = (_dbTechVia*) this;
 
   if (via->_pattern == NULL) {
-    dbString n("");
-    return n;
+    return "";
   }
 
-  dbString p(via->_pattern);
-  return p;
+  return via->_pattern;
 }
 
 void dbTechVia::setPattern(const char* pattern)

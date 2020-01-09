@@ -73,7 +73,7 @@ static void print_shape( dbShape & shape )
     if ( shape.isVia() )
     {
         dbTechVia * tech_via = shape.getTechVia();
-        dbString vname = tech_via ->getName();
+        std::string vname = tech_via ->getName();
         uint dx = shape.xMax() - shape.xMin();
         uint dy = shape.yMax() - shape.yMin();
 
@@ -86,7 +86,7 @@ static void print_shape( dbShape & shape )
     else
     {
         dbTechLayer * layer = shape.getTechLayer();
-        dbString lname = layer->getName();
+        std::string lname = layer->getName();
         notice(0,"RECT %s ( %d %d ) ( %d %d )\n",
                lname.c_str(),
                shape.xMin(),
@@ -307,9 +307,9 @@ void print_encoding(dbWire* wire)
         break;
 
       case dbWireDecoder::TECH_VIA: {
-        dbTechVia* tech_via = decoder.getTechVia();
-        dbString   vname    = tech_via->getName();
-        int        j        = decoder.getJunctionId();
+        dbTechVia*  tech_via = decoder.getTechVia();
+        std::string vname    = tech_via->getName();
+        int         j        = decoder.getJunctionId();
         notice(0, "J%d VIA %s\n", j, vname.c_str());
         break;
       }

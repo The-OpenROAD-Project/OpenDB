@@ -174,12 +174,12 @@ void _dbRow::out(dbDiff& diff, char side, const char* field) const
 //
 ////////////////////////////////////////////////////////////////////
 
-dbString dbRow::getName()
+std::string dbRow::getName()
 {
   _dbRow*  row = (_dbRow*) this;
-  dbString str(row->_name);
-  return str;
+  return row->_name;
 }
+
 const char* dbRow::getConstName()
 {
   _dbRow* row = (_dbRow*) this;

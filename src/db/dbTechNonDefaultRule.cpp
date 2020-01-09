@@ -218,11 +218,10 @@ bool _dbTechNonDefaultRule::operator<(const _dbTechNonDefaultRule& rhs) const
 //
 ////////////////////////////////////////////////////////////////////
 
-dbString dbTechNonDefaultRule::getName()
+std::string dbTechNonDefaultRule::getName()
 {
   _dbTechNonDefaultRule* rule = (_dbTechNonDefaultRule*) this;
-  dbString               n(rule->_name);
-  return n;
+  return rule->_name;
 }
 
 const char* dbTechNonDefaultRule::getConstName()

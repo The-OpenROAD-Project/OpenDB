@@ -2,10 +2,6 @@
 
 
 // DB specital types
-%typemap(out) odb::dbString {
-    PyObject *obj = PyString_FromString($1.c_str());
-    $result = obj;  
-}
 %typemap(out) odb::dbStringProperty {
     PyObject *obj = PyString_FromString($1.getValue().c_str());
     $result = obj; 

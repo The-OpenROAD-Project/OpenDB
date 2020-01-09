@@ -206,11 +206,10 @@ dbIStream& operator>>(dbIStream& stream, _dbRegion& r)
   return stream;
 }
 
-dbString dbRegion::getName()
+std::string dbRegion::getName()
 {
   _dbRegion* region = (_dbRegion*) this;
-  dbString   s(region->_name);
-  return s;
+  return region->_name;
 }
 
 dbRegionType dbRegion::getRegionType()

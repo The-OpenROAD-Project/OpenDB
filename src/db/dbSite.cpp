@@ -145,12 +145,12 @@ _dbSite::~_dbSite()
 //
 ////////////////////////////////////////////////////////////////////
 
-dbString dbSite::getName()
+std::string dbSite::getName()
 {
   _dbSite* site = (_dbSite*) this;
-  dbString str(site->_name);
-  return str;
+  return site->_name;
 }
+
 const char* dbSite::getConstName()
 {
   _dbSite* site = (_dbSite*) this;

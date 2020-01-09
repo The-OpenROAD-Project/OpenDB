@@ -261,12 +261,12 @@ dbIStream& operator>>(dbIStream& stream, _dbBTerm& bterm)
 //
 ////////////////////////////////////////////////////////////////////
 
-dbString dbBTerm::getName()
+std::string dbBTerm::getName()
 {
   _dbBTerm* bterm = (_dbBTerm*) this;
-  dbString  str(bterm->_name);
-  return str;
+  return bterm->_name;
 }
+
 const char* dbBTerm::getConstName()
 {
   _dbBTerm* bterm = (_dbBTerm*) this;

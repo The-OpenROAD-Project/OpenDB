@@ -138,11 +138,10 @@ dbIStream& operator>>(dbIStream& stream, _dbTechViaRule& v)
 //
 ////////////////////////////////////////////////////////////////////
 
-dbString dbTechViaRule::getName()
+std::string dbTechViaRule::getName()
 {
   _dbTechViaRule* via = (_dbTechViaRule*) this;
-  dbString        str(via->_name);
-  return str;
+  return via->_name;
 }
 
 void dbTechViaRule::addVia(dbTechVia* via)

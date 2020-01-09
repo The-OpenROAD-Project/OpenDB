@@ -125,7 +125,7 @@ dbTechLayer* create_via_array(dbSWire*        wire,
                               int             stepY)
 {
   if (via->getBBox() == NULL) {
-    dbString n = via->getName();
+    std::string n = via->getName();
     notice(0,
            "error: Cannot create a via instance, via (%s) has no shapes\n",
            n.c_str());
@@ -151,8 +151,8 @@ dbTechLayer* create_via_array(dbSWire*        wire,
 
   // VIA: implicit layer change...
   if ((top != layer) && (bottom != layer)) {
-    dbString vname = via->getName();
-    dbString lname = layer->getName();
+    std::string vname = via->getName();
+    std::string lname = layer->getName();
 
     notice(0, "error: Can not determine which direction to continue path,\n");
     notice(0,
@@ -183,7 +183,7 @@ dbTechLayer* create_via_array(dbSWire*        wire,
                               int             stepY)
 {
   if (via->getBBox() == NULL) {
-    dbString vname = via->getName();
+    std::string vname = via->getName();
     notice(0,
            "error: Cannot create a via instance, via (%s) has no shapes\n",
            vname.c_str());
@@ -209,8 +209,8 @@ dbTechLayer* create_via_array(dbSWire*        wire,
 
   // VIA: implicit layer change...
   if ((top != layer) && (bottom != layer)) {
-    dbString vname = via->getName();
-    dbString lname = layer->getName();
+    std::string vname = via->getName();
+    std::string lname = layer->getName();
 
     notice(
         0,

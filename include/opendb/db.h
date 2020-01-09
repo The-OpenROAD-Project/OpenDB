@@ -49,6 +49,7 @@
 
 #include <list>
 #include <set>
+#include <string>
 #include <vector>
 
 #define ADS_MAX_CORNER 10
@@ -130,143 +131,6 @@ class dbViaParams;
 // Extraction Objects
 class dbExtControl;
 
-///////////////////////////////////////////////////////////////////////////////
-///
-/// C-string wrapper classe. Strings returned from the database are returned
-/// in an instance of this class.
-///
-/// Avoid using dbString. Use std::string instead. For example, instead of
-///   dbString name = getName()
-/// use
-///   std::string name = getConstName()
-/// -cherry
-///
-///////////////////////////////////////////////////////////////////////////////
-class dbString
-{
-  const char* _str;
-
-  void assign(const char* str)
-  {
-    if (_str)
-      free(reinterpret_cast<void*>(const_cast<char*>(_str)));
-    _str = strdup(str);
-    assert(_str);
-  }
-
-  void copy(const dbString& str) { assign(str._str); }
-
-  void append(const char* str)
-  {
-    if (_str == NULL)
-      _str = strdup(str);
-    else {
-      int   len = strlen(_str) + strlen(str);
-      char* s   = (char*) malloc(len + 1);
-      strcpy(s, _str);
-      strcat(s, str);
-      free(reinterpret_cast<void*>(const_cast<char*>(_str)));
-      _str = s;
-    }
-
-    assert(_str);
-  }
-
- public:
-  dbString() { _str = NULL; }
-  dbString(const char* str) { _str = strdup(str); }
-  dbString(const dbString& str)
-  {
-    _str = NULL;
-    copy(str);
-  }
-  ~dbString() { free(reinterpret_cast<void*>(const_cast<char*>(_str))); }
-
-  bool operator==(const char* str) { return strcmp(_str, str) == 0; }
-  bool operator!=(const char* str) { return strcmp(_str, str) != 0; }
-  bool operator==(const dbString& str) { return strcmp(_str, str._str) == 0; }
-  bool operator!=(const dbString& str) { return strcmp(_str, str._str) != 0; }
-
-  ///
-  /// dbString assignment operator;
-  ///
-  dbString& operator=(const dbString& str)
-  {
-    if (&str != this) {
-      copy(str);
-    }
-    return *this;
-  }
-
-  ///
-  /// dbString assignment operator;
-  ///
-  dbString& operator=(const char* str)
-  {
-    assign(str);
-    return *this;
-  }
-
-  ///
-  /// dbString "+" operator;
-  ///
-  dbString operator+(const dbString& str)
-  {
-    dbString s(_str);
-    s += str;
-    return s;
-  }
-
-  ///
-  /// dbString "+" operator;
-  ///
-  dbString& operator+=(const dbString& str)
-  {
-    append(str._str);
-    return *this;
-  }
-
-  ///
-  /// dbString "+" operator;
-  ///
-  dbString operator+(const char* str)
-  {
-    dbString s(_str);
-    s += str;
-    return s;
-  }
-
-  ///
-  /// dbString "+" operator;
-  ///
-  dbString& operator+=(const char* str)
-  {
-    append(str);
-    return *this;
-  }
-
-  ///
-  /// Cast operator const char *:
-  ///    dbString s = getName();
-  ///    const char * p = s;
-  operator const char*() { return _str; }
-
-  ///
-  /// c_str - Get the c-string pointer.
-  ///
-  const char* c_str() { return _str; }
-
-  ///
-  /// Return length of string.
-  ///
-  uint length()
-  {
-    if (_str == NULL)
-      return 0;
-    return strlen(_str);
-  }
-};
-
 ///
 /// dbProperty - Property base class.
 ///
@@ -286,7 +150,7 @@ class dbProperty : public dbObject
   Type getType();
 
   /// Get thetname of this property.
-  dbString getName();
+  std::string getName();
 
   /// Get the owner of this property
   dbObject* getPropOwner();
@@ -337,7 +201,7 @@ class dbStringProperty : public dbProperty
 {
  public:
   /// Get the value of this property.
-  dbString getValue();
+  std::string getValue();
 
   /// Set the value of this property.
   void setValue(const char* value);
@@ -900,7 +764,7 @@ class dbBlock : public dbObject
   ///
   /// Get block chip name.
   ///
-  dbString getName();
+  std::string getName();
 
   ///
   /// Get the block chip name.
@@ -1654,7 +1518,7 @@ class dbBTerm : public dbObject
   ///
   /// Get the block-terminal name.
   ///
-  dbString getName();
+  std::string getName();
 
   ///
   /// Get the block-terminal name.
@@ -1938,7 +1802,7 @@ class dbNet : public dbObject
   ///
   /// Get the net name.
   ///
-  dbString getName();
+  std::string getName();
 
   ///
   /// Get the net name.
@@ -2723,7 +2587,7 @@ class dbInst : public dbObject
   ///
   /// Get the instance name.
   ///
-  dbString getName();
+  std::string getName();
 
   ///
   /// Need a version that does not do strdup every time
@@ -3428,7 +3292,7 @@ class dbVia : public dbObject
   ///
   /// Get the via name.
   ///
-  dbString getName();
+  std::string getName();
 
   ///
   /// Get the via name.
@@ -3439,7 +3303,7 @@ class dbVia : public dbObject
   /// Get the pattern value of this via.
   /// Returns and empty ("") string if a pattern has not been set.
   ///
-  dbString getPattern();
+  std::string getPattern();
 
   ///
   /// Set the pattern value of this via.
@@ -4855,7 +4719,7 @@ class dbRow : public dbObject
   ///
   /// Get the row name.
   ///
-  dbString getName();
+  std::string getName();
 
   ///
   /// Get the row name.
@@ -4938,7 +4802,7 @@ class dbRegion : public dbObject
   ///
   /// Get the region name.
   ///
-  dbString getName();
+  std::string getName();
 
   ///
   /// Get the region type.
@@ -5046,7 +4910,7 @@ class dbLib : public dbObject
   ///
   /// Get the library name.
   ///
-  dbString getName();
+  std::string getName();
 
   ///
   /// Get the library name.
@@ -5145,7 +5009,7 @@ class dbSite : public dbObject
   ///
   /// Get the site name.
   ///
-  dbString getName();
+  std::string getName();
 
   ///
   /// Get the site name.
@@ -5240,7 +5104,7 @@ class dbMaster : public dbObject
   ///
   /// Get the master cell name.
   ///
-  dbString getName();
+  std::string getName();
 
   ///
   /// Get the master cell name.
@@ -5471,7 +5335,7 @@ class dbMTerm : public dbObject
   ///
   /// Get the master term name.
   ///
-  dbString getName();
+  std::string getName();
 
   ///
   /// Get the master term name.
@@ -5858,7 +5722,7 @@ class dbTechLayer : public dbObject
   ///
   /// Get the layer name.
   ///
-  dbString getName();
+  std::string getName();
 
   ///
   /// Get the layer name.
@@ -5873,7 +5737,7 @@ class dbTechLayer : public dbObject
   ///
   /// Get the layer alias.
   ///
-  dbString getAlias();
+  std::string getAlias();
 
   ///
   /// Set the layer alias.
@@ -6105,7 +5969,7 @@ class dbTechVia : public dbObject
   ///
   /// Get the via name.
   ///
-  dbString getName();
+  std::string getName();
 
   ///
   /// Get the via name.
@@ -6152,7 +6016,7 @@ class dbTechVia : public dbObject
   /// Get the pattern value of this via.
   /// Returns and empty ("") string if a pattern has not been set.
   ///
-  dbString getPattern();
+  std::string getPattern();
 
   ///
   /// Set generate rule that was used to genreate this via.
@@ -6251,7 +6115,7 @@ class dbTechViaRule : public dbObject
   ///
   /// Get the via-rule name.
   ///
-  dbString getName();
+  std::string getName();
 
   ///
   /// Add this via to this rule
@@ -6450,7 +6314,7 @@ class dbTechViaGenerateRule : public dbObject
   ///
   /// Get the via-rule name.
   ///
-  dbString getName();
+  std::string getName();
 
   ///
   /// Returns true if this is the default rule.
@@ -6674,7 +6538,7 @@ class dbTechNonDefaultRule : public dbObject
   ///
   /// Get the rule name.
   ///
-  dbString getName();
+  std::string getName();
 
   ///
   /// Get the rule name.

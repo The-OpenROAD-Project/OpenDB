@@ -30,13 +30,13 @@
 // ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 // POSSIBILITY OF SUCH DAMAGE.
 
-#include "definNet.h"
 #include <ctype.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include "db.h"
 #include "dbShape.h"
 #include "dbWireCodec.h"
+#include "definNet.h"
 
 namespace odb {
 
@@ -239,9 +239,9 @@ void definNet::nonDefaultRule(const char* rule)
     }
 
     else if (net_rule != def_rule) {
-      dbString    net_name      = _cur_net->getName();
+      std::string net_name      = _cur_net->getName();
       const char* net_rule_name = "(NULL)";
-      dbString    n;
+      std::string n;
 
       if (net_rule != NULL) {
         n             = net_rule->getName();
@@ -425,8 +425,8 @@ void definNet::pathBegin(const char* layer_name)
     _taper_rule = _rule_for_path->getLayerRule(_cur_layer);
 
     if (_taper_rule == NULL) {
-      dbString lyr_name  = _cur_layer->getName();
-      dbString rule_name = _non_default_rule->getName();
+      std::string lyr_name  = _cur_layer->getName();
+      std::string rule_name = _non_default_rule->getName();
       notice(0,
              "error: RULE (%s) referenced for layer (%s)\n",
              _rule_for_path->getName().c_str(),

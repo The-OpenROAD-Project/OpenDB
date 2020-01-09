@@ -2040,9 +2040,9 @@ void dbBlockSearch::inspectInstPin()
     if (getItermShapesWithViaShapes(iterm) == 0)
       addInstBox(inst);
 
-    dbString name = iterm->getMTerm()->getName();
+    std::string name = iterm->getMTerm()->getName();
 
-    dbString designName = _block->getName();
+    std::string designName = _block->getName();
     _dcr->print_self((char*) designName.c_str(), (char*) name.c_str(), NULL);
   } else if (actionId == _inst_pin_menu_net1_id) {
     getNetConnectivity(net, false, 0, false, false, false);
@@ -2243,9 +2243,9 @@ void dbBlockSearch::inspectInst()
   if (actionId == _inst_bb_menu_self_id) {
     addInstBox(inst);
 
-    dbString name = inst->getName();
+    std::string name = inst->getName();
 
-    dbString designName = _block->getName();
+    std::string designName = _block->getName();
     _dcr->print_self((char*) designName.c_str(), (char*) name.c_str(), NULL);
   } else if (actionId == _inst_bb_menu_inst1_id) {
     addInstConnList(inst, true);
@@ -2942,9 +2942,9 @@ void dbBlockSearch::inspectNet()
             == 0))
       return;
 
-    dbString name = net->getName();
+    std::string name = net->getName();
 
-    dbString designName = _block->getName();
+    std::string designName = _block->getName();
     _dcr->print_self((char*) designName.c_str(), (char*) name.c_str(), NULL);
   } else if (actionId == _signal_wire_menu_net1_id) {
     getNetConnectivity(net, false, 0, false, false, false);
@@ -3057,9 +3057,9 @@ void dbBlockSearch::inspectBterm()
   if (actionId == _block_pin_menu_self_id) {
     addBoxes(bterm);
 
-    dbString name = net->getName();
+    std::string name = net->getName();
 
-    dbString designName = _block->getName();
+    std::string designName = _block->getName();
     _dcr->print_self((char*) designName.c_str(), (char*) name.c_str(), NULL);
     //(char *) bterm->getName().c_str());
   } else if (actionId == _block_pin_menu_pin1_id) {

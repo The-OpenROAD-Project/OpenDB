@@ -1292,12 +1292,12 @@ void _dbBlock::out(dbDiff& diff, char side, const char* field) const
 //
 ////////////////////////////////////////////////////////////////////
 
-dbString dbBlock::getName()
+std::string dbBlock::getName()
 {
   _dbBlock* block = (_dbBlock*) this;
-  dbString  str(block->_name);
-  return str;
+  return block->_name;
 }
+
 const char* dbBlock::getConstName()
 {
   _dbBlock* block = (_dbBlock*) this;

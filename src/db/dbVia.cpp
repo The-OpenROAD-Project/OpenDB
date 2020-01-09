@@ -232,37 +232,36 @@ dbIStream& operator>>(dbIStream& stream, _dbVia& v)
 //
 ////////////////////////////////////////////////////////////////////
 
-dbString dbVia::getName()
+std::string dbVia::getName()
 {
   _dbVia*  via = (_dbVia*) this;
-  dbString str(via->_name);
-  return str;
+  return via->_name;
 }
+
 const char* dbVia::getConstName()
 {
   _dbVia* via = (_dbVia*) this;
   return via->_name;
 }
 
-dbString dbVia::getPattern()
+std::string dbVia::getPattern()
 {
   _dbVia*  via = (_dbVia*) this;
-  dbString str;
 
-  if (via->_pattern == 0)
-    str = "";
-  else
-    str = via->_pattern;
+  if (via->_pattern == 0) {
+    return "";
+  }
 
-  return str;
+  return via->_pattern;
 }
 
 void dbVia::setPattern(const char* name)
 {
   _dbVia* via = (_dbVia*) this;
 
-  if (via->_pattern != 0)
+  if (via->_pattern != 0) {
     return;
+  }
 
   via->_pattern = strdup(name);
   ZALLOCATED(via->_pattern);

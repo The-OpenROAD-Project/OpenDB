@@ -1107,7 +1107,7 @@ void lefin::pin(lefiPin* pin)
 
   if (term == NULL) {
     if (_master->isFrozen()) {
-      dbString n = _master->getName();
+      std::string n = _master->getName();
       notice(0,
              "Cannot add a new PIN (%s) to MACRO (%s), because the pins have "
              "already been defined. \n",

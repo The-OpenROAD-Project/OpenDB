@@ -20,55 +20,56 @@
 //
 // THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
 // AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
-// IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
-// DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE
-// FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
-// DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR
-// SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
-// CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
-// OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
-// OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+// IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
+// ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE
+// LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
+// CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
+// SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
+// INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
+// CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
+// ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
+// POSSIBILITY OF SUCH DAMAGE.
 
 #ifndef ADS_DEFIN_NON_DEFAULT_RULE_H
 #define ADS_DEFIN_NON_DEFAULT_RULE_H
 
 #include "ads.h"
-#include "geom.h"
-#include "definINonDefaultRule.h"
 #include "definBase.h"
+#include "definINonDefaultRule.h"
+#include "geom.h"
 
 namespace odb {
 
 class dbTechNonDefaultRule;
 class dbTechLayerRule;
- 
+
 class definNonDefaultRule : public definINonDefaultRule, public definBase
 {
-    dbTechNonDefaultRule * _cur_rule;
-    dbTechLayerRule *      _cur_layer_rule;
-    
-    virtual void beginRules(int n);
-    virtual void beginRule( const char * name );
-    virtual void hardSpacing();
-    virtual void via( const char * name );
-    virtual void viaRule( const char * rule );
-    virtual void minCuts( const char * layer, int count );
-    virtual void beginLayerRule( const char * layer, int width );
-    virtual void spacing(int s);
-    virtual void wireExt(int e);
-    virtual void endLayerRule();
-    virtual void property( const char * name, const char * value );
-    virtual void property( const char * name, int value );
-    virtual void property( const char * name, double value );
-    virtual void endRule();
-    virtual void endRules();
+  dbTechNonDefaultRule* _cur_rule;
+  dbTechLayerRule*      _cur_layer_rule;
 
-  public:
-    definNonDefaultRule();
-    virtual ~definNonDefaultRule();
-    void init();
+  virtual void beginRules(int n);
+  virtual void beginRule(const char* name);
+  virtual void hardSpacing();
+  virtual void via(const char* name);
+  virtual void viaRule(const char* rule);
+  virtual void minCuts(const char* layer, int count);
+  virtual void beginLayerRule(const char* layer, int width);
+  virtual void spacing(int s);
+  virtual void wireExt(int e);
+  virtual void endLayerRule();
+  virtual void property(const char* name, const char* value);
+  virtual void property(const char* name, int value);
+  virtual void property(const char* name, double value);
+  virtual void endRule();
+  virtual void endRules();
+
+ public:
+  definNonDefaultRule();
+  virtual ~definNonDefaultRule();
+  void init();
 };
-    
-} // namespace
+
+}  // namespace odb
 
 #endif

@@ -20,21 +20,22 @@
 //
 // THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
 // AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
-// IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
-// DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE
-// FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
-// DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR
-// SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
-// CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
-// OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
-// OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+// IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
+// ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE
+// LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
+// CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
+// SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
+// INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
+// CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
+// ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
+// POSSIBILITY OF SUCH DAMAGE.
 
 #include "dbITermItr.h"
-#include "dbNet.h"
-#include "dbInst.h"
 #include "dbBlock.h"
 #include "dbITerm.h"
+#include "dbInst.h"
 #include "dbInstHdr.h"
+#include "dbNet.h"
 #include "dbTable.h"
 
 namespace odb {
@@ -47,79 +48,78 @@ namespace odb {
 
 bool dbNetITermItr::reversible()
 {
-    return true;
+  return true;
 }
 
 bool dbNetITermItr::orderReversed()
 {
-    return true;
+  return true;
 }
 
-void dbNetITermItr::reverse(dbObject * parent)
+void dbNetITermItr::reverse(dbObject* parent)
 {
-    _dbNet * net = (_dbNet *) parent;
-    uint id = net->_iterms;
-    uint list = 0;
+  _dbNet* net  = (_dbNet*) parent;
+  uint    id   = net->_iterms;
+  uint    list = 0;
 
-    while( id !=  0 )
-    {
-        _dbITerm * iterm =  _iterm_tbl->getPtr(id);
-        uint n = iterm->_next_net_iterm;
-        iterm->_next_net_iterm = list;
-        list = id; 
-        id = n;
-    }
+  while (id != 0) {
+    _dbITerm* iterm        = _iterm_tbl->getPtr(id);
+    uint      n            = iterm->_next_net_iterm;
+    iterm->_next_net_iterm = list;
+    list                   = id;
+    id                     = n;
+  }
 
-    uint prev = 0;
-    id = list;
-    
-    while( id !=  0 )
-    {
-        _dbITerm * iterm =  _iterm_tbl->getPtr(id);
-        iterm->_prev_net_iterm = prev;
-        prev = id;
-        id = iterm->_next_net_iterm;
-    }
+  uint prev = 0;
+  id        = list;
 
-    net->_iterms = list;
+  while (id != 0) {
+    _dbITerm* iterm        = _iterm_tbl->getPtr(id);
+    iterm->_prev_net_iterm = prev;
+    prev                   = id;
+    id                     = iterm->_next_net_iterm;
+  }
+
+  net->_iterms = list;
 }
 
 uint dbNetITermItr::sequential()
 {
-    return 0;
+  return 0;
 }
 
-uint dbNetITermItr::size( dbObject * parent )
+uint dbNetITermItr::size(dbObject* parent)
 {
-    uint id;
-    uint cnt = 0;
+  uint id;
+  uint cnt = 0;
 
-    for( id = dbNetITermItr::begin(parent); id != dbNetITermItr::end(parent); id = dbNetITermItr::next(id) )
-        ++cnt;
-   
-    return cnt; 
+  for (id = dbNetITermItr::begin(parent); id != dbNetITermItr::end(parent);
+       id = dbNetITermItr::next(id))
+    ++cnt;
+
+  return cnt;
 }
 
-uint dbNetITermItr::begin( dbObject * parent )
+uint dbNetITermItr::begin(dbObject* parent)
 {
-    _dbNet * net = (_dbNet *) parent;
-    return (uint) net->_iterms;
+  _dbNet* net = (_dbNet*) parent;
+  return (uint) net->_iterms;
 }
 
-uint dbNetITermItr::end( dbObject * parent )
+uint dbNetITermItr::end(dbObject* parent)
 {
-    return 0;
+  return 0;
 }
 
-uint dbNetITermItr::next( uint id, ... )
+uint dbNetITermItr::next(uint id, ...)
 {
-    _dbITerm * iterm = _iterm_tbl->getPtr(id);
-    return iterm->_next_net_iterm;
+  _dbITerm* iterm = _iterm_tbl->getPtr(id);
+  return iterm->_next_net_iterm;
 }
 
-dbObject * dbNetITermItr::getObject( uint id, ... )
+dbObject* dbNetITermItr::getObject(uint id, ...)
 {
-    return _iterm_tbl->getPtr(id);
+  return _iterm_tbl->getPtr(id);
 }
 
 ////////////////////////////////////////////////
@@ -130,67 +130,68 @@ dbObject * dbNetITermItr::getObject( uint id, ... )
 
 bool dbInstITermItr::reversible()
 {
-    return false;
+  return false;
 }
 
 bool dbInstITermItr::orderReversed()
 {
-    return false;
+  return false;
 }
 
-void dbInstITermItr::reverse(dbObject * parent)
+void dbInstITermItr::reverse(dbObject* parent)
 {
 }
 
 uint dbInstITermItr::sequential()
 {
+  return 0;
+}
+
+uint dbInstITermItr::size(dbObject* parent)
+{
+  uint id;
+  uint cnt = 0;
+
+  for (id = dbInstITermItr::begin(parent); id != dbInstITermItr::end(parent);
+       id = dbInstITermItr::next(id))
+    ++cnt;
+
+  return cnt;
+}
+
+uint dbInstITermItr::begin(dbObject* parent)
+{
+  _dbInst* inst = (_dbInst*) parent;
+
+  if (inst->_iterms.size() == 0)
     return 0;
+
+  return inst->_iterms[0];
 }
 
-uint dbInstITermItr::size( dbObject * parent )
+uint dbInstITermItr::end(dbObject* parent)
 {
-    uint id;
-    uint cnt = 0;
-
-    for( id = dbInstITermItr::begin(parent); id != dbInstITermItr::end(parent); id = dbInstITermItr::next(id) )
-        ++cnt;
-   
-    return cnt; 
+  return 0;
 }
 
-uint dbInstITermItr::begin( dbObject * parent )
+uint dbInstITermItr::next(uint id, ...)
 {
-    _dbInst * inst = (_dbInst *) parent;
+  _dbITerm* iterm = _iterm_tbl->getPtr(id);
+  _dbBlock* block = (_dbBlock*) iterm->getOwner();
+  _dbInst*  inst  = block->_inst_tbl->getPtr(iterm->_inst);
+  uint      cnt   = inst->_iterms.size();
+  uint      idx   = iterm->_flags._mterm_idx + 1;
 
-    if ( inst->_iterms.size() ==  0 )
-        return 0;
-    
-    return inst->_iterms[0];
-}
-
-uint dbInstITermItr::end( dbObject * parent )
-{
+  if (idx == cnt)
     return 0;
+
+  dbId<_dbITerm> next = inst->_iterms[idx];
+  return next;
 }
 
-uint dbInstITermItr::next( uint id, ... )
+dbObject* dbInstITermItr::getObject(uint id, ...)
 {
-    _dbITerm * iterm = _iterm_tbl->getPtr(id);
-    _dbBlock * block = (_dbBlock *) iterm->getOwner();
-    _dbInst * inst = block->_inst_tbl->getPtr(iterm->_inst);
-    uint cnt = inst->_iterms.size();
-    uint idx = iterm->_flags._mterm_idx + 1;
-
-    if ( idx == cnt )
-        return 0;
-    
-    dbId<_dbITerm> next = inst->_iterms[idx];
-    return next;
+  return _iterm_tbl->getPtr(id);
 }
 
-dbObject * dbInstITermItr::getObject( uint id, ... )
-{
-    return _iterm_tbl->getPtr(id);
-}
-
-} // namespace
+}  // namespace odb

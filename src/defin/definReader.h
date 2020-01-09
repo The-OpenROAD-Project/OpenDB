@@ -20,21 +20,22 @@
 //
 // THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
 // AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
-// IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
-// DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE
-// FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
-// DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR
-// SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
-// CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
-// OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
-// OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+// IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
+// ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE
+// LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
+// CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
+// SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
+// INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
+// CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
+// ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
+// POSSIBILITY OF SUCH DAMAGE.
 
 #ifndef ADS_DEFIN_READER_H
 #define ADS_DEFIN_READER_H
 
 #include "ads.h"
-#include "definIReader.h"
 #include "definBase.h"
+#include "definIReader.h"
 
 namespace odb {
 
@@ -55,60 +56,62 @@ class definPinProps;
 
 class definReader : public definIReader, public definBase
 {
-    dbDatabase *             _db;
-    definBlockage *          _blockageR;
-    definComponent *         _componentR;
-    definFill *              _fillR;
-    definGCell *             _gcellR;
-    definNet *               _netR;
-    definPin *               _pinR;
-    definRow *               _rowR;
-    definSNet *              _snetR;
-    definTracks *            _tracksR;
-    definVia *               _viaR;
-    definRegion *            _regionR;
-    definNonDefaultRule *    _non_default_ruleR;
-    definPropDefs *          _prop_defsR;
-    definPinProps *          _pin_propsR;
-    std::vector<definBase *> _interfaces;
-    bool             _update;
-    const char *     _block_name;
+  dbDatabase*             _db;
+  definBlockage*          _blockageR;
+  definComponent*         _componentR;
+  definFill*              _fillR;
+  definGCell*             _gcellR;
+  definNet*               _netR;
+  definPin*               _pinR;
+  definRow*               _rowR;
+  definSNet*              _snetR;
+  definTracks*            _tracksR;
+  definVia*               _viaR;
+  definRegion*            _regionR;
+  definNonDefaultRule*    _non_default_ruleR;
+  definPropDefs*          _prop_defsR;
+  definPinProps*          _pin_propsR;
+  std::vector<definBase*> _interfaces;
+  bool                    _update;
+  const char*             _block_name;
 
-    void init();
-    void setLibs( std::vector<dbLib *> & lib_names );
-    
-    virtual void dieArea( const std::vector<defPoint> & points );
-    virtual void error( const char * msg );
-    virtual void units( int d );
-    virtual void line( int line_num );
+  void init();
+  void setLibs(std::vector<dbLib*>& lib_names);
 
-    void setTech( dbTech * tech );
-    void setBlock( dbBlock * block );
+  virtual void dieArea(const std::vector<defPoint>& points);
+  virtual void error(const char* msg);
+  virtual void units(int d);
+  virtual void line(int line_num);
 
-    bool createBlock( const char * file );
-    bool replaceWires( const char * file );
-    void replaceWires();
-    int errors();
-    
-  public:
-    definReader( dbDatabase * db );
-    virtual ~definReader();
-    
-    void skipConnections();
-    void skipWires();
-    void skipSpecialWires();
-    void skipShields();
-    void skipBlockWires();
-    void skipFillWires();
-    void useBlockName( const char * name );
-    void namesAreDBIDs();
-    void setAssemblyMode();
-    
-    dbChip * createChip( std::vector<dbLib *> & search_libs, const char * def_file );
-    dbBlock * createBlock( dbBlock * parent, std::vector<dbLib *> & search_libs, const char * def_file );
-    bool replaceWires( dbBlock * block, const char * def_file );
+  void setTech(dbTech* tech);
+  void setBlock(dbBlock* block);
+
+  bool createBlock(const char* file);
+  bool replaceWires(const char* file);
+  void replaceWires();
+  int  errors();
+
+ public:
+  definReader(dbDatabase* db);
+  virtual ~definReader();
+
+  void skipConnections();
+  void skipWires();
+  void skipSpecialWires();
+  void skipShields();
+  void skipBlockWires();
+  void skipFillWires();
+  void useBlockName(const char* name);
+  void namesAreDBIDs();
+  void setAssemblyMode();
+
+  dbChip*  createChip(std::vector<dbLib*>& search_libs, const char* def_file);
+  dbBlock* createBlock(dbBlock*             parent,
+                       std::vector<dbLib*>& search_libs,
+                       const char*          def_file);
+  bool     replaceWires(dbBlock* block, const char* def_file);
 };
-    
-} // namespace
+
+}  // namespace odb
 
 #endif

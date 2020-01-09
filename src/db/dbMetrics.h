@@ -20,14 +20,15 @@
 //
 // THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
 // AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
-// IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
-// DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE
-// FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
-// DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR
-// SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
-// CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
-// OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
-// OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+// IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
+// ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE
+// LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
+// CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
+// SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
+// INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
+// CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
+// ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
+// POSSIBILITY OF SUCH DAMAGE.
 
 #ifndef ADS_DB_METRICS_H
 #define ADS_DB_METRICS_H
@@ -44,30 +45,32 @@ class dbDiff;
 
 class _dbMetrics : public dbObject
 {
-  public:
-    int          _worst_slack;
-    int          _total_slack;
-    
-    _dbMetrics( _dbDatabase * );
-    _dbMetrics( _dbDatabase *, const _dbMetrics & i );
-    ~_dbMetrics();
-    bool operator==( const _dbMetrics & rhs ) const;
-    bool operator!=( const _dbMetrics & rhs ) const { return ! operator==(rhs); }
-    bool operator<( const _dbMetrics & rhs ) const;
-    void differences( dbDiff & diff, const char * field, const _dbMetrics & rhs ) const;
-    void out( dbDiff & diff, char side, const char * field ) const;
-    static void merge( _dbMetrics & dst, _dbMetrics & src, int slew_op, int slack_op);
+ public:
+  int _worst_slack;
+  int _total_slack;
+
+  _dbMetrics(_dbDatabase*);
+  _dbMetrics(_dbDatabase*, const _dbMetrics& i);
+  ~_dbMetrics();
+  bool operator==(const _dbMetrics& rhs) const;
+  bool operator!=(const _dbMetrics& rhs) const { return !operator==(rhs); }
+  bool operator<(const _dbMetrics& rhs) const;
+  void differences(dbDiff&           diff,
+                   const char*       field,
+                   const _dbMetrics& rhs) const;
+  void out(dbDiff& diff, char side, const char* field) const;
+  static void merge(_dbMetrics& dst,
+                    _dbMetrics& src,
+                    int         slew_op,
+                    int         slack_op);
 };
 
-inline _dbMetrics::_dbMetrics( _dbDatabase * )
-        : _worst_slack(2),
-          _total_slack(2)
+inline _dbMetrics::_dbMetrics(_dbDatabase*) : _worst_slack(2), _total_slack(2)
 {
 }
 
-inline _dbMetrics::_dbMetrics( _dbDatabase *, const _dbMetrics & i )
-        : _worst_slack(i._worst_slack),
-          _total_slack(i._total_slack)
+inline _dbMetrics::_dbMetrics(_dbDatabase*, const _dbMetrics& i)
+    : _worst_slack(i._worst_slack), _total_slack(i._total_slack)
 {
 }
 
@@ -75,36 +78,36 @@ inline _dbMetrics::~_dbMetrics()
 {
 }
 
-inline bool _dbMetrics::operator==( const _dbMetrics & rhs ) const
+inline bool _dbMetrics::operator==(const _dbMetrics& rhs) const
 {
-    if ( _worst_slack != rhs._worst_slack )
-        return false;
+  if (_worst_slack != rhs._worst_slack)
+    return false;
 
-    if ( _total_slack != rhs._total_slack )
-        return false;
+  if (_total_slack != rhs._total_slack)
+    return false;
 
-    return true;
+  return true;
 }
 
-inline bool _dbMetrics::operator<( const _dbMetrics & rhs ) const
+inline bool _dbMetrics::operator<(const _dbMetrics& rhs) const
 {
-    return getOID() < rhs.getOID();
+  return getOID() < rhs.getOID();
 }
 
-inline dbOStream & operator<<( dbOStream & stream, const _dbMetrics & tmg )
+inline dbOStream& operator<<(dbOStream& stream, const _dbMetrics& tmg)
 {
-    stream << tmg._worst_slack;
-    stream << tmg._total_slack;
-    return stream;
+  stream << tmg._worst_slack;
+  stream << tmg._total_slack;
+  return stream;
 }
 
-inline dbIStream & operator>>( dbIStream & stream, _dbMetrics & tmg )
+inline dbIStream& operator>>(dbIStream& stream, _dbMetrics& tmg)
 {
-    stream >> tmg._worst_slack;
-    stream >> tmg._total_slack;
-    return stream;
+  stream >> tmg._worst_slack;
+  stream >> tmg._total_slack;
+  return stream;
 }
 
-} // namespace
+}  // namespace odb
 
 #endif

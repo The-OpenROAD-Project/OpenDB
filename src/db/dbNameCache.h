@@ -20,14 +20,15 @@
 //
 // THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
 // AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
-// IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
-// DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE
-// FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
-// DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR
-// SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
-// CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
-// OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
-// OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+// IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
+// ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE
+// LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
+// CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
+// SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
+// INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
+// CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
+// ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
+// POSSIBILITY OF SUCH DAMAGE.
 
 #ifndef ADS_DB_NAME_CACHE_H
 #define ADS_DB_NAME_CACHE_H
@@ -44,35 +45,39 @@ class _dbDatabase;
 
 class _dbNameCache
 {
-  public:
-    dbTable<_dbName> *   _name_tbl;
-    dbHashTable<_dbName> _name_hash;
-    
-    _dbNameCache( _dbDatabase * db, dbObject * owner, dbObjectTable * (dbObject::*m)(dbObjectType) );
-    _dbNameCache( _dbDatabase * db, dbObject * owner, const _dbNameCache & cache );
-    ~_dbNameCache();
+ public:
+  dbTable<_dbName>*    _name_tbl;
+  dbHashTable<_dbName> _name_hash;
 
-    bool operator==( const _dbNameCache & rhs ) const;
-    bool operator!=( const _dbNameCache & rhs ) const { return ! operator==(rhs); }
-    void differences( dbDiff & diff, const char * field, const _dbNameCache & rhs ) const;
-    void out( dbDiff & diff, char side, const char * field ) const;
+  _dbNameCache(_dbDatabase* db,
+               dbObject*    owner,
+               dbObjectTable* (dbObject::*m)(dbObjectType));
+  _dbNameCache(_dbDatabase* db, dbObject* owner, const _dbNameCache& cache);
+  ~_dbNameCache();
 
-    // Find the name, returns 0 if the name does not exists.
-    uint findName( const char * name );
+  bool operator==(const _dbNameCache& rhs) const;
+  bool operator!=(const _dbNameCache& rhs) const { return !operator==(rhs); }
+  void differences(dbDiff&             diff,
+                   const char*         field,
+                   const _dbNameCache& rhs) const;
+  void out(dbDiff& diff, char side, const char* field) const;
 
-    // Add this name to the table if it does not exists.
-    // increment the reference count to this name
-    uint addName( const char * name );
+  // Find the name, returns 0 if the name does not exists.
+  uint findName(const char* name);
 
-    // Remove this name to the table if the ref-cnt is 0
-    void removeName( uint id );
+  // Add this name to the table if it does not exists.
+  // increment the reference count to this name
+  uint addName(const char* name);
 
-    // Remove the string this id represents
-    const char * getName( uint id );
+  // Remove this name to the table if the ref-cnt is 0
+  void removeName(uint id);
+
+  // Remove the string this id represents
+  const char* getName(uint id);
 };
 
-dbOStream & operator<<( dbOStream & stream, const _dbNameCache & net );
-dbIStream & operator>>( dbIStream & stream, _dbNameCache & net );
+dbOStream& operator<<(dbOStream& stream, const _dbNameCache& net);
+dbIStream& operator>>(dbIStream& stream, _dbNameCache& net);
 
-} // namespace
+}  // namespace odb
 #endif

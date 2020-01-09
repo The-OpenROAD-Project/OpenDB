@@ -20,44 +20,44 @@
 //
 // THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
 // AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
-// IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
-// DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE
-// FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
-// DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR
-// SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
-// CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
-// OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
-// OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+// IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
+// ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE
+// LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
+// CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
+// SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
+// INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
+// CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
+// ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
+// POSSIBILITY OF SUCH DAMAGE.
 
 #include "definPolygon.h"
-#include "poly_decomp.h"
 #include <algorithm>
+#include "poly_decomp.h"
 
 namespace odb {
 
-definPolygon::definPolygon( const std::vector<adsPoint> & points )
+definPolygon::definPolygon(const std::vector<adsPoint>& points)
     : _points(points)
 {
-    if ( _points.size() < 4 )
-        return;
-                                                                                
-    if ( _points[0] == _points[_points.size()-1] )
-        _points.pop_back();
-                                                                                
-    if ( _points.size() < 4 )
-        return;
-                                                                                
-    if ( ! polygon_is_clockwise(_points) )
-        std::reverse(_points.begin(), _points.end());
+  if (_points.size() < 4)
+    return;
+
+  if (_points[0] == _points[_points.size() - 1])
+    _points.pop_back();
+
+  if (_points.size() < 4)
+    return;
+
+  if (!polygon_is_clockwise(_points))
+    std::reverse(_points.begin(), _points.end());
 }
 
-void definPolygon::decompose( std::vector<adsRect> & rects )
+void definPolygon::decompose(std::vector<adsRect>& rects)
 {
-    if ( _points.size() < 4 )
-        return;
+  if (_points.size() < 4)
+    return;
 
-    decompose_polygon( _points, rects );
+  decompose_polygon(_points, rects);
 }
 
-
-} // namespace
+}  // namespace odb

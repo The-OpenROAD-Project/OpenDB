@@ -20,19 +20,19 @@
 //
 // THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
 // AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
-// IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
-// DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE
-// FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
-// DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR
-// SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
-// CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
-// OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
-// OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+// IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
+// ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE
+// LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
+// CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
+// SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
+// INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
+// CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
+// ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
+// POSSIBILITY OF SUCH DAMAGE.
 
 #include "dbRegionInstItr.h"
-#include "dbRegion.h"
-#include "dbInst.h"
 #include "dbBlock.h"
+#include "dbInst.h"
 #include "dbRegion.h"
 #include "dbTable.h"
 
@@ -46,79 +46,78 @@ namespace odb {
 
 bool dbRegionInstItr::reversible()
 {
-    return true;
+  return true;
 }
 
 bool dbRegionInstItr::orderReversed()
 {
-    return true;
+  return true;
 }
 
-void dbRegionInstItr::reverse(dbObject * parent)
+void dbRegionInstItr::reverse(dbObject* parent)
 {
-    _dbRegion * region = (_dbRegion *) parent;
-    uint id = region->_insts;
-    uint list = 0;
+  _dbRegion* region = (_dbRegion*) parent;
+  uint       id     = region->_insts;
+  uint       list   = 0;
 
-    while( id !=  0 )
-    {
-        _dbInst * inst =  _inst_tbl->getPtr(id);
-        uint n = inst->_region_next;
-        inst->_region_next = list;
-        list = id; 
-        id = n;
-    }
+  while (id != 0) {
+    _dbInst* inst      = _inst_tbl->getPtr(id);
+    uint     n         = inst->_region_next;
+    inst->_region_next = list;
+    list               = id;
+    id                 = n;
+  }
 
-    uint prev = 0;
-    id = list;
-    
-    while( id !=  0 )
-    {
-        _dbInst * inst =  _inst_tbl->getPtr(id);
-        inst->_region_prev = prev;
-        prev = id;
-        id = inst->_region_next;
-    }
+  uint prev = 0;
+  id        = list;
 
-    region->_insts = list;
+  while (id != 0) {
+    _dbInst* inst      = _inst_tbl->getPtr(id);
+    inst->_region_prev = prev;
+    prev               = id;
+    id                 = inst->_region_next;
+  }
+
+  region->_insts = list;
 }
 
 uint dbRegionInstItr::sequential()
 {
-    return 0;
+  return 0;
 }
 
-uint dbRegionInstItr::size( dbObject * parent )
+uint dbRegionInstItr::size(dbObject* parent)
 {
-    uint id;
-    uint cnt = 0;
+  uint id;
+  uint cnt = 0;
 
-    for( id = dbRegionInstItr::begin(parent); id != dbRegionInstItr::end(parent); id = dbRegionInstItr::next(id) )
-        ++cnt;
-   
-    return cnt; 
+  for (id = dbRegionInstItr::begin(parent); id != dbRegionInstItr::end(parent);
+       id = dbRegionInstItr::next(id))
+    ++cnt;
+
+  return cnt;
 }
 
-uint dbRegionInstItr::begin( dbObject * parent )
+uint dbRegionInstItr::begin(dbObject* parent)
 {
-    _dbRegion * region = (_dbRegion *) parent;
-    return (uint) region->_insts;
+  _dbRegion* region = (_dbRegion*) parent;
+  return (uint) region->_insts;
 }
 
-uint dbRegionInstItr::end( dbObject * parent )
+uint dbRegionInstItr::end(dbObject* parent)
 {
-    return 0;
+  return 0;
 }
 
-uint dbRegionInstItr::next( uint id, ... )
+uint dbRegionInstItr::next(uint id, ...)
 {
-    _dbInst * inst = _inst_tbl->getPtr(id);
-    return inst->_region_next;
+  _dbInst* inst = _inst_tbl->getPtr(id);
+  return inst->_region_next;
 }
 
-dbObject * dbRegionInstItr::getObject( uint id, ... )
+dbObject* dbRegionInstItr::getObject(uint id, ...)
 {
-    return _inst_tbl->getPtr(id);
+  return _inst_tbl->getPtr(id);
 }
 
-} // namespace
+}  // namespace odb

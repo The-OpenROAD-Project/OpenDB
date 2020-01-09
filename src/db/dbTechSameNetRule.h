@@ -20,22 +20,23 @@
 //
 // THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
 // AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
-// IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
-// DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE
-// FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
-// DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR
-// SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
-// CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
-// OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
-// OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+// IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
+// ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE
+// LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
+// CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
+// SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
+// INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
+// CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
+// ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
+// POSSIBILITY OF SUCH DAMAGE.
 
 #ifndef ADS_DB_TECH_SAME_NET_RULE_H
 #define ADS_DB_TECH_SAME_NET_RULE_H
 
 #include "ads.h"
-#include "dbTypes.h"
 #include "dbId.h"
 #include "dbObject.h"
+#include "dbTypes.h"
 
 namespace odb {
 
@@ -49,68 +50,74 @@ class dbDiff;
 
 struct _dbTechSameNetRuleFlags
 {
-    uint  _stack         : 1;
-    uint  _spare_bits    : 31;
+  uint _stack : 1;
+  uint _spare_bits : 31;
 };
 
 class _dbTechSameNetRule : public dbObject
 {
-  public:
-    // PERSISTANT-MEMBERS
-    _dbTechSameNetRuleFlags     _flags;
-    uint                        _spacing;
-    dbId<_dbTechLayer>          _layer_1;
-    dbId<_dbTechLayer>          _layer_2;
+ public:
+  // PERSISTANT-MEMBERS
+  _dbTechSameNetRuleFlags _flags;
+  uint                    _spacing;
+  dbId<_dbTechLayer>      _layer_1;
+  dbId<_dbTechLayer>      _layer_2;
 
-    _dbTechSameNetRule( _dbDatabase *, const _dbTechSameNetRule & r );
-    _dbTechSameNetRule( _dbDatabase * );
-    ~_dbTechSameNetRule();
+  _dbTechSameNetRule(_dbDatabase*, const _dbTechSameNetRule& r);
+  _dbTechSameNetRule(_dbDatabase*);
+  ~_dbTechSameNetRule();
 
-    bool operator==( const _dbTechSameNetRule & rhs ) const;
-    bool operator!=( const _dbTechSameNetRule & rhs ) const { return ! operator==(rhs); }
-    void differences( dbDiff & diff, const char * field, const _dbTechSameNetRule & rhs ) const;
-    void out( dbDiff & diff, char side, const char * field ) const;
+  bool operator==(const _dbTechSameNetRule& rhs) const;
+  bool operator!=(const _dbTechSameNetRule& rhs) const
+  {
+    return !operator==(rhs);
+  }
+  void differences(dbDiff&                   diff,
+                   const char*               field,
+                   const _dbTechSameNetRule& rhs) const;
+  void out(dbDiff& diff, char side, const char* field) const;
 };
 
-inline _dbTechSameNetRule::_dbTechSameNetRule( _dbDatabase *, const _dbTechSameNetRule & r )
-        : _flags(r._flags),
-          _spacing(r._spacing),
-          _layer_1(r._layer_1),
-          _layer_2(r._layer_2)
+inline _dbTechSameNetRule::_dbTechSameNetRule(_dbDatabase*,
+                                              const _dbTechSameNetRule& r)
+    : _flags(r._flags),
+      _spacing(r._spacing),
+      _layer_1(r._layer_1),
+      _layer_2(r._layer_2)
 {
 }
 
-inline _dbTechSameNetRule::_dbTechSameNetRule( _dbDatabase * )
+inline _dbTechSameNetRule::_dbTechSameNetRule(_dbDatabase*)
 {
-    _flags._stack = 0;
-    _flags._spare_bits = 0;
-    _spacing  = 0;
+  _flags._stack      = 0;
+  _flags._spare_bits = 0;
+  _spacing           = 0;
 }
 
 inline _dbTechSameNetRule::~_dbTechSameNetRule()
 {
 }
 
-inline dbOStream & operator<<( dbOStream & stream, const _dbTechSameNetRule & rule )
+inline dbOStream& operator<<(dbOStream& stream, const _dbTechSameNetRule& rule)
 {
-    uint * bit_field = (uint *) &rule._flags;
-    stream << *bit_field;
-    stream << rule._spacing;
-    stream << rule._layer_1;
-    stream << rule._layer_2;
-    return stream;
+  uint* bit_field = (uint*) &rule._flags;
+  stream << *bit_field;
+  stream << rule._spacing;
+  stream << rule._layer_1;
+  stream << rule._layer_2;
+  return stream;
 }
 
-inline dbIStream & operator>>( dbIStream & stream, _dbTechSameNetRule & rule )
+inline dbIStream& operator>>(dbIStream& stream, _dbTechSameNetRule& rule)
 {
-    uint * bit_field = (uint *) &rule._flags;
-    stream >> *bit_field;
-    stream >> rule._spacing;
-    stream >> rule._layer_1;
-    stream >> rule._layer_2;
-    return stream;
+  uint* bit_field = (uint*) &rule._flags;
+  stream >> *bit_field;
+  stream >> rule._spacing;
+  stream >> rule._layer_1;
+  stream >> rule._layer_2;
+  return stream;
 }
 
-} // namespace
+}  // namespace odb
 
 #endif

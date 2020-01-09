@@ -20,14 +20,15 @@
 //
 // THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
 // AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
-// IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
-// DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE
-// FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
-// DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR
-// SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
-// CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
-// OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
-// OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+// IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
+// ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE
+// LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
+// CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
+// SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
+// INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
+// CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
+// ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
+// POSSIBILITY OF SUCH DAMAGE.
 
 #ifndef ADS_DB_PRINTCONTROL_H
 #define ADS_DB_PRINTCONTROL_H
@@ -35,32 +36,34 @@
 #include "array1.h"
 
 namespace odb {
-    
+
 class dbNet;
 class dbInst;
 
 class dbPrintControl
 {
-  public:
-   enum Type
-    {
-        EXTTREE,
-        EXTRACT  //  keep this as the last in enum !!!!
-    } ;
-    // NON-PERSISTANT-MEMBERS
-    uint _groupCnt;
-    uint _printCnt;
-    Ath__array1D<dbNet *> ** _targetNet;
-    Ath__array1D<dbInst *> ** _targetInst;
+ public:
+  enum Type
+  {
+    EXTTREE,
+    EXTRACT  //  keep this as the last in enum !!!!
+  };
+  // NON-PERSISTANT-MEMBERS
+  uint                    _groupCnt;
+  uint                    _printCnt;
+  Ath__array1D<dbNet*>**  _targetNet;
+  Ath__array1D<dbInst*>** _targetInst;
 
-
-    dbPrintControl();
-    ~dbPrintControl();
-    void setPrintControl(dbBlock *block, const char *name, const char *netn, const char *instn);
-    uint getPrintCnt(dbPrintControl::Type ptype, dbNet *net);
-    uint getPrintCnt(dbPrintControl::Type ptype, dbInst *inst);
+  dbPrintControl();
+  ~dbPrintControl();
+  void setPrintControl(dbBlock*    block,
+                       const char* name,
+                       const char* netn,
+                       const char* instn);
+  uint getPrintCnt(dbPrintControl::Type ptype, dbNet* net);
+  uint getPrintCnt(dbPrintControl::Type ptype, dbInst* inst);
 };
 
-} // namespace
+}  // namespace odb
 
 #endif

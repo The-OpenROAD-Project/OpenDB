@@ -20,50 +20,51 @@
 //
 // THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
 // AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
-// IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
-// DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE
-// FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
-// DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR
-// SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
-// CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
-// OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
-// OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+// IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
+// ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE
+// LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
+// CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
+// SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
+// INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
+// CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
+// ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
+// POSSIBILITY OF SUCH DAMAGE.
 
 #ifndef ADS_DEFIN_IMPL_H
 #define ADS_DEFIN_IMPL_H
 
-#include <vector>
 #include <map>
+#include <vector>
 
 #include "ads.h"
-#include "definITracks.h"
 #include "definBase.h"
+#include "definITracks.h"
 
 namespace odb {
 
 struct Track
 {
-    int  _dir;
-    int  _orig;
-    int  _step;
-    int  _count;
+  int _dir;
+  int _orig;
+  int _step;
+  int _count;
 };
 
 class definTracks : public definITracks, public definBase
 {
-    Track  _track;
+  Track _track;
 
-    /// Track interface methods
-    virtual void tracksBegin( defDirection dir, int orig, int count, int step );
-    virtual void tracksLayer( const char * layer );
-    virtual void tracksEnd();
+  /// Track interface methods
+  virtual void tracksBegin(defDirection dir, int orig, int count, int step);
+  virtual void tracksLayer(const char* layer);
+  virtual void tracksEnd();
 
-  public:
-    definTracks();
-    virtual ~definTracks();
-    void init();
+ public:
+  definTracks();
+  virtual ~definTracks();
+  void init();
 };
-    
-} // namespace
+
+}  // namespace odb
 
 #endif

@@ -20,14 +20,15 @@
 //
 // THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
 // AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
-// IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
-// DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE
-// FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
-// DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR
-// SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
-// CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
-// OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
-// OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+// IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
+// ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE
+// LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
+// CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
+// SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
+// INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
+// CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
+// ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
+// POSSIBILITY OF SUCH DAMAGE.
 
 #ifndef ADS_DB_MAP_H
 #define ADS_DB_MAP_H
@@ -54,66 +55,65 @@ namespace odb {
 template <class T, class D>
 class dbMap
 {
-    dbSet<T>            _set;
-    std::map<T *, D> *  _map;    // map used if set is not sequential
-    std::vector<D> *    _vector; // vector used if set is sequential
+  dbSet<T>         _set;
+  std::map<T*, D>* _map;     // map used if set is not sequential
+  std::vector<D>*  _vector;  // vector used if set is sequential
 
-    // Map cannot be assigned or copied!
-    dbMap( const dbMap & );
-    dbMap & operator=( const dbMap & );
-    
-  public:
+  // Map cannot be assigned or copied!
+  dbMap(const dbMap&);
+  dbMap& operator=(const dbMap&);
 
-    ///
-    /// Create a new map from the set. The data-objects are initialized
-    /// to the default constructor of the object type.
-    ///
-    dbMap( const dbSet<T> & set );
+ public:
+  ///
+  /// Create a new map from the set. The data-objects are initialized
+  /// to the default constructor of the object type.
+  ///
+  dbMap(const dbSet<T>& set);
 
-    ///
-    /// Destructor.
-    ///
-    ~dbMap();
+  ///
+  /// Destructor.
+  ///
+  ~dbMap();
 
-    ///
-    /// D & operator[T *] const
-    /// Access to a data object of key "T *".
-    ///
-    /// Example:
-    ///
-    /// dbSet<dbNet> nets = block->getNets();
-    /// dbMap<dbNet, int> net_weight;
-    /// dbSet<dbNet>::iterator itr;
-    ///
-    /// for( itr = nets.begin(); itr != nets.end(); ++itr )
-    /// {
-    ///     dbNet * net = *itr;
-    ///     net_weight[net] = 1;
-    /// }
-    /// 
-    D & operator[]( T * object );
+  ///
+  /// D & operator[T *] const
+  /// Access to a data object of key "T *".
+  ///
+  /// Example:
+  ///
+  /// dbSet<dbNet> nets = block->getNets();
+  /// dbMap<dbNet, int> net_weight;
+  /// dbSet<dbNet>::iterator itr;
+  ///
+  /// for( itr = nets.begin(); itr != nets.end(); ++itr )
+  /// {
+  ///     dbNet * net = *itr;
+  ///     net_weight[net] = 1;
+  /// }
+  ///
+  D& operator[](T* object);
 
-    ///
-    /// const D & operator[T *] const
-    /// Const access to a data object of key "T *".
-    ///
-    /// Example:
-    ///
-    /// dbSet<dbNet> nets = block->getNets();
-    /// dbMap<dbNet, int> net_weight;
-    /// dbSet<dbNet>::iterator itr;
-    ///
-    /// for( itr = nets.begin(); itr != nets.end(); ++itr )
-    /// {
-    ///     dbNet * net = *itr;
-    ///     int weight = net_weight[net];
-    ///     printf("net(%d) weight = %d\n", net->getId(), weight );
-    /// }
-    /// 
-    const D & operator[]( T * object ) const;
+  ///
+  /// const D & operator[T *] const
+  /// Const access to a data object of key "T *".
+  ///
+  /// Example:
+  ///
+  /// dbSet<dbNet> nets = block->getNets();
+  /// dbMap<dbNet, int> net_weight;
+  /// dbSet<dbNet>::iterator itr;
+  ///
+  /// for( itr = nets.begin(); itr != nets.end(); ++itr )
+  /// {
+  ///     dbNet * net = *itr;
+  ///     int weight = net_weight[net];
+  ///     printf("net(%d) weight = %d\n", net->getId(), weight );
+  /// }
+  ///
+  const D& operator[](T* object) const;
 };
 
-} // namespace
+}  // namespace odb
 
 #include "dbMap.hpp"
 

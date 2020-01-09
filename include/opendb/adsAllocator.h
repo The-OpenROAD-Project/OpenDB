@@ -20,14 +20,15 @@
 //
 // THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
 // AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
-// IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
-// DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE
-// FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
-// DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR
-// SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
-// CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
-// OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
-// OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+// IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
+// ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE
+// LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
+// CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
+// SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
+// INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
+// CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
+// ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
+// POSSIBILITY OF SUCH DAMAGE.
 
 #ifndef ADS_ALLOCATOR_H
 #define ADS_ALLOCATOR_H
@@ -52,7 +53,7 @@ namespace odb {
 ///       destroyed.
 ///
 /// There are two usage alternatives when using C++ classes.
-/// 
+///
 /// 1) You can apply a specific constructor by doing the folowing:
 ///
 ///      class Foo {};
@@ -67,11 +68,11 @@ namespace odb {
 ///    The create() method will call the default constructor.
 ///    The destroy() method will call the destructor. The example above can
 ///    be recoded as:
-/// 
+///
 ///      adsAllocator<Foo> alloc;
 ///      Foo * p = alloc.create();
 ///      alloc.destroy(p);
-/// 
+///
 /// DO NOT CALL DELETE ON a POINTER RETURNED FROM THE ALLOCATOR
 ///
 ///      delete p;    // ILLEGAL
@@ -79,166 +80,164 @@ namespace odb {
 template <class T>
 class adsAllocator
 {
-    struct chunk
-    {
-        chunk * _next;
-    };
-        
-    struct block
-    {
-        void *  _chunk;
-        block * _next;
-    };
+  struct chunk
+  {
+    chunk* _next;
+  };
 
-    block * _block_list;
-    int     _block_size;
-    uint    _size;
-    uint    _vm_size;
-    chunk * _free_list;
-    void new_block();
+  struct block
+  {
+    void*  _chunk;
+    block* _next;
+  };
 
-  public:
+  block* _block_list;
+  int    _block_size;
+  uint   _size;
+  uint   _vm_size;
+  chunk* _free_list;
+  void   new_block();
 
-    // construct an allocator, block-size = number of object reserved per block allocation
-    adsAllocator(int block_size = 128);
+ public:
+  // construct an allocator, block-size = number of object reserved per block
+  // allocation
+  adsAllocator(int block_size = 128);
 
-    // destroy the allocator, all memory is free'ed...
-    ~adsAllocator();
+  // destroy the allocator, all memory is free'ed...
+  ~adsAllocator();
 
-    // clear the pool, release all memory and resets the pool to it's initial state.
-    void clear();
+  // clear the pool, release all memory and resets the pool to it's initial
+  // state.
+  void clear();
 
-    // malloc a new object
-    T * malloc();
+  // malloc a new object
+  T* malloc();
 
-    // free an object
-    void free( T * );
+  // free an object
+  void free(T*);
 
-    // Create a new object and call the default constructor
-    T * create();
+  // Create a new object and call the default constructor
+  T* create();
 
-    // Destroy an object and call the destructor
-    void destroy( T * );
+  // Destroy an object and call the destructor
+  void destroy(T*);
 
-    uint size() const { return _size; }
+  uint size() const { return _size; }
 
-    uint vm_size() const;
+  uint vm_size() const;
 };
 
 template <class T>
 inline adsAllocator<T>::adsAllocator(int block_size)
 {
-    _block_size = block_size;
-    _free_list = NULL;
-    _block_list = NULL;
-    _size = 0;
-    _vm_size = 0;
+  _block_size = block_size;
+  _free_list  = NULL;
+  _block_list = NULL;
+  _size       = 0;
+  _vm_size    = 0;
 }
 
 template <class T>
 inline adsAllocator<T>::~adsAllocator()
 {
-    clear();
+  clear();
 }
 
 template <class T>
 inline uint adsAllocator<T>::vm_size() const
 {
-    return _vm_size;
+  return _vm_size;
 }
 
 template <class T>
 inline void adsAllocator<T>::clear()
 {
-    block * b = _block_list;
-    block * next = NULL;
+  block* b    = _block_list;
+  block* next = NULL;
 
-    for( ; b ; b = next )
-    {
-        next = b->_next;
-        ::free( (void *) b->_chunk );
-        ::free( (void *) b );
-    }
+  for (; b; b = next) {
+    next = b->_next;
+    ::free((void*) b->_chunk);
+    ::free((void*) b);
+  }
 
-    _free_list = NULL;
-    _block_list = NULL;
+  _free_list  = NULL;
+  _block_list = NULL;
 }
 
 template <class T>
-inline T * adsAllocator<T>::malloc()
+inline T* adsAllocator<T>::malloc()
 {
 #ifdef ADS_PURIFY_ALLOCATOR
-    _size += sizeof(T);
-    return (T *) ::malloc(sizeof(T));
+  _size += sizeof(T);
+  return (T*) ::malloc(sizeof(T));
 #else
-    if ( _free_list == NULL )
-        new_block();
+  if (_free_list == NULL)
+    new_block();
 
-    chunk * c = _free_list;
-    _free_list = c->_next;
-    return (T*) c;
+  chunk* c   = _free_list;
+  _free_list = c->_next;
+  return (T*) c;
 #endif
 }
 
 template <class T>
-inline T * adsAllocator<T>::create()
+inline T* adsAllocator<T>::create()
 {
-    T * t = adsAllocator<T>::malloc();
-    new(t) T;
-    return t;
+  T* t = adsAllocator<T>::malloc();
+  new (t) T;
+  return t;
 }
 
 template <class T>
-inline void adsAllocator<T>::free( T * t )
+inline void adsAllocator<T>::free(T* t)
 {
 #ifdef ADS_PURIFY_ALLOCATOR
-    _size -= sizeof(T);
-    ::free((void *) t);
+  _size -= sizeof(T);
+  ::free((void*) t);
 #else
-    
-    chunk * c = (chunk *) t;
-    c->_next = _free_list;
-    _free_list = c;
+
+  chunk* c   = (chunk*) t;
+  c->_next   = _free_list;
+  _free_list = c;
 #endif
 }
 
 template <class T>
-inline void adsAllocator<T>::destroy( T * t )
+inline void adsAllocator<T>::destroy(T* t)
 {
-    t->~T();
-    adsAllocator<T>::free(t);
+  t->~T();
+  adsAllocator<T>::free(t);
 }
 
 template <class T>
 inline void adsAllocator<T>::new_block()
 {
-    int obj_size = sizeof(T) < sizeof(chunk) ? sizeof(chunk) : sizeof(T);
-    _size += sizeof(block);
-    _size += _block_size*obj_size;
+  int obj_size = sizeof(T) < sizeof(chunk) ? sizeof(chunk) : sizeof(T);
+  _size += sizeof(block);
+  _size += _block_size * obj_size;
 
-    block * b = (block *) ::malloc(sizeof(block));
-    assert(b);
-    b->_chunk =  ::malloc( obj_size * _block_size );
-    assert(b->_chunk);
-    _vm_size += sizeof(block);
-    _vm_size += obj_size * _block_size;
+  block* b = (block*) ::malloc(sizeof(block));
+  assert(b);
+  b->_chunk = ::malloc(obj_size * _block_size);
+  assert(b->_chunk);
+  _vm_size += sizeof(block);
+  _vm_size += obj_size * _block_size;
 
-    char * base = (char *) b->_chunk;
-    char * end = base + obj_size * _block_size;
-    char * c;
-    
-    for( c = end - obj_size; c >= base; c -= obj_size )
-    {
-        chunk * ck = (chunk *) c;
-        ck->_next = _free_list;
-        _free_list = ck;
-    }
+  char* base = (char*) b->_chunk;
+  char* end  = base + obj_size * _block_size;
+  char* c;
 
-    b->_next = _block_list;
-    _block_list = b;
+  for (c = end - obj_size; c >= base; c -= obj_size) {
+    chunk* ck  = (chunk*) c;
+    ck->_next  = _free_list;
+    _free_list = ck;
+  }
+
+  b->_next    = _block_list;
+  _block_list = b;
 }
 
-
-} // namespace
+}  // namespace odb
 
 #endif

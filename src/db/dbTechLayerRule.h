@@ -20,22 +20,23 @@
 //
 // THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
 // AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
-// IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
-// DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE
-// FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
-// DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR
-// SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
-// CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
-// OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
-// OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+// IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
+// ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE
+// LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
+// CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
+// SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
+// INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
+// CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
+// ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
+// POSSIBILITY OF SUCH DAMAGE.
 
 #ifndef ADS_DB_TECH_LAYERRULE_H
 #define ADS_DB_TECH_LAYERRULE_H
 
 #include "ads.h"
-#include "dbTypes.h"
 #include "dbId.h"
 #include "dbObject.h"
+#include "dbTypes.h"
 
 namespace odb {
 
@@ -50,51 +51,56 @@ class dbDiff;
 
 struct _dbTechLayerRuleFlags
 {
-    uint  _block_rule    : 1;
-    uint  _spare_bits    : 31;
+  uint _block_rule : 1;
+  uint _spare_bits : 31;
 };
 
 class _dbTechLayerRule : public dbObject
 {
-  public:
-    // PERSISTANT-MEMBERS
-    _dbTechLayerRuleFlags       _flags;
-    uint                        _width;
-    uint                        _spacing;
-    double                      _resistance;
-    double                      _capacitance;
-    double                      _edge_capacitance;
-    uint                        _wire_extension;
-    dbId<_dbTechNonDefaultRule> _non_default_rule;
-    dbId<_dbTechLayer>          _layer;
+ public:
+  // PERSISTANT-MEMBERS
+  _dbTechLayerRuleFlags       _flags;
+  uint                        _width;
+  uint                        _spacing;
+  double                      _resistance;
+  double                      _capacitance;
+  double                      _edge_capacitance;
+  uint                        _wire_extension;
+  dbId<_dbTechNonDefaultRule> _non_default_rule;
+  dbId<_dbTechLayer>          _layer;
 
-    _dbTechLayerRule( _dbDatabase * );
-    _dbTechLayerRule( _dbDatabase *, const _dbTechLayerRule & r );
-    ~_dbTechLayerRule();
+  _dbTechLayerRule(_dbDatabase*);
+  _dbTechLayerRule(_dbDatabase*, const _dbTechLayerRule& r);
+  ~_dbTechLayerRule();
 
-    _dbTech * getTech();
-    _dbBlock * getBlock();
+  _dbTech*  getTech();
+  _dbBlock* getBlock();
 
-    bool operator==( const _dbTechLayerRule & rhs ) const;
-    bool operator!=( const _dbTechLayerRule & rhs ) const { return ! operator==(rhs); }
-    bool operator<( const _dbTechLayerRule & rhs ) const
-    {
-        if  ( _layer < rhs._layer )
-            return true;
+  bool operator==(const _dbTechLayerRule& rhs) const;
+  bool operator!=(const _dbTechLayerRule& rhs) const
+  {
+    return !operator==(rhs);
+  }
+  bool operator<(const _dbTechLayerRule& rhs) const
+  {
+    if (_layer < rhs._layer)
+      return true;
 
-        if  ( _layer > rhs._layer )
-            return false;
-        
-        return _non_default_rule < rhs._non_default_rule;
-    }
-    
-    void differences( dbDiff & diff, const char * field, const _dbTechLayerRule & rhs ) const;
-    void out( dbDiff & diff, char side, const char * field ) const;
+    if (_layer > rhs._layer)
+      return false;
+
+    return _non_default_rule < rhs._non_default_rule;
+  }
+
+  void differences(dbDiff&                 diff,
+                   const char*             field,
+                   const _dbTechLayerRule& rhs) const;
+  void out(dbDiff& diff, char side, const char* field) const;
 };
 
-dbOStream & operator<<( dbOStream & stream, const _dbTechLayerRule & rule );
-dbIStream & operator>>( dbIStream & stream, _dbTechLayerRule & rule );
+dbOStream& operator<<(dbOStream& stream, const _dbTechLayerRule& rule);
+dbIStream& operator>>(dbIStream& stream, _dbTechLayerRule& rule);
 
-} // namespace
+}  // namespace odb
 
 #endif

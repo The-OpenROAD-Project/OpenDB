@@ -20,14 +20,15 @@
 //
 // THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
 // AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
-// IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
-// DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE
-// FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
-// DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR
-// SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
-// CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
-// OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
-// OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+// IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
+// ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE
+// LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
+// CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
+// SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
+// INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
+// CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
+// ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
+// POSSIBILITY OF SUCH DAMAGE.
 
 #ifndef ADS_LEFOUT_H
 #define ADS_LEFOUT_H
@@ -52,61 +53,53 @@ class dbTechViaGenerateRule;
 
 class lefout
 {
-    FILE * _out;
-    bool   _use_master_ids;
-    bool   _use_alias;
-    bool   _write_marked_masters;
-    double _dist_factor;
-    double _area_factor;
+  FILE*  _out;
+  bool   _use_master_ids;
+  bool   _use_alias;
+  bool   _write_marked_masters;
+  double _dist_factor;
+  double _area_factor;
 
-    
-    void writeBoxes( void * boxes, const char * indent );
-    void writeTech( dbTech * tech );
-    void writeLayer( dbTechLayer * layer );
-    void writeVia( dbTechVia * via );
-    void writeHeader( dbLib * lib );
-    void writeLib( dbLib * lib );
-    void writeMaster( dbMaster * master );
-    void writeMTerm( dbMTerm * mterm );
-    void writeSite( dbSite * site );
-    void writeNonDefaultRule( dbTech * tech, dbTechNonDefaultRule * rule );
-    void writeLayerRule( dbTechLayerRule * rule );
-    void writeSameNetRule( dbTechSameNetRule * rule );
-    void writeTechViaRule( dbTechViaRule * rule );
-    void writeTechViaGenerateRule( dbTechViaGenerateRule * rule );
+  void writeBoxes(void* boxes, const char* indent);
+  void writeTech(dbTech* tech);
+  void writeLayer(dbTechLayer* layer);
+  void writeVia(dbTechVia* via);
+  void writeHeader(dbLib* lib);
+  void writeLib(dbLib* lib);
+  void writeMaster(dbMaster* master);
+  void writeMTerm(dbMTerm* mterm);
+  void writeSite(dbSite* site);
+  void writeNonDefaultRule(dbTech* tech, dbTechNonDefaultRule* rule);
+  void writeLayerRule(dbTechLayerRule* rule);
+  void writeSameNetRule(dbTechSameNetRule* rule);
+  void writeTechViaRule(dbTechViaRule* rule);
+  void writeTechViaGenerateRule(dbTechViaGenerateRule* rule);
 
-  public:
+ public:
+  double lefdist(int value) { return ((double) value * _dist_factor); }
 
-    double lefdist( int value ) 
-    {
-        return ((double) value * _dist_factor);
-    }
-    
-    double lefarea( int value ) 
-    {
-        return ((double) value * _area_factor);
-    }
+  double lefarea(int value) { return ((double) value * _area_factor); }
 
-    lefout()
-    {
-        _write_marked_masters = _use_alias = _use_master_ids = false; 
-        _dist_factor = 0.001;
-        _area_factor = 0.000001;
-    }
+  lefout()
+  {
+    _write_marked_masters = _use_alias = _use_master_ids = false;
+    _dist_factor                                         = 0.001;
+    _area_factor                                         = 0.000001;
+  }
 
-    ~lefout() { }
+  ~lefout() {}
 
-    void setWriteMarkedMasters( bool value ) { _write_marked_masters = value; }
-    void setUseLayerAlias( bool value ) { _use_alias = value; }
-    void setUseMasterIds( bool value ) { _use_master_ids = value; }
+  void setWriteMarkedMasters(bool value) { _write_marked_masters = value; }
+  void setUseLayerAlias(bool value) { _use_alias = value; }
+  void setUseMasterIds(bool value) { _use_master_ids = value; }
 
-    bool writeTech( dbTech * tech, const char * lef_file );
-    bool writeLib( dbLib * lib, const char * lef_file );
-    bool writeTechAndLib( dbLib * lib, const char * lef_file );
+  bool writeTech(dbTech* tech, const char* lef_file);
+  bool writeLib(dbLib* lib, const char* lef_file);
+  bool writeTechAndLib(dbLib* lib, const char* lef_file);
 
-    FILE * out() { return _out; }
+  FILE* out() { return _out; }
 };
 
-} // namespace
+}  // namespace odb
 
 #endif

@@ -20,19 +20,20 @@
 //
 // THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
 // AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
-// IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
-// DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE
-// FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
-// DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR
-// SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
-// CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
-// OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
-// OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+// IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
+// ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE
+// LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
+// CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
+// SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
+// INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
+// CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
+// ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
+// POSSIBILITY OF SUCH DAMAGE.
 
-#include <stdlib.h>
-#include <stdio.h>
-#include <ctype.h>
 #include "definVia.h"
+#include <ctype.h>
+#include <stdio.h>
+#include <stdlib.h>
 #include "db.h"
 #include "dbShape.h"
 
@@ -40,7 +41,7 @@ namespace odb {
 
 definVia::definVia()
 {
-    init();
+  init();
 }
 
 definVia::~definVia()
@@ -49,206 +50,201 @@ definVia::~definVia()
 
 void definVia::init()
 {
-    definBase::init();
-    _cur_via = NULL;
-    _params = NULL;
+  definBase::init();
+  _cur_via = NULL;
+  _params  = NULL;
 }
 
-void definVia::viaBegin( const char * name )
+void definVia::viaBegin(const char* name)
 {
-    assert( _cur_via == NULL );
-    
-    _cur_via = dbVia::create( _block, name );
-    
-    if ( _cur_via == NULL )
-    {
-        notice(0,"error: duplicate via (%s)\n", name );
-        ++_errors;
-    }
+  assert(_cur_via == NULL);
+
+  _cur_via = dbVia::create(_block, name);
+
+  if (_cur_via == NULL) {
+    notice(0, "error: duplicate via (%s)\n", name);
+    ++_errors;
+  }
 }
 
-void definVia::viaRule( const char * rule )
+void definVia::viaRule(const char* rule)
 {
-    if ( _cur_via == NULL )
-        return;
-    
-    dbTechViaGenerateRule * viarule = _tech->findViaGenerateRule(rule);
+  if (_cur_via == NULL)
+    return;
 
-     if ( viarule == NULL )
-     {
-         notice(0,"error: cannot file VIA GENERATE rule in technology (%s).\n", rule );
-         ++_errors;
-         return;
-     }
+  dbTechViaGenerateRule* viarule = _tech->findViaGenerateRule(rule);
 
-     _cur_via->setViaGenerateRule(viarule);
- }
+  if (viarule == NULL) {
+    notice(
+        0, "error: cannot file VIA GENERATE rule in technology (%s).\n", rule);
+    ++_errors;
+    return;
+  }
 
- void definVia::viaCutSize( int xSize, int ySize )
- {
-     if ( _cur_via == NULL )
-         return;
-
-     if ( _params == NULL )
-         _params = new dbViaParams();
-
-     _params->setXCutSize(dbdist(xSize));
-     _params->setYCutSize(dbdist(ySize));
- }
-
- void definVia::viaLayers(  const char * botName, const char * cutName, const char * topName)
-{
-    if ( _cur_via == NULL )
-        return;
-
-    if ( _params == NULL )
-        _params = new dbViaParams();
-
-    dbTechLayer * bot = _tech->findLayer(botName);
-
-    if ( bot == NULL )
-    {
-        notice(0,"error: undefined layer (%s) referenced\n", botName );
-        ++_errors;
-        return;
-    }
-
-    dbTechLayer * cut = _tech->findLayer(cutName);
-
-    if ( cut == NULL )
-    {
-        notice(0,"error: undefined layer (%s) referenced\n", cutName );
-        ++_errors;
-        return;
-    }
-    
-    dbTechLayer * top = _tech->findLayer(topName);
-
-    if ( top == NULL )
-    {
-        notice(0,"error: undefined layer (%s) referenced\n", topName );
-        ++_errors;
-        return;
-    }
-
-    _params->setTopLayer(top);
-    _params->setBottomLayer(bot);
-    _params->setCutLayer(cut);
+  _cur_via->setViaGenerateRule(viarule);
 }
 
-void definVia::viaCutSpacing( int xSpacing, int ySpacing )
+void definVia::viaCutSize(int xSize, int ySize)
 {
-    if ( _cur_via == NULL )
-        return;
+  if (_cur_via == NULL)
+    return;
 
-    if ( _params == NULL )
-        _params = new dbViaParams();
+  if (_params == NULL)
+    _params = new dbViaParams();
 
-    _params->setXCutSpacing(dbdist(xSpacing));
-    _params->setYCutSpacing(dbdist(ySpacing));
+  _params->setXCutSize(dbdist(xSize));
+  _params->setYCutSize(dbdist(ySize));
 }
 
-void definVia::viaEnclosure( int xBot, int yBot, int xTop, int yTop )
+void definVia::viaLayers(const char* botName,
+                         const char* cutName,
+                         const char* topName)
 {
-    if ( _cur_via == NULL )
-        return;
+  if (_cur_via == NULL)
+    return;
 
-    if ( _params == NULL )
-        _params = new dbViaParams();
+  if (_params == NULL)
+    _params = new dbViaParams();
 
-    _params->setXBottomEnclosure(dbdist(xBot));
-    _params->setYBottomEnclosure(dbdist(yBot));
-    _params->setXTopEnclosure(dbdist(xTop));
-    _params->setYTopEnclosure(dbdist(yTop));
+  dbTechLayer* bot = _tech->findLayer(botName);
+
+  if (bot == NULL) {
+    notice(0, "error: undefined layer (%s) referenced\n", botName);
+    ++_errors;
+    return;
+  }
+
+  dbTechLayer* cut = _tech->findLayer(cutName);
+
+  if (cut == NULL) {
+    notice(0, "error: undefined layer (%s) referenced\n", cutName);
+    ++_errors;
+    return;
+  }
+
+  dbTechLayer* top = _tech->findLayer(topName);
+
+  if (top == NULL) {
+    notice(0, "error: undefined layer (%s) referenced\n", topName);
+    ++_errors;
+    return;
+  }
+
+  _params->setTopLayer(top);
+  _params->setBottomLayer(bot);
+  _params->setCutLayer(cut);
 }
 
-void definVia::viaRowCol( int numCutRows, int numCutCols )
+void definVia::viaCutSpacing(int xSpacing, int ySpacing)
 {
-    if ( _cur_via == NULL )
-        return;
+  if (_cur_via == NULL)
+    return;
 
-    if ( _params == NULL )
-        _params = new dbViaParams();
+  if (_params == NULL)
+    _params = new dbViaParams();
 
-    _params->setNumCutRows(numCutRows);
-    _params->setNumCutCols(numCutCols);
+  _params->setXCutSpacing(dbdist(xSpacing));
+  _params->setYCutSpacing(dbdist(ySpacing));
 }
 
-void definVia::viaOrigin( int x, int y )
+void definVia::viaEnclosure(int xBot, int yBot, int xTop, int yTop)
 {
-    if ( _cur_via == NULL )
-        return;
+  if (_cur_via == NULL)
+    return;
 
-    if ( _params == NULL )
-        _params = new dbViaParams();
+  if (_params == NULL)
+    _params = new dbViaParams();
 
-    _params->setXOrigin(dbdist(x));
-    _params->setYOrigin(dbdist(y));
+  _params->setXBottomEnclosure(dbdist(xBot));
+  _params->setYBottomEnclosure(dbdist(yBot));
+  _params->setXTopEnclosure(dbdist(xTop));
+  _params->setYTopEnclosure(dbdist(yTop));
 }
 
-void definVia::viaOffset( int xBot, int yBot, int xTop, int yTop )
+void definVia::viaRowCol(int numCutRows, int numCutCols)
 {
-    if ( _cur_via == NULL )
-        return;
+  if (_cur_via == NULL)
+    return;
 
-    if ( _params == NULL )
-        _params = new dbViaParams();
+  if (_params == NULL)
+    _params = new dbViaParams();
 
-    _params->setXBottomOffset(dbdist(xBot));
-    _params->setYBottomOffset(dbdist(yBot));
-    _params->setXTopOffset(dbdist(xTop));
-    _params->setYTopOffset(dbdist(yTop));
+  _params->setNumCutRows(numCutRows);
+  _params->setNumCutCols(numCutCols);
 }
 
-void definVia::viaPattern( const char * pattern )
+void definVia::viaOrigin(int x, int y)
 {
-    if ( _cur_via == NULL )
-        return;
-    
-    _cur_via->setPattern( pattern );
+  if (_cur_via == NULL)
+    return;
+
+  if (_params == NULL)
+    _params = new dbViaParams();
+
+  _params->setXOrigin(dbdist(x));
+  _params->setYOrigin(dbdist(y));
 }
 
-void definVia::viaRect( const char * layer_name, int x1, int y1, int x2, int y2 )
+void definVia::viaOffset(int xBot, int yBot, int xTop, int yTop)
 {
-    if ( _cur_via == NULL )
-        return;
-    
-    x1 = dbdist(x1);
-    y1 = dbdist(y1);
-    x2 = dbdist(x2);
-    y2 = dbdist(y2);
+  if (_cur_via == NULL)
+    return;
 
-    dbTechLayer * layer = _tech->findLayer(layer_name);
+  if (_params == NULL)
+    _params = new dbViaParams();
 
-    if ( layer == NULL )
-    {
-        notice(0,"error: undefined layer (%s) referenced\n", layer_name );
-        ++_errors;
-        return;
-    }
+  _params->setXBottomOffset(dbdist(xBot));
+  _params->setYBottomOffset(dbdist(yBot));
+  _params->setXTopOffset(dbdist(xTop));
+  _params->setYTopOffset(dbdist(yTop));
+}
 
-    dbBox::create( _cur_via, layer, x1, y1, x2, y2 );
+void definVia::viaPattern(const char* pattern)
+{
+  if (_cur_via == NULL)
+    return;
+
+  _cur_via->setPattern(pattern);
+}
+
+void definVia::viaRect(const char* layer_name, int x1, int y1, int x2, int y2)
+{
+  if (_cur_via == NULL)
+    return;
+
+  x1 = dbdist(x1);
+  y1 = dbdist(y1);
+  x2 = dbdist(x2);
+  y2 = dbdist(y2);
+
+  dbTechLayer* layer = _tech->findLayer(layer_name);
+
+  if (layer == NULL) {
+    notice(0, "error: undefined layer (%s) referenced\n", layer_name);
+    ++_errors;
+    return;
+  }
+
+  dbBox::create(_cur_via, layer, x1, y1, x2, y2);
 }
 
 void definVia::viaEnd()
 {
-    if ( _cur_via == NULL )
-        return;
+  if (_cur_via == NULL)
+    return;
 
-    if ( _params )
-    {
-        _cur_via->setViaParams( *_params );
-        delete _params;
-        _params = NULL;
-    }
-            
-    dbSet<dbBox> boxes = _cur_via->getBoxes();
+  if (_params) {
+    _cur_via->setViaParams(*_params);
+    delete _params;
+    _params = NULL;
+  }
 
-    if ( boxes.reversible() && boxes.orderReversed() )
-        boxes.reverse();
+  dbSet<dbBox> boxes = _cur_via->getBoxes();
 
-    _cur_via = NULL;
+  if (boxes.reversible() && boxes.orderReversed())
+    boxes.reverse();
+
+  _cur_via = NULL;
 }
 
-    
-} // namespace
+}  // namespace odb

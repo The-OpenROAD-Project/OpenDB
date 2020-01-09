@@ -432,8 +432,9 @@ int Ath__parser::mkDirTree(char* word, char* sep)
     mkDir(_wordArray[0]);
     sprintf(_line, "%s", _wordArray[0]);
   }
+  int pos = 0;
   for (int ii = 1; ii < _currentWordCnt; ii++) {
-    sprintf(_line, "%s/%s", _line, _wordArray[ii]);
+    pos += sprintf(&_line[pos], "/%s", _wordArray[ii]);
     mkDir(_line);
   }
   return _currentWordCnt;

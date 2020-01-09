@@ -182,9 +182,10 @@ void dbCCSeg::setAllCcCap(double* ttcap)
   }
   if (block->_journal) {
     char ccCaps[400];
+    int pos = 0;
     ccCaps[0] = '\0';
     for (uint ii = 0; ii < cornerCnt; ii++)
-      sprintf(&ccCaps[0], "%s %f ", &ccCaps[0], ttcap[ii]);
+      pos += sprintf(&ccCaps[pos], "%f ", ttcap[ii]);
     debug("DB_ECO",
           "A",
           "ECO: dbCCSeg::setAllCcCap, ccseg: %d, caps: %s\n",

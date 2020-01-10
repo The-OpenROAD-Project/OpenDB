@@ -62,7 +62,7 @@ class defout
   void setUseNetInstIds(bool value);
   void setUseMasterIds(bool value);
   void selectNet(dbNet* net);
-  void setVersion(Version v);  // default is 5.5
+  void setVersion(Version v);  // default is 5.8
 
   bool writeBlock(dbBlock* block, const char* def_file);
 };

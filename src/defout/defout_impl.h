@@ -119,7 +119,7 @@ class defout_impl
     _use_alias        = false;
     _select_net_map   = NULL;
     _select_inst_map  = NULL;
-    _version          = defout::DEF_5_5;
+    _version          = defout::DEF_5_8;
   }
 
   ~defout_impl() {}

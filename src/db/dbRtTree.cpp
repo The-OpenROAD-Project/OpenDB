@@ -227,8 +227,8 @@ void dbRtSegment::getBBox(adsRect& bbox)
       y1 = src_y - dw;
       y2 = src_y + dw;
     }
-  } else if (src_y == tgt_y)  // horiz. path
-  {
+  } else {
+    ZASSERT (src_y == tgt_y);  // horiz. path
     y1 = src_y - dw;
     y2 = src_y + dw;
 
@@ -257,8 +257,6 @@ void dbRtSegment::getBBox(adsRect& bbox)
       x2 = src_x + dw;
     }
 
-  } else {
-    assert(0);  // illegal: non-orthogonal-path
   }
 
   bbox.reset(x1, y1, x2, y2);

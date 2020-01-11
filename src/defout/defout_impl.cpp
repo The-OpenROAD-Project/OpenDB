@@ -1623,8 +1623,7 @@ void defout_impl::writeSpecialPath(dbSBox* box)
         y2 -= dw;
         assert(y1 == y2);
       } else {
-        // This case can't occur
-        assert(0);
+        throw ZException("odd dimension in both directions");
       }
 
       break;
@@ -1648,8 +1647,7 @@ void defout_impl::writeSpecialPath(dbSBox* box)
       break;
     }
     default:
-      // This case can't occur
-      assert(0);
+      throw ZException("unknown direction");
       break;
   }
 

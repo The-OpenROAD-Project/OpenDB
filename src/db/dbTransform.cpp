@@ -192,6 +192,8 @@ void dbTransform::invert(dbTransform& result) const
       offset.rotate90();
       orient = dbOrientType::MXR90;
       break;
+    default:
+      throw ZException("Unknown orientation");
   }
 
   result._offset = offset;

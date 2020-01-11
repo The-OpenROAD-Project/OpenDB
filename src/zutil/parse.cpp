@@ -125,7 +125,9 @@ void Ath__parser::openFile(char* name)
     if (_inFP) {
       char buff[1024];
       while (!feof(_inFP)) {
-        fread(buff, 1, 1023, _inFP);
+        if (fread(buff, 1, 1023, _inFP) != 1) {
+          break;
+        }
       }
       pclose(_inFP);
       _inFP = NULL;
@@ -161,7 +163,9 @@ Ath__parser::~Ath__parser()
       && !strcmp(_inputFile + strlen(_inputFile) - 3, ".gz")) {
     char buff[1024];
     while (!feof(_inFP)) {
-      fread(buff, 1, 1023, _inFP);
+      if (fread(buff, 1, 1023, _inFP) != 1) {
+        break;
+      }
     }
     pclose(_inFP);
     _inFP = NULL;
@@ -413,14 +417,14 @@ int Ath__parser::get2Double(const char* word, char* sep, double& v1, double& v2)
 
   return 0;
 }
-void Ath__parser::mkDir(char* word)
+bool Ath__parser::mkDir(char* word)
 {
 #ifdef _WIN32
-  mkdir(word);
+  return mkdir(word) == 0;
 #else
   char command[1024];
   sprintf(command, "mkdir -p %s", word);
-  system(command);
+  return system(command) == 0;
 #endif
 }
 

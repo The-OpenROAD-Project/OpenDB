@@ -79,18 +79,23 @@ void Ath__nameTable::writeDB(FILE* fp, char* nameType)
   for (uint i = 1; i < _bucketPool->getCnt(); i++)
     fprintf(fp, "%d %s\n", i, _bucketPool->get(i)->_name);
 }
-void Ath__nameTable::readDB(FILE* fp)
+bool Ath__nameTable::readDB(FILE* fp)
 {
   char type[16];
   char word[16];
   uint nameCnt;
-  fscanf(fp, "%s %s %u\n", type, word, &nameCnt);
+  if (fscanf(fp, "%s %s %u\n", type, word, &nameCnt) != 3) {
+    return false;
+  }
   for (uint i = 0; i < nameCnt; i++) {
     char name[1024];
     uint nameId;
-    fscanf(fp, "%u %s\n", &nameId, name);
+    if (fscanf(fp, "%u %s\n", &nameId, name) != 2) {
+      return false;
+    }
     allocName(name, nameId, true);
   }
+  return true;
 }
 void Ath__nameTable::allocName(char* name, uint nameId, bool hash)
 {

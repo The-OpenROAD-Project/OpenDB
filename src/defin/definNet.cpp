@@ -545,7 +545,7 @@ dbVia* definNet::getRotatedVia(const char* via_name, int orient)
       break;
 
     default:
-      assert(0);
+      throw ZException("Unknown orientation");
       break;
   }
 

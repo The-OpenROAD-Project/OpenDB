@@ -30,7 +30,6 @@
 // ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 // POSSIBILITY OF SUCH DAMAGE.
 
-#include "dbITerm.h"
 #include "db.h"
 #include "dbArrayTable.h"
 #include "dbBTerm.h"
@@ -40,6 +39,7 @@
 #include "dbDatabase.h"
 #include "dbDiff.hpp"
 #include "dbHier.h"
+#include "dbITerm.h"
 #include "dbInst.h"
 #include "dbInstHdr.h"
 #include "dbJournal.h"
@@ -139,8 +139,8 @@ void _dbITerm::differences(dbDiff&         diff,
     _dbInst*  rhs_inst  = rhs_blk->_inst_tbl->getPtr(rhs._inst);
     _dbMTerm* lhs_mterm = getMTerm();
     _dbMTerm* rhs_mterm = rhs.getMTerm();
-    assert(strcmp(lhs_inst->_name, rhs_inst->_name) == 0);
-    assert(strcmp(lhs_mterm->_name, rhs_mterm->_name) == 0);
+    ZASSERT(strcmp(lhs_inst->_name, rhs_inst->_name) == 0);
+    ZASSERT(strcmp(lhs_mterm->_name, rhs_mterm->_name) == 0);
 
     diff.begin_object("<> %s (_dbITerm)\n", lhs_mterm->_name);
 

@@ -525,7 +525,7 @@ void dbTechLayerSpacingRule::setCutLayer4Spacing(dbTechLayer* cutly)
          || (_lsp->_flags._rule == CUT_LAYER_BELOW));
 
   dbTechLayer* tmply = (dbTechLayer*) getOwner();
-  assert(cutly->getNumber() < tmply->getNumber());
+  ZASSERT(cutly->getNumber() < tmply->getNumber());
   _dbTechLayer* ct_ly = (_dbTechLayer*) cutly;
 
   _lsp->_flags._rule     = CUT_LAYER_BELOW;

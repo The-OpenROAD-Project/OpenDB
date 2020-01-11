@@ -41,7 +41,7 @@ namespace odb {
 #define SET_TYPE(TYPE) _data.push_back((char) TYPE)
 #define CHECK_TYPE(TYPE)                   \
   LogDataType type = (LogDataType) next(); \
-  assert(type == TYPE)
+  ZASSERT(type == TYPE)
 #else
 #define SET_TYPE(TYPE)
 #define CHECK_TYPE(TYPE)

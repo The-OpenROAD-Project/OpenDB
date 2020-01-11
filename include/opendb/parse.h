@@ -117,7 +117,7 @@ class Ath__parser
 
   int   getDefCoord(int ii, int prev);
   void  syntaxError(char* msg);
-  void  mkDir(char* word);
+  bool  mkDir(char* word);
   int   mkDirTree(char* word, char* sep);
   bool  isPlusKeyword(int ii, char* key1);
   char* getRequiredPlusKeyword(int ii, char* key1);

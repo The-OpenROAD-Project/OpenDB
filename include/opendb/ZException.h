@@ -81,16 +81,14 @@ class ZAssert : public ZException
   ZAssert(const char* expr, const char* file, int line);
 };
 
-#define ZASSERT(expr) assert(expr)
-
-#if 0
-#if defined(DEBUG) || !defined(NDEBUG)
-#define ZASSERT(expr) ((expr) ? 0 : throw ZAssert(#expr, __FILE__, __LINE__))
-#else
-#define ZASSERT(expr)
-#endif
-#endif
-
+// See http://cnicholson.net/2009/02/stupid-c-tricks-adventures-in-assert
+// Avoids unused variable warnings.
+#ifdef NDEBUG
+    #define ZASSERT(x) do { (void)sizeof(x); } while(0)  
+#else  
+    #define ZASSERT(x) assert(x)
+#endif  
+  
 #define ZALLOCATED(expr)    \
   do {                      \
     if ((expr) == NULL)     \

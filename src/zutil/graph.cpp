@@ -33,10 +33,10 @@
 /*-------------------------------------------------------------
 ////	AUTHOR: SANJEEV MAHAJAN
 ---------------------------------------------------------------*/
-#include "graph.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include "assert.h"
+#include "graph.h"
 #include "logger.h"
 
 #define MAXIT 1000
@@ -380,9 +380,11 @@ long Graph::matchwt()
   int  i;
   long ww = 0;
   for (i = 0; i < _num_left; i++) {
+#ifndef NDEBUG
     Keyval<int, int> kv;
     kv.key = i;
     kv.val = _match[i];
+#endif
     assert(_match[i] != -1);
     Edge* ed;
     assert(_edge_table.find(kv, ed));

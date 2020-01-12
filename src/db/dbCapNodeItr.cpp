@@ -20,19 +20,20 @@
 //
 // THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
 // AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
-// IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
-// DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE
-// FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
-// DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR
-// SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
-// CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
-// OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
-// OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+// IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
+// ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE
+// LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
+// CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
+// SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
+// INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
+// CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
+// ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
+// POSSIBILITY OF SUCH DAMAGE.
 
 #include "dbCapNodeItr.h"
 #include "dbBlock.h"
-#include "dbNet.h"
 #include "dbCapNode.h"
+#include "dbNet.h"
 #include "dbTable.h"
 
 namespace odb {
@@ -45,68 +46,68 @@ namespace odb {
 
 bool dbCapNodeItr::reversible()
 {
-    return true;
+  return true;
 }
 
 bool dbCapNodeItr::orderReversed()
 {
-    return true;
+  return true;
 }
 
-void dbCapNodeItr::reverse(dbObject * parent)
+void dbCapNodeItr::reverse(dbObject* parent)
 {
-    _dbNet * net = (_dbNet *) parent;
-    uint id = net->_cap_nodes;
-    uint list = 0;
+  _dbNet* net  = (_dbNet*) parent;
+  uint    id   = net->_cap_nodes;
+  uint    list = 0;
 
-    while( id !=  0 )
-    {
-        _dbCapNode * seg =  _seg_tbl->getPtr(id);
-        uint n = seg->_next;
-        seg->_next = list;
-        list = id; 
-        id = n;
-    }
+  while (id != 0) {
+    _dbCapNode* seg = _seg_tbl->getPtr(id);
+    uint        n   = seg->_next;
+    seg->_next      = list;
+    list            = id;
+    id              = n;
+  }
 
-    net->_cap_nodes = list;
+  net->_cap_nodes = list;
 }
 
 uint dbCapNodeItr::sequential()
 {
-    return 0;
+  return 0;
 }
 
-uint dbCapNodeItr::size( dbObject * parent )
+uint dbCapNodeItr::size(dbObject* parent)
 {
-    uint id;
-    uint cnt = 0;
+  uint id;
+  uint cnt = 0;
 
-    for( id = dbCapNodeItr::begin(parent); id != dbCapNodeItr::end(parent); id = dbCapNodeItr::next(id) )
-        ++cnt;
-   
-    return cnt; 
+  for (id = dbCapNodeItr::begin(parent); id != dbCapNodeItr::end(parent);
+       id = dbCapNodeItr::next(id))
+    ++cnt;
+
+  return cnt;
 }
 
-uint dbCapNodeItr::begin( dbObject * parent )
+uint dbCapNodeItr::begin(dbObject* parent)
 {
-    _dbNet * net = (_dbNet *) parent;
-    return net->_cap_nodes;
+  _dbNet* net = (_dbNet*) parent;
+  return net->_cap_nodes;
 }
 
-uint dbCapNodeItr::end( dbObject * parent )
+uint dbCapNodeItr::end(dbObject* parent)
 {
-    return 0;
+  return 0;
 }
 
-uint dbCapNodeItr::next( uint id, ... )
+uint dbCapNodeItr::next(uint id, ...)
 {
-    _dbCapNode * seg = _seg_tbl->getPtr(id);
-    return seg->_next;
+  _dbCapNode* seg = _seg_tbl->getPtr(id);
+  return seg->_next;
 }
 
-dbObject * dbCapNodeItr::getObject( uint id, ... )
+dbObject* dbCapNodeItr::getObject(uint id, ...)
 {
-    return _seg_tbl->getPtr(id);
+  return _seg_tbl->getPtr(id);
 }
 
-} // namespace
+}  // namespace odb

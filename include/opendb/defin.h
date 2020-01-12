@@ -20,14 +20,15 @@
 //
 // THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
 // AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
-// IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
-// DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE
-// FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
-// DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR
-// SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
-// CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
-// OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
-// OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+// IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
+// ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE
+// LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
+// CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
+// SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
+// INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
+// CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
+// ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
+// POSSIBILITY OF SUCH DAMAGE.
 
 #ifndef ADS_DEFIN_H
 #define ADS_DEFIN_H
@@ -47,32 +48,34 @@ class dbTech;
 
 class defin
 {
-    definReader * _reader;
+  definReader* _reader;
 
-  public:
-    defin(dbDatabase *db);
-    ~defin();
+ public:
+  defin(dbDatabase* db);
+  ~defin();
 
-    void skipWires();
-    void skipConnections();
-    void skipSpecialWires();
-    void skipShields();
-    void skipBlockWires();
-    void skipFillWires();
-    void namesAreDBIDs();
-    void setAssemblyMode();
-    void useBlockName( const char * name );
+  void skipWires();
+  void skipConnections();
+  void skipSpecialWires();
+  void skipShields();
+  void skipBlockWires();
+  void skipFillWires();
+  void namesAreDBIDs();
+  void setAssemblyMode();
+  void useBlockName(const char* name);
 
-    /// Create a new chip
-    dbChip * createChip( std::vector<dbLib *> & search_libs, const char * def_file );
+  /// Create a new chip
+  dbChip* createChip(std::vector<dbLib*>& search_libs, const char* def_file);
 
-    /// Create a new hierachical block
-    dbBlock * createBlock( dbBlock * parent, std::vector<dbLib *> & search_libs, const char * def_file );
+  /// Create a new hierachical block
+  dbBlock* createBlock(dbBlock*             parent,
+                       std::vector<dbLib*>& search_libs,
+                       const char*          def_file);
 
-    /// Replace the wires of this block.
-    bool replaceWires( dbBlock * block, const char * def_file );
+  /// Replace the wires of this block.
+  bool replaceWires(dbBlock* block, const char* def_file);
 };
-    
-} // namespace
+
+}  // namespace odb
 
 #endif

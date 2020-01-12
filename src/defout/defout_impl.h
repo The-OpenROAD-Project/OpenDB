@@ -20,20 +20,22 @@
 //
 // THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
 // AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
-// IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
-// DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE
-// FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
-// DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR
-// SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
-// CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
-// OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
-// OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+// IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
+// ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE
+// LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
+// CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
+// SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
+// INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
+// CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
+// ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
+// POSSIBILITY OF SUCH DAMAGE.
 
 #ifndef ADS_DEFOUT_IMPL_H
 #define ADS_DEFOUT_IMPL_H
 
 #include "ads.h"
 #include "dbMap.h"
+#include "db.h"
 
 #include <list>
 #include <map>
@@ -46,111 +48,96 @@ class dbBlock;
 class dbBTerm;
 class dbInst;
 class dbTechNonDefaultRule;
-class dbTechLayerRule;;
+class dbTechLayerRule;
+;
 
 class defout_impl
 {
-    enum ObjType
-    {
-        COMPONENT,
-        COMPONENTPIN,
-        DESIGN,
-        GROUP,
-        NET,
-        NONDEFAULTRULE,
-        REGION,
-        ROW,
-        SPECIALNET
-    };
-    
-    double    _dist_factor;
-    FILE *    _out;
-    bool      _use_net_inst_ids;
-    bool      _use_master_ids;
-    bool      _use_alias;
-    std::list<dbNet*> _select_net_list;
-    std::list<dbInst*> _select_inst_list;
-    dbMap<dbNet,char> *_select_net_map;
-    dbMap<dbInst,char> *_select_inst_map;
-    dbTechNonDefaultRule * _non_default_rule;
-    int       _version;
-    std::map<std::string,bool> _prop_defs[9];
+  enum ObjType
+  {
+    COMPONENT,
+    COMPONENTPIN,
+    DESIGN,
+    GROUP,
+    NET,
+    NONDEFAULTRULE,
+    REGION,
+    ROW,
+    SPECIALNET
+  };
 
-    int defdist( int value ) 
-    {
-        return (int) (((double) value) * _dist_factor);
-    }
+  double                      _dist_factor;
+  FILE*                       _out;
+  bool                        _use_net_inst_ids;
+  bool                        _use_master_ids;
+  bool                        _use_alias;
+  std::list<dbNet*>           _select_net_list;
+  std::list<dbInst*>          _select_inst_list;
+  dbMap<dbNet, char>*         _select_net_map;
+  dbMap<dbInst, char>*        _select_inst_map;
+  dbTechNonDefaultRule*       _non_default_rule;
+  int                         _version;
+  std::map<std::string, bool> _prop_defs[9];
 
-    int defdist( uint value ) 
-    {
-        return (uint) (((double) value) * _dist_factor);
-    }
+  int defdist(int value) { return (int) (((double) value) * _dist_factor); }
 
-    void writePropertyDefinitions( dbBlock * block );
-    void writeRows( dbBlock * block );
-    void writeTracks( dbBlock * block );
-    void writeGCells( dbBlock * block );
-    void writeVias( dbBlock * block );
-    void writeVia( dbVia * via );
-    void writeInsts( dbBlock * block );
-    void writeNonDefaultRules( dbBlock * block );
-    void writeNonDefaultRule( dbTechNonDefaultRule * rule );
-    void writeLayerRule( dbTechLayerRule * rule );
-    void writeInst( dbInst * inst );
-    void writeBTerms( dbBlock * block );
-    void writeBTerm( dbBTerm * bterm );
-    void writeBPin( dbBPin * bpin, int n );
-    void writeRegions( dbBlock * block );
-    void writeGroups( dbBlock * block );
-    void writeBlockages( dbBlock * block );
-    void writeNets( dbBlock * block );
-    void writeNet( dbNet * net );
-    void writeSNet( dbNet * net );
-    void writeWire( dbWire * wire );
-    void writeSWire( dbSWire * wire );
-    void writeSpecialPath( dbSBox * box );
-    void writePropValue( dbProperty * prop );
-    void writeProperties( dbObject * object );
-    void writePinProperties( dbBlock * block );
-    bool hasProperties( dbObject * object, ObjType type );
-    
-  public:
+  int defdist(uint value) { return (uint)(((double) value) * _dist_factor); }
 
-    defout_impl()
-    {
-        _use_net_inst_ids = false;
-        _use_master_ids = false;
-        _use_alias = false;
-        _select_net_map = NULL;
-        _select_inst_map = NULL;
-        _version = defout::DEF_5_5;
-    }
+  void writePropertyDefinitions(dbBlock* block);
+  void writeRows(dbBlock* block);
+  void writeTracks(dbBlock* block);
+  void writeGCells(dbBlock* block);
+  void writeVias(dbBlock* block);
+  void writeVia(dbVia* via);
+  void writeInsts(dbBlock* block);
+  void writeNonDefaultRules(dbBlock* block);
+  void writeNonDefaultRule(dbTechNonDefaultRule* rule);
+  void writeLayerRule(dbTechLayerRule* rule);
+  void writeInst(dbInst* inst);
+  void writeBTerms(dbBlock* block);
+  void writeBTerm(dbBTerm* bterm);
+  void writeBPin(dbBPin* bpin, int n);
+  void writeRegions(dbBlock* block);
+  void writeGroups(dbBlock* block);
+  void writeBlockages(dbBlock* block);
+  void writeNets(dbBlock* block);
+  void writeNet(dbNet* net);
+  void writeSNet(dbNet* net);
+  void writeWire(dbWire* wire);
+  void writeSWire(dbSWire* wire);
+  void writeSpecialPath(dbSBox* box);
+  void writePropValue(dbProperty* prop);
+  void writeProperties(dbObject* object);
+  void writePinProperties(dbBlock* block);
+  bool hasProperties(dbObject* object, ObjType type);
 
-    ~defout_impl() {}
+ public:
+  defout_impl()
+  {
+    _use_net_inst_ids = false;
+    _use_master_ids   = false;
+    _use_alias        = false;
+    _select_net_map   = NULL;
+    _select_inst_map  = NULL;
+    _version          = defout::DEF_5_8;
+  }
 
-    void setUseLayerAlias( bool value )
-    {
-        _use_alias = value;
-    }
+  ~defout_impl() {}
 
-    void setUseNetInstIds( bool value )
-    {
-        _use_net_inst_ids = value;
-    }
-    
-    void setUseMasterIds( bool value )
-    {
-        _use_master_ids = value;
-    }
-    
-    void selectNet( dbNet *net );
+  void setUseLayerAlias(bool value) { _use_alias = value; }
 
-    void selectInst( dbInst *inst );
-    void setVersion( int v ) { _version = v; } 
-    
-    bool writeBlock( dbBlock * block, const char * def_file);
+  void setUseNetInstIds(bool value) { _use_net_inst_ids = value; }
+
+  void setUseMasterIds(bool value) { _use_master_ids = value; }
+
+  void selectNet(dbNet* net);
+
+  void selectInst(dbInst* inst);
+  void setVersion(int v) { _version = v; }
+
+  bool writeBlock(dbBlock* block, const char* def_file);
 };
 
-} // namespace
+}  // namespace odb
 
 #endif

@@ -20,24 +20,25 @@
 //
 // THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
 // AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
-// IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
-// DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE
-// FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
-// DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR
-// SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
-// CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
-// OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
-// OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+// IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
+// ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE
+// LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
+// CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
+// SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
+// INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
+// CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
+// ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
+// POSSIBILITY OF SUCH DAMAGE.
 
 #ifndef ADS_DB_TECH_NONDEFAULT_RULE_H
 #define ADS_DB_TECH_NONDEFAULT_RULE_H
 
 #include "ads.h"
+#include "dbId.h"
+#include "dbMatrix.h"
+#include "dbObject.h"
 #include "dbTypes.h"
 #include "dbVector.h"
-#include "dbMatrix.h"
-#include "dbId.h"
-#include "dbObject.h"
 
 namespace odb {
 
@@ -55,43 +56,48 @@ class dbDiff;
 
 struct _dbTechNonDefaultRuleFlags
 {
-    uint _hard_spacing  : 1 ;
-    uint _block_rule    : 1 ;
-    uint _spare_bits    : 30;
+  uint _hard_spacing : 1;
+  uint _block_rule : 1;
+  uint _spare_bits : 30;
 };
 
 class _dbTechNonDefaultRule : public dbObject
 {
-  public:
-    // PERSISTANT-MEMBERS
-    _dbTechNonDefaultRuleFlags               _flags;
-    char *                                   _name;
-    dbVector< dbId<_dbTechLayerRule> >       _layer_rules;
-    dbVector< dbId<_dbTechVia> >             _vias;
-    dbVector< dbId<_dbTechSameNetRule> >     _samenet_rules;
-    dbMatrix< dbId<_dbTechSameNetRule> >     _samenet_matrix;
-    dbVector< dbId<_dbTechVia> >             _use_vias;
-    dbVector< dbId<_dbTechViaGenerateRule> > _use_rules;
-    dbVector< dbId<_dbTechLayer> >           _cut_layers;
-    dbVector<int>                            _min_cuts;
-    
-    _dbTechNonDefaultRule( _dbDatabase * );
-    _dbTechNonDefaultRule( _dbDatabase *, const _dbTechNonDefaultRule & r );
-    ~_dbTechNonDefaultRule();
+ public:
+  // PERSISTANT-MEMBERS
+  _dbTechNonDefaultRuleFlags              _flags;
+  char*                                   _name;
+  dbVector<dbId<_dbTechLayerRule> >       _layer_rules;
+  dbVector<dbId<_dbTechVia> >             _vias;
+  dbVector<dbId<_dbTechSameNetRule> >     _samenet_rules;
+  dbMatrix<dbId<_dbTechSameNetRule> >     _samenet_matrix;
+  dbVector<dbId<_dbTechVia> >             _use_vias;
+  dbVector<dbId<_dbTechViaGenerateRule> > _use_rules;
+  dbVector<dbId<_dbTechLayer> >           _cut_layers;
+  dbVector<int>                           _min_cuts;
 
-    _dbTech * getTech();
-    _dbBlock * getBlock();
+  _dbTechNonDefaultRule(_dbDatabase*);
+  _dbTechNonDefaultRule(_dbDatabase*, const _dbTechNonDefaultRule& r);
+  ~_dbTechNonDefaultRule();
 
-    bool operator==( const _dbTechNonDefaultRule & rhs ) const;
-    bool operator!=( const _dbTechNonDefaultRule & rhs ) const { return ! operator==(rhs); }
-    bool operator<( const _dbTechNonDefaultRule & rhs ) const;
-    void differences( dbDiff & diff, const char * field, const _dbTechNonDefaultRule & rhs ) const;
-    void out( dbDiff & diff, char side, const char * field ) const;
+  _dbTech*  getTech();
+  _dbBlock* getBlock();
+
+  bool operator==(const _dbTechNonDefaultRule& rhs) const;
+  bool operator!=(const _dbTechNonDefaultRule& rhs) const
+  {
+    return !operator==(rhs);
+  }
+  bool operator<(const _dbTechNonDefaultRule& rhs) const;
+  void differences(dbDiff&                      diff,
+                   const char*                  field,
+                   const _dbTechNonDefaultRule& rhs) const;
+  void out(dbDiff& diff, char side, const char* field) const;
 };
 
-dbOStream & operator<<( dbOStream & stream, const _dbTechNonDefaultRule & rule );
-dbIStream & operator>>( dbIStream & stream, _dbTechNonDefaultRule & rule );
+dbOStream& operator<<(dbOStream& stream, const _dbTechNonDefaultRule& rule);
+dbIStream& operator>>(dbIStream& stream, _dbTechNonDefaultRule& rule);
 
-} // namespace
+}  // namespace odb
 
 #endif

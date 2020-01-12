@@ -40,7 +40,7 @@ odb_read_def(odb::dbDatabase* db, std::string path)
 
 int
 odb_write_def(odb::dbBlock* block, const char* path,
-	      odb::defout::Version version = odb::defout::Version::DEF_5_5) {
+	      odb::defout::Version version = odb::defout::Version::DEF_5_8) {
   defout writer;
   writer.setVersion(version);
   return writer.writeBlock(block, path);
@@ -95,7 +95,7 @@ odb_read_def(odb::dbDatabase* db, std::string path);
 
 int
 odb_write_def(odb::dbBlock* block, const char* path,
-	      odb::defout::Version version = odb::defout::Version::DEF_5_5);
+	      odb::defout::Version version = odb::defout::Version::DEF_5_8);
 int
 odb_write_lef(odb::dbLib* lib, const char* path);
 

@@ -20,23 +20,24 @@
 //
 // THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
 // AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
-// IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
-// DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE
-// FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
-// DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR
-// SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
-// CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
-// OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
-// OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+// IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
+// ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE
+// LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
+// CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
+// SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
+// INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
+// CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
+// ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
+// POSSIBILITY OF SUCH DAMAGE.
 
 #ifndef ADS_DB_REGION_H
 #define ADS_DB_REGION_H
 
 #include "ads.h"
-#include "geom.h"
-#include "dbTypes.h"
 #include "dbId.h"
 #include "dbObject.h"
+#include "dbTypes.h"
+#include "geom.h"
 
 namespace odb {
 
@@ -49,39 +50,38 @@ class dbDiff;
 
 struct _dbRegionFlags
 {
-    dbRegionType::Value  _type : 4;
-    uint                 _invalid : 1;
-    uint                 _spare_bits : 28;
+  dbRegionType::Value _type : 4;
+  uint                _invalid : 1;
+  uint                _spare_bits : 27;
 };
 
 class _dbRegion : public dbObject
 {
-  public:
-    // PERSISTANT-MEMBERS
-    _dbRegionFlags   _flags;
-    char *           _name;
-    dbId<_dbInst>    _insts;
-    dbId<_dbBox>     _boxes;
-    dbId<_dbRegion>  _parent;
-    dbId<_dbRegion>  _children;
-    dbId<_dbRegion>  _next_child;
+ public:
+  // PERSISTANT-MEMBERS
+  _dbRegionFlags  _flags;
+  char*           _name;
+  dbId<_dbInst>   _insts;
+  dbId<_dbBox>    _boxes;
+  dbId<_dbRegion> _parent;
+  dbId<_dbRegion> _children;
+  dbId<_dbRegion> _next_child;
 
-    _dbRegion( _dbDatabase * );
-    _dbRegion( _dbDatabase *, const _dbRegion & b );
-    ~_dbRegion();
+  _dbRegion(_dbDatabase*);
+  _dbRegion(_dbDatabase*, const _dbRegion& b);
+  ~_dbRegion();
 
-    bool operator==( const _dbRegion & rhs ) const;
-    bool operator!=( const _dbRegion & rhs ) const { return ! operator==(rhs); }
-    bool operator<( const _dbRegion & rhs ) const;
+  bool operator==(const _dbRegion& rhs) const;
+  bool operator!=(const _dbRegion& rhs) const { return !operator==(rhs); }
+  bool operator<(const _dbRegion& rhs) const;
 
-    void differences( dbDiff & diff, const char * field, const _dbRegion & rhs ) const;
-    void out( dbDiff & diff, char side, const char * field ) const;
+  void differences(dbDiff& diff, const char* field, const _dbRegion& rhs) const;
+  void out(dbDiff& diff, char side, const char* field) const;
 };
 
+dbOStream& operator<<(dbOStream& stream, const _dbRegion& r);
+dbIStream& operator>>(dbIStream& stream, _dbRegion& r);
 
-dbOStream & operator<<( dbOStream & stream, const _dbRegion & r );
-dbIStream & operator>>( dbIStream & stream, _dbRegion & r );
-
-} // namespace
+}  // namespace odb
 
 #endif

@@ -20,19 +20,20 @@
 //
 // THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
 // AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
-// IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
-// DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE
-// FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
-// DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR
-// SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
-// CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
-// OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
-// OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+// IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
+// ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE
+// LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
+// CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
+// SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
+// INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
+// CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
+// ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
+// POSSIBILITY OF SUCH DAMAGE.
 
 #include "dbMPinItr.h"
-#include "dbMaster.h"
-#include "dbMTerm.h"
 #include "dbMPin.h"
+#include "dbMTerm.h"
+#include "dbMaster.h"
 #include "dbTable.h"
 
 namespace odb {
@@ -45,68 +46,68 @@ namespace odb {
 
 bool dbMPinItr::reversible()
 {
-    return true;
+  return true;
 }
 
 bool dbMPinItr::orderReversed()
 {
-    return true;
+  return true;
 }
 
-void dbMPinItr::reverse(dbObject * parent)
+void dbMPinItr::reverse(dbObject* parent)
 {
-    _dbMTerm * mterm = (_dbMTerm *) parent;
-    uint id = mterm->_pins;
-    uint list = 0;
+  _dbMTerm* mterm = (_dbMTerm*) parent;
+  uint      id    = mterm->_pins;
+  uint      list  = 0;
 
-    while( id !=  0 )
-    {
-        _dbMPin * pin =  _mpin_tbl->getPtr(id);
-        uint n = pin->_next_mpin;
-        pin->_next_mpin = list;
-        list = id; 
-        id = n;
-    }
+  while (id != 0) {
+    _dbMPin* pin    = _mpin_tbl->getPtr(id);
+    uint     n      = pin->_next_mpin;
+    pin->_next_mpin = list;
+    list            = id;
+    id              = n;
+  }
 
-    mterm->_pins = list;
+  mterm->_pins = list;
 }
 
 uint dbMPinItr::sequential()
 {
-    return 0;
+  return 0;
 }
 
-uint dbMPinItr::size( dbObject * parent )
+uint dbMPinItr::size(dbObject* parent)
 {
-    uint id;
-    uint cnt = 0;
+  uint id;
+  uint cnt = 0;
 
-    for( id = dbMPinItr::begin(parent); id != dbMPinItr::end(parent); id = dbMPinItr::next(id) )
-        ++cnt;
-   
-    return cnt; 
+  for (id = dbMPinItr::begin(parent); id != dbMPinItr::end(parent);
+       id = dbMPinItr::next(id))
+    ++cnt;
+
+  return cnt;
 }
 
-uint dbMPinItr::begin( dbObject * parent )
+uint dbMPinItr::begin(dbObject* parent)
 {
-    _dbMTerm * mterm = (_dbMTerm *) parent;
-    return mterm->_pins;
+  _dbMTerm* mterm = (_dbMTerm*) parent;
+  return mterm->_pins;
 }
 
-uint dbMPinItr::end( dbObject * parent )
+uint dbMPinItr::end(dbObject* parent)
 {
-    return 0;
+  return 0;
 }
 
-uint dbMPinItr::next( uint id, ... )
+uint dbMPinItr::next(uint id, ...)
 {
-    _dbMPin * mpin = _mpin_tbl->getPtr(id);
-    return mpin->_next_mpin;
+  _dbMPin* mpin = _mpin_tbl->getPtr(id);
+  return mpin->_next_mpin;
 }
 
-dbObject * dbMPinItr::getObject( uint id, ... )
+dbObject* dbMPinItr::getObject(uint id, ...)
 {
-    return _mpin_tbl->getPtr(id);
+  return _mpin_tbl->getPtr(id);
 }
 
-} // namespace
+}  // namespace odb

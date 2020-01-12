@@ -20,14 +20,15 @@
 //
 // THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
 // AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
-// IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
-// DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE
-// FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
-// DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR
-// SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
-// CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
-// OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
-// OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+// IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
+// ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE
+// LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
+// CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
+// SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
+// INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
+// CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
+// ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
+// POSSIBILITY OF SUCH DAMAGE.
 
 #ifndef ADS_ZINTERFACE_H
 #define ADS_ZINTERFACE_H
@@ -38,9 +39,9 @@
 #include <tcl.h>
 #endif
 
+#include "ZException.h"
 #include "ads.h"
 #include "geom.h"
-#include "ZException.h"
 
 namespace odb {
 
@@ -54,18 +55,18 @@ class dbObject;
 /////////////////////////////////
 enum ZValueType
 {
-    Z_CHAR,
-    Z_UCHAR,
-    Z_SHORT,
-    Z_USHORT,
-    Z_INT,
-    Z_UINT,
-    Z_FLOAT,
-    Z_DOUBLE,
-    Z_STRING,
-    Z_BOOL,
-    Z_ZOBJECT,
-    Z_DBOBJECT
+  Z_CHAR,
+  Z_UCHAR,
+  Z_SHORT,
+  Z_USHORT,
+  Z_INT,
+  Z_UINT,
+  Z_FLOAT,
+  Z_DOUBLE,
+  Z_STRING,
+  Z_BOOL,
+  Z_ZOBJECT,
+  Z_DBOBJECT
 };
 
 ///////////////////////////////////////////////////////
@@ -73,71 +74,71 @@ enum ZValueType
 ///////////////////////////////////////////////////////
 class ZEvent
 {
-    struct Attr
+  struct Attr
+  {
+    const char* _name;
+    ZValueType  _type;
+    union
     {
-        const char * _name;
-        ZValueType   _type;
-        union 
-        {
-            int          _int;
-            unsigned int _uint;
-            double       _dbl;
-            const char * _str;
-            dbObject *   _dbobj;
-            ZObject *    _zobj;
-        } _value;
-        
-        Attr( const char * name );
-        ~Attr();
-        void clearValue();
-    };
-        
-    const char *         _name;
-    std::vector<Attr *>  _attrs;
-    Attr * find( const char * attr );
+      int          _int;
+      unsigned int _uint;
+      double       _dbl;
+      const char*  _str;
+      dbObject*    _dbobj;
+      ZObject*     _zobj;
+    } _value;
 
-    ZEvent & operator=( const ZEvent & e );
-    ZEvent( const ZEvent & e);
+    Attr(const char* name);
+    ~Attr();
+    void clearValue();
+  };
 
-  public:
-    ZEvent( const char * name );
-    ~ZEvent();
+  const char*        _name;
+  std::vector<Attr*> _attrs;
+  Attr*              find(const char* attr);
 
-    // Add a new attribute value pair.
-    // Return false, if the attr already exists
-    void add( const char * attr, bool value );
-    void add( const char * attr, char * value );
-    void add( const char * attr, char value );
-    void add( const char * attr, short value );
-    void add( const char * attr, int value );
-    void add( const char * attr, unsigned char value );
-    void add( const char * attr, unsigned short value );
-    void add( const char * attr, unsigned int value );
-    void add( const char * attr, float value );
-    void add( const char * attr, double value );
-    void add( const char * attr, ZObject * value );
-    void add( const char * attr, dbObject * value );
-    void add( const char * attr, const adsRect & value );
-    void add( const char * attr, adsPoint value );
+  ZEvent& operator=(const ZEvent& e);
+  ZEvent(const ZEvent& e);
 
-    // Change an existing attribute value pair.
-    // Return false, if the attr does not exists
-    void change( const char * attr, bool value );
-    void change( const char * attr, char * value );
-    void change( const char * attr, char value );
-    void change( const char * attr, short value );
-    void change( const char * attr, int value );
-    void change( const char * attr, unsigned char value );
-    void change( const char * attr, unsigned short value );
-    void change( const char * attr, unsigned int value );
-    void change( const char * attr, float value );
-    void change( const char * attr, double value );
-    void change( const char * attr, ZObject * value );
-    void change( const char * attr, dbObject * value );
-    void change( const char * attr, const adsRect & value );
-    void change( const char * attr, adsPoint value );
+ public:
+  ZEvent(const char* name);
+  ~ZEvent();
 
-    friend class ZInterface;
+  // Add a new attribute value pair.
+  // Return false, if the attr already exists
+  void add(const char* attr, bool value);
+  void add(const char* attr, char* value);
+  void add(const char* attr, char value);
+  void add(const char* attr, short value);
+  void add(const char* attr, int value);
+  void add(const char* attr, unsigned char value);
+  void add(const char* attr, unsigned short value);
+  void add(const char* attr, unsigned int value);
+  void add(const char* attr, float value);
+  void add(const char* attr, double value);
+  void add(const char* attr, ZObject* value);
+  void add(const char* attr, dbObject* value);
+  void add(const char* attr, const adsRect& value);
+  void add(const char* attr, adsPoint value);
+
+  // Change an existing attribute value pair.
+  // Return false, if the attr does not exists
+  void change(const char* attr, bool value);
+  void change(const char* attr, char* value);
+  void change(const char* attr, char value);
+  void change(const char* attr, short value);
+  void change(const char* attr, int value);
+  void change(const char* attr, unsigned char value);
+  void change(const char* attr, unsigned short value);
+  void change(const char* attr, unsigned int value);
+  void change(const char* attr, float value);
+  void change(const char* attr, double value);
+  void change(const char* attr, ZObject* value);
+  void change(const char* attr, dbObject* value);
+  void change(const char* attr, const adsRect& value);
+  void change(const char* attr, adsPoint value);
+
+  friend class ZInterface;
 };
 
 /////////////////////////////////////////////////////
@@ -145,10 +146,9 @@ class ZEvent
 /////////////////////////////////////////////////////
 class ZContext
 {
-  public:
-    
-    Tcl_Interp * _interp;
-    ZSession *   _session;
+ public:
+  Tcl_Interp* _interp;
+  ZSession*   _session;
 };
 
 //////////////////////////////////////////////
@@ -156,69 +156,72 @@ class ZContext
 //////////////////////////////////////////////
 class ZInterface
 {
-public:
-    ZInterface();
-    virtual ~ZInterface();
-    
-    //
-    // Post an event. This method specifies the event as a series of attribute value pairs. There
-    // must be a at least one attribute value pair. Furthermore the series of attribute value pairs must
-    // be terminated with a zero. For examples:
-    //    int x, y;
-    //    ...
-    //    z->event("foo", "x", Z_INT, x, "y", Z_INT, y, 0 );
-    //
-    // Throws ZException
-    int event( const char * name, const char * attr1, int type, ... );
+ public:
+  ZInterface();
+  virtual ~ZInterface();
 
-    //
-    // Post an event. This method specifies the event as a series of attribute value pairs. There
-    // must be a at least one attribute value pair. Furthermore the series of attribute value pairs must
-    // be terminated with a zero. For examples:
-    //    int x, y;
-    //    ...
-    //    z->event("foo", "x", "10", "y", "11", 0 );
-    // Throws ZException
-    int event( const char * name, const char * attr1, const char * val, ... );
+  //
+  // Post an event. This method specifies the event as a series of attribute
+  // value pairs. There must be a at least one attribute value pair. Furthermore
+  // the series of attribute value pairs must be terminated with a zero. For
+  // examples:
+  //    int x, y;
+  //    ...
+  //    z->event("foo", "x", Z_INT, x, "y", Z_INT, y, 0 );
+  //
+  // Throws ZException
+  int event(const char* name, const char* attr1, int type, ...);
 
-    // Post an event.
-    // Throws ZException
-    int event( const ZEvent & e );
+  //
+  // Post an event. This method specifies the event as a series of attribute
+  // value pairs. There must be a at least one attribute value pair. Furthermore
+  // the series of attribute value pairs must be terminated with a zero. For
+  // examples:
+  //    int x, y;
+  //    ...
+  //    z->event("foo", "x", "10", "y", "11", 0 );
+  // Throws ZException
+  int event(const char* name, const char* attr1, const char* val, ...);
 
-    // idle event
-    int idle( int level);
+  // Post an event.
+  // Throws ZException
+  int event(const ZEvent& e);
 
-    // ade event
-    int ade( int code, const char * fmt, ... ) ADS_FORMAT_PRINTF(3,4);
+  // idle event
+  int idle(int level);
 
-    // milos event
-    int milos( int code, const char * fmt, ... ) ADS_FORMAT_PRINTF(3,4);
+  // ade event
+  int ade(int code, const char* fmt, ...) ADS_FORMAT_PRINTF(3, 4);
 
-    // warning message
-    int warning( int code, const char * fmt, ... ) ADS_FORMAT_PRINTF(3,4);
+  // milos event
+  int milos(int code, const char* fmt, ...) ADS_FORMAT_PRINTF(3, 4);
 
-    // informational message
-    int info( int code, const char * fmt, ... ) ADS_FORMAT_PRINTF(3,4);
+  // warning message
+  int warning(int code, const char* fmt, ...) ADS_FORMAT_PRINTF(3, 4);
 
-    // informational message
-    int notice( int code, const char * fmt, ... ) ADS_FORMAT_PRINTF(3,4);
+  // informational message
+  int info(int code, const char* fmt, ...) ADS_FORMAT_PRINTF(3, 4);
 
-    // verbose/debugging message
-    int verbose( int code, const char * fmt, ... ) ADS_FORMAT_PRINTF(3,4);
+  // informational message
+  int notice(int code, const char* fmt, ...) ADS_FORMAT_PRINTF(3, 4);
 
-    // debug message
-    //void debug(const char *mod, const char *tag, const char * fmt, ... ) ADS_FORMAT_PRINTF(4,5);
+  // verbose/debugging message
+  int verbose(int code, const char* fmt, ...) ADS_FORMAT_PRINTF(3, 4);
 
-    // error, Throws a ZException
-    void error( int code, const char * fmt, ... ) ADS_FORMAT_PRINTF(3,4);
+  // debug message
+  // void debug(const char *mod, const char *tag, const char * fmt, ... )
+  // ADS_FORMAT_PRINTF(4,5);
 
-    // Get the name of this module
-    virtual const char * getModuleName() { return ""; }
+  // error, Throws a ZException
+  void error(int code, const char* fmt, ...) ADS_FORMAT_PRINTF(3, 4);
 
-public:
-    ZContext     _context;
+  // Get the name of this module
+  virtual const char* getModuleName() { return ""; }
+
+ public:
+  ZContext _context;
 };
 
-} // namespace
+}  // namespace odb
 
 #endif

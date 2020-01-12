@@ -20,14 +20,15 @@
 //
 // THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
 // AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
-// IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
-// DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE
-// FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
-// DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR
-// SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
-// CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
-// OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
-// OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+// IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
+// ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE
+// LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
+// CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
+// SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
+// INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
+// CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
+// ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
+// POSSIBILITY OF SUCH DAMAGE.
 
 #ifndef ADS_DCR_ZGUIDB_H
 #define ADS_DCR_ZGUIDB_H
@@ -43,36 +44,33 @@ class dbBlockSearch;
 ///
 /// ZguiDb - Implementation for ZRoute Zui object interface for Db
 ///
-/// 
+///
 
 class ZguiDb : public ZImplements<ZguiDb, IZgui>
 {
-private:
+ private:
+  ZPtr<IZdcr>    _dcr;
+  dbBlockSearch* _blockSearch;
 
-	ZPtr<IZdcr> _dcr;
-	dbBlockSearch *_blockSearch;
+  char* _name;
 
-	char *_name;
+  char* makeName(const char* name);
+  void  setGuiContext(void* x, void* blk);
 
-	char* makeName(const char *name);
-	void setGuiContext(void *x, void *blk);
+ public:
+  ZguiDb();
+  ~ZguiDb();
 
-	
-public:
-	ZguiDb();
-	~ZguiDb();
-	
-	// IZgui Interface
-	void setDcr(ZPtr<IZdcr> z);
-	char *setName(const char *name);
-	char *getName();
-	void init(const char *);
-	uint getBbox(int *x1, int *y1, int *x2, int *y2);
-	void chip_get(ZPtr<IZdcr> dcr);
-	void inspect(ZPtr<IZdcr> dcr);
-
+  // IZgui Interface
+  void  setDcr(ZPtr<IZdcr> z);
+  char* setName(const char* name);
+  char* getName();
+  void  init(const char*);
+  uint  getBbox(int* x1, int* y1, int* x2, int* y2);
+  void  chip_get(ZPtr<IZdcr> dcr);
+  void  inspect(ZPtr<IZdcr> dcr);
 };
 
-} // namespace
+}  // namespace odb
 
 #endif

@@ -20,20 +20,21 @@
 //
 // THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
 // AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
-// IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
-// DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE
-// FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
-// DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR
-// SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
-// CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
-// OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
-// OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+// IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
+// ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE
+// LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
+// CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
+// SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
+// INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
+// CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
+// ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
+// POSSIBILITY OF SUCH DAMAGE.
 
 #ifndef ADS_ZFACTORY_H
 #define ADS_ZFACTORY_H
 
-#include "ads.h"
 #include "ZObject.h"
+#include "ads.h"
 
 namespace odb {
 
@@ -42,46 +43,46 @@ class ZObject;
 class ZFactory;
 
 ///
-/// adsRegisterZFactory - Register this factory and return the class-id this factory represents.
+/// adsRegisterZFactory - Register this factory and return the class-id this
+/// factory represents.
 ///
-void adsRegisterZFactory( ZFactory * factory, ZComponentID cid );
+void adsRegisterZFactory(ZFactory* factory, ZComponentID cid);
 
 ///
 /// ZFactory - Class factory interface
 ///
 class ZFactory
 {
-  public:
-
-    //
-    // Return values:
-    //    Z_OK - Object created
-    //    Z_ERROR_NO_INTERFACE - Object not created because it does not
-    //                           support the specified interface.
-    //
-    virtual int create( const ZContext & context, ZInterfaceID iid, void ** p ) = 0;
+ public:
+  //
+  // Return values:
+  //    Z_OK - Object created
+  //    Z_ERROR_NO_INTERFACE - Object not created because it does not
+  //                           support the specified interface.
+  //
+  virtual int create(const ZContext& context, ZInterfaceID iid, void** p) = 0;
 };
 
 ///
-/// ZFactoryImpl - A singleton class which creates instances of the implementation
-/// class.
+/// ZFactoryImpl - A singleton class which creates instances of the
+/// implementation class.
 ///
 template <class IMPL, class INFC>
-class ZFactoryImpl : public ZFactory 
+class ZFactoryImpl : public ZFactory
 {
-  public:
-    int create( const ZContext & context, ZInterfaceID iid, void ** p )
-    {
-        IMPL * o = new IMPL;
-        o->_context = context;
+ public:
+  int create(const ZContext& context, ZInterfaceID iid, void** p)
+  {
+    IMPL* o     = new IMPL;
+    o->_context = context;
 
-        if( o->QueryInterface( iid, p ) == Z_OK )
-            return Z_OK;
-        
-        delete o;
-        *p = NULL;
-        return Z_ERROR_NO_INTERFACE;
-    }
+    if (o->QueryInterface(iid, p) == Z_OK)
+      return Z_OK;
+
+    delete o;
+    *p = NULL;
+    return Z_ERROR_NO_INTERFACE;
+  }
 };
 
 ///
@@ -89,37 +90,34 @@ class ZFactoryImpl : public ZFactory
 ///
 /// This macro must be added to main/factories.cpp
 ///
-#define REGISTER_ZFACTORY(IMPL,INFC) \
-            extern void adsRegisterZFactory_##IMPL##INFC(); \
-            adsRegisterZFactory_##IMPL##INFC();
+#define REGISTER_ZFACTORY(IMPL, INFC)             \
+  extern void adsRegisterZFactory_##IMPL##INFC(); \
+  adsRegisterZFactory_##IMPL##INFC();
 
+#define DECLARE_ZFACTORY(IMPL, INFC)                 \
+  using namespace odb;                               \
+  void adsRegisterZFactory_##IMPL##INFC()            \
+  {                                                  \
+    static ZFactoryImpl<IMPL, INFC>* factory = NULL; \
+    if (factory == NULL) {                           \
+      factory = new ZFactoryImpl<IMPL, INFC>;        \
+      assert(factory);                               \
+      adsRegisterZFactory(factory, ZCID(IMPL));      \
+    }                                                \
+  }
 
-#define DECLARE_ZFACTORY(IMPL,INFC) \
-    using namespace odb; \
-    void adsRegisterZFactory_##IMPL##INFC() \
-    { \
-        static ZFactoryImpl<IMPL,INFC> * factory = NULL; \
-        if ( factory == NULL ) \
-        { \
-            factory = new ZFactoryImpl<IMPL,INFC>; \
-            assert(factory); \
-            adsRegisterZFactory( factory, ZCID(IMPL)); \
-        } \
-    } \
+#define DECLARE_ZFACTORY_CID(IMPL, INFC, CID)        \
+  using namespace odb;                               \
+  void adsRegisterZFactory_##IMPL##INFC()            \
+  {                                                  \
+    static ZFactoryImpl<IMPL, INFC>* factory = NULL; \
+    if (factory == NULL) {                           \
+      factory = new ZFactoryImpl<IMPL, INFC>;        \
+      assert(factory);                               \
+      adsRegisterZFactory(factory, CID);             \
+    }                                                \
+  }
 
-#define DECLARE_ZFACTORY_CID(IMPL,INFC,CID) \
-    using namespace odb; \
-    void adsRegisterZFactory_##IMPL##INFC() \
-    { \
-        static ZFactoryImpl<IMPL,INFC> * factory = NULL; \
-        if ( factory == NULL ) \
-        { \
-            factory = new ZFactoryImpl<IMPL,INFC>; \
-            assert(factory); \
-            adsRegisterZFactory(factory, CID); \
-        } \
-    } \
-
-} // namespace
+}  // namespace odb
 
 #endif

@@ -20,53 +20,54 @@
 //
 // THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
 // AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
-// IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
-// DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE
-// FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
-// DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR
-// SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
-// CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
-// OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
-// OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+// IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
+// ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE
+// LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
+// CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
+// SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
+// INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
+// CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
+// ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
+// POSSIBILITY OF SUCH DAMAGE.
 
 #ifndef ADS_DEFIN_VIA_H
 #define ADS_DEFIN_VIA_H
 
 #include "ads.h"
-#include "definIVia.h"
-#include "definBase.h"
 #include "db.h"
+#include "definBase.h"
+#include "definIVia.h"
 
 namespace odb {
 
 class dbVia;
- 
+
 class definVia : public definIVia, public definBase
 {
-    dbVia *  _cur_via;
-    dbViaParams * _params;
+  dbVia*       _cur_via;
+  dbViaParams* _params;
 
-    // Via interface methods
-    virtual void viaBegin( const char * name );
-    virtual void viaRule( const char * rule );
-    virtual void viaCutSize( int xSize, int ySize );
-    virtual void viaLayers(  const char * bottom, const char * cut, const char * top );
-    virtual void viaCutSpacing( int xSpacing, int ySpacing );
-    virtual void viaEnclosure( int xBot, int yBot, int xTop, int yTop );
-    virtual void viaRowCol( int numCutRows, int numCutCols );
-    virtual void viaOrigin( int xOffset, int yOffset );
-    virtual void viaOffset( int xBot, int yBot, int xTop, int yTop );
+  // Via interface methods
+  virtual void viaBegin(const char* name);
+  virtual void viaRule(const char* rule);
+  virtual void viaCutSize(int xSize, int ySize);
+  virtual void viaLayers(const char* bottom, const char* cut, const char* top);
+  virtual void viaCutSpacing(int xSpacing, int ySpacing);
+  virtual void viaEnclosure(int xBot, int yBot, int xTop, int yTop);
+  virtual void viaRowCol(int numCutRows, int numCutCols);
+  virtual void viaOrigin(int xOffset, int yOffset);
+  virtual void viaOffset(int xBot, int yBot, int xTop, int yTop);
 
-    virtual void viaPattern( const char * pattern );
-    virtual void viaRect( const char * layer, int x1, int y1, int x2, int y2 );
-    virtual void viaEnd();
+  virtual void viaPattern(const char* pattern);
+  virtual void viaRect(const char* layer, int x1, int y1, int x2, int y2);
+  virtual void viaEnd();
 
-  public:
-    definVia();
-    virtual ~definVia();
-    void init();
+ public:
+  definVia();
+  virtual ~definVia();
+  void init();
 };
-    
-} // namespace
+
+}  // namespace odb
 
 #endif

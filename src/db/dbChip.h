@@ -20,14 +20,15 @@
 //
 // THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
 // AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
-// IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
-// DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE
-// FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
-// DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR
-// SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
-// CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
-// OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
-// OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+// IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
+// ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE
+// LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
+// CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
+// SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
+// INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
+// CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
+// ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
+// POSSIBILITY OF SUCH DAMAGE.
 
 #ifndef ADS_DB_CHIP_H
 #define ADS_DB_CHIP_H
@@ -37,7 +38,8 @@
 
 namespace odb {
 
-template <class T> class dbTable;
+template <class T>
+class dbTable;
 class _dbProperty;
 class dbPropertyItr;
 class _dbNameCache;
@@ -51,31 +53,31 @@ class dbDiff;
 
 class _dbChip : public dbObject
 {
-  public:
-    // PERSISTANT-MEMBERS
-    dbId<_dbBlock>         _top;
+ public:
+  // PERSISTANT-MEMBERS
+  dbId<_dbBlock> _top;
 
-    // NON-PERSISTANT-MEMBERS
-    dbTable<_dbBlock> *    _block_tbl;
-    dbTable<_dbProperty> * _prop_tbl;
-    _dbNameCache *         _name_cache;
-    dbBlockItr *           _block_itr;
-    dbPropertyItr *        _prop_itr;
-    
-    _dbChip( _dbDatabase * db );
-    _dbChip( _dbDatabase * db, const _dbChip & c );
-    ~_dbChip();
+  // NON-PERSISTANT-MEMBERS
+  dbTable<_dbBlock>*    _block_tbl;
+  dbTable<_dbProperty>* _prop_tbl;
+  _dbNameCache*         _name_cache;
+  dbBlockItr*           _block_itr;
+  dbPropertyItr*        _prop_itr;
 
-    bool operator==( const _dbChip & rhs ) const;
-    bool operator!=( const _dbChip & rhs ) const { return ! operator==(rhs); }
-    void differences( dbDiff & diff, const char * field, const _dbChip & rhs ) const;
-    void out( dbDiff & diff, char side, const char * field ) const;
-    dbObjectTable * getObjectTable( dbObjectType type );
+  _dbChip(_dbDatabase* db);
+  _dbChip(_dbDatabase* db, const _dbChip& c);
+  ~_dbChip();
+
+  bool operator==(const _dbChip& rhs) const;
+  bool operator!=(const _dbChip& rhs) const { return !operator==(rhs); }
+  void differences(dbDiff& diff, const char* field, const _dbChip& rhs) const;
+  void out(dbDiff& diff, char side, const char* field) const;
+  dbObjectTable* getObjectTable(dbObjectType type);
 };
 
-dbOStream & operator<<( dbOStream & stream, const _dbChip & chip );
-dbIStream & operator>>( dbIStream & stream, _dbChip & chip );
+dbOStream& operator<<(dbOStream& stream, const _dbChip& chip);
+dbIStream& operator>>(dbIStream& stream, _dbChip& chip);
 
-} // namespace
+}  // namespace odb
 
 #endif

@@ -20,22 +20,23 @@
 //
 // THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
 // AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
-// IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
-// DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE
-// FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
-// DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR
-// SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
-// CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
-// OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
-// OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+// IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
+// ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE
+// LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
+// CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
+// SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
+// INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
+// CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
+// ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
+// POSSIBILITY OF SUCH DAMAGE.
 
 #ifndef ADS_DB_ROUTE_NODE_H
 #define ADS_DB_ROUTE_NODE_H
 
 #include "ads.h"
-#include "geom.h"
 #include "adsDList.h"
 #include "dbRtEdge.h"
+#include "geom.h"
 
 #include <vector>
 
@@ -49,166 +50,204 @@ class dbWireEncoder;
 
 class dbRtNodeEdgeIterator
 {
-    dbRtNode * _node;
-    dbRtEdge * _cur;
+  dbRtNode* _node;
+  dbRtEdge* _cur;
 
-    void incr() { _cur = _cur->next(_node); }
-    
-public:
-    dbRtNodeEdgeIterator() { _node = NULL; _cur = NULL; }
-    dbRtNodeEdgeIterator( dbRtNode * node, dbRtEdge * cur ) { _node = node; _cur = cur; }
-    dbRtNodeEdgeIterator( const dbRtNodeEdgeIterator & i ) { _node = i._node; _cur = i._cur; }
-    dbRtNodeEdgeIterator & operator=( const dbRtNodeEdgeIterator & i ) { _node = i._node; _cur = i._cur; return *this; }
-                
-    bool operator==( const dbRtNodeEdgeIterator & i ) const { return _cur == i._cur; } 
-    bool operator!=( const dbRtNodeEdgeIterator & i ) const { return _cur != i._cur; } 
-    dbRtEdge * operator*() { return _cur; }
-    dbRtNodeEdgeIterator & operator++() { incr(); return *this; }
-    dbRtNodeEdgeIterator operator++(int) { dbRtNodeEdgeIterator i = *this; incr(); return i; }
+  void incr() { _cur = _cur->next(_node); }
+
+ public:
+  dbRtNodeEdgeIterator()
+  {
+    _node = NULL;
+    _cur  = NULL;
+  }
+  dbRtNodeEdgeIterator(dbRtNode* node, dbRtEdge* cur)
+  {
+    _node = node;
+    _cur  = cur;
+  }
+  dbRtNodeEdgeIterator(const dbRtNodeEdgeIterator& i)
+  {
+    _node = i._node;
+    _cur  = i._cur;
+  }
+  dbRtNodeEdgeIterator& operator=(const dbRtNodeEdgeIterator& i)
+  {
+    _node = i._node;
+    _cur  = i._cur;
+    return *this;
+  }
+
+  bool operator==(const dbRtNodeEdgeIterator& i) const
+  {
+    return _cur == i._cur;
+  }
+  bool operator!=(const dbRtNodeEdgeIterator& i) const
+  {
+    return _cur != i._cur;
+  }
+  dbRtEdge*             operator*() { return _cur; }
+  dbRtNodeEdgeIterator& operator++()
+  {
+    incr();
+    return *this;
+  }
+  dbRtNodeEdgeIterator operator++(int)
+  {
+    dbRtNodeEdgeIterator i = *this;
+    incr();
+    return i;
+  }
 };
 
 // Node - A Node represents a physical point in the graph.
 class dbRtNode
 {
-  private:
-    int                       _x;
-    int                       _y;
-    int                       _jct_id;
-    dbTechLayer *             _layer;
-    std::vector<dbObject *>   _objects;
-    dbRtTree *                _rt_tree;
-    dbRtEdge *                _head;
-    dbRtEdge *                _tail;
-    adsDListEntry<dbRtNode>   _rt_node;
-    bool                      _visited;
-    int                       _bterm_map_id;
+ private:
+  int                     _x;
+  int                     _y;
+  int                     _jct_id;
+  dbTechLayer*            _layer;
+  std::vector<dbObject*>  _objects;
+  dbRtTree*               _rt_tree;
+  dbRtEdge*               _head;
+  dbRtEdge*               _tail;
+  adsDListEntry<dbRtNode> _rt_node;
+  bool                    _visited;
+  int                     _bterm_map_id;
 
-    void add_edge( dbRtEdge * edge )
-    {
-        assert( edge->_src == this || edge->_tgt == this );
+  void add_edge(dbRtEdge* edge)
+  {
+    assert(edge->_src == this || edge->_tgt == this);
 
-        if ( _head == NULL )
-        {
-            _head = _tail = edge;
-            edge->next(this) = NULL;
-            edge->prev(this) = NULL;
-        }
-        else
-        {
-            edge->prev(this) = _tail;
-            _tail->next(this) = edge;
-            edge->next(this) = NULL;
-            _tail = edge;
-        }
+    if (_head == NULL) {
+      _head = _tail    = edge;
+      edge->next(this) = NULL;
+      edge->prev(this) = NULL;
+    } else {
+      edge->prev(this)  = _tail;
+      _tail->next(this) = edge;
+      edge->next(this)  = NULL;
+      _tail             = edge;
     }
+  }
 
-    void remove_edge( dbRtEdge * edge )
-    {
-        dbRtEdge * n = edge->next(this);
-        dbRtEdge * p = edge->prev(this);
+  void remove_edge(dbRtEdge* edge)
+  {
+    dbRtEdge* n = edge->next(this);
+    dbRtEdge* p = edge->prev(this);
 
-        if ( p )
-            p->next(this) = n;
-        else
-            _head = n;
+    if (p)
+      p->next(this) = n;
+    else
+      _head = n;
 
-        if ( n )
-            n->prev(this) = p;
-        else
-            _tail = p;
-    }
+    if (n)
+      n->prev(this) = p;
+    else
+      _tail = p;
+  }
 
-  public:
-    typedef dbRtNodeEdgeIterator edge_iterator;
-    typedef std::vector<dbObject *>::iterator object_iterator;
+ public:
+  typedef dbRtNodeEdgeIterator             edge_iterator;
+  typedef std::vector<dbObject*>::iterator object_iterator;
 
-    dbRtNode( int x, int y, dbTechLayer * layer )
-        : _x(x),
-          _y(y), 
-          _jct_id(-1), 
-          _layer(layer), 
-          _rt_tree(NULL), 
-          _head(NULL), 
-          _tail(NULL),
-          _visited(false), 
-          _bterm_map_id(-1)
-    {
-    }
-    
-    // Set the x/y location of this node
-    void setPoint( int x, int y ) { _x = x; _y = y; }
+  dbRtNode(int x, int y, dbTechLayer* layer)
+      : _x(x),
+        _y(y),
+        _jct_id(-1),
+        _layer(layer),
+        _rt_tree(NULL),
+        _head(NULL),
+        _tail(NULL),
+        _visited(false),
+        _bterm_map_id(-1)
+  {
+  }
 
-    // Set the x/y location of this node
-    void setPoint( adsPoint & p ) { _x = p.x(); _y = p.y(); }
+  // Set the x/y location of this node
+  void setPoint(int x, int y)
+  {
+    _x = x;
+    _y = y;
+  }
 
-    // Set the x/y location of this node
-    void getPoint( int & x, int & y ) const { x = _x; y = _y; }
+  // Set the x/y location of this node
+  void setPoint(adsPoint& p)
+  {
+    _x = p.x();
+    _y = p.y();
+  }
 
-    // Set the x/y location of this node
-    void getPoint( adsPoint & p ) const { p = adsPoint(_x,_y); }
+  // Set the x/y location of this node
+  void getPoint(int& x, int& y) const
+  {
+    x = _x;
+    y = _y;
+  }
 
-    // Get the x-coordinate of this point
-    int x() const { return _x; }
+  // Set the x/y location of this node
+  void getPoint(adsPoint& p) const { p = adsPoint(_x, _y); }
 
-    // Get the x-coordinate of this point
-    int y() const { return _y; }
+  // Get the x-coordinate of this point
+  int x() const { return _x; }
 
-    // Set the layer of this node
-    void setLayer( dbTechLayer * layer ) { _layer = layer; }
+  // Get the x-coordinate of this point
+  int y() const { return _y; }
 
-    // Get the layer of this node
-    dbTechLayer * getLayer() const { return _layer; }
+  // Set the layer of this node
+  void setLayer(dbTechLayer* layer) { _layer = layer; }
 
-    // begin iterating edges of this node
-    edge_iterator begin() { return edge_iterator( this, _head ); }
+  // Get the layer of this node
+  dbTechLayer* getLayer() const { return _layer; }
 
-    // end iterating edges of this node
-    edge_iterator end() {  return edge_iterator( this, NULL ); }
+  // begin iterating edges of this node
+  edge_iterator begin() { return edge_iterator(this, _head); }
 
-    // Add database object to this node
-    void addObject( dbObject * object ) { _objects.push_back(object); }
-    
-    // Get the database object assigned to this node
-    void getObjects( std::vector<dbObject *> & objects ) const { objects = _objects; }
+  // end iterating edges of this node
+  edge_iterator end() { return edge_iterator(this, NULL); }
 
-    // Get the value of the visited flag.
-    bool isVisited() const { return _visited; }
+  // Add database object to this node
+  void addObject(dbObject* object) { _objects.push_back(object); }
 
-    // Set the value of the visited flag.
-    void setVisited(bool value) { _visited = value; }
+  // Get the database object assigned to this node
+  void getObjects(std::vector<dbObject*>& objects) const { objects = _objects; }
 
-    // Get the bterm-map-id
-    int getBTermMapId() const { return _bterm_map_id; }
+  // Get the value of the visited flag.
+  bool isVisited() const { return _visited; }
 
-    // Set the bterm-map-id
-    void setBTermMapId(int id) { _bterm_map_id = id; }
+  // Set the value of the visited flag.
+  void setVisited(bool value) { _visited = value; }
 
-    // returns true if this node has no edges
-    bool isOrphan() const
-    {
-        return _head == NULL;
-    }
-    
-    // returns true if this node is not an orphan and has a single edge
-    bool isLeaf() const
-    {
-        return (_head != NULL) && (_head == _tail);
-    }
+  // Get the bterm-map-id
+  int getBTermMapId() const { return _bterm_map_id; }
 
-    object_iterator begin_objects() { return _objects.begin(); }
-    object_iterator end_objects() { return _objects.end(); }
-    
-    static adsDListEntry<dbRtNode> * rtNode( dbRtNode * node ) { return &node->_rt_node; }
+  // Set the bterm-map-id
+  void setBTermMapId(int id) { _bterm_map_id = id; }
 
-    friend class dbRtTree;
-    friend class dbRtEdge;
-    friend class dbRtSegment;
-    friend class dbRtVia;
-    friend class dbRtTechVia;
-    friend class dbRtShort;
-    friend class dbRtVWire;
+  // returns true if this node has no edges
+  bool isOrphan() const { return _head == NULL; }
+
+  // returns true if this node is not an orphan and has a single edge
+  bool isLeaf() const { return (_head != NULL) && (_head == _tail); }
+
+  object_iterator begin_objects() { return _objects.begin(); }
+  object_iterator end_objects() { return _objects.end(); }
+
+  static adsDListEntry<dbRtNode>* rtNode(dbRtNode* node)
+  {
+    return &node->_rt_node;
+  }
+
+  friend class dbRtTree;
+  friend class dbRtEdge;
+  friend class dbRtSegment;
+  friend class dbRtVia;
+  friend class dbRtTechVia;
+  friend class dbRtShort;
+  friend class dbRtVWire;
 };
 
-} // namespace
+}  // namespace odb
 
 #endif

@@ -20,22 +20,22 @@
 //
 // THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
 // AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
-// IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
-// DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE
-// FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
-// DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR
-// SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
-// CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
-// OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
-// OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+// IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
+// ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE
+// LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
+// CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
+// SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
+// INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
+// CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
+// ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
+// POSSIBILITY OF SUCH DAMAGE.
 
 #ifndef ADS_DB_TRANSFORM_H
 #define ADS_DB_TRANSFORM_H
 
-#include "geom.h"
 #include "ads.h"
-#include "geom.h"
 #include "dbTypes.h"
+#include "geom.h"
 
 namespace odb {
 
@@ -48,106 +48,87 @@ class dbDiff;
 //
 class dbTransform
 {
-    friend class _dbBlock;
-    dbOrientType::Value _orient;
-    adsPoint            _offset;
-    
-  public:
+  friend class _dbBlock;
+  dbOrientType::Value _orient;
+  adsPoint            _offset;
 
-    // T = <R0, (0,0)>
-    dbTransform()
-        : _orient(dbOrientType::R0), _offset(0,0)
-    {
-    }
+ public:
+  // T = <R0, (0,0)>
+  dbTransform() : _orient(dbOrientType::R0), _offset(0, 0) {}
 
-    //  T = <R0, offset>
-    dbTransform( adsPoint offset )
-        : _orient(dbOrientType::R0), _offset(offset)
-    {
-    }
+  //  T = <R0, offset>
+  dbTransform(adsPoint offset) : _orient(dbOrientType::R0), _offset(offset) {}
 
-    //  T = <orient, (0,0)>
-    dbTransform( dbOrientType orient )
-        : _orient(orient), _offset(0,0)
-    {
-    }
+  //  T = <orient, (0,0)>
+  dbTransform(dbOrientType orient) : _orient(orient), _offset(0, 0) {}
 
-    //  T = <orient, offset>
-    dbTransform( dbOrientType orient, adsPoint offset )
-        : _orient(orient), _offset(offset)
-    {
-    }
+  //  T = <orient, offset>
+  dbTransform(dbOrientType orient, adsPoint offset)
+      : _orient(orient), _offset(offset)
+  {
+  }
 
-    bool operator==( const dbTransform & t ) const
-    {
-        return (_orient == t._orient) && (_offset == t._offset);
-    }
+  bool operator==(const dbTransform& t) const
+  {
+    return (_orient == t._orient) && (_offset == t._offset);
+  }
 
-    bool operator!=( const dbTransform & t ) const
-    {
-        return ! operator==(t);
-    }
-    
-    void setOrient( dbOrientType orient )
-    {
-        _orient = orient;
-    }
+  bool operator!=(const dbTransform& t) const { return !operator==(t); }
 
-    void setOffset( adsPoint offset )
-    {
-        _offset = offset;
-    }
+  void setOrient(dbOrientType orient) { _orient = orient; }
 
-    void setTransform( dbOrientType orient, adsPoint offset )
-    {
-        _orient = orient;
-        _offset = offset;
-    }
-    
-    // Apply transform to this point
-    void apply( adsPoint & p ) const;
+  void setOffset(adsPoint offset) { _offset = offset; }
 
-    // Apply transform to this point
-    void apply( adsRect & r ) const;
+  void setTransform(dbOrientType orient, adsPoint offset)
+  {
+    _orient = orient;
+    _offset = offset;
+  }
 
-    // Post multiply transform.
-    void concat( const dbTransform & t );
+  // Apply transform to this point
+  void apply(adsPoint& p) const;
 
-    // Post multiply transform
-    void concat( const dbTransform & t, dbTransform & result );
+  // Apply transform to this point
+  void apply(adsRect& r) const;
 
-    // Compute inverse transform
-    void invert( dbTransform & result ) const;
+  // Post multiply transform.
+  void concat(const dbTransform& t);
 
-    // Compute inverse transform
-    void invert();
+  // Post multiply transform
+  void concat(const dbTransform& t, dbTransform& result);
 
-    dbOrientType getOrient() const { return _orient; }
-    adsPoint getOffset() const { return _offset; }
+  // Compute inverse transform
+  void invert(dbTransform& result) const;
 
-    friend dbOStream & operator<<( dbOStream & stream, const dbTransform & t );
-    friend dbIStream & operator>>( dbIStream & stream, dbTransform & t );
-    friend dbDiff & operator<<( dbDiff & diff, const dbTransform & t );
+  // Compute inverse transform
+  void invert();
+
+  dbOrientType getOrient() const { return _orient; }
+  adsPoint     getOffset() const { return _offset; }
+
+  friend dbOStream& operator<<(dbOStream& stream, const dbTransform& t);
+  friend dbIStream& operator>>(dbIStream& stream, dbTransform& t);
+  friend dbDiff&    operator<<(dbDiff& diff, const dbTransform& t);
 };
 
-dbOStream & operator<<( dbOStream & stream, const dbTransform & t );
-dbIStream & operator>>( dbIStream & stream, dbTransform & t );
-dbDiff & operator<<( dbDiff & diff, const dbTransform & t );
+dbOStream& operator<<(dbOStream& stream, const dbTransform& t);
+dbIStream& operator>>(dbIStream& stream, dbTransform& t);
+dbDiff&    operator<<(dbDiff& diff, const dbTransform& t);
 
-inline void dbTransform::concat( const dbTransform & t )
+inline void dbTransform::concat(const dbTransform& t)
 {
-    dbTransform result;
-    concat(t,result);
-    *this = result;
+  dbTransform result;
+  concat(t, result);
+  *this = result;
 }
 
 inline void dbTransform::invert()
 {
-    dbTransform result;
-    invert(result);
-    *this = result;
+  dbTransform result;
+  invert(result);
+  *this = result;
 }
 
-} // namespace
+}  // namespace odb
 
 #endif

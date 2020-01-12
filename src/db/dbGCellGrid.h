@@ -20,22 +20,23 @@
 //
 // THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
 // AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
-// IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
-// DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE
-// FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
-// DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR
-// SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
-// CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
-// OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
-// OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+// IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
+// ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE
+// LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
+// CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
+// SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
+// INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
+// CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
+// ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
+// POSSIBILITY OF SUCH DAMAGE.
 
 #ifndef ADS_DB_GCELL_GRID_H
 #define ADS_DB_GCELL_GRID_H
 
 #include "ads.h"
-#include "dbTypes.h"
 #include "dbId.h"
 #include "dbObject.h"
+#include "dbTypes.h"
 #include "dbVector.h"
 
 namespace odb {
@@ -47,42 +48,44 @@ class dbDiff;
 
 class _dbGCellGrid : public dbObject
 {
-  public:
-    dbVector<int> _x_origin;
-    dbVector<int> _x_count;
-    dbVector<int> _x_step;
-    dbVector<int> _y_origin;
-    dbVector<int> _y_count;
-    dbVector<int> _y_step;
-    
-    _dbGCellGrid(_dbDatabase * );
-    _dbGCellGrid(_dbDatabase *, const _dbGCellGrid & g );
-    ~_dbGCellGrid();
+ public:
+  dbVector<int> _x_origin;
+  dbVector<int> _x_count;
+  dbVector<int> _x_step;
+  dbVector<int> _y_origin;
+  dbVector<int> _y_count;
+  dbVector<int> _y_step;
 
-    bool operator==( const _dbGCellGrid & rhs ) const;
-    bool operator!=( const _dbGCellGrid & rhs ) const { return ! operator==(rhs); }
-    void differences( dbDiff & diff, const char * field, const _dbGCellGrid & rhs ) const;
-    void out( dbDiff & diff, char side, const char * field ) const;
+  _dbGCellGrid(_dbDatabase*);
+  _dbGCellGrid(_dbDatabase*, const _dbGCellGrid& g);
+  ~_dbGCellGrid();
 
-    bool operator<( const _dbGCellGrid & rhs ) const
-    {
-        _dbGCellGrid * o1 = (_dbGCellGrid *) this;
-        _dbGCellGrid * o2 = (_dbGCellGrid *) &rhs;
-        return o1->getOID() < o2->getOID();
-    }
+  bool operator==(const _dbGCellGrid& rhs) const;
+  bool operator!=(const _dbGCellGrid& rhs) const { return !operator==(rhs); }
+  void differences(dbDiff&             diff,
+                   const char*         field,
+                   const _dbGCellGrid& rhs) const;
+  void out(dbDiff& diff, char side, const char* field) const;
+
+  bool operator<(const _dbGCellGrid& rhs) const
+  {
+    _dbGCellGrid* o1 = (_dbGCellGrid*) this;
+    _dbGCellGrid* o2 = (_dbGCellGrid*) &rhs;
+    return o1->getOID() < o2->getOID();
+  }
 };
 
-inline _dbGCellGrid::_dbGCellGrid(_dbDatabase * )
+inline _dbGCellGrid::_dbGCellGrid(_dbDatabase*)
 {
 }
 
-inline _dbGCellGrid::_dbGCellGrid(_dbDatabase *, const _dbGCellGrid & g )
-        : _x_origin(g._x_origin),
-          _x_count(g._x_count),
-          _x_step(g._x_step),
-          _y_origin(g._y_origin),
-          _y_count(g._y_count),
-          _y_step(g._y_step)
+inline _dbGCellGrid::_dbGCellGrid(_dbDatabase*, const _dbGCellGrid& g)
+    : _x_origin(g._x_origin),
+      _x_count(g._x_count),
+      _x_step(g._x_step),
+      _y_origin(g._y_origin),
+      _y_count(g._y_count),
+      _y_step(g._y_step)
 {
 }
 
@@ -90,28 +93,28 @@ inline _dbGCellGrid::~_dbGCellGrid()
 {
 }
 
-inline dbOStream & operator<<( dbOStream & stream,  const _dbGCellGrid & grid )
+inline dbOStream& operator<<(dbOStream& stream, const _dbGCellGrid& grid)
 {
-    stream << grid._x_origin;
-    stream << grid._x_count;
-    stream << grid._x_step;
-    stream << grid._y_origin;
-    stream << grid._y_count;
-    stream << grid._y_step;
-    return stream;
+  stream << grid._x_origin;
+  stream << grid._x_count;
+  stream << grid._x_step;
+  stream << grid._y_origin;
+  stream << grid._y_count;
+  stream << grid._y_step;
+  return stream;
 }
 
-inline dbIStream & operator>>( dbIStream & stream, _dbGCellGrid & grid )
+inline dbIStream& operator>>(dbIStream& stream, _dbGCellGrid& grid)
 {
-    stream >> grid._x_origin;
-    stream >> grid._x_count;
-    stream >> grid._x_step;
-    stream >> grid._y_origin;
-    stream >> grid._y_count;
-    stream >> grid._y_step;
-    return stream;
+  stream >> grid._x_origin;
+  stream >> grid._x_count;
+  stream >> grid._x_step;
+  stream >> grid._y_origin;
+  stream >> grid._y_count;
+  stream >> grid._y_step;
+  return stream;
 }
 
-} // namespace
+}  // namespace odb
 
 #endif

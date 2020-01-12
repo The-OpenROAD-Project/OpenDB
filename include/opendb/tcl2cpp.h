@@ -20,14 +20,15 @@
 //
 // THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
 // AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
-// IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
-// DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE
-// FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
-// DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR
-// SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
-// CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
-// OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
-// OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+// IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
+// ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE
+// LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
+// CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
+// SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
+// INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
+// CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
+// ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
+// POSSIBILITY OF SUCH DAMAGE.
 
 #ifndef TCL2CPP_H
 #define TCL2CPP_H
@@ -36,59 +37,59 @@
 #include "direct.h"
 #endif
 
-#include "tcl.h"
 #include "atypes.h"
 #include "parse.h"
+#include "tcl.h"
 
-#include <string.h>
 #include <stdlib.h>
+#include <string.h>
 
 #define ZROUTER_VERSION "1.0"
 
 class Ath__tcl2Cpp
 {
+ private:
+  char** _cmdTable;
+  char** _useTable;
+  uint   _maxCmdCnt;
+  uint   _cmdCnt;
 
-private:
+  char** _args;
+  uint   _maxWordCnt;
+  uint   _wordSize;
+  uint   _argc;
 
-	char **_cmdTable;
-	char **_useTable;
-	uint _maxCmdCnt;
-	uint _cmdCnt;
-	
-	char **_args;
-	uint _maxWordCnt;
-	uint _wordSize;
-	uint _argc;
+  char* _cmd;
 
-	char *_cmd;
+  Ath__parser* _parse;
 
-	Ath__parser *_parse;
+ public:
+  Ath__tcl2Cpp(uint m, uint n, uint k);
+  ~Ath__tcl2Cpp();
+  char** allocArray(uint m, uint n);
+  uint   defineCmd(char* name, char* use);
+  char** getCmdTable();
 
-public:
+  char*  getTcl_string(uint ii);
+  int    getTcl_int(uint ii);
+  bool   getTcl_bool(uint ii);
+  char** checkArgs(int         n,
+                   char*       usage,
+                   Tcl_Interp* interp,
+                   int         objc,
+                   Tcl_Obj* CONST objv[]);
 
-	Ath__tcl2Cpp(uint m, uint n, uint k);
-	~Ath__tcl2Cpp();
-	char **allocArray(uint m, uint n);
-	uint defineCmd(char *name, char *use);
-	char **getCmdTable();
+  uint getOptionNum(char* option,
+                    char* val0,
+                    char* val1 = NULL,
+                    char* val2 = NULL,
+                    char* val3 = NULL,
+                    char* val4 = NULL);
 
-	char *getTcl_string(uint ii);
-	int getTcl_int(uint ii);
-	bool getTcl_bool(uint ii);
-	char** checkArgs(int n, char *usage, Tcl_Interp *interp, 
-		int objc, Tcl_Obj *CONST objv[]);
-
-	uint getOptionNum(char *option, char *val0, 
-		char *val1=NULL, char *val2=NULL, char *val3=NULL, char *val4=NULL);
-
-	int getInt(char *option, int val, char *units1, char *units2, int *units);
-	char* getRequiredName(char *option);
-	int getInt(char *word, uint start);
-	uint getArgCnt();
-
+  int   getInt(char* option, int val, char* units1, char* units2, int* units);
+  char* getRequiredName(char* option);
+  int   getInt(char* word, uint start);
+  uint  getArgCnt();
 };
 
-
 #endif
-
-

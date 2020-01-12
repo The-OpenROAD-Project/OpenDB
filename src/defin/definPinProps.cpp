@@ -20,20 +20,21 @@
 //
 // THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
 // AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
-// IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
-// DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE
-// FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
-// DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR
-// SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
-// CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
-// OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
-// OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+// IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
+// ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE
+// LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
+// CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
+// SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
+// INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
+// CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
+// ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
+// POSSIBILITY OF SUCH DAMAGE.
 
-#include <stdlib.h>
-#include <stdio.h>
-#include <string>
-#include <ctype.h>
 #include "definPinProps.h"
+#include <ctype.h>
+#include <stdio.h>
+#include <stdlib.h>
+#include <string>
 #include "db.h"
 
 namespace odb {
@@ -46,71 +47,67 @@ definPinProps::~definPinProps()
 {
 }
 
-void definPinProps::begin( const char * instance, const char * terminal )
+void definPinProps::begin(const char* instance, const char* terminal)
 {
-    _cur_obj = NULL;
+  _cur_obj = NULL;
 
-    if ( strcmp(instance, "PIN") == 0 )
-    {
-        _cur_obj = _block->findBTerm(terminal);
-    }
-    else
-    {
-        dbInst * inst = _block->findInst(instance);
+  if (strcmp(instance, "PIN") == 0) {
+    _cur_obj = _block->findBTerm(terminal);
+  } else {
+    dbInst* inst = _block->findInst(instance);
 
-        if ( inst )
-            _cur_obj = inst->findITerm(terminal);
-    }
+    if (inst)
+      _cur_obj = inst->findITerm(terminal);
+  }
 }
 
-void definPinProps::property( const char * name, const char * value )
+void definPinProps::property(const char* name, const char* value)
 {
-    if ( _cur_obj == NULL )
-        return;
+  if (_cur_obj == NULL)
+    return;
 
-    dbProperty * p = dbProperty::find(_cur_obj,name);
+  dbProperty* p = dbProperty::find(_cur_obj, name);
 
-    if ( p )
-        dbProperty::destroy(p);
+  if (p)
+    dbProperty::destroy(p);
 
-    dbStringProperty::create(_cur_obj,name,value);
+  dbStringProperty::create(_cur_obj, name, value);
 }
 
-void definPinProps::property( const char * name, int value )
+void definPinProps::property(const char* name, int value)
 {
-    if ( _cur_obj == NULL )
-        return;
+  if (_cur_obj == NULL)
+    return;
 
-    dbProperty * p = dbProperty::find(_cur_obj,name);
+  dbProperty* p = dbProperty::find(_cur_obj, name);
 
-    if ( p )
-        dbProperty::destroy(p);
+  if (p)
+    dbProperty::destroy(p);
 
-    dbIntProperty::create(_cur_obj,name,value);
+  dbIntProperty::create(_cur_obj, name, value);
 }
 
-void definPinProps::property( const char * name, double value )
+void definPinProps::property(const char* name, double value)
 {
-    if ( _cur_obj == NULL )
-        return;
+  if (_cur_obj == NULL)
+    return;
 
-    dbProperty * p = dbProperty::find(_cur_obj,name);
+  dbProperty* p = dbProperty::find(_cur_obj, name);
 
-    if ( p )
-        dbProperty::destroy(p);
+  if (p)
+    dbProperty::destroy(p);
 
-    dbDoubleProperty::create(_cur_obj,name,value);
+  dbDoubleProperty::create(_cur_obj, name, value);
 }
 
 void definPinProps::end()
 {
-    if ( _cur_obj )
-    {
-        dbSet<dbProperty> props = dbProperty::getProperties(_cur_obj);
+  if (_cur_obj) {
+    dbSet<dbProperty> props = dbProperty::getProperties(_cur_obj);
 
-        if ( !props.empty() && props.orderReversed() )
-            props.reverse();
-    }
+    if (!props.empty() && props.orderReversed())
+      props.reverse();
+  }
 }
 
-} // namespace
+}  // namespace odb

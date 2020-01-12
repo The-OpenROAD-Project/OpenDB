@@ -20,63 +20,62 @@
 //
 // THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
 // AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
-// IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
-// DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE
-// FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
-// DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR
-// SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
-// CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
-// OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
-// OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+// IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
+// ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE
+// LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
+// CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
+// SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
+// INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
+// CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
+// ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
+// POSSIBILITY OF SUCH DAMAGE.
 
+#include "defout.h"
 #include <stdio.h>
 #include "db.h"
-#include "defout.h"
 #include "defout_impl.h"
 
 namespace odb {
 
 defout::defout()
 {
-    _writer = new defout_impl();
-    assert(_writer);
+  _writer = new defout_impl();
+  assert(_writer);
 }
 
 defout::~defout()
 {
-    delete _writer;
+  delete _writer;
 }
 
-void defout::setUseLayerAlias( bool value )
+void defout::setUseLayerAlias(bool value)
 {
-    _writer->setUseLayerAlias( value );
+  _writer->setUseLayerAlias(value);
 }
 
-void defout::setUseNetInstIds( bool value )
+void defout::setUseNetInstIds(bool value)
 {
-    _writer->setUseNetInstIds( value );
+  _writer->setUseNetInstIds(value);
 }
 
-void defout::setUseMasterIds( bool value )
+void defout::setUseMasterIds(bool value)
 {
-    _writer->setUseMasterIds( value );
+  _writer->setUseMasterIds(value);
 }
 
-void defout::selectNet( dbNet * net )
+void defout::selectNet(dbNet* net)
 {
-    _writer->selectNet( net );
+  _writer->selectNet(net);
 }
 
-void defout::setVersion( Version v )
+void defout::setVersion(Version v)
 {
-    _writer->setVersion( v );
+  _writer->setVersion(v);
 }
 
-bool
-defout::writeBlock( dbBlock * block, const char * def_file )
+bool defout::writeBlock(dbBlock* block, const char* def_file)
 {
-    return _writer->writeBlock(block, def_file);
+  return _writer->writeBlock(block, def_file);
 }
 
-
-} // namespace
+}  // namespace odb

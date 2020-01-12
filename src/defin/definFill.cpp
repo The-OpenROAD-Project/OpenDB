@@ -20,19 +20,20 @@
 //
 // THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
 // AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
-// IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
-// DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE
-// FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
-// DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR
-// SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
-// CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
-// OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
-// OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+// IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
+// ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE
+// LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
+// CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
+// SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
+// INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
+// CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
+// ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
+// POSSIBILITY OF SUCH DAMAGE.
 
-#include <stdlib.h>
-#include <stdio.h>
-#include <ctype.h>
 #include "definFill.h"
+#include <ctype.h>
+#include <stdio.h>
+#include <stdlib.h>
 #include "db.h"
 #include "dbShape.h"
 
@@ -40,7 +41,7 @@ namespace odb {
 
 definFill::definFill()
 {
-    _cur_layer = NULL;
+  _cur_layer = NULL;
 }
 
 definFill::~definFill()
@@ -49,30 +50,29 @@ definFill::~definFill()
 
 void definFill::init()
 {
-    definBase::init();
-    _cur_layer = NULL;
+  definBase::init();
+  _cur_layer = NULL;
 }
 
-void definFill::fillBegin( const char * layer )
+void definFill::fillBegin(const char* layer)
 {
-    _cur_layer = _tech->findLayer(layer);
-    
-    if ( _cur_layer == NULL )
-    {
-        notice(0,"error: undefined layer (%s) referenced\n", layer );
-        ++_errors;
-    }
+  _cur_layer = _tech->findLayer(layer);
+
+  if (_cur_layer == NULL) {
+    notice(0, "error: undefined layer (%s) referenced\n", layer);
+    ++_errors;
+  }
 }
 
-void definFill::fillRect( int x1, int y1, int x2, int y2 )
+void definFill::fillRect(int x1, int y1, int x2, int y2)
 {
-    x1 = dbdist(x1);
-    y1 = dbdist(y1);
-    x2 = dbdist(x2);
-    y2 = dbdist(y2);
+  x1 = dbdist(x1);
+  y1 = dbdist(y1);
+  x2 = dbdist(x2);
+  y2 = dbdist(y2);
 }
 
-void definFill::fillPolygon( std::vector<defPoint> & points )
+void definFill::fillPolygon(std::vector<defPoint>& points)
 {
 }
 
@@ -80,4 +80,4 @@ void definFill::fillEnd()
 {
 }
 
-} // namespace
+}  // namespace odb

@@ -20,83 +20,82 @@
 //
 // THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
 // AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
-// IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
-// DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE
-// FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
-// DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR
-// SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
-// CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
-// OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
-// OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+// IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
+// ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE
+// LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
+// CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
+// SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
+// INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
+// CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
+// ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
+// POSSIBILITY OF SUCH DAMAGE.
 
 #include "dbStream.h"
 #include "db.h"
 
 namespace odb {
 
-dbOStream & operator<<( dbOStream & stream, const adsRect & r )
+dbOStream& operator<<(dbOStream& stream, const adsRect& r)
 {
-    stream << r._xlo;
-    stream << r._ylo;
-    stream << r._xhi;
-    stream << r._yhi;
-    return stream;
+  stream << r._xlo;
+  stream << r._ylo;
+  stream << r._xhi;
+  stream << r._yhi;
+  return stream;
 }
 
-dbIStream & operator>>( dbIStream & stream, adsRect & r )
+dbIStream& operator>>(dbIStream& stream, adsRect& r)
 {
-    stream >> r._xlo;
-    stream >> r._ylo;
-    stream >> r._xhi;
-    stream >> r._yhi;
-    return stream;
+  stream >> r._xlo;
+  stream >> r._ylo;
+  stream >> r._xhi;
+  stream >> r._yhi;
+  return stream;
 }
 
-dbOStream & operator<<( dbOStream & stream, const adsPoint & p )
+dbOStream& operator<<(dbOStream& stream, const adsPoint& p)
 {
-    stream << p._x;
-    stream << p._y;
-    return stream;
-}
-                                                                                
-dbIStream & operator>>( dbIStream & stream, adsPoint & p )
-{
-    stream >> p._x;
-    stream >> p._y;
-    return stream;
+  stream << p._x;
+  stream << p._y;
+  return stream;
 }
 
-dbOStream::dbOStream( _dbDatabase * db, FILE * f )
+dbIStream& operator>>(dbIStream& stream, adsPoint& p)
 {
-    _db = db;
-    _f = f;
-    _lef_dist_factor = 0.001;
-    _lef_area_factor = 0.000001;
-
-    dbTech * tech = ((dbDatabase *) db)->getTech();
-
-    if ( tech && tech->getLefUnits() == 2000 )
-    {
-        _lef_dist_factor = 0.0005;
-        _lef_area_factor = 0.00000025;
-    }
+  stream >> p._x;
+  stream >> p._y;
+  return stream;
 }
 
-dbIStream::dbIStream( _dbDatabase * db, FILE * f )
+dbOStream::dbOStream(_dbDatabase* db, FILE* f)
 {
-    _db = db;
-    _f = f;
+  _db              = db;
+  _f               = f;
+  _lef_dist_factor = 0.001;
+  _lef_area_factor = 0.000001;
 
-    _lef_dist_factor = 0.001;
-    _lef_area_factor = 0.000001;
+  dbTech* tech = ((dbDatabase*) db)->getTech();
 
-    dbTech * tech = ((dbDatabase *) db)->getTech();
-
-    if ( tech && tech->getLefUnits() == 2000 )
-    {
-        _lef_dist_factor = 0.0005;
-        _lef_area_factor = 0.00000025;
-    }
+  if (tech && tech->getLefUnits() == 2000) {
+    _lef_dist_factor = 0.0005;
+    _lef_area_factor = 0.00000025;
+  }
 }
 
-} // namespace
+dbIStream::dbIStream(_dbDatabase* db, FILE* f)
+{
+  _db = db;
+  _f  = f;
+
+  _lef_dist_factor = 0.001;
+  _lef_area_factor = 0.000001;
+
+  dbTech* tech = ((dbDatabase*) db)->getTech();
+
+  if (tech && tech->getLefUnits() == 2000) {
+    _lef_dist_factor = 0.0005;
+    _lef_area_factor = 0.00000025;
+  }
+}
+
+}  // namespace odb

@@ -20,14 +20,15 @@
 //
 // THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
 // AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
-// IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
-// DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE
-// FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
-// DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR
-// SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
-// CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
-// OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
-// OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+// IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
+// ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE
+// LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
+// CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
+// SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
+// INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
+// CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
+// ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
+// POSSIBILITY OF SUCH DAMAGE.
 
 #ifndef ADS_DB_PROPERTY_ITR_H
 #define ADS_DB_PROPERTY_ITR_H
@@ -38,30 +39,27 @@
 namespace odb {
 
 class _dbProperty;
-template <class T> class dbTable;
+template <class T>
+class dbTable;
 
 class dbPropertyItr : public dbIterator
 {
-    dbTable<_dbProperty> * _prop_tbl;
+  dbTable<_dbProperty>* _prop_tbl;
 
-public:
-    dbPropertyItr( dbTable<_dbProperty> * prop_tbl )
-    {
-        _prop_tbl = prop_tbl;
-    }
-    
-    bool reversible();
-    bool orderReversed();
-    void reverse(dbObject * parent);
-    uint sequential();
-    uint size( dbObject * parent );
-    uint begin( dbObject * parent );
-    uint end( dbObject * parent );
-    uint next( uint id, ... );
-    dbObject * getObject( uint id, ... );
+ public:
+  dbPropertyItr(dbTable<_dbProperty>* prop_tbl) { _prop_tbl = prop_tbl; }
+
+  bool      reversible();
+  bool      orderReversed();
+  void      reverse(dbObject* parent);
+  uint      sequential();
+  uint      size(dbObject* parent);
+  uint      begin(dbObject* parent);
+  uint      end(dbObject* parent);
+  uint      next(uint id, ...);
+  dbObject* getObject(uint id, ...);
 };
 
-
-} // namespace
+}  // namespace odb
 
 #endif

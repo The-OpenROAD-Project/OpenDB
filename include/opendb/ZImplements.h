@@ -20,27 +20,29 @@
 //
 // THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
 // AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
-// IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
-// DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE
-// FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
-// DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR
-// SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
-// CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
-// OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
-// OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+// IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
+// ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE
+// LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
+// CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
+// SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
+// INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
+// CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
+// ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
+// POSSIBILITY OF SUCH DAMAGE.
 
 #ifndef ADS_ZIMPLEMENTS_H
 #define ADS_ZIMPLEMENTS_H
 
-#include "ads.h"
 #include "ZInterface.h"
 #include "ZObject.h"
+#include "ads.h"
 
 ///
 /// This file contains an implmentation of a component based software
 /// architecture. This implementation is strictly for C++ interfaces. There is
 /// no support for external language bindings. And there is no support for
-/// multiple interfaces (QueryInterface: one interface is supported per implementation).
+/// multiple interfaces (QueryInterface: one interface is supported per
+/// implementation).
 ///
 
 namespace odb {
@@ -50,46 +52,43 @@ namespace odb {
 ///
 class ZPtrCnt
 {
-    int _ref_cnt;
+  int _ref_cnt;
 
-  public:
-    ZPtrCnt() 
-    { 
-        _ref_cnt = 0; 
-    }
-    uint inc() 
-    { 
-        return ++_ref_cnt; 
-    }
-    uint dec() 
-    { 
-        assert( _ref_cnt > 0); 
-        return --_ref_cnt; 
-    }
+ public:
+  ZPtrCnt() { _ref_cnt = 0; }
+  uint inc() { return ++_ref_cnt; }
+  uint dec()
+  {
+    assert(_ref_cnt > 0);
+    return --_ref_cnt;
+  }
 };
 
 ///
-/// Implements this interface. An object can only implement one interface using ZImplements.
+/// Implements this interface. An object can only implement one interface using
+/// ZImplements.
 ///
 template <class CLASS, class INTERFACE>
 class ZImplements : public ZInterface, public INTERFACE
 {
-    ZPtrCnt  _ref_cnt;
-    
-  public:
-    virtual ~ZImplements();
+  ZPtrCnt _ref_cnt;
 
-    typedef typename INTERFACE::_zobject_traits _zobject_traits; // Compilation check: this INTERFACE implements a ZObject
-    virtual uint AddRef();
-    virtual uint Release();
-    virtual int QueryInterface( ZInterfaceID iid, void ** ref );
+ public:
+  virtual ~ZImplements();
+
+  typedef typename INTERFACE::_zobject_traits
+      _zobject_traits;  // Compilation check: this INTERFACE implements a
+                        // ZObject
+  virtual uint AddRef();
+  virtual uint Release();
+  virtual int  QueryInterface(ZInterfaceID iid, void** ref);
 };
 
 ///
 /// Declare this macro in the ".cpp" file of the implementation class.
-#define DECLARE_IMPLEMENTATION(CLASS,INFC) \
-           template class ZImplements<CLASS, INFC>;
+#define DECLARE_IMPLEMENTATION(CLASS, INFC) \
+  template class ZImplements<CLASS, INFC>;
 
-} // namespace
+}  // namespace odb
 
 #endif

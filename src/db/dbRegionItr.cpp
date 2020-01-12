@@ -20,18 +20,18 @@
 //
 // THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
 // AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
-// IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
-// DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE
-// FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
-// DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR
-// SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
-// CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
-// OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
-// OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+// IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
+// ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE
+// LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
+// CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
+// SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
+// INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
+// CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
+// ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
+// POSSIBILITY OF SUCH DAMAGE.
 
 #include "dbRegionItr.h"
 #include "dbMaster.h"
-#include "dbRegion.h"
 #include "dbRegion.h"
 #include "dbTable.h"
 
@@ -45,68 +45,68 @@ namespace odb {
 
 bool dbRegionItr::reversible()
 {
-    return true;
+  return true;
 }
 
 bool dbRegionItr::orderReversed()
 {
-    return true;
+  return true;
 }
 
-void dbRegionItr::reverse(dbObject * parent)
+void dbRegionItr::reverse(dbObject* parent)
 {
-    _dbRegion * region = (_dbRegion *) parent;
-    uint id = region->_children;
-    uint list = 0;
+  _dbRegion* region = (_dbRegion*) parent;
+  uint       id     = region->_children;
+  uint       list   = 0;
 
-    while( id !=  0 )
-    {
-        _dbRegion * pin =  _region_tbl->getPtr(id);
-        uint n = pin->_next_child;
-        pin->_next_child = list;
-        list = id; 
-        id = n;
-    }
+  while (id != 0) {
+    _dbRegion* pin   = _region_tbl->getPtr(id);
+    uint       n     = pin->_next_child;
+    pin->_next_child = list;
+    list             = id;
+    id               = n;
+  }
 
-    region->_children = list;
+  region->_children = list;
 }
 
 uint dbRegionItr::sequential()
 {
-    return 0;
+  return 0;
 }
 
-uint dbRegionItr::size( dbObject * parent )
+uint dbRegionItr::size(dbObject* parent)
 {
-    uint id;
-    uint cnt = 0;
+  uint id;
+  uint cnt = 0;
 
-    for( id = dbRegionItr::begin(parent); id != dbRegionItr::end(parent); id = dbRegionItr::next(id) )
-        ++cnt;
-   
-    return cnt; 
+  for (id = dbRegionItr::begin(parent); id != dbRegionItr::end(parent);
+       id = dbRegionItr::next(id))
+    ++cnt;
+
+  return cnt;
 }
 
-uint dbRegionItr::begin( dbObject * parent )
+uint dbRegionItr::begin(dbObject* parent)
 {
-    _dbRegion * region = (_dbRegion *) parent;
-    return region->_children;
+  _dbRegion* region = (_dbRegion*) parent;
+  return region->_children;
 }
 
-uint dbRegionItr::end( dbObject * parent )
+uint dbRegionItr::end(dbObject* parent)
 {
-    return 0;
+  return 0;
 }
 
-uint dbRegionItr::next( uint id, ... )
+uint dbRegionItr::next(uint id, ...)
 {
-    _dbRegion * region = _region_tbl->getPtr(id);
-    return region->_next_child;
+  _dbRegion* region = _region_tbl->getPtr(id);
+  return region->_next_child;
 }
 
-dbObject * dbRegionItr::getObject( uint id, ... )
+dbObject* dbRegionItr::getObject(uint id, ...)
 {
-    return _region_tbl->getPtr(id);
+  return _region_tbl->getPtr(id);
 }
 
-} // namespace
+}  // namespace odb

@@ -20,21 +20,22 @@
 //
 // THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
 // AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
-// IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
-// DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE
-// FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
-// DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR
-// SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
-// CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
-// OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
-// OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+// IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
+// ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE
+// LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
+// CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
+// SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
+// INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
+// CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
+// ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
+// POSSIBILITY OF SUCH DAMAGE.
 
 #ifndef ADS_ZNAMESPACE_H
 #define ADS_ZNAMESPACE_H
 
 #include <string.h>
-#include<map>
-#include<vector>
+#include <map>
+#include <vector>
 
 #include "ads.h"
 
@@ -49,36 +50,36 @@ class dbObject;
 ////////////////////////////////////
 class ZNamespace
 {
-    struct ltstr
+  struct ltstr
+  {
+    bool operator()(const char* s1, const char* s2) const
     {
-        bool operator()(const char * s1, const char * s2) const
-        {
-            return strcmp(s1,s2) < 0;
-        }
-    };
+      return strcmp(s1, s2) < 0;
+    }
+  };
 
-    class ZEntry;
-    class dbEntry;
-    
-    std::map<ZObject *, ZEntry *>            _zobj_entries;
-    std::map<dbDatabase *, dbEntry *>        _db_entries;
-    std::map<const char *, ZEntry *, ltstr>  _zobj_names;
-    std::map<const char *, dbEntry *, ltstr> _db_names;
-    uint                                     _unique_id;
-    
-public:
-    ZNamespace();
-    ~ZNamespace();
+  class ZEntry;
+  class dbEntry;
 
-    // These functions may throw a ZException
-    const char * addZObject( ZObject * obj );
-    void removeZObject( ZObject * obj );
-    ZObject * resolveZObject( const char * zname );
-    void registerDb( dbDatabase * db );
-    void unregisterDb( dbDatabase * db );
-    dbObject * resolveDB( const char * dbname );
+  std::map<ZObject*, ZEntry*>            _zobj_entries;
+  std::map<dbDatabase*, dbEntry*>        _db_entries;
+  std::map<const char*, ZEntry*, ltstr>  _zobj_names;
+  std::map<const char*, dbEntry*, ltstr> _db_names;
+  uint                                   _unique_id;
+
+ public:
+  ZNamespace();
+  ~ZNamespace();
+
+  // These functions may throw a ZException
+  const char* addZObject(ZObject* obj);
+  void        removeZObject(ZObject* obj);
+  ZObject*    resolveZObject(const char* zname);
+  void        registerDb(dbDatabase* db);
+  void        unregisterDb(dbDatabase* db);
+  dbObject*   resolveDB(const char* dbname);
 };
 
-} // namespace
+}  // namespace odb
 
 #endif

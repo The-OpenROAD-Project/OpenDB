@@ -20,19 +20,20 @@
 //
 // THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
 // AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
-// IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
-// DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE
-// FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
-// DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR
-// SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
-// CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
-// OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
-// OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+// IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
+// ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE
+// LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
+// CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
+// SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
+// INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
+// CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
+// ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
+// POSSIBILITY OF SUCH DAMAGE.
 
-#include <stdlib.h>
-#include <stdio.h>
-#include <ctype.h>
 #include "definComponent.h"
+#include <ctype.h>
+#include <stdio.h>
+#include <stdlib.h>
 #include "db.h"
 #include "dbTransform.h"
 
@@ -40,299 +41,291 @@ namespace odb {
 
 definComponent::definComponent()
 {
-    init();
+  init();
 }
 
 definComponent::~definComponent()
 {
-    MasterMap::iterator mitr;
+  MasterMap::iterator mitr;
 
-    for( mitr = _masters.begin(); mitr != _masters.end(); ++mitr )
-        free( (void *) (*mitr).first );
+  for (mitr = _masters.begin(); mitr != _masters.end(); ++mitr)
+    free((void*) (*mitr).first);
 
-    SiteMap::iterator sitr;
+  SiteMap::iterator sitr;
 
-    for( sitr = _sites.begin(); sitr != _sites.end(); ++sitr )
-        free( (void *) (*sitr).first );
+  for (sitr = _sites.begin(); sitr != _sites.end(); ++sitr)
+    free((void*) (*sitr).first);
 }
 
 void definComponent::init()
 {
-    definBase::init();
-    _libs.clear();
+  definBase::init();
+  _libs.clear();
 
-    MasterMap::iterator mitr;
-    for( mitr = _masters.begin(); mitr != _masters.end(); ++mitr )
-        free( (void *) (*mitr).first );
+  MasterMap::iterator mitr;
+  for (mitr = _masters.begin(); mitr != _masters.end(); ++mitr)
+    free((void*) (*mitr).first);
 
-    _masters.clear();
+  _masters.clear();
 
-    SiteMap::iterator sitr;
+  SiteMap::iterator sitr;
 
-    for( sitr = _sites.begin(); sitr != _sites.end(); ++sitr )
-        free( (void *) (*sitr).first );
-    
-    _sites.clear();
-    _inst_cnt = 0;
-    _iterm_cnt = 0;
-    _cur_inst = NULL;
+  for (sitr = _sites.begin(); sitr != _sites.end(); ++sitr)
+    free((void*) (*sitr).first);
+
+  _sites.clear();
+  _inst_cnt  = 0;
+  _iterm_cnt = 0;
+  _cur_inst  = NULL;
 }
 
-dbMaster *
-definComponent::getMaster( const char * name )
+dbMaster* definComponent::getMaster(const char* name)
 {
-    MasterMap::iterator mitr;
+  MasterMap::iterator mitr;
 
-    mitr = _masters.find( name );
+  mitr = _masters.find(name);
 
-    if ( mitr != _masters.end() )
-    {
-        dbMaster * master = (*mitr).second;
-        return master;
+  if (mitr != _masters.end()) {
+    dbMaster* master = (*mitr).second;
+    return master;
+  }
+
+  std::vector<dbLib*>::iterator litr;
+
+  for (litr = _libs.begin(); litr != _libs.end(); ++litr) {
+    dbLib* lib = *litr;
+
+    dbMaster* master = lib->findMaster(name);
+
+    if (master) {
+      const char* n = strdup(name);
+      assert(n);
+      _masters[n] = master;
+      return master;
     }
+  }
 
-    std::vector<dbLib *>::iterator litr;
+  return NULL;
+}
 
-    for( litr = _libs.begin(); litr != _libs.end(); ++litr )
-    {
-        dbLib * lib = * litr;
+dbSite* definComponent::getSite(const char* name)
+{
+  SiteMap::iterator mitr;
 
-        dbMaster * master = lib->findMaster( name );
+  mitr = _sites.find(name);
 
-        if ( master )
-        {
-            const char * n = strdup(name);
-            assert(n);
-            _masters[n] = master;
-            return master;
-        }
+  if (mitr != _sites.end()) {
+    dbSite* site = (*mitr).second;
+    return site;
+  }
+
+  std::vector<dbLib*>::iterator litr;
+
+  for (litr = _libs.begin(); litr != _libs.end(); ++litr) {
+    dbLib* lib = *litr;
+
+    dbSite* site = lib->findSite(name);
+
+    if (site) {
+      const char* n = strdup(name);
+      assert(n);
+      _sites[n] = site;
+      return site;
     }
+  }
 
-    return NULL;
+  return NULL;
 }
 
-dbSite *
-definComponent::getSite( const char * name )
+void definComponent::begin(const char* iname, const char* mname)
 {
-    SiteMap::iterator mitr;
+  assert(_cur_inst == NULL);
+  dbMaster* master = getMaster(mname);
 
-    mitr = _sites.find( name );
+  if (master == NULL) {
+    notice(0,
+           "error: unknown library cell referenced (%s) for instance (%s)\n",
+           mname,
+           iname);
+    _errors++;
+    return;
+  }
 
-    if ( mitr != _sites.end() )
-    {
-        dbSite * site = (*mitr).second;
-        return site;
-    }
+  _cur_inst = dbInst::create(_block, master, iname);
 
-    std::vector<dbLib *>::iterator litr;
+  if (_cur_inst == NULL) {
+    notice(0, "error: duplicate instance definition(%s)\n", iname);
+    _errors++;
+    return;
+  }
 
-    for( litr = _libs.begin(); litr != _libs.end(); ++litr )
-    {
-        dbLib * lib = * litr;
-
-        dbSite * site = lib->findSite( name );
-
-        if ( site )
-        {
-            const char * n = strdup(name);
-            assert(n);
-            _sites[n] = site;
-            return site;
-        }
-    }
-
-    return NULL;
+  _iterm_cnt += master->getMTermCount();
+  _inst_cnt++;
+  if (_inst_cnt % 100000 == 0)
+    notice(0, "\t\tCreated %d Insts\n", _inst_cnt);
 }
 
-void definComponent::begin( const char * iname, const char * mname )
+void definComponent::placement(defPlacement status,
+                               int          x,
+                               int          y,
+                               defOrient    orient)
 {
-    assert(_cur_inst == NULL);
-    dbMaster * master = getMaster( mname );
+  if (_cur_inst == NULL)
+    return;
 
-    if ( master == NULL )
-    {
-        notice(0,"error: unknown library cell referenced (%s) for instance (%s)\n", mname, iname );
-        _errors++;
-        return;
-    }
+  switch (status) {
+    case DEF_PLACEMENT_FIXED:
+      _cur_inst->setPlacementStatus(dbPlacementStatus::FIRM);
+      break;
+    case DEF_PLACEMENT_COVER:
+      _cur_inst->setPlacementStatus(dbPlacementStatus::COVER);
+      break;
+    case DEF_PLACEMENT_PLACED:
+      _cur_inst->setPlacementStatus(dbPlacementStatus::PLACED);
+      break;
+    case DEF_PLACEMENT_UNPLACED:
+      _cur_inst->setPlacementStatus(dbPlacementStatus::UNPLACED);
+      break;
+  }
 
-    _cur_inst = dbInst::create( _block, master, iname );
+  switch (orient) {
+    case DEF_ORIENT_N:
+      _cur_inst->setOrient(dbOrientType::R0);
+      break;
+    case DEF_ORIENT_S:
+      _cur_inst->setOrient(dbOrientType::R180);
+      break;
+    case DEF_ORIENT_E:
+      _cur_inst->setOrient(dbOrientType::R270);
+      break;
+    case DEF_ORIENT_W:
+      _cur_inst->setOrient(dbOrientType::R90);
+      break;
+    case DEF_ORIENT_FN:
+      _cur_inst->setOrient(dbOrientType::MY);
+      break;
+    case DEF_ORIENT_FS:
+      _cur_inst->setOrient(dbOrientType::MX);
+      break;
+    case DEF_ORIENT_FE:
+      _cur_inst->setOrient(dbOrientType::MYR90);
+      break;
+    case DEF_ORIENT_FW:
+      _cur_inst->setOrient(dbOrientType::MXR90);
+      break;
+  }
 
-    if ( _cur_inst == NULL )
-    {
-        notice(0,"error: duplicate instance definition(%s)\n", iname );
-        _errors++;
-        return;
-    }
-
-    _iterm_cnt += master->getMTermCount();
-    _inst_cnt++;
-    if ( _inst_cnt % 100000 == 0)
-        notice(0,"\t\tCreated %d Insts\n", _inst_cnt);
-}
-    
-void definComponent::placement( defPlacement status, int x, int y, defOrient orient )
-{
-    if (_cur_inst == NULL)
-        return;
-    
-    switch( status )
-    {
-        case DEF_PLACEMENT_FIXED:
-            _cur_inst->setPlacementStatus(dbPlacementStatus::FIRM);
-            break;
-        case DEF_PLACEMENT_COVER:
-            _cur_inst->setPlacementStatus(dbPlacementStatus::COVER);
-            break;
-        case DEF_PLACEMENT_PLACED:
-            _cur_inst->setPlacementStatus(dbPlacementStatus::PLACED);
-            break;
-        case DEF_PLACEMENT_UNPLACED:
-            _cur_inst->setPlacementStatus(dbPlacementStatus::UNPLACED);
-            break;
-    }
-
-    
-    switch (orient)
-    {
-        case DEF_ORIENT_N:
-            _cur_inst->setOrient( dbOrientType::R0 );
-            break;
-        case DEF_ORIENT_S: 
-            _cur_inst->setOrient( dbOrientType::R180 );
-            break;
-        case DEF_ORIENT_E: 
-            _cur_inst->setOrient( dbOrientType::R270 );
-            break;
-        case DEF_ORIENT_W: 
-            _cur_inst->setOrient( dbOrientType::R90 );
-            break;
-        case DEF_ORIENT_FN: 
-            _cur_inst->setOrient( dbOrientType::MY );
-            break;
-        case DEF_ORIENT_FS: 
-            _cur_inst->setOrient( dbOrientType::MX );
-            break;
-        case DEF_ORIENT_FE: 
-            _cur_inst->setOrient( dbOrientType::MYR90 );
-            break;
-        case DEF_ORIENT_FW: 
-            _cur_inst->setOrient( dbOrientType::MXR90 );
-            break;
-    }
-
-    dbMaster * master = _cur_inst->getMaster();
-    adsRect bbox;
-    master->getPlacementBoundary(bbox);
-    dbTransform t(_cur_inst->getOrient());
-    t.apply(bbox);
-    _cur_inst->setOrigin(dbdist(x) - bbox.xMin(),dbdist(y) - bbox.yMin());
+  dbMaster* master = _cur_inst->getMaster();
+  adsRect   bbox;
+  master->getPlacementBoundary(bbox);
+  dbTransform t(_cur_inst->getOrient());
+  t.apply(bbox);
+  _cur_inst->setOrigin(dbdist(x) - bbox.xMin(), dbdist(y) - bbox.yMin());
 }
 
-void definComponent::halo( int left, int bottom, int right, int top )
+void definComponent::halo(int left, int bottom, int right, int top)
 {
-    dbBox::create( _cur_inst, dbdist(left), dbdist(bottom), dbdist(right), dbdist(top) );
+  dbBox::create(
+      _cur_inst, dbdist(left), dbdist(bottom), dbdist(right), dbdist(top));
 }
 
-void definComponent::region( const char * name )
+void definComponent::region(const char* name)
 {
-    if (_cur_inst == NULL)
-        return;
+  if (_cur_inst == NULL)
+    return;
 
-    dbRegion * region = _block->findRegion( name );
+  dbRegion* region = _block->findRegion(name);
 
-    if ( region == NULL )
-        region = dbRegion::create(_block, name);
-        
-    region->addInst(_cur_inst);
+  if (region == NULL)
+    region = dbRegion::create(_block, name);
+
+  region->addInst(_cur_inst);
 }
 
-void definComponent::source( defSource source )
+void definComponent::source(defSource source)
 {
-    if (_cur_inst == NULL)
-        return;
+  if (_cur_inst == NULL)
+    return;
 
-    switch( source)
-    {
-        case DEF_DIST:
-            _cur_inst->setSourceType( dbSourceType::DIST );
-            break;
-            
-        case DEF_NETLIST:
-            _cur_inst->setSourceType( dbSourceType::NETLIST );
-            break;
-            
-        case DEF_TEST:
-            _cur_inst->setSourceType( dbSourceType::TEST );
-            break;
-            
-        case DEF_TIMING:
-            _cur_inst->setSourceType( dbSourceType::TIMING );
-            break;
-            
-        case DEF_USER:
-            _cur_inst->setSourceType( dbSourceType::USER );
-            break;
-    }
+  switch (source) {
+    case DEF_DIST:
+      _cur_inst->setSourceType(dbSourceType::DIST);
+      break;
+
+    case DEF_NETLIST:
+      _cur_inst->setSourceType(dbSourceType::NETLIST);
+      break;
+
+    case DEF_TEST:
+      _cur_inst->setSourceType(dbSourceType::TEST);
+      break;
+
+    case DEF_TIMING:
+      _cur_inst->setSourceType(dbSourceType::TIMING);
+      break;
+
+    case DEF_USER:
+      _cur_inst->setSourceType(dbSourceType::USER);
+      break;
+  }
 }
 
-void definComponent::weight( int weight )
+void definComponent::weight(int weight)
 {
-    if (_cur_inst == NULL)
-        return;
+  if (_cur_inst == NULL)
+    return;
 
-    _cur_inst->setWeight( weight );
+  _cur_inst->setWeight(weight);
 }
 
-void definComponent::property( const char * name, const char * value )
+void definComponent::property(const char* name, const char* value)
 {
-    if ( _cur_inst == NULL )
-        return;
+  if (_cur_inst == NULL)
+    return;
 
-    dbProperty * p = dbProperty::find(_cur_inst,name);
-    if ( p )
-        dbProperty::destroy(p);
+  dbProperty* p = dbProperty::find(_cur_inst, name);
+  if (p)
+    dbProperty::destroy(p);
 
-    dbStringProperty::create(_cur_inst,name,value);
+  dbStringProperty::create(_cur_inst, name, value);
 }
 
-void definComponent::property( const char * name, int value )
+void definComponent::property(const char* name, int value)
 {
-    if ( _cur_inst == NULL )
-        return;
+  if (_cur_inst == NULL)
+    return;
 
-    dbProperty * p = dbProperty::find(_cur_inst,name);
-    if ( p )
-        dbProperty::destroy(p);
+  dbProperty* p = dbProperty::find(_cur_inst, name);
+  if (p)
+    dbProperty::destroy(p);
 
-    dbIntProperty::create(_cur_inst,name,value);
+  dbIntProperty::create(_cur_inst, name, value);
 }
 
-void definComponent::property( const char * name, double value )
+void definComponent::property(const char* name, double value)
 {
-    if ( _cur_inst == NULL )
-        return;
+  if (_cur_inst == NULL)
+    return;
 
-    dbProperty * p = dbProperty::find(_cur_inst,name);
+  dbProperty* p = dbProperty::find(_cur_inst, name);
 
-    if ( p )
-        dbProperty::destroy(p);
+  if (p)
+    dbProperty::destroy(p);
 
-    dbDoubleProperty::create(_cur_inst,name,value);
+  dbDoubleProperty::create(_cur_inst, name, value);
 }
 
 void definComponent::end()
 {
-    if ( _cur_inst == NULL )
-        return;
+  if (_cur_inst == NULL)
+    return;
 
-    dbSet<dbProperty> props = dbProperty::getProperties(_cur_inst);
+  dbSet<dbProperty> props = dbProperty::getProperties(_cur_inst);
 
-    if ( !props.empty() && props.orderReversed() )
-        props.reverse();
-    
-    _cur_inst = NULL;
+  if (!props.empty() && props.orderReversed())
+    props.reverse();
+
+  _cur_inst = NULL;
 }
 
-    
-} // namespace
+}  // namespace odb

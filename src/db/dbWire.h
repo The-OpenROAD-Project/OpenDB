@@ -20,22 +20,23 @@
 //
 // THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
 // AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
-// IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
-// DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE
-// FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
-// DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR
-// SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
-// CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
-// OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
-// OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+// IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
+// ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE
+// LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
+// CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
+// SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
+// INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
+// CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
+// ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
+// POSSIBILITY OF SUCH DAMAGE.
 
 #ifndef ADS_DB_WIRE_H
 #define ADS_DB_WIRE_H
 
 #include "ads.h"
-#include "dbTypes.h"
 #include "dbId.h"
 #include "dbObject.h"
+#include "dbTypes.h"
 #include "dbVector.h"
 
 namespace odb {
@@ -46,41 +47,42 @@ class dbDiff;
 
 struct _dbWireFlags
 {
-    uint _is_global : 1;
-    uint _spare_bits : 31;
+  uint _is_global : 1;
+  uint _spare_bits : 31;
 };
 
 class _dbWire : public dbObject
 {
-public:
-    _dbWireFlags             _flags;
-    dbVector<int>            _data;
-    dbVector<unsigned char>  _opcodes;
-    dbId<_dbNet>             _net;
+ public:
+  _dbWireFlags            _flags;
+  dbVector<int>           _data;
+  dbVector<unsigned char> _opcodes;
+  dbId<_dbNet>            _net;
 
-    _dbWire( _dbDatabase * ) { _flags._is_global = 0; _flags._spare_bits = 0; }
+  _dbWire(_dbDatabase*)
+  {
+    _flags._is_global  = 0;
+    _flags._spare_bits = 0;
+  }
 
-    _dbWire( _dbDatabase *, const _dbWire & w )
-        : _flags(w._flags),
-          _data(w._data),
-          _opcodes(w._opcodes),
-          _net(w._net)
-        {
-        }
-        
-    ~_dbWire() {}
-    
-    uint length() { return _opcodes.size(); }
+  _dbWire(_dbDatabase*, const _dbWire& w)
+      : _flags(w._flags), _data(w._data), _opcodes(w._opcodes), _net(w._net)
+  {
+  }
 
-    bool operator==( const _dbWire & rhs ) const;
-    bool operator!=( const _dbWire & rhs ) const { return ! operator==(rhs); }
-    void differences( dbDiff & diff, const char * field, const _dbWire & rhs ) const;
-    void out( dbDiff & diff, char side, const char * field ) const;
+  ~_dbWire() {}
+
+  uint length() { return _opcodes.size(); }
+
+  bool operator==(const _dbWire& rhs) const;
+  bool operator!=(const _dbWire& rhs) const { return !operator==(rhs); }
+  void differences(dbDiff& diff, const char* field, const _dbWire& rhs) const;
+  void out(dbDiff& diff, char side, const char* field) const;
 };
 
-dbOStream & operator<<( dbOStream & stream, const _dbWire & wire );
-dbIStream & operator>>( dbIStream & stream, _dbWire & wire );
+dbOStream& operator<<(dbOStream& stream, const _dbWire& wire);
+dbIStream& operator>>(dbIStream& stream, _dbWire& wire);
 
-} // namespace
+}  // namespace odb
 
 #endif

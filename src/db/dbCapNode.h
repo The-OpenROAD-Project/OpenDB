@@ -20,22 +20,23 @@
 //
 // THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
 // AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
-// IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
-// DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE
-// FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
-// DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR
-// SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
-// CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
-// OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
-// OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+// IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
+// ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE
+// LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
+// CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
+// SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
+// INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
+// CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
+// ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
+// POSSIBILITY OF SUCH DAMAGE.
 
 #ifndef ADS_DB_CAPNODE_H
 #define ADS_DB_CAPNODE_H
 
 #include "ads.h"
-#include "dbTypes.h"
 #include "dbId.h"
 #include "dbObject.h"
+#include "dbTypes.h"
 
 #include "dbDatabase.h"
 
@@ -48,96 +49,79 @@ class dbIStream;
 class dbOStream;
 class dbDiff;
 
-//struct _dbCapNodeFlags
-//{
-//    uint             _cnt          : 7;
-//    uint             _internal     : 1;
-//    uint             _iterm        : 1;
-//    uint             _bterm        : 1;
-//    uint             _branch       : 1;
-//    uint             _foreign      : 1;
-//    uint             _childrenCnt  : 3;
-//    uint             _select       : 1;
-//    union {
-//            uint             _spare_bits   : 16;
-//            uint             _sort_index   : 16;
-//    };
-//};
-
 struct _dbCapNodeFlags
 {
-    uint             _internal     : 1;
-    uint             _iterm        : 1;
-    uint             _bterm        : 1;
-    uint             _branch       : 1;
-    uint             _foreign      : 1;
-    uint             _childrenCnt  : 5;
-    uint             _select       : 1;
-    union {
-            uint             _spare_bits   : 20;
-            uint             _sort_index   : 20;
-    };
-    uint             _name         : 1;
-    //uint             _dest         : 1;
+  uint _internal : 1;
+  uint _iterm : 1;
+  uint _bterm : 1;
+  uint _branch : 1;
+  uint _foreign : 1;
+  uint _childrenCnt : 5;
+  uint _select : 1;
+  union
+  {
+    uint _spare_bits : 20;
+    uint _sort_index : 20;
+  };
+  uint _name : 1;
 };
 
 class _dbCapNode : public dbObject
 {
-  public:
-    enum Fields // dbJournal field names
-    {
-        FLAGS,
-        NODE_NUM,
-        CAPACITANCE,
-        ADDCAPNCAPACITANCE,
-        SETNET,
-        SETNEXT
-    };
-    
-    // PERSISTANT-MEMBERS
-    _dbCapNodeFlags   _flags;
-    uint              _node_num; // rc-network node-id
-    dbId<_dbNet>      _net;
-    dbId<_dbCapNode>  _next;
-    dbId<_dbCCSeg>    _cc_segs;
-    
-    _dbCapNode( _dbDatabase *);
-    _dbCapNode( _dbDatabase *, const _dbCapNode & n );
-    ~_dbCapNode();
+ public:
+  enum Fields  // dbJournal field names
+  {
+    FLAGS,
+    NODE_NUM,
+    CAPACITANCE,
+    ADDCAPNCAPACITANCE,
+    SETNET,
+    SETNEXT
+  };
 
-    bool operator==( const _dbCapNode & rhs ) const;
-    bool operator!=( const _dbCapNode & rhs ) const { return ! operator==(rhs); }
-    bool operator<( const _dbCapNode & rhs ) const
-    {
-        _dbCapNode * o1 = (_dbCapNode *) this;
-        _dbCapNode * o2 = (_dbCapNode *) &rhs;
-        return o1->getOID() < o2->getOID();
-    }
-    
-    void differences( dbDiff & diff, const char * field, const _dbCapNode & rhs ) const;
-    void out( dbDiff & diff, char side, const char * field ) const;
+  // PERSISTANT-MEMBERS
+  _dbCapNodeFlags  _flags;
+  uint             _node_num;  // rc-network node-id
+  dbId<_dbNet>     _net;
+  dbId<_dbCapNode> _next;
+  dbId<_dbCCSeg>   _cc_segs;
+
+  _dbCapNode(_dbDatabase*);
+  _dbCapNode(_dbDatabase*, const _dbCapNode& n);
+  ~_dbCapNode();
+
+  bool operator==(const _dbCapNode& rhs) const;
+  bool operator!=(const _dbCapNode& rhs) const { return !operator==(rhs); }
+  bool operator<(const _dbCapNode& rhs) const
+  {
+    _dbCapNode* o1 = (_dbCapNode*) this;
+    _dbCapNode* o2 = (_dbCapNode*) &rhs;
+    return o1->getOID() < o2->getOID();
+  }
+
+  void differences(dbDiff&           diff,
+                   const char*       field,
+                   const _dbCapNode& rhs) const;
+  void out(dbDiff& diff, char side, const char* field) const;
 };
 
-inline _dbCapNode::_dbCapNode( _dbDatabase * )
+inline _dbCapNode::_dbCapNode(_dbDatabase*)
 {
-    _flags._internal= 0;
-    _flags._iterm= 0;
-    _flags._bterm= 0;
-    _flags._branch= 0;
-    _flags._foreign= 0;
-    _flags._childrenCnt = 0;
-    _flags._select= 0;
-    _flags._name= 0;
-    _flags._spare_bits = 0;
-    _net= 0;
-    _node_num= 0;
+  _flags._internal    = 0;
+  _flags._iterm       = 0;
+  _flags._bterm       = 0;
+  _flags._branch      = 0;
+  _flags._foreign     = 0;
+  _flags._childrenCnt = 0;
+  _flags._select      = 0;
+  _flags._name        = 0;
+  _flags._spare_bits  = 0;
+  _net                = 0;
+  _node_num           = 0;
 }
 
-inline _dbCapNode::_dbCapNode( _dbDatabase *, const _dbCapNode & n )
-        : _flags( n._flags ),
-          _node_num( n._node_num ),
-          _net( n._net ),
-          _next( n._next )
+inline _dbCapNode::_dbCapNode(_dbDatabase*, const _dbCapNode& n)
+    : _flags(n._flags), _node_num(n._node_num), _net(n._net), _next(n._next)
 {
 }
 
@@ -145,38 +129,29 @@ inline _dbCapNode::~_dbCapNode()
 {
 }
 
-inline dbOStream & operator<<( dbOStream & stream, const _dbCapNode & seg )
+inline dbOStream& operator<<(dbOStream& stream, const _dbCapNode& seg)
 {
-    uint *bit_field = (uint *) &seg._flags;
-    stream << *bit_field;
+  uint* bit_field = (uint*) &seg._flags;
+  stream << *bit_field;
 
-
-    stream << seg._node_num;
-    stream << seg._net;
-    stream << seg._next;
-    stream << seg._cc_segs;
-    return stream;
+  stream << seg._node_num;
+  stream << seg._net;
+  stream << seg._next;
+  stream << seg._cc_segs;
+  return stream;
 }
 
-inline dbIStream & operator>>( dbIStream & stream, _dbCapNode & seg )
+inline dbIStream& operator>>(dbIStream& stream, _dbCapNode& seg)
 {
-    uint *bit_field = (uint *) &seg._flags;
-    stream >> *bit_field;
-    if (!stream.getDatabase()->isSchema(ADS_DB_INDEPENDENT_EXT_CORNERS))
-        *bit_field = (*bit_field)>>7;
-    if (!stream.getDatabase()->isSchema(ADS_DB_5BITCAPNODECHILDRENCNT))
-    {
-        seg._flags._select = (seg._flags._childrenCnt % 16) >> 3;
-        seg._flags._childrenCnt = seg._flags._childrenCnt % 8;
-    }
-
-    stream >> seg._node_num;
-    stream >> seg._net;
-    stream >> seg._next;
-    stream >> seg._cc_segs;
-    return stream;
+  uint* bit_field = (uint*) &seg._flags;
+  stream >> *bit_field;
+  stream >> seg._node_num;
+  stream >> seg._net;
+  stream >> seg._next;
+  stream >> seg._cc_segs;
+  return stream;
 }
 
-} // namespace
+}  // namespace odb
 
 #endif

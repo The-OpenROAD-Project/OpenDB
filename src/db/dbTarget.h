@@ -20,22 +20,23 @@
 //
 // THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
 // AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
-// IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
-// DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE
-// FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
-// DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR
-// SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
-// CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
-// OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
-// OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+// IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
+// ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE
+// LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
+// CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
+// SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
+// INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
+// CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
+// ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
+// POSSIBILITY OF SUCH DAMAGE.
 
 #ifndef ADS_DB_TARGET_H
 #define ADS_DB_TARGET_H
 
 #include "ads.h"
-#include "geom.h"
 #include "dbId.h"
 #include "dbObject.h"
+#include "geom.h"
 
 namespace odb {
 
@@ -49,69 +50,69 @@ class dbDiff;
 
 struct _dbTargetFlags
 {
-    uint             _spare_bits : 32;
+  uint _spare_bits : 32;
 };
 
 class _dbTarget : public dbObject
 {
-  public:
-    // PERSISTANT-MEMBERS
-    _dbTargetFlags     _flags;
-    adsPoint           _point;
-    dbId<_dbMTerm>     _mterm;
-    dbId<_dbTechLayer> _layer;
-    dbId<_dbTarget>    _next;
-    
-    _dbTarget( _dbDatabase *, const _dbTarget & t );
-    _dbTarget( _dbDatabase * );
-    ~_dbTarget();
+ public:
+  // PERSISTANT-MEMBERS
+  _dbTargetFlags     _flags;
+  adsPoint           _point;
+  dbId<_dbMTerm>     _mterm;
+  dbId<_dbTechLayer> _layer;
+  dbId<_dbTarget>    _next;
 
-    bool operator==( const _dbTarget & rhs ) const;
-    bool operator!=( const _dbTarget & rhs ) const { return ! operator==(rhs); }
-    void differences( dbDiff & diff, const char * field, const _dbTarget & rhs ) const;
-    void out( dbDiff & diff, char side, const char * field ) const;
+  _dbTarget(_dbDatabase*, const _dbTarget& t);
+  _dbTarget(_dbDatabase*);
+  ~_dbTarget();
+
+  bool operator==(const _dbTarget& rhs) const;
+  bool operator!=(const _dbTarget& rhs) const { return !operator==(rhs); }
+  void differences(dbDiff& diff, const char* field, const _dbTarget& rhs) const;
+  void out(dbDiff& diff, char side, const char* field) const;
 };
 
-inline _dbTarget::_dbTarget( _dbDatabase *, const _dbTarget & t )
-        : _flags(t._flags),
-          _point(t._point),
-          _mterm(t._mterm),
-          _layer(t._layer),
-          _next(t._next)
+inline _dbTarget::_dbTarget(_dbDatabase*, const _dbTarget& t)
+    : _flags(t._flags),
+      _point(t._point),
+      _mterm(t._mterm),
+      _layer(t._layer),
+      _next(t._next)
 {
 }
 
-inline _dbTarget::_dbTarget( _dbDatabase * )
+inline _dbTarget::_dbTarget(_dbDatabase*)
 {
-    _flags._spare_bits = 0;
+  _flags._spare_bits = 0;
 }
 
 inline _dbTarget::~_dbTarget()
 {
 }
 
-inline dbOStream & operator<<( dbOStream & stream, const _dbTarget & target )
+inline dbOStream& operator<<(dbOStream& stream, const _dbTarget& target)
 {
-    uint * bit_field = (uint *) &target._flags;
-    stream << *bit_field;
-    stream << target._point;
-    stream << target._mterm;
-    stream << target._layer;
-    stream << target._next;
-    return stream;
+  uint* bit_field = (uint*) &target._flags;
+  stream << *bit_field;
+  stream << target._point;
+  stream << target._mterm;
+  stream << target._layer;
+  stream << target._next;
+  return stream;
 }
 
-inline dbIStream & operator>>( dbIStream & stream, _dbTarget & target )
+inline dbIStream& operator>>(dbIStream& stream, _dbTarget& target)
 {
-    uint * bit_field = (uint *) &target._flags;
-    stream >> *bit_field;
-    stream >> target._point;
-    stream >> target._mterm;
-    stream >> target._layer;
-    stream >> target._next;
-    return stream;
+  uint* bit_field = (uint*) &target._flags;
+  stream >> *bit_field;
+  stream >> target._point;
+  stream >> target._mterm;
+  stream >> target._layer;
+  stream >> target._next;
+  return stream;
 }
 
-} // namespace
+}  // namespace odb
 
 #endif

@@ -20,16 +20,17 @@
 //
 // THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
 // AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
-// IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
-// DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE
-// FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
-// DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR
-// SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
-// CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
-// OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
-// OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+// IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
+// ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE
+// LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
+// CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
+// SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
+// INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
+// CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
+// ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
+// POSSIBILITY OF SUCH DAMAGE.
 
-#ifndef LOGGER_H 
+#ifndef LOGGER_H
 #define LOGGER_H
 #include <stdarg.h>
 #include <stdio.h>
@@ -37,53 +38,53 @@
 #include <sys/times.h>
 #endif
 
-#include "tm.h"
 #include "ads.h"
+#include "tm.h"
 
 namespace odb {
 
-#define _ATH_LOGBUFLEN 1024*8
+#define _ATH_LOGBUFLEN 1024 * 8
 #define LAST_TIMER -1
 #define NUM_TIMERS 64
 
 class Logger : public ZInterface
 {
-    public:
-        static Logger *getLogger();
-        static void initLogger(Tcl_Interp *interp);
+ public:
+  static Logger* getLogger();
+  static void    initLogger(Tcl_Interp* interp);
 
-    private:
-        static Logger *_logger;
-        Logger(Tcl_Interp *interp) { _context._interp = interp; }
+ private:
+  static Logger* _logger;
+  Logger(Tcl_Interp* interp) { _context._interp = interp; }
 };
 
-int idle(int =0);
+int idle(int = 0);
 
-int notice(int code, const char *msg, ...);
-int verbose(int code, const char *msg, ...);
+int notice(int code, const char* msg, ...);
+int verbose(int code, const char* msg, ...);
 
-int info(int code, const char *msg, ...);
+int info(int code, const char* msg, ...);
 
 void dumpWarn();
-int checkWarning(const char *msg);
-void resetWarningCount(const char *msg, int max, int cnt);
+int  checkWarning(const char* msg);
+void resetWarningCount(const char* msg, int max, int cnt);
 
-int warning(int code, const char*msg, ...);
+int warning(int code, const char* msg, ...);
 
-void error(int code, const char*msg, ...);
+void error(int code, const char* msg, ...);
 
-int fnotice(FILE* file, int code, const char *msg, ...);
+int fnotice(FILE* file, int code, const char* msg, ...);
 
-int fwarning(FILE* file, int code, const char*msg, ...);
+int fwarning(FILE* file, int code, const char* msg, ...);
 
-int debug(const char *mod, const char *tag, const char*msg, ...);
-int isDebug(const char *mod, const char *tag);
+int debug(const char* mod, const char* tag, const char* msg, ...);
+int isDebug(const char* mod, const char* tag);
 
-int _new_htimer(void);
+int  _new_htimer(void);
 void _reset_htimer(int idx);
 void _get_htimer(int idx, int& sdiff, int& ndiff);
-void _show_htimer(char *msg, char *mod, char *tag, int idx);
+void _show_htimer(char* msg, char* mod, char* tag, int idx);
 
-} // namespace
+}  // namespace odb
 
 #endif

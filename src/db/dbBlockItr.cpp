@@ -20,77 +20,79 @@
 //
 // THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
 // AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
-// IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
-// DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE
-// FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
-// DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR
-// SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
-// CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
-// OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
-// OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+// IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
+// ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE
+// LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
+// CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
+// SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
+// INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
+// CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
+// ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
+// POSSIBILITY OF SUCH DAMAGE.
 
 #include "dbBlockItr.h"
+#include <algorithm>
 #include "dbBlock.h"
 #include "dbTable.h"
-#include <algorithm>
 
 namespace odb {
 
 bool dbBlockItr::reversible()
 {
-    return true;
+  return true;
 }
 
 bool dbBlockItr::orderReversed()
 {
-    return false;
+  return false;
 }
 
-void dbBlockItr::reverse(dbObject * parent)
+void dbBlockItr::reverse(dbObject* parent)
 {
-    _dbBlock * block = (_dbBlock *) parent;
-    std::reverse( block->_children_v1.begin(), block->_children_v1.end());
+  _dbBlock* block = (_dbBlock*) parent;
+  std::reverse(block->_children.begin(), block->_children.end());
 }
 
 uint dbBlockItr::sequential()
 {
-    return 0;
+  return 0;
 }
 
-uint dbBlockItr::size( dbObject * parent )
+uint dbBlockItr::size(dbObject* parent)
 {
-    _dbBlock * block = (_dbBlock *) parent;
-    return block->_children_v1.size();
+  _dbBlock* block = (_dbBlock*) parent;
+  return block->_children.size();
 }
 
-uint dbBlockItr::begin( dbObject * )
+uint dbBlockItr::begin(dbObject*)
 {
-    return 0;
+  return 0;
 }
 
-uint dbBlockItr::end( dbObject * parent )
+uint dbBlockItr::end(dbObject* parent)
 {
-    _dbBlock * block = (_dbBlock *) parent;
-    return block->_children_v1.size();
+  _dbBlock* block = (_dbBlock*) parent;
+  return block->_children.size();
 }
 
-uint dbBlockItr::next( uint id, ... )
+uint dbBlockItr::next(uint id, ...)
 {
-    return ++id;
+  return ++id;
 }
 
-// dbBlockItr.cpp:54:5: warning: undefined behavior when second parameter of ‘va_start’ is declared with ‘register’ storage [-Wvarargs]
+// dbBlockItr.cpp:54:5: warning: undefined behavior when second parameter of
+// ‘va_start’ is declared with ‘register’ storage [-Wvarargs]
 //     va_start(ap,id);
 
 // dbObject * dbBlockItr::getObject( uint id, ... )
-dbObject * dbBlockItr::getObject( uint id, ... )
+dbObject* dbBlockItr::getObject(uint id, ...)
 {
-    va_list ap;
-    va_start(ap,id);
-    _dbBlock * parent = (_dbBlock *) va_arg(ap, dbObject *);
-    va_end(ap);
-    uint cid = parent->_children_v1[id];
-    return _block_tbl->getPtr(cid);
+  va_list ap;
+  va_start(ap, id);
+  _dbBlock* parent = (_dbBlock*) va_arg(ap, dbObject*);
+  va_end(ap);
+  uint cid = parent->_children[id];
+  return _block_tbl->getPtr(cid);
 }
 
-} // namespace
+}  // namespace odb

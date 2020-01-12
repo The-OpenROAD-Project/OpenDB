@@ -20,74 +20,77 @@
 //
 // THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
 // AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
-// IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
-// DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE
-// FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
-// DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR
-// SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
-// CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
-// OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
-// OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+// IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
+// ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE
+// LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
+// CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
+// SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
+// INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
+// CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
+// ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
+// POSSIBILITY OF SUCH DAMAGE.
 
 #include "dbGCellGrid.h"
-#include "dbDatabase.h"
+#include <algorithm>
+#include "db.h"
 #include "dbBlock.h"
+#include "dbDatabase.h"
+#include "dbDiff.hpp"
 #include "dbSet.h"
 #include "dbTable.h"
 #include "dbTable.hpp"
-#include "dbDiff.hpp"
-#include "db.h"
-#include <algorithm>
 
 namespace odb {
 
 template class dbTable<_dbGCellGrid>;
 
-bool _dbGCellGrid::operator==( const _dbGCellGrid & rhs ) const
+bool _dbGCellGrid::operator==(const _dbGCellGrid& rhs) const
 {
-    if ( _x_origin != rhs._x_origin )
-        return false;
-    
-    if ( _x_count != rhs._x_count )
-        return false;
-    
-    if ( _x_step != rhs._x_step )
-        return false;
-    
-    if ( _y_origin != rhs._y_origin )
-        return false;
-    
-    if ( _y_count != rhs._y_count )
-        return false;
-    
-    if ( _y_step != rhs._y_step )
-        return false;
-    
-    return true;
+  if (_x_origin != rhs._x_origin)
+    return false;
+
+  if (_x_count != rhs._x_count)
+    return false;
+
+  if (_x_step != rhs._x_step)
+    return false;
+
+  if (_y_origin != rhs._y_origin)
+    return false;
+
+  if (_y_count != rhs._y_count)
+    return false;
+
+  if (_y_step != rhs._y_step)
+    return false;
+
+  return true;
 }
 
-void _dbGCellGrid::differences( dbDiff & diff, const char * field, const _dbGCellGrid & rhs ) const
+void _dbGCellGrid::differences(dbDiff&             diff,
+                               const char*         field,
+                               const _dbGCellGrid& rhs) const
 {
-    DIFF_BEGIN
-    DIFF_VECTOR(_x_origin);
-    DIFF_VECTOR(_x_count);
-    DIFF_VECTOR(_x_step);
-    DIFF_VECTOR(_y_origin);
-    DIFF_VECTOR(_y_count);
-    DIFF_VECTOR(_y_step);
-    DIFF_END
+  DIFF_BEGIN
+  DIFF_VECTOR(_x_origin);
+  DIFF_VECTOR(_x_count);
+  DIFF_VECTOR(_x_step);
+  DIFF_VECTOR(_y_origin);
+  DIFF_VECTOR(_y_count);
+  DIFF_VECTOR(_y_step);
+  DIFF_END
 }
 
-void _dbGCellGrid::out( dbDiff & diff, char side, const char * field  ) const
+void _dbGCellGrid::out(dbDiff& diff, char side, const char* field) const
 {
-    DIFF_OUT_BEGIN
-    DIFF_OUT_VECTOR(_x_origin);
-    DIFF_OUT_VECTOR(_x_count);
-    DIFF_OUT_VECTOR(_x_step);
-    DIFF_OUT_VECTOR(_y_origin);
-    DIFF_OUT_VECTOR(_y_count);
-    DIFF_OUT_VECTOR(_y_step);
-    DIFF_END
+  DIFF_OUT_BEGIN
+  DIFF_OUT_VECTOR(_x_origin);
+  DIFF_OUT_VECTOR(_x_count);
+  DIFF_OUT_VECTOR(_x_step);
+  DIFF_OUT_VECTOR(_y_origin);
+  DIFF_OUT_VECTOR(_y_count);
+  DIFF_OUT_VECTOR(_y_step);
+  DIFF_END
 }
 
 ////////////////////////////////////////////////////////////////////
@@ -96,153 +99,147 @@ void _dbGCellGrid::out( dbDiff & diff, char side, const char * field  ) const
 //
 ////////////////////////////////////////////////////////////////////
 
-void dbGCellGrid::getGridX( std::vector<int> & x_grid )
+void dbGCellGrid::getGridX(std::vector<int>& x_grid)
 {
-    x_grid.clear();
+  x_grid.clear();
 
-    _dbGCellGrid * grid = (_dbGCellGrid *) this;
+  _dbGCellGrid* grid = (_dbGCellGrid*) this;
 
-    uint i;
+  uint i;
 
-    for( i = 0; i < grid->_x_origin.size(); ++i )
-    {
-        int j;
+  for (i = 0; i < grid->_x_origin.size(); ++i) {
+    int j;
 
-        int x = grid->_x_origin[i];
-        int count = grid->_x_count[i];
-        int step = grid->_x_step[i];
+    int x     = grid->_x_origin[i];
+    int count = grid->_x_count[i];
+    int step  = grid->_x_step[i];
 
-        for ( j = 0; j < count; ++j )
-        {
-            x_grid.push_back( x );
-            x += step;
-        }
+    for (j = 0; j < count; ++j) {
+      x_grid.push_back(x);
+      x += step;
     }
+  }
 
-    // empty grid
-    if ( x_grid.begin() == x_grid.end() )
-        return;
-    
-    // sort coords in asscending order
-    std::sort( x_grid.begin(), x_grid.end() );
+  // empty grid
+  if (x_grid.begin() == x_grid.end())
+    return;
 
-    // remove any duplicates
-    std::vector<int>::iterator new_end;
-    new_end = std::unique( x_grid.begin(), x_grid.end() );
-    x_grid.erase( new_end, x_grid.end() );
+  // sort coords in asscending order
+  std::sort(x_grid.begin(), x_grid.end());
+
+  // remove any duplicates
+  std::vector<int>::iterator new_end;
+  new_end = std::unique(x_grid.begin(), x_grid.end());
+  x_grid.erase(new_end, x_grid.end());
 }
 
-void dbGCellGrid::getGridY( std::vector<int> & y_grid )
+void dbGCellGrid::getGridY(std::vector<int>& y_grid)
 {
-    y_grid.clear();
+  y_grid.clear();
 
-    _dbGCellGrid * grid = (_dbGCellGrid *) this;
+  _dbGCellGrid* grid = (_dbGCellGrid*) this;
 
-    uint i;
+  uint i;
 
-    for( i = 0; i < grid->_y_origin.size(); ++i )
-    {
-        int j;
+  for (i = 0; i < grid->_y_origin.size(); ++i) {
+    int j;
 
-        int y = grid->_y_origin[i];
-        int count = grid->_y_count[i];
-        int step = grid->_y_step[i];
+    int y     = grid->_y_origin[i];
+    int count = grid->_y_count[i];
+    int step  = grid->_y_step[i];
 
-        for ( j = 0; j < count; ++j )
-        {
-            y_grid.push_back( y );
-            y += step;
-        }
+    for (j = 0; j < count; ++j) {
+      y_grid.push_back(y);
+      y += step;
     }
+  }
 
-    // empty grid
-    if ( y_grid.begin() == y_grid.end() )
-        return;
-    
-    // sort coords in asscending order
-    std::sort( y_grid.begin(), y_grid.end() );
+  // empty grid
+  if (y_grid.begin() == y_grid.end())
+    return;
 
-    // remove any duplicates
-    std::vector<int>::iterator new_end;
-    new_end = std::unique( y_grid.begin(), y_grid.end() );
-    y_grid.erase( new_end, y_grid.end() );
+  // sort coords in asscending order
+  std::sort(y_grid.begin(), y_grid.end());
+
+  // remove any duplicates
+  std::vector<int>::iterator new_end;
+  new_end = std::unique(y_grid.begin(), y_grid.end());
+  y_grid.erase(new_end, y_grid.end());
 }
 
-dbBlock *
-dbGCellGrid::getBlock()
+dbBlock* dbGCellGrid::getBlock()
 {
-    return (dbBlock *) getOwner();
+  return (dbBlock*) getOwner();
 }
 
-void
-dbGCellGrid::addGridPatternX( int origin_x, int line_count, int step )
+void dbGCellGrid::addGridPatternX(int origin_x, int line_count, int step)
 {
-    _dbGCellGrid * grid = (_dbGCellGrid *) this;
-    grid->_x_origin.push_back( origin_x );
-    grid->_x_count.push_back( line_count );
-    grid->_x_step.push_back( step );
+  _dbGCellGrid* grid = (_dbGCellGrid*) this;
+  grid->_x_origin.push_back(origin_x);
+  grid->_x_count.push_back(line_count);
+  grid->_x_step.push_back(step);
 }
 
-void 
-dbGCellGrid::addGridPatternY( int origin_y, int line_count, int step )
+void dbGCellGrid::addGridPatternY(int origin_y, int line_count, int step)
 {
-    _dbGCellGrid * grid = (_dbGCellGrid *) this;
-    grid->_y_origin.push_back( origin_y );
-    grid->_y_count.push_back( line_count );
-    grid->_y_step.push_back( step );
+  _dbGCellGrid* grid = (_dbGCellGrid*) this;
+  grid->_y_origin.push_back(origin_y);
+  grid->_y_count.push_back(line_count);
+  grid->_y_step.push_back(step);
 }
 
-int 
-dbGCellGrid::getNumGridPatternsX()
+int dbGCellGrid::getNumGridPatternsX()
 {
-    _dbGCellGrid * grid = (_dbGCellGrid *) this;
-    return grid->_x_origin.size();
+  _dbGCellGrid* grid = (_dbGCellGrid*) this;
+  return grid->_x_origin.size();
 }
 
-int 
-dbGCellGrid::getNumGridPatternsY()
+int dbGCellGrid::getNumGridPatternsY()
 {
-    _dbGCellGrid * grid = (_dbGCellGrid *) this;
-    return grid->_y_origin.size();
+  _dbGCellGrid* grid = (_dbGCellGrid*) this;
+  return grid->_y_origin.size();
 }
-    
-void 
-dbGCellGrid::getGridPatternX( int i, int & origin_x, int & line_count, int & step )
+
+void dbGCellGrid::getGridPatternX(int  i,
+                                  int& origin_x,
+                                  int& line_count,
+                                  int& step)
 {
-    _dbGCellGrid * grid = (_dbGCellGrid *) this;
-    ZASSERT( i < (int) grid->_x_origin.size() );
-    origin_x = grid->_x_origin[i];
-    line_count = grid->_x_count[i];
-    step = grid->_x_step[i];
+  _dbGCellGrid* grid = (_dbGCellGrid*) this;
+  ZASSERT(i < (int) grid->_x_origin.size());
+  origin_x   = grid->_x_origin[i];
+  line_count = grid->_x_count[i];
+  step       = grid->_x_step[i];
 }
 
-void 
-dbGCellGrid::getGridPatternY( int i, int & origin_y, int & line_count, int & step )
+void dbGCellGrid::getGridPatternY(int  i,
+                                  int& origin_y,
+                                  int& line_count,
+                                  int& step)
 {
-    _dbGCellGrid * grid = (_dbGCellGrid *) this;
-    ZASSERT( i < (int) grid->_y_origin.size() );
-    origin_y = grid->_y_origin[i];
-    line_count = grid->_y_count[i];
-    step = grid->_y_step[i];
+  _dbGCellGrid* grid = (_dbGCellGrid*) this;
+  ZASSERT(i < (int) grid->_y_origin.size());
+  origin_y   = grid->_y_origin[i];
+  line_count = grid->_y_count[i];
+  step       = grid->_y_step[i];
 }
 
-dbGCellGrid * dbGCellGrid::create( dbBlock * block_ )
+dbGCellGrid* dbGCellGrid::create(dbBlock* block_)
 {
-    _dbBlock * block = (_dbBlock *) block_;
+  _dbBlock* block = (_dbBlock*) block_;
 
-    if ( block->_gcell_grid != 0 )
-        return NULL;
+  if (block->_gcell_grid != 0)
+    return NULL;
 
-    _dbGCellGrid * grid = block->_gcell_grid_tbl->create();
-    block->_gcell_grid = grid->getOID();
-    return (dbGCellGrid *) grid;
+  _dbGCellGrid* grid = block->_gcell_grid_tbl->create();
+  block->_gcell_grid = grid->getOID();
+  return (dbGCellGrid*) grid;
 }
 
-dbGCellGrid *
-dbGCellGrid::getGCellGrid( dbBlock * block_, uint dbid_ )
+dbGCellGrid* dbGCellGrid::getGCellGrid(dbBlock* block_, uint dbid_)
 {
-    _dbBlock * block = (_dbBlock *) block_;
-    return (dbGCellGrid *) block->_gcell_grid_tbl->getPtr(dbid_);
+  _dbBlock* block = (_dbBlock*) block_;
+  return (dbGCellGrid*) block->_gcell_grid_tbl->getPtr(dbid_);
 }
 
-} // namespace
+}  // namespace odb

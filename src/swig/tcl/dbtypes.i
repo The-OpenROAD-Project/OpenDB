@@ -2,10 +2,6 @@
 
 
 // DB specital types
-%typemap(out) odb::dbString {
-    Tcl_Obj *obj = Tcl_NewStringObj($1.c_str(), $1.length());
-    Tcl_SetObjResult(interp, obj);
-}
 %typemap(out) odb::dbStringProperty {
     Tcl_Obj *obj = Tcl_NewStringObj($1.getValue().c_str(), $1.getValue().length());
     Tcl_SetObjResult(interp, obj);

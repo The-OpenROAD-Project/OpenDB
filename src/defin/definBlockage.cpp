@@ -20,28 +20,29 @@
 //
 // THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
 // AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
-// IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
-// DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE
-// FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
-// DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR
-// SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
-// CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
-// OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
-// OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+// IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
+// ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE
+// LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
+// CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
+// SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
+// INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
+// CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
+// ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
+// POSSIBILITY OF SUCH DAMAGE.
 
-#include <stdlib.h>
-#include <stdio.h>
-#include <ctype.h>
 #include "definBlockage.h"
-#include "definPolygon.h"
+#include <ctype.h>
+#include <stdio.h>
+#include <stdlib.h>
 #include "db.h"
 #include "dbShape.h"
+#include "definPolygon.h"
 
 namespace odb {
 
 definBlockage::definBlockage()
 {
-    init();
+  init();
 }
 
 definBlockage::~definBlockage()
@@ -50,127 +51,124 @@ definBlockage::~definBlockage()
 
 void definBlockage::init()
 {
-    definBase::init();
+  definBase::init();
 }
 
-void definBlockage::blockageRoutingBegin( const char * layer )
+void definBlockage::blockageRoutingBegin(const char* layer)
 {
-    _layer = _tech->findLayer(layer);
-    _inst = NULL;
-    _slots = false;
-    _fills = false;
-    _pushdown = false;
-    _has_min_spacing = false;
-    _has_effective_width = false;
-    _min_spacing = 0;
-    _effective_width = 0;
+  _layer               = _tech->findLayer(layer);
+  _inst                = NULL;
+  _slots               = false;
+  _fills               = false;
+  _pushdown            = false;
+  _has_min_spacing     = false;
+  _has_effective_width = false;
+  _min_spacing         = 0;
+  _effective_width     = 0;
 
-    if ( _layer == NULL )
-    {
-        notice(0,"error: undefined layer (%s) referenced\n", layer );
-        ++_errors;
-    }
+  if (_layer == NULL) {
+    notice(0, "error: undefined layer (%s) referenced\n", layer);
+    ++_errors;
+  }
 }
 
-void definBlockage::blockageRoutingComponent( const char * comp )
+void definBlockage::blockageRoutingComponent(const char* comp)
 {
-    _inst = _block->findInst( comp );
+  _inst = _block->findInst(comp);
 
-    if ( _inst == NULL )
-    {
-        notice(0,"error: undefined component (%s) referenced\n", comp );
-        ++_errors;
-    }
+  if (_inst == NULL) {
+    notice(0, "error: undefined component (%s) referenced\n", comp);
+    ++_errors;
+  }
 }
 
 void definBlockage::blockageRoutingSlots()
 {
-    _slots = true;
+  _slots = true;
 }
 
 void definBlockage::blockageRoutingFills()
 {
-    _fills = true;
+  _fills = true;
 }
 
 void definBlockage::blockageRoutingPushdown()
 {
-    _pushdown = true;
+  _pushdown = true;
 }
 
 void definBlockage::blockageRoutingMinSpacing(int spacing)
 {
-    _has_min_spacing = true;
-    _min_spacing = spacing;
+  _has_min_spacing = true;
+  _min_spacing     = spacing;
 }
 
 void definBlockage::blockageRoutingEffectiveWidth(int width)
 {
-    _has_effective_width = true;
-    _effective_width = width;
+  _has_effective_width = true;
+  _effective_width     = width;
 }
 
-void definBlockage::blockageRoutingRect( int x1, int y1, int x2, int y2 )
+void definBlockage::blockageRoutingRect(int x1, int y1, int x2, int y2)
 {
-    if ( _layer == NULL )
-        return;
+  if (_layer == NULL)
+    return;
 
-    x1 = dbdist(x1);
-    y1 = dbdist(y1);
-    x2 = dbdist(x2);
-    y2 = dbdist(y2);
-    dbObstruction * o = dbObstruction::create( _block, _layer, x1, y1, x2, y2, _inst );
+  x1 = dbdist(x1);
+  y1 = dbdist(y1);
+  x2 = dbdist(x2);
+  y2 = dbdist(y2);
+  dbObstruction* o
+      = dbObstruction::create(_block, _layer, x1, y1, x2, y2, _inst);
 
-    if ( _pushdown )
-        o->setPushedDown();
+  if (_pushdown)
+    o->setPushedDown();
 
-    if ( _fills )
-        o->setFillObstruction();
+  if (_fills)
+    o->setFillObstruction();
 
-    if ( _slots )
-        o->setSlotObstruction();
+  if (_slots)
+    o->setSlotObstruction();
 
-    if ( _has_min_spacing )
-        o->setMinSpacing( dbdist(_min_spacing) );
+  if (_has_min_spacing)
+    o->setMinSpacing(dbdist(_min_spacing));
 
-    if ( _has_effective_width )
-        o->setEffectiveWidth( dbdist(_effective_width) );
+  if (_has_effective_width)
+    o->setEffectiveWidth(dbdist(_effective_width));
 }
 
-void definBlockage::blockageRoutingPolygon( std::vector<defPoint> & points )
+void definBlockage::blockageRoutingPolygon(std::vector<defPoint>& points)
 {
-    if ( _layer == NULL )
-        return;
+  if (_layer == NULL)
+    return;
 
-    std::vector<adsPoint> P;
-    translate(points,P);
-    definPolygon polygon(P);
-    std::vector<adsRect> R;
-    polygon.decompose(R);
+  std::vector<adsPoint> P;
+  translate(points, P);
+  definPolygon         polygon(P);
+  std::vector<adsRect> R;
+  polygon.decompose(R);
 
-    std::vector<adsRect>::iterator itr;
+  std::vector<adsRect>::iterator itr;
 
-    for( itr = R.begin(); itr != R.end(); ++itr )
-    {
-        adsRect & r = *itr;
+  for (itr = R.begin(); itr != R.end(); ++itr) {
+    adsRect& r = *itr;
 
-        dbObstruction * o = dbObstruction::create( _block, _layer,
-                                                   r.xMin(), r.yMin(), r.xMax(), r.yMax(),
-                                                   _inst );
-        if ( _pushdown )
-            o->setPushedDown();
-    
-        if ( _fills )
-            o->setFillObstruction();
-    
-        if ( _slots )
-            o->setSlotObstruction();
-        if ( _has_min_spacing )
-            o->setMinSpacing( dbdist(_min_spacing) );
+    dbObstruction* o = dbObstruction::create(
+        _block, _layer, r.xMin(), r.yMin(), r.xMax(), r.yMax(), _inst);
+    if (_pushdown)
+      o->setPushedDown();
 
-        if ( _has_effective_width )
-            o->setEffectiveWidth( dbdist(_effective_width) );
-    }
+    if (_fills)
+      o->setFillObstruction();
+
+    if (_slots)
+      o->setSlotObstruction();
+    if (_has_min_spacing)
+      o->setMinSpacing(dbdist(_min_spacing));
+
+    if (_has_effective_width)
+      o->setEffectiveWidth(dbdist(_effective_width));
+  }
 }
 
 void definBlockage::blockageRoutingEnd()
@@ -179,43 +177,42 @@ void definBlockage::blockageRoutingEnd()
 
 void definBlockage::blockagePlacementBegin()
 {
-    _layer = NULL;
-    _inst = NULL;
-    _slots = false;
-    _fills = false;
-    _pushdown = false;
+  _layer    = NULL;
+  _inst     = NULL;
+  _slots    = false;
+  _fills    = false;
+  _pushdown = false;
 }
 
-void definBlockage::blockagePlacementComponent( const char * comp )
+void definBlockage::blockagePlacementComponent(const char* comp)
 {
-    _inst = _block->findInst( comp );
+  _inst = _block->findInst(comp);
 
-    if ( _inst == NULL )
-    {
-        notice(0,"error: undefined component (%s) referenced\n", comp );
-        ++_errors;
-    }
+  if (_inst == NULL) {
+    notice(0, "error: undefined component (%s) referenced\n", comp);
+    ++_errors;
+  }
 }
 
 void definBlockage::blockagePlacementPushdown()
 {
-    _pushdown = true;
+  _pushdown = true;
 }
 
-void definBlockage::blockagePlacementRect( int x1, int y1, int x2, int y2 )
+void definBlockage::blockagePlacementRect(int x1, int y1, int x2, int y2)
 {
-    x1 = dbdist(x1);
-    y1 = dbdist(y1);
-    x2 = dbdist(x2);
-    y2 = dbdist(y2);
-    dbBlockage * b = dbBlockage::create( _block, x1, y1, x2, y2, _inst );
+  x1            = dbdist(x1);
+  y1            = dbdist(y1);
+  x2            = dbdist(x2);
+  y2            = dbdist(y2);
+  dbBlockage* b = dbBlockage::create(_block, x1, y1, x2, y2, _inst);
 
-    if ( _pushdown )
-        b->setPushedDown();
+  if (_pushdown)
+    b->setPushedDown();
 }
 
 void definBlockage::blockagePlacementEnd()
 {
 }
-    
-} // namespace
+
+}  // namespace odb

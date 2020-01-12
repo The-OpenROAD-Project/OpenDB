@@ -20,14 +20,15 @@
 //
 // THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
 // AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
-// IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
-// DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE
-// FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
-// DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR
-// SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
-// CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
-// OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
-// OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+// IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
+// ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE
+// LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
+// CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
+// SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
+// INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
+// CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
+// ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
+// POSSIBILITY OF SUCH DAMAGE.
 
 #ifndef ADS_DB_BPIN_H
 #define ADS_DB_BPIN_H
@@ -48,37 +49,36 @@ class dbDiff;
 
 struct _dbBPinFlags
 {
-    dbPlacementStatus::Value   _status              : 4;
-    uint                       _has_min_spacing     : 1;
-    uint                       _has_effective_width : 1;
-    uint                       _spare_bits : 26;
+  dbPlacementStatus::Value _status : 4;
+  uint                     _has_min_spacing : 1;
+  uint                     _has_effective_width : 1;
+  uint                     _spare_bits : 26;
 };
 
 class _dbBPin : public dbObject
 {
-  public:
-    // PERSISTANT-MEMBERS
-    _dbBPinFlags   _flags;
-    dbId<_dbBTerm> _bterm;
-    dbId<_dbBox>   _bbox;
-    dbId<_dbBPin>  _next_bpin;
-    uint           _min_spacing;      // 5.6 DEF
-    uint           _effective_width;  // 5.6 DEF
+ public:
+  // PERSISTANT-MEMBERS
+  _dbBPinFlags   _flags;
+  dbId<_dbBTerm> _bterm;
+  dbId<_dbBox>   _bbox;
+  dbId<_dbBPin>  _next_bpin;
+  uint           _min_spacing;      // 5.6 DEF
+  uint           _effective_width;  // 5.6 DEF
 
-    _dbBPin( _dbDatabase *, const _dbBPin & p );
-    _dbBPin( _dbDatabase * );
-    ~_dbBPin();
+  _dbBPin(_dbDatabase*, const _dbBPin& p);
+  _dbBPin(_dbDatabase*);
+  ~_dbBPin();
 
-    bool operator==( const _dbBPin & rhs ) const;
-    bool operator!=( const _dbBPin & rhs ) const { return ! operator==(rhs); }
-    void differences( dbDiff & diff, const char * field, const _dbBPin & rhs ) const;
-    void out( dbDiff & diff, char side, const char * field ) const;
+  bool operator==(const _dbBPin& rhs) const;
+  bool operator!=(const _dbBPin& rhs) const { return !operator==(rhs); }
+  void differences(dbDiff& diff, const char* field, const _dbBPin& rhs) const;
+  void out(dbDiff& diff, char side, const char* field) const;
 };
 
-dbIStream & operator>>( dbIStream & stream, _dbBPin & bpin );
-dbOStream & operator<<( dbOStream & stream, const _dbBPin & bpin );
+dbIStream& operator>>(dbIStream& stream, _dbBPin& bpin);
+dbOStream& operator<<(dbOStream& stream, const _dbBPin& bpin);
 
-
-} // namespace
+}  // namespace odb
 
 #endif

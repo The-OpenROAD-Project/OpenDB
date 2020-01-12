@@ -20,14 +20,15 @@
 //
 // THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
 // AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
-// IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
-// DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE
-// FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
-// DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR
-// SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
-// CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
-// OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
-// OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+// IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
+// ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE
+// LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
+// CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
+// SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
+// INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
+// CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
+// ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
+// POSSIBILITY OF SUCH DAMAGE.
 
 #include "dbNullIterator.h"
 
@@ -37,46 +38,46 @@ dbNullIterator dbNullIterator::null_iterator;
 
 bool dbNullIterator::reversible()
 {
-    return false;
-}
-    
-bool dbNullIterator::orderReversed()
-{
-    return false;
+  return false;
 }
 
-void dbNullIterator::reverse( dbObject * )
+bool dbNullIterator::orderReversed()
+{
+  return false;
+}
+
+void dbNullIterator::reverse(dbObject*)
 {
 }
 
 uint dbNullIterator::sequential()
 {
-    return 0;
+  return 0;
 }
 
-uint dbNullIterator::size( dbObject * )
+uint dbNullIterator::size(dbObject*)
 {
-    return 0;
+  return 0;
 }
 
-uint dbNullIterator::begin( dbObject * )
+uint dbNullIterator::begin(dbObject*)
 {
-    return 0;
+  return 0;
 }
 
-uint dbNullIterator::end( dbObject * )
+uint dbNullIterator::end(dbObject*)
 {
-    return 0;
+  return 0;
 }
 
-uint dbNullIterator::next( uint , ... )
+uint dbNullIterator::next(uint, ...)
 {
-    return 0;
+  return 0;
 }
 
-dbObject * dbNullIterator::getObject( uint, ... )
+dbObject* dbNullIterator::getObject(uint, ...)
 {
-    return NULL;
+  return NULL;
 }
 
-} // namespace
+}  // namespace odb

@@ -20,23 +20,24 @@
 //
 // THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
 // AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
-// IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
-// DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE
-// FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
-// DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR
-// SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
-// CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
-// OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
-// OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+// IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
+// ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE
+// LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
+// CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
+// SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
+// INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
+// CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
+// ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
+// POSSIBILITY OF SUCH DAMAGE.
 
 #ifndef ADS_DEFIN_PIN_PROPS_H
 #define ADS_DEFIN_PIN_PROPS_H
 
 #include "ads.h"
-#include "geom.h"
-#include "definIPinProps.h"
-#include "definBase.h"
 #include "dbTypes.h"
+#include "definBase.h"
+#include "definIPinProps.h"
+#include "geom.h"
 
 namespace odb {
 
@@ -45,20 +46,20 @@ class dbBTerm;
 
 class definPinProps : public definIPinProps, public definBase
 {
-  private:
-    dbObject * _cur_obj;
-    
-  public:
-    virtual void begin(const char * inst, const char * term);
-    virtual void property( const char * name, const char * value );
-    virtual void property( const char * name, int value );
-    virtual void property( const char * name, double value );
-    virtual void end();
+ private:
+  dbObject* _cur_obj;
 
-    definPinProps();
-    virtual ~definPinProps();
+ public:
+  virtual void begin(const char* inst, const char* term);
+  virtual void property(const char* name, const char* value);
+  virtual void property(const char* name, int value);
+  virtual void property(const char* name, double value);
+  virtual void end();
+
+  definPinProps();
+  virtual ~definPinProps();
 };
-    
-} // namespace
+
+}  // namespace odb
 
 #endif

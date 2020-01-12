@@ -20,14 +20,15 @@
 //
 // THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
 // AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
-// IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
-// DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE
-// FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
-// DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR
-// SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
-// CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
-// OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
-// OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+// IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
+// ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE
+// LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
+// CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
+// SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
+// INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
+// CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
+// ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
+// POSSIBILITY OF SUCH DAMAGE.
 
 #ifndef ADS_DB_JOURNAL_LOG_H
 #define ADS_DB_JOURNAL_LOG_H
@@ -42,54 +43,52 @@ class dbOStream;
 
 class dbJournalLog
 {
-    dbPagedVector<unsigned char> _data;
-    int                          _idx;
-    int                          _debug;
+  dbPagedVector<unsigned char> _data;
+  int                          _idx;
+  int                          _debug;
 
-    unsigned char next() { return _data[_idx++]; }
+  unsigned char next() { return _data[_idx++]; }
 
-public:
+ public:
+  dbJournalLog();
+  ~dbJournalLog();
 
-    dbJournalLog();
-    ~dbJournalLog();
-    
-    void clear()
-    {
-        _data.clear();
-        _idx = 0;
-    }
+  void clear()
+  {
+    _data.clear();
+    _idx = 0;
+  }
 
-    bool empty() { return _data.size() == 0; }
-    
-    uint idx() { return _idx; }
-    uint size() { return _data.size(); }
-    void push( bool value );
-    void push( char value );
-    void push( unsigned char value );
-    void push( int value );
-    void push( unsigned int value );
-    void push( float value );
-    void push( double value );
-    void push( const char * value );
+  bool empty() { return _data.size() == 0; }
 
-    void begin() { _idx = 0; }
-    bool end() { return _idx == (int)_data.size(); }
-    void set( uint idx ) { _idx = idx; }
+  uint idx() { return _idx; }
+  uint size() { return _data.size(); }
+  void push(bool value);
+  void push(char value);
+  void push(unsigned char value);
+  void push(int value);
+  void push(unsigned int value);
+  void push(float value);
+  void push(double value);
+  void push(const char* value);
 
-    void pop( bool & value );
-    void pop( char & value );
-    void pop( unsigned char & value );
-    void pop( int & value );
-    void pop( unsigned int & value );
-    void pop( float & value );
-    void pop( double & value );
-    void pop( char * & value );
-    void pop( std::string & value );
-    friend dbIStream & operator>>( dbIStream & stream, dbJournalLog & log );
-    friend dbOStream & operator<<( dbOStream & stream, const dbJournalLog & log );
+  void begin() { _idx = 0; }
+  bool end() { return _idx == (int) _data.size(); }
+  void set(uint idx) { _idx = idx; }
+
+  void              pop(bool& value);
+  void              pop(char& value);
+  void              pop(unsigned char& value);
+  void              pop(int& value);
+  void              pop(unsigned int& value);
+  void              pop(float& value);
+  void              pop(double& value);
+  void              pop(char*& value);
+  void              pop(std::string& value);
+  friend dbIStream& operator>>(dbIStream& stream, dbJournalLog& log);
+  friend dbOStream& operator<<(dbOStream& stream, const dbJournalLog& log);
 };
 
-} // namespace    
-
+}  // namespace odb
 
 #endif

@@ -20,14 +20,15 @@
 //
 // THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
 // AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
-// IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
-// DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE
-// FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
-// DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR
-// SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
-// CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
-// OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
-// OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+// IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
+// ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE
+// LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
+// CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
+// SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
+// INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
+// CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
+// ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
+// POSSIBILITY OF SUCH DAMAGE.
 
 #ifndef ADS_DB_OBSTRUCTION_H
 #define ADS_DB_OBSTRUCTION_H
@@ -47,37 +48,39 @@ class dbDiff;
 
 struct _dbObstructionFlags
 {
-    uint _slot_obs            : 1;
-    uint _fill_obs            : 1;
-    uint _pushed_down         : 1;
-    uint _has_min_spacing     : 1;
-    uint _has_effective_width : 1;
-    uint _spare_bits          : 27;
+  uint _slot_obs : 1;
+  uint _fill_obs : 1;
+  uint _pushed_down : 1;
+  uint _has_min_spacing : 1;
+  uint _has_effective_width : 1;
+  uint _spare_bits : 27;
 };
 
 class _dbObstruction : public dbObject
 {
-  public:
-    _dbObstructionFlags   _flags;
-    dbId<_dbInst>         _inst;
-    dbId<_dbBox>          _bbox;
-    int                   _min_spacing;
-    int                   _effective_width;
+ public:
+  _dbObstructionFlags _flags;
+  dbId<_dbInst>       _inst;
+  dbId<_dbBox>        _bbox;
+  int                 _min_spacing;
+  int                 _effective_width;
 
-    _dbObstruction( _dbDatabase *, const _dbObstruction & o );
-    _dbObstruction( _dbDatabase * );
-    ~_dbObstruction();
+  _dbObstruction(_dbDatabase*, const _dbObstruction& o);
+  _dbObstruction(_dbDatabase*);
+  ~_dbObstruction();
 
-    bool operator==( const _dbObstruction & rhs ) const;
-    bool operator!=( const _dbObstruction & rhs ) const { return ! operator==(rhs); }
-    bool operator<( const _dbObstruction & rhs ) const;
-    void differences( dbDiff & diff, const char * field, const _dbObstruction & rhs ) const;
-    void out( dbDiff & diff, char side, const char * field ) const;
+  bool operator==(const _dbObstruction& rhs) const;
+  bool operator!=(const _dbObstruction& rhs) const { return !operator==(rhs); }
+  bool operator<(const _dbObstruction& rhs) const;
+  void differences(dbDiff&               diff,
+                   const char*           field,
+                   const _dbObstruction& rhs) const;
+  void out(dbDiff& diff, char side, const char* field) const;
 };
 
-dbOStream & operator<<( dbOStream & stream, const _dbObstruction & obs );
-dbIStream & operator>>( dbIStream & stream, _dbObstruction & obs );
+dbOStream& operator<<(dbOStream& stream, const _dbObstruction& obs);
+dbIStream& operator>>(dbIStream& stream, _dbObstruction& obs);
 
-} // namespace
+}  // namespace odb
 
 #endif

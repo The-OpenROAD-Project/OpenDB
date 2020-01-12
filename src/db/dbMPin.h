@@ -20,14 +20,15 @@
 //
 // THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
 // AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
-// IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
-// DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE
-// FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
-// DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR
-// SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
-// CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
-// OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
-// OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+// IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
+// ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE
+// LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
+// CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
+// SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
+// INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
+// CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
+// ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
+// POSSIBILITY OF SUCH DAMAGE.
 
 #ifndef ADS_DB_MPIN_H
 #define ADS_DB_MPIN_H
@@ -47,25 +48,25 @@ class dbDiff;
 
 class _dbMPin : public dbObject
 {
-  public:
-    // PERSISTANT-MEMBERS
-    dbId<_dbMTerm>  _mterm;
-    dbId<_dbBox>    _geoms;
-    dbId<_dbMPin>   _next_mpin;
+ public:
+  // PERSISTANT-MEMBERS
+  dbId<_dbMTerm> _mterm;
+  dbId<_dbBox>   _geoms;
+  dbId<_dbMPin>  _next_mpin;
 
-    _dbMPin( _dbDatabase *, const _dbMPin & p );
-    _dbMPin( _dbDatabase * );
-    ~_dbMPin();
+  _dbMPin(_dbDatabase*, const _dbMPin& p);
+  _dbMPin(_dbDatabase*);
+  ~_dbMPin();
 
-    bool operator==( const _dbMPin & rhs ) const;
-    bool operator!=( const _dbMPin & rhs ) const { return ! operator==(rhs); }
-    void differences( dbDiff & diff, const char * field, const _dbMPin & rhs ) const;
-    void out( dbDiff & diff, char side, const char * field ) const;
+  bool operator==(const _dbMPin& rhs) const;
+  bool operator!=(const _dbMPin& rhs) const { return !operator==(rhs); }
+  void differences(dbDiff& diff, const char* field, const _dbMPin& rhs) const;
+  void out(dbDiff& diff, char side, const char* field) const;
 };
 
-dbOStream & operator<<( dbOStream & stream, const _dbMPin & mpin );
-dbIStream & operator>>( dbIStream & stream, _dbMPin & mpin );
+dbOStream& operator<<(dbOStream& stream, const _dbMPin& mpin);
+dbIStream& operator>>(dbIStream& stream, _dbMPin& mpin);
 
-} // namespace
+}  // namespace odb
 
 #endif

@@ -112,7 +112,7 @@ void definPropDefs::begin(defObjectType obj_type,
       break;
 
     default:
-      assert(0);
+      throw ZException("Unknown defObjectType");
   }
 
   dbProperty* obj = dbProperty::find(_defs, otype);

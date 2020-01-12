@@ -543,6 +543,10 @@ dbVia* definNet::getRotatedVia(const char* via_name, int orient)
       viaName += "_FW";
       db_orient = dbOrientType::MXR90;
       break;
+
+    default:
+      throw ZException("Unknown orientation");
+      break;
   }
 
   dbVia*& via = _rotated_vias[viaName];

@@ -69,7 +69,7 @@ class Ath__nameTable
   Ath__nameTable(uint n, char* zero = NULL);
 
   void writeDB(FILE* fp, char* nameType);
-  void readDB(FILE* fp);
+  bool readDB(FILE* fp);
   void addData(uint poolId, uint dataId);
 
   uint  addNewName(char* name, uint dataId);

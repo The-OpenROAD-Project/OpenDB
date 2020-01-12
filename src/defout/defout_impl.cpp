@@ -33,6 +33,7 @@
 #include <stdio.h>
 #include <set>
 #include <string>
+#include <limits>
 #include "db.h"
 #include "dbMap.h"
 #include "dbWireCodec.h"
@@ -1314,8 +1315,8 @@ void defout_impl::writeWire(dbWire* wire)
   dbWireType    prev_wire_type = dbWireType::NONE;
   int           point_cnt      = 0;
   int           path_cnt       = 0;
-  int           prev_x;
-  int           prev_y;
+  int           prev_x         = std::numeric_limits<int>::max();
+  int           prev_y         = std::numeric_limits<int>::max();
 
   for (decode.begin(wire);;) {
     dbWireDecoder::OpCode opcode = decode.next();
@@ -1622,8 +1623,7 @@ void defout_impl::writeSpecialPath(dbSBox* box)
         y2 -= dw;
         assert(y1 == y2);
       } else {
-        // This case can't occur
-        assert(0);
+        throw ZException("odd dimension in both directions");
       }
 
       break;
@@ -1646,6 +1646,9 @@ void defout_impl::writeSpecialPath(dbSBox* box)
       assert(x1 == x2);
       break;
     }
+    default:
+      throw ZException("unknown direction");
+      break;
   }
 
   dbWireShapeType type = box->getWireShapeType();

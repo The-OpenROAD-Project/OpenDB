@@ -40,7 +40,8 @@ odb_read_def(odb::dbDatabase* db, std::string path)
 
 int
 odb_write_def(odb::dbBlock* block, const char* path,
-	      odb::defout::Version version = odb::defout::Version::DEF_5_8) {
+	      odb::defout::Version version = odb::defout::Version::DEF_5_8)
+{
   defout writer;
   writer.setVersion(version);
   return writer.writeBlock(block, path);
@@ -76,7 +77,7 @@ odb_write_db(odb::dbDatabase* db, const char* db_path)
   FILE *fp = fopen(db_path, "wb");
   if (!fp) {
     int errnum = errno;
-    fprintf(stderr, "Error opening file: %s\n", strerror( errnum ));
+    fprintf(stderr, "Error opening file: %s\n", strerror(errnum));
     fprintf(stderr, "Errno: %d\n", errno);
     return errno;
   }

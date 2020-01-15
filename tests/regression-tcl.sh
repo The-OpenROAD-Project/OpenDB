@@ -98,3 +98,8 @@ echo "[18] Check routing tracks test"
 $APP $BASE_DIR/tcl/18-check_routing_tracks.tcl
 echo "SUCCESS!"
 echo ""
+
+echo "[19] Polygon operations test"
+$APP $BASE_DIR/tcl/19-polygon_test.tcl
+echo "SUCCESS!"
+echo ""

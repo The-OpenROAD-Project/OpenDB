@@ -33,9 +33,7 @@
 #ifndef ADS_DB_MAP_HPP
 #define ADS_DB_MAP_HPP
 
-#ifndef ADS_ZEXCEPTION_H
 #include "ZException.h"
-#endif
 
 namespace odb {
 

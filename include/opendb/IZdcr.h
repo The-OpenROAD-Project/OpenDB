@@ -89,9 +89,9 @@ class IZdcr : public ZObject
 
   virtual char* getInspectName() = 0;
 
-  virtual uint addSubMenu(uint menuId, char* name, uint boxId) = 0;
-  virtual uint getMenuId(char* name)                           = 0;
-  virtual uint initDbMenus()                                   = 0;
+  virtual uint addSubMenu(uint menuId, const char* name, uint boxId) = 0;
+  virtual uint getMenuId(const char* name)                           = 0;
+  virtual uint initDbMenus()                                         = 0;
   virtual uint setupModuleMenu(const char* moduleName,
                                const char* onechar,
                                uint        id)
@@ -120,7 +120,7 @@ class IZdcr : public ZObject
   virtual uint  getPullDownActionId()                          = 0;
   virtual bool  msgAction()                                    = 0;
   virtual bool  selectAction()                                 = 0;
-  virtual bool  isSelectedMenu(char* name)                     = 0;
+  virtual bool  isSelectedMenu(const char* name)               = 0;
   virtual uint  getSelectIds(uint* id1, uint* id2, uint* id3)  = 0;
   virtual bool  isSubmenuType(uint id)                         = 0;
   virtual char* getMsgBuffer(bool setBuffFlag)                 = 0;
@@ -148,16 +148,16 @@ class IZdcr : public ZObject
 
   virtual int getCoords(const char* bb, int* x1, int* y1, int* x2, int* y2) = 0;
 
-  virtual uint addBox(uint  id,
-                      uint  subMenuId,
-                      uint  menuId,
-                      int   layer,
-                      int   x1,
-                      int   y1,
-                      int   x2,
-                      int   y2,
-                      uint  ownId,
-                      char* boxType = NULL)
+  virtual uint addBox(uint        id,
+                      uint        subMenuId,
+                      uint        menuId,
+                      int         layer,
+                      int         x1,
+                      int         y1,
+                      int         x2,
+                      int         y2,
+                      uint        ownId,
+                      const char* boxType = NULL)
       = 0;
   virtual uint addArrow(bool    right,
                         uint    boxType,
@@ -186,15 +186,15 @@ class IZdcr : public ZObject
 
   virtual bool* getExcludeLayerTable()                      = 0;
   virtual bool  getSubMenuFlag(uint menuId, uint subMenuId) = 0;
-  virtual uint  addPullDownMenu(uint  menuId,
-                                uint  subMenuId,
-                                char* db_name,
-                                char* zui_action)
+  virtual uint  addPullDownMenu(uint        menuId,
+                                uint        subMenuId,
+                                const char* db_name,
+                                const char* zui_action)
       = 0;
-  virtual uint addPullDownMenu(char* menu,
-                               char* subMenu,
-                               char* db_name,
-                               char* zui_action)
+  virtual uint addPullDownMenu(const char* menu,
+                               const char* subMenu,
+                               const char* db_name,
+                               const char* zui_action)
       = 0;
   virtual bool validSearchBbox()                             = 0;
   virtual void setSearchBox(int x1, int y1, int x2, int y2)  = 0;

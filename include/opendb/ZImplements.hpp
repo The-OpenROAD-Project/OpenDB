@@ -33,17 +33,9 @@
 #ifndef ADS_ZIMPLEMENTS_HPP
 #define ADS_ZIMPLEMENTS_HPP
 
-#ifndef ADS_H
 #include "ads.h"
-#endif
-
-#ifndef ADS_ZSESSION_H
 #include "ZSession.h"
-#endif
-
-#ifndef ADS_ZNAMESPACE_H
 #include "ZNamespace.h"
-#endif
 
 namespace odb {
 

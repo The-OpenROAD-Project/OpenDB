@@ -36,14 +36,12 @@
 #include "ads.h"
 #include "geom.h"
 
-#ifndef ADS_ZOBJECT_H
 #include "ZObject.h"
-#endif
 #include "IZdcr.h"
 #include "ZInterface.h"
 #include "array1.h"
+#include "gseq.h"
 #include "util.h"
-// #include "gseq.h"
 
 // class duiShape;
 // typedef duiShape * duiShapeId;
@@ -71,8 +69,31 @@ class ISdb : public ZObject
   virtual void reMakeSdb(dbTech* tech, dbBlock* block) = 0;
   virtual void cleanSdb()                              = 0;
   virtual void dumpTrackCounts(FILE* fp)               = 0;
-  virtual void adjustOverlapMakerEnd()                 = 0;
-  virtual void adjustMetalFill()                       = 0;
+  virtual void setExtControl(dbBlock*              block,
+                             bool                  useDbSdb,
+                             uint                  adj,
+                             uint                  npsrc,
+                             uint                  nptgt,
+                             uint                  ccUp,
+                             bool                  allNet,
+                             uint                  contextDepth,
+                             Ath__array1D<int>**   contextArray,
+                             uint*                 contextLength,
+                             Ath__array1D<SEQ*>*** dgContextArray,
+                             uint*                 dgContextDepth,
+                             uint*                 dgContextPlanes,
+                             uint*                 dgContextTracks,
+                             uint*                 dgContextBaseLvl,
+                             int*                  dgContextLowLvl,
+                             int*                  dgContextHiLvl,
+                             uint*                 dgContextBaseTrack,
+                             int*                  dgContextLowTrack,
+                             int*                  dgContextHiTrack,
+                             int**                 dgContextTrackBase,
+                             AthPool<SEQ>*         seqPool)
+      = 0;
+  virtual void adjustOverlapMakerEnd() = 0;
+  virtual void adjustMetalFill()       = 0;
   virtual void setupForBoxes(adsRect maxRect, uint minHeight, uint minWidth)
       = 0;
   virtual void            addBox(dbBox* bb, uint wtype, uint id)           = 0;

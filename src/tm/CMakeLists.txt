@@ -1,5 +1,6 @@
 add_library(tm
     tm.cpp
+    ZFactory.cpp
     ZNamespace.cpp
 )
 

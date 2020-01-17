@@ -48,6 +48,7 @@ using namespace odb;
 
 %include "geom.h"
 %include "db.h"
+%include "polygon.i"
 
 %include "lefin.h"
 %include "lefout.h"

@@ -1398,7 +1398,7 @@ class dbBlock : public dbObject
   ///
   /// Get the Container class for Nets Search DB
   ///
-  ZPtr<ISdb> getSearchDbNets();
+  // ZPtr<ISdb> getSearchDbNets();
 
   ///
   /// Get the Container class for Insts Search DB

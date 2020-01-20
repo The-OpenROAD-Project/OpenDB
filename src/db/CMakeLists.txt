@@ -19,6 +19,7 @@ add_library(opendb
     dbMTerm.cpp 
     dbMaster.cpp 
     dbNet.cpp 
+    dbSearch.cpp
     dbTech.cpp 
     dbTechLayer.cpp 
     dbTechLayerSpacingRule.cpp 
@@ -85,6 +86,8 @@ add_library(opendb
     dbPropertyItr.cpp 
     dbFlatten.cpp 
     dbUtil.cpp
+    gs.cpp
+    grids.cpp
     logger.cpp 
 )
 

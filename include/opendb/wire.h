@@ -37,21 +37,16 @@
 #include <stdlib.h>
 #include <string.h>
 
+#include "ZInterface.h"
+#include "array1.h"
 #include "atypes.h"
 #include "box.h"
+#include "db.h"
+#include "geom.h"
+#include "gseq.h"
 #include "qtype.h"
 #include "tech.h"
 #include "zui.h"
-
-#include "array1.h"
-
-#include "ZInterface.h"
-#include "geom.h"
-#include "seq.h"
-
-// #include "gseq.h"
-
-#include "db.h"
 
 using namespace odb;
 
@@ -336,8 +331,10 @@ class Ath__track
                     uint  met,
                     void (*doSpread)(void*, uint, void*, void*, void*));
   void getTrackWires(std::vector<Ath__wire*>& ctxwire);
-  // void buildDgContext(Ath__array1D<SEQ *> *dgContext, Ath__wire ** & allWire,
-  // int & awcnt, int & a1wcnt);
+  void buildDgContext(Ath__array1D<odb::SEQ*>* dgContext,
+                      Ath__wire**&             allWire,
+                      int&                     awcnt,
+                      int&                     a1wcnt);
   int  getBandWires(Ath__array1D<Ath__wire*>* bandWire);
   uint couplingCaps(Ath__grid*          resGrid,
                     uint                currentTrack,
@@ -662,7 +659,7 @@ class Ath__gridStack  // DELETE after porting on new DB
  private:
   Ath__grid* _nextGridTable[2];
   Ath__grid* _thruGridTable[2];
-  Ath__grid* _cornerGridTable[2][2];
+  Ath__grid* _cornerGridTable[4][2];
   int        _loDivide[2];
   int        _hiDivide[2];
   uint       _level[2];
@@ -798,8 +795,8 @@ class Ath__gridTable
 
   Ath__array1D<int>** _ccContextArray;
 
-  AthPool<SEQ>*         _seqPool;
-  Ath__array1D<SEQ*>*** _dgContextArray;  // array
+  AthPool<odb::SEQ>*         _seqPool;
+  Ath__array1D<odb::SEQ*>*** _dgContextArray;  // array
 
   uint* _dgContextDepth;      // not array
   uint* _dgContextPlanes;     // not array
@@ -921,34 +918,34 @@ class Ath__gridTable
 
   // EXTRACTION
 
-  void setDefaultWireType(uint v);
-  uint searchSpread(void*                ip,
-                    uint                 spreadTrackDist,
-                    std::vector<dbNet*>& inets,
-                    char*                bbox,
-                    void (*doSpread)(void*, uint, void*, void*, void*));
-  void buildDgContext(int base, uint level, uint dir);
-  // Ath__array1D<SEQ *> *renewDgContext(uint gridn, uint trackn);
-  uint couplingCaps(Ath__gridTable*     resGridTable,
-                    uint                couplingDist,
-                    ZInterface*         context,
-                    Ath__array1D<uint>* ccTable,
-                    void (*coupleAndCompute)(int*, void*),
-                    void* compPtr);
-  uint couplingCaps(uint        row,
-                    uint        col,
-                    Ath__grid*  resGrid,
-                    uint        couplingDist,
-                    ZInterface* context);
-  void getBox(uint  wid,
-              int*  x1,
-              int*  y1,
-              int*  x2,
-              int*  y2,
-              uint* level,
-              uint* id1,
-              uint* id2,
-              uint* wireType);
+  void                     setDefaultWireType(uint v);
+  uint                     searchSpread(void*                ip,
+                                        uint                 spreadTrackDist,
+                                        std::vector<dbNet*>& inets,
+                                        char*                bbox,
+                                        void (*doSpread)(void*, uint, void*, void*, void*));
+  void                     buildDgContext(int base, uint level, uint dir);
+  Ath__array1D<odb::SEQ*>* renewDgContext(uint gridn, uint trackn);
+  uint                     couplingCaps(Ath__gridTable*     resGridTable,
+                                        uint                couplingDist,
+                                        ZInterface*         context,
+                                        Ath__array1D<uint>* ccTable,
+                                        void (*coupleAndCompute)(int*, void*),
+                                        void* compPtr);
+  uint                     couplingCaps(uint        row,
+                                        uint        col,
+                                        Ath__grid*  resGrid,
+                                        uint        couplingDist,
+                                        ZInterface* context);
+  void                     getBox(uint  wid,
+                                  int*  x1,
+                                  int*  y1,
+                                  int*  x2,
+                                  int*  y2,
+                                  uint* level,
+                                  uint* id1,
+                                  uint* id2,
+                                  uint* wireType);
   void getCCdist(uint wid, uint* width, uint* level, uint* id1, uint* id2);
   void getIds(uint wid, uint* id1, uint* id2, uint* wtype);
   uint search(Ath__searchBox*     bb,
@@ -968,34 +965,49 @@ class Ath__gridTable
   {
     _ccContextLength[level] = contextLength;
   };
-  Ath__array1D<int>** contextArray() { return _ccContextArray; };
-  // AthPool<SEQ> *seqPool() { return _seqPool; };
-  Ath__array1D<SEQ*>*** dgContextArray() { return _dgContextArray; };
-  int**                 dgContextTrackBase() { return _dgContextTrackBase; };
-  uint*                 dgContextBaseTrack() { return _dgContextBaseTrack; };
-  int*                  dgContextLowTrack() { return _dgContextLowTrack; };
-  int*                  dgContextHiTrack() { return _dgContextHiTrack; };
-  bool                  allNet() { return _allNet; };
-  void                  setAllNet(bool allnet) { _allNet = allnet; };
-  bool                  handleEmptyOnly() { return _handleEmptyOnly; };
-  void                  setHandleEmptyOnly(bool handleEmptyOnly)
+  Ath__array1D<int>**        contextArray() { return _ccContextArray; };
+  AthPool<odb::SEQ>*         seqPool() { return _seqPool; };
+  Ath__array1D<odb::SEQ*>*** dgContextArray() { return _dgContextArray; };
+  int** dgContextTrackBase() { return _dgContextTrackBase; };
+  uint* dgContextBaseTrack() { return _dgContextBaseTrack; };
+  int*  dgContextLowTrack() { return _dgContextLowTrack; };
+  int*  dgContextHiTrack() { return _dgContextHiTrack; };
+  bool  allNet() { return _allNet; };
+  void  setAllNet(bool allnet) { _allNet = allnet; };
+  bool  handleEmptyOnly() { return _handleEmptyOnly; };
+  void  setHandleEmptyOnly(bool handleEmptyOnly)
   {
     _handleEmptyOnly = handleEmptyOnly;
   };
-  uint noPowerSource() { return _noPowerSource; };
-  void setNoPowerSource(uint nps) { _noPowerSource = nps; };
-  uint noPowerTarget() { return _noPowerTarget; };
-  void setNoPowerTarget(uint npt) { _noPowerTarget = npt; };
-  void incrOfflineOverlapCnt() { _offlineOverlapCnt++; };
-  void incrOfflineOverlapTouch() { _offlineOverlapTouch++; };
-  void incrCCshorts() { _CCshorts++; };
-  // void setExtControl(dbBlock *block, bool useDbSdb, uint adj, uint npsrc,
-  // uint nptgt, uint ccUp, bool allNet, uint contextDepth, Ath__array1D<int>
-  // **contextArray, uint *contextLength, Ath__array1D<SEQ*> ***dgContextArray,
-  // uint *dgContextDepth, uint *dgContextPlanes, uint *dgContextTracks, uint
-  // *dgContextBaseLvl, int *dgContextLowLvl, int *dgContextHiLvl, uint
-  // *dgContextBaseTrack, int *dgContextLowTrack, int *dgContextHiTrack, int
-  // **dgContextTrackBase, AthPool<SEQ> *seqPool);
+  uint     noPowerSource() { return _noPowerSource; };
+  void     setNoPowerSource(uint nps) { _noPowerSource = nps; };
+  uint     noPowerTarget() { return _noPowerTarget; };
+  void     setNoPowerTarget(uint npt) { _noPowerTarget = npt; };
+  void     incrOfflineOverlapCnt() { _offlineOverlapCnt++; };
+  void     incrOfflineOverlapTouch() { _offlineOverlapTouch++; };
+  void     incrCCshorts() { _CCshorts++; };
+  void     setExtControl(dbBlock*                   block,
+                         bool                       useDbSdb,
+                         uint                       adj,
+                         uint                       npsrc,
+                         uint                       nptgt,
+                         uint                       ccUp,
+                         bool                       allNet,
+                         uint                       contextDepth,
+                         Ath__array1D<int>**        contextArray,
+                         uint*                      contextLength,
+                         Ath__array1D<odb::SEQ*>*** dgContextArray,
+                         uint*                      dgContextDepth,
+                         uint*                      dgContextPlanes,
+                         uint*                      dgContextTracks,
+                         uint*                      dgContextBaseLvl,
+                         int*                       dgContextLowLvl,
+                         int*                       dgContextHiLvl,
+                         uint*                      dgContextBaseTrack,
+                         int*                       dgContextLowTrack,
+                         int*                       dgContextHiTrack,
+                         int**                      dgContextTrackBase,
+                         AthPool<odb::SEQ>*         seqPool);
   bool     usingDbSdb() { return _useDbSdb; }
   void     reverseTargetTrack();
   bool     targetTrackReversed() { return _targetTrackReversed; };

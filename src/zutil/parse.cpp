@@ -36,6 +36,7 @@
 #include "direct.h"
 #endif
 #include <stdio.h>
+
 #include "logger.h"
 #include "misc_global.h"
 #include "parse.h"
@@ -101,11 +102,11 @@ bool Ath__parser::isDigit(int ii, int jj)
     return false;
 }
 
-void Ath__parser::resetSeparator(char* s)
+void Ath__parser::resetSeparator(const char* s)
 {
   strcpy(_wordSeparators, s);
 }
-void Ath__parser::addSeparator(char* s)
+void Ath__parser::addSeparator(const char* s)
 {
   strcat(_wordSeparators, s);
 }
@@ -323,7 +324,8 @@ void Ath__parser::getDoubleArray(Ath__array1D<double>* A,
       A->add(atof(get(ii)) * mult);
   }
 }
-Ath__array1D<double>* Ath__parser::readDoubleArray(char* keyword, int start1)
+Ath__array1D<double>* Ath__parser::readDoubleArray(const char* keyword,
+                                                   int         start1)
 {
   if ((keyword != NULL) && (strcmp(keyword, get(0)) != 0))
     return NULL;
@@ -344,7 +346,7 @@ int Ath__parser::getIntFromDouble(int ii, int lefUnits)
   sprintf(buf, "%f", atof(get(ii)) * lefUnits);
   return atoi(buf);
 }
-int Ath__parser::mkWords(const char* word, char* sep)
+int Ath__parser::mkWords(const char* word, const char* sep)
 {
   if (word == NULL)
     return 0;
@@ -363,7 +365,7 @@ int Ath__parser::mkWords(const char* word, char* sep)
 
   return _currentWordCnt;
 }
-int Ath__parser::get2Int(const char* word, char* sep, int& v1, int& v2)
+int Ath__parser::get2Int(const char* word, const char* sep, int& v1, int& v2)
 {
   // return -1 if no tokens
   // return 0 if there are 2 words separated with sep[0]
@@ -390,7 +392,10 @@ int Ath__parser::get2Int(const char* word, char* sep, int& v1, int& v2)
 
   return 0;
 }
-int Ath__parser::get2Double(const char* word, char* sep, double& v1, double& v2)
+int Ath__parser::get2Double(const char* word,
+                            const char* sep,
+                            double&     v1,
+                            double&     v2)
 {
   // return -1 if no tokens
   // return 0 if there are 2 words separated with sep[0]
@@ -428,7 +433,7 @@ bool Ath__parser::mkDir(char* word)
 #endif
 }
 
-int Ath__parser::mkDirTree(char* word, char* sep)
+int Ath__parser::mkDirTree(const char* word, const char* sep)
 {
   mkWords(word, sep);
 
@@ -563,7 +568,7 @@ int Ath__parser::readMultipleLineAndBreak(char continuationChar)
 
   return _currentWordCnt;
 }
-void Ath__parser::syntaxError(char* msg)
+void Ath__parser::syntaxError(const char* msg)
 {
   fprintf(stderr, "\n Syntax Error at line %d (%s)\n", _lineNum, msg);
   exit(1);
@@ -664,7 +669,7 @@ char* Ath__parser::getPlusKeyword(int ii)
   else
     return NULL;
 }
-bool Ath__parser::isKeyword(int ii, char* key1)
+bool Ath__parser::isKeyword(int ii, const char* key1)
 {
   if ((get(ii) != NULL) && (strcmp(get(ii), key1) == 0)) {
     return true;
@@ -716,7 +721,7 @@ int Ath__parser::getNamePair(int   ii,
     return -1;
   }
 }
-char* Ath__parser::get(int start, char* prefix)
+char* Ath__parser::get(int start, const char* prefix)
 {
   for (int ii = start; ii < _currentWordCnt; ii++) {
     char* w = get(ii);

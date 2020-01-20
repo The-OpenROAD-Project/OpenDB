@@ -31,6 +31,7 @@
 // POSSIBILITY OF SUCH DAMAGE.
 
 #include "dbRSeg.h"
+
 #include "db.h"
 #include "dbBlock.h"
 #include "dbCapNode.h"
@@ -929,6 +930,74 @@ dbRSeg* dbRSeg::getRSeg(dbBlock* block_, uint dbid_)
 {
   _dbBlock* block = (_dbBlock*) block_;
   return (dbRSeg*) block->_r_seg_tbl->getPtr(dbid_);
+}
+
+void dbRSeg::mergeRCs(std::vector<dbRSeg*>& mrsegs)
+{
+  uint    rsegcnt   = mrsegs.size();
+  dbRSeg* finalRSeg = mrsegs[rsegcnt - 1];
+  if (rsegcnt <= 1) {
+    // finalRSeg->setNext(0);
+    setNext(finalRSeg->getId());
+    // finalRSeg->setSourceNode(getTargetNode());
+    return;
+  }
+  std::vector<dbCCSeg*>   mCcSegs;
+  std::vector<dbCapNode*> otherCapns;
+  mCcSegs.push_back(NULL);
+  otherCapns.push_back(NULL);
+  dbRSeg*    rseg;
+  dbCapNode* tgtCapNode;
+  dbCapNode* ccCapNode;
+  dbCapNode* finalCapNode = finalRSeg->getTargetCapNode();
+  dbCCSeg *  ccSeg, *tccSeg;
+  int        ii;
+  uint       cid;
+  for (ii = rsegcnt - 1; ii >= 0; ii--) {
+    rseg                            = mrsegs[ii];
+    tgtCapNode                      = rseg->getTargetCapNode();
+    dbSet<dbCCSeg>           ccSegs = tgtCapNode->getCCSegs();
+    dbSet<dbCCSeg>::iterator ccitr;
+    for (ccitr = ccSegs.begin(); ccitr != ccSegs.end();) {
+      ccSeg = *ccitr;
+      ccitr++;
+      ccCapNode  = ccSeg->getTheOtherCapn(tgtCapNode, cid);
+      uint ccidx = ccCapNode->getSortIndex();
+      if (ccidx == 0) {
+        if (tgtCapNode != finalCapNode)  // plug to finalCapNode
+          ccSeg->swapCapnode(tgtCapNode, finalCapNode);
+        mCcSegs.push_back(ccSeg);
+        otherCapns.push_back(ccCapNode);
+        ccCapNode->setSortIndex(mCcSegs.size() - 1);
+        continue;
+      } else {
+        tccSeg = mCcSegs[ccidx];
+        tccSeg->addCcCapacitance(ccSeg);
+        // if (tgtCapNode != finalCapNode)
+        // destroy ccSeg - unlink only ccCapNode
+        // else
+        // destroy ccSeg
+        dbCCSeg::destroy(ccSeg);
+      }
+    }
+    if (tgtCapNode != finalCapNode) {
+      finalRSeg->addRSegCapacitance(rseg);
+      finalRSeg->addRSegResistance(rseg);
+      // dbRSeg::destroy(rseg);
+      // dbCapNode::destroy(tgtCapNode, false/*destroyCC*/);
+    }
+  }
+  for (ii = 1; ii < (int) otherCapns.size(); ii++)
+    otherCapns[ii]->setSortIndex(0);
+  // finalRSeg->setNext(0);
+  setNext(finalRSeg->getId());
+  finalRSeg->setSourceNode(mrsegs[0]->getSourceNode());
+  for (ii = rsegcnt - 2; ii >= 0; ii--) {
+    rseg       = mrsegs[ii];
+    tgtCapNode = rseg->getTargetCapNode();
+    dbRSeg::destroy(rseg);
+    dbCapNode::destroy(tgtCapNode, false /*destroyCC*/);
+  }
 }
 
 }  // namespace odb

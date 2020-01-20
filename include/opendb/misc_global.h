@@ -36,7 +36,7 @@
 #include <string.h>
 
 void Ath__allocFailure(char* msg);
-void Ath__hashError(char* msg, int exitFlag);
+void Ath__hashError(const char* msg, int exitFlag);
 
 void ATH__failMessage(const char* msg);
 

@@ -1175,7 +1175,7 @@ dbSBox* dbCreateNetUtil::createSpecialWire(dbNet*       mainNet,
 
   // MIGHT NOT care abour sboxId!!
 }
-dbNet* dbCreateNetUtil::createSpecialNet(dbNet* origNet, char* name)
+dbNet* dbCreateNetUtil::createSpecialNet(dbNet* origNet, const char* name)
 {
   dbNet* net = _currentNet;
 

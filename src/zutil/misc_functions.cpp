@@ -190,7 +190,7 @@ void AthMemCounterp(int signo)
   }
 }
 
-int AthResourceLog(char* title, int ss)
+int AthResourceLog(const char* title, int ss)
 {
 #ifdef _WIN32
   return 0;
@@ -273,11 +273,6 @@ int AthResourceLog(char* title, int ss)
 
   return 1;
 #endif
-}
-
-extern "C" void cAthResourceLog(char* title)
-{
-  AthResourceLog(title, 0);
 }
 
 int Ath__double2int(double v)

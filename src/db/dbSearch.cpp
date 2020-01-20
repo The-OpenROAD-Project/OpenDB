@@ -767,8 +767,8 @@ uint dbBlockSearch::getFirstShape(dbITerm* iterm,
 }
 uint dbBlockSearch::getItermShapesWithViaShapes(dbITerm* iterm)
 {
-  char* tcut = "tcut";
-  char* bcut = "bcut";
+  const char* tcut = "tcut";
+  const char* bcut = "bcut";
 
   // dbInst *inst= iterm->getInst();
   uint cnt     = 0;
@@ -2891,7 +2891,7 @@ void dbBlockSearch::inspectNet()
   dbNet*  net = getNetAndShape(s, &shapeId, &level);
 
   if (_dcr->msgAction()) {
-    char* typeWord = NULL;
+    const char* typeWord = NULL;
 
     if (_dcr->isInspectSubMenu(_signal_wire_id))
       typeWord = "Signal Wire";

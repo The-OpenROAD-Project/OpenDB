@@ -41,12 +41,11 @@
 #include "array2d.h"
 #include "atypes.h"
 #include "box.h"
+#include "db.h"
 #include "enumtype.h"
 #include "misc_global.h"
 #include "tcl.h"
 #include "util.h"
-
-#include "db.h"
 
 using namespace odb;
 class dcrASA;
@@ -270,21 +269,21 @@ class Ath__zui
   void  getHierBoxTypes(char* hierBuff, char* boxBuff);
   uint  getBoxTypes(char* layerBuff);
   char* getMenuPathBuff();
-  uint  initGuiMenus(bool skipMenuInit);
+  uint  initGuiMenus();
   void  deallocGuiMenus();
-  void  initPullDownMenus(bool skipMenuInit);
+  void  initPullDownMenus();
   uint  initMarks();
-  uint  addPullDownMenu(char* menu,
-                        char* subMenu,
-                        uint  mult,
-                        char* db_name,
-                        char* zui_action_name);
+  uint  addPullDownMenu(const char* menu,
+                        const char* subMenu,
+                        uint        mult,
+                        const char* db_name,
+                        const char* zui_action_name);
 
   void  addPullDownMenu(uint           hier,
                         uint           btype,
                         Ath__zuiAction action,
-                        char*          db_name,
-                        char*          zui_action_name);
+                        const char*    db_name,
+                        const char*    zui_action_name);
   char* getPullDownMenu(char* objHierWord, uint objType);
 
   uint           makeMenuPath(char* menuTabName,
@@ -293,7 +292,7 @@ class Ath__zui
                               uint  h1,
                               uint  h2,
                               uint  h3);
-  uint           defineMenuPaths(bool skipMenuInit);
+  uint           defineMenuPaths();
   void           resetMenuPathFlags();
   bool           getDbFlag(char* name);
   Ath__hierarchy getHierarchyWord(char* name);
@@ -314,17 +313,16 @@ class Ath__zui
                   uint      modY = 0,
                   Ath__box* bb   = NULL);
   void resetPixelTables(uint modX, uint modY, Ath__box* bb);
-  uint addBox(uint  id,
-              uint  boxType,
-              uint  hier,
-              int   layer,
-              int   x1,
-              int   y1,
-              int   x2,
-              int   y2,
-              uint  ownId,
-              uint  boxFilter,
-              char* boxWord = NULL);
+  uint addBox(uint id,
+              uint boxType,
+              uint hier,
+              int  layer,
+              int  x1,
+              int  y1,
+              int  x2,
+              int  y2,
+              uint ownId,
+              uint boxFilter);
 
   uint addBox(Ath__box* bb, uint type, uint id = 0);
   uint addBox(dbBox* bb, uint boxType, uint id, int hierType = -1);
@@ -397,11 +395,10 @@ class Ath__zui
   uint setInspectParams(char* action,
                         char* objectName,
                         char* bb,
-                        char* selectType,
-                        bool  noclip);
+                        char* selectType);
   uint getHierId();
   uint getHierId(char* name);
-  uint getInspNameId(uint* inspId2 = NULL);
+  uint getInspNameId();
   // uint getInspNameId();
   uint  getPullDownActionId();
   char* getInspectName();
@@ -444,8 +441,8 @@ class Ath__zui
   char* getFirstBox(int* x1, int* y1, int* x2, int* y2, uint* layer);
 
   // IZdcr
-  uint addModuleNameToMenu(char* name, const char* onechar, uint id);
-  uint addBoxNameToMenu(uint moduleId, char* name, uint* boxType);
+  uint addModuleNameToMenu(const char* name, const char* onechar, uint id);
+  uint addBoxNameToMenu(uint moduleId, const char* name, uint* boxType);
 
   void  setCursorFlag(bool flag);
   char* createZuiId(uint hier, uint index, uint ownId, uint type);
@@ -470,17 +467,17 @@ class Ath__zui
                  int     y2,
                  uint    boxFilter);
 
-  uint addBoxAndMsg(uint  id,
-                    uint  boxType,
-                    uint  hier,
-                    int   layer,
-                    int   x1,
-                    int   y1,
-                    int   x2,
-                    int   y2,
-                    uint  ownId,
-                    uint  boxFilter,
-                    char* special);
+  uint addBoxAndMsg(uint        id,
+                    uint        boxType,
+                    uint        hier,
+                    int         layer,
+                    int         x1,
+                    int         y1,
+                    int         x2,
+                    int         y2,
+                    uint        ownId,
+                    uint        boxFilter,
+                    const char* special);
 
   void  setASA(dcrASA* s);
   void  setTclInterp(Tcl_Interp* interp);
@@ -505,11 +502,11 @@ class Ath__zui
   void  setAggrParams(int x, int y, int maxobjects);
   uint* getGxy(uint* n);
   uint  setDbMenus(bool skipMenuInit);
-  uint  addPullDownMenu(uint  hier,
-                        uint  btype,
-                        char* db_name,
-                        char* zui_action_name);
-  bool  isSelectType(char* name);
+  uint  addPullDownMenu(uint        hier,
+                        uint        btype,
+                        const char* db_name,
+                        const char* zui_action_name);
+  bool  isSelectType(const char* name);
   uint  getSelectIds(uint* id1, uint* id2, uint* id3);
   uint  getBoxId();
 

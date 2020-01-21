@@ -297,8 +297,8 @@ class dbBlockSearch
 
   dbNet*  getDbNet(Ath__zui* zui);
   dbRSeg* getRSeg(dbNet* net, uint shapeId);
-  void    writeRval(dbRSeg* rseg, char* delim, uint cornerCnt);
-  void    writeRCvalue(double* val, char* delim, uint cornerCnt);
+  void    writeRval(dbRSeg* rseg, const char* delim, uint cornerCnt);
+  void    writeRCvalue(double* val, const char* delim, uint cornerCnt);
   bool    getRCmsg(dbNet* net, uint shapeId);
 
   uint getWiresClipped(dbNet* targetNet, uint halo, bool ignoreFlag);

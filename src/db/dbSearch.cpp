@@ -1258,8 +1258,8 @@ uint dbBlockSearch::addViaBoxes(dbShape& sVia,
 {
   uint cnt = 0;
 
-  char* tcut = "tcut";
-  char* bcut = "bcut";
+  const char* tcut = "tcut";
+  const char* bcut = "bcut";
 
   std::vector<dbShape> shapes;
   dbShape::getViaBoxes(sVia, shapes);
@@ -1315,8 +1315,8 @@ uint dbBlockSearch::addViaBoxes(dbBox* viaBox,
 {
   uint cnt = 0;
 
-  char* tcut = "tcut";
-  char* bcut = "bcut";
+  const char* tcut = "tcut";
+  const char* bcut = "bcut";
 
   uint topLevel = 0;
   uint botLevel = getViaLevels(viaBox, topLevel);
@@ -2140,7 +2140,7 @@ void dbBlockSearch::selectIterm2Net(uint itermId)
   // add context markers
 
   dbSigType type = net->getSigType();
-  if ((type == POWER) || (type == GROUND))
+  if ((type == dbSigType::POWER) || (type == dbSigType::GROUND))
     addNetSBoxesOnSearch(net, false);
   else
     getNetConnectivity(net, false, 0, false, false, false);
@@ -2575,7 +2575,7 @@ uint dbBlockSearch::getConnectivityWires(dbInst* inst, bool ignoreZuiFlags)
       continue;
 
     dbSigType type = net->getSigType();
-    if ((type == POWER) || (type == GROUND))
+    if ((type == dbSigType::POWER) || (type == dbSigType::GROUND))
       continue;
 
     cnt += getNetFromDb(net, ignoreZuiFlags, true);
@@ -2640,7 +2640,7 @@ void dbBlockSearch::inspectPowerNet(bool menuFlag)
           }
   */
   if (_dcr->msgAction()) {
-    char* typeWord = "Power Wire/Via";
+    const char* typeWord = "Power Wire/Via";
     /*
                     if (power_wires)
                             typeWord= "Power Wire";
@@ -2757,13 +2757,13 @@ dbRSeg* dbBlockSearch::getRSeg(dbNet* net, uint shapeId)
 
   return rseg;
 }
-void dbBlockSearch::writeRCvalue(double* val, char* delim, uint cornerCnt)
+void dbBlockSearch::writeRCvalue(double* val, const char* delim, uint cornerCnt)
 {
   sprintf(_tmpBuf128, "%g", val[0]);
   for (uint ii = 1; ii < cornerCnt; ii++)
     sprintf(_tmpBuf128, "%s%g", delim, val[ii]);
 }
-void dbBlockSearch::writeRval(dbRSeg* rseg, char* delim, uint cornerCnt)
+void dbBlockSearch::writeRval(dbRSeg* rseg, const char* delim, uint cornerCnt)
 {
   sprintf(_tmpBuf128, "%g", rseg->getResistance(0));
   for (uint ii = 1; ii < cornerCnt; ii++)
@@ -2970,7 +2970,7 @@ void dbBlockSearch::selectBterm2Net(uint btermId)
 
   dbSigType type = net->getSigType();
 
-  if ((type == POWER) || (type == GROUND))
+  if ((type == dbSigType::POWER) || (type == dbSigType::GROUND))
     addNetSBoxesOnSearch(net, false);
   else
     getNetConnectivity(net, false, 0, false, false, false);

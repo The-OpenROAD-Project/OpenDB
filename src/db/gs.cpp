@@ -136,7 +136,7 @@ void gs::check_mem()
     for (y = 0; y < plc->height; y++) {
       fprintf(stderr, "Row: %d\n", y);
       for (pl = 0; pl < nslices; pl++) {
-        fprintf(stderr, "Plane: %d at %x\n", pl, (long int) pldata[pl]->plane);
+        fprintf(stderr, "Plane: %d at %ld\n", pl, (long int) pldata[pl]->plane);
         dump_row(y, pl);
       }
     }
@@ -474,7 +474,7 @@ int gs::create_image(FILE*  fp,
   int rc = 0;
   // file-based output
 
-  if ((output == GS_FILE)) {
+  if (output == GS_FILE) {
     rc += write_ppm_file(fp, encoding, width, height, ll, ur);
     fflush(fp);
   }
@@ -1308,13 +1308,13 @@ void gs::dump_row(int row, int pl)
   pixmap* pm = pldata[pl]->plane + (row * pldata[pl]->pixstride);
   for (int i = 0; i < pldata[pl]->pixstride; i++) {
     fprintf(stderr,
-            "address: %x (%x, %d, %d, %d)\n",
+            "address: %ld (%ld, %d, %d, %d)\n",
             (long int) &(pm->lword),
             (long int) pldata[pl]->plane,
             i,
             row,
             pldata[pl]->pixstride);
-    fprintf(stderr, "element %d: %x\n", i, pm->lword);
+    fprintf(stderr, "element %d: %lld\n", i, pm->lword);
     pm++;
   }
 }

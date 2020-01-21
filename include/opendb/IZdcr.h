@@ -172,16 +172,16 @@ class IZdcr : public ZObject
                         int     y2,
                         uint    boxFilter)
       = 0;
-  virtual uint addBoxAndMsg(uint  id,
-                            uint  subMenuId,
-                            uint  menuId,
-                            int   layer,
-                            int   x1,
-                            int   y1,
-                            int   x2,
-                            int   y2,
-                            uint  ownId,
-                            char* special)
+  virtual uint addBoxAndMsg(uint        id,
+                            uint        subMenuId,
+                            uint        menuId,
+                            int         layer,
+                            int         x1,
+                            int         y1,
+                            int         x2,
+                            int         y2,
+                            uint        ownId,
+                            const char* special)
       = 0;
 
   virtual bool* getExcludeLayerTable()                      = 0;

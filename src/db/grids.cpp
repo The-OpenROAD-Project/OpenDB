@@ -868,7 +868,7 @@ void Ath__grid::initContextTracks()
       continue;
     track     = NULL;
     bool tohi = true;
-    while (track = btrack->getNextSubTrack(track, tohi))
+    while ((track = btrack->getNextSubTrack(track, tohi)) != nullptr)
       track->initTargetWire(noPowerTarget);
   }
 }
@@ -2546,7 +2546,7 @@ uint Ath__grid::setExtrusionMarker()
       continue;
     tstr      = NULL;
     bool tohi = true;
-    while (tstr = track->getNextSubTrack(tstr, tohi))
+    while ((tstr = track->getNextSubTrack(tstr, tohi)) != nullptr)
       cnt += tstr->setExtrusionMarker(_markerCnt, _start, _markerLen);
   }
   return cnt;
@@ -2662,7 +2662,7 @@ uint Ath__grid::search(Ath__searchBox*     bb,
 
     tstrack   = NULL;
     bool tohi = true;
-    while (tstrack = track->getNextSubTrack(tstrack, tohi)) {
+    while ((tstrack = track->getNextSubTrack(tstrack, tohi)) != nullptr) {
       if (_schema > 0)
         cnt += tstrack->search1(loXY, hiXY, loMarker, hiMarker, &wireIdTable);
       else
@@ -2947,7 +2947,7 @@ void Ath__grid::adjustOverlapMakerEnd()
       continue;
     tstr      = NULL;
     bool tohi = true;
-    while (tstr = track->getNextSubTrack(tstr, tohi))
+    while ((tstr = track->getNextSubTrack(tstr, tohi)) != nullptr)
       if (TTTnewAdj)
         tstr->adjustOverlapMakerEnd(_markerCnt, _start, _markerLen);
       else
@@ -2967,7 +2967,7 @@ void Ath__grid::adjustMetalFill()
       continue;
     tstr      = NULL;
     bool tohi = false;
-    while (tstr = track->getNextSubTrack(tstr, tohi))
+    while ((tstr = track->getNextSubTrack(tstr, tohi)) != nullptr)
       tstr->adjustMetalFill();
   }
 }
@@ -4168,7 +4168,7 @@ uint Ath__grid::removeMarkedNetWires()
 
     Ath__track* track = NULL;
     bool        tohi  = true;
-    while (track = btrack->getNextSubTrack(track, tohi))
+    while ((track = btrack->getNextSubTrack(track, tohi)) != nullptr)
       cnt += track->removeMarkedNetWires();
   }
   return cnt;

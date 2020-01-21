@@ -2082,7 +2082,7 @@ class dbNet : public dbObject
   dbSet<dbSWire> getSWires();
 
   ///
-  /// Get the wire of thie net.
+  /// Get the wire of this net.
   /// Returns NULL if this net has no wire.
   ///
   dbWire* getWire();

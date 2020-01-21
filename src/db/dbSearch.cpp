@@ -30,11 +30,11 @@
 // ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 // POSSIBILITY OF SUCH DAMAGE.
 
-#include "dbSearch.h"
 #include "db.h"
 #include "dbBlock.h"
 #include "dbDatabase.h"
 #include "dbNet.h"
+#include "dbSearch.h"
 #include "dbTable.h"
 #include "dbTable.hpp"
 #include "dbTypes.h"
@@ -333,8 +333,6 @@ uint dbBlockSearch::makeInstSearchDb()
 
   dbSet<dbInst> insts = _block->getInsts();
 
-  dbSet<dbInst>::iterator inst_itr;
-
   // dbBox *maxBox= _block->getBBox();
   adsRect maxRect;
   _block->getDieArea(maxRect);
@@ -342,7 +340,8 @@ uint dbBlockSearch::makeInstSearchDb()
   maxRect.reset(maxInt, maxInt, -maxInt, -maxInt);
   // maxBox->getBox(maxRect);
 
-  uint instCnt = 0;
+  dbSet<dbInst>::iterator inst_itr;
+  uint                    instCnt = 0;
   for (inst_itr = insts.begin(); inst_itr != insts.end(); ++inst_itr) {
     dbInst* inst = *inst_itr;
 
@@ -399,28 +398,8 @@ uint dbBlockSearch::makeTrackSearchDb()
   adsRect maxRect;
   _block->getDieArea(maxRect);
 
-  uint W[16];
-  uint S[16];
-  uint P[16];
-
   dbSet<dbTechLayer>           layers = _tech->getLayers();
   dbSet<dbTechLayer>::iterator itr;
-
-  uint n = 0;
-  for (itr = layers.begin(); itr != layers.end(); ++itr) {
-    dbTechLayer*    layer = *itr;
-    dbTechLayerType type  = layer->getType();
-
-    if (type.getValue() != dbTechLayerType::ROUTING)
-      continue;
-
-    n = layer->getRoutingLevel();
-    // W[n]= layer->getWidth();
-    W[n] = 1;
-    S[n] = layer->getSpacing();
-    P[n] = layer->getPitch();
-  }
-  // uint layerCnt= n+1;
 
   uint cnt = 0;
 
@@ -669,7 +648,7 @@ uint dbBlockSearch::getBlockBox(uint level, uint dd, bool ignoreFlag)
 
   //	return _dcr->addBox(_blockId, _block_bb_id, _blockMenuId, level,
   //					  s.xMin()+dd, s.yMin()+dd, s.xMax()-dd,
-  //s.yMax()-dd, 0);
+  // s.yMax()-dd, 0);
 
   level = 0;
   return _dcr->addBoxAndMsg(_blockId,
@@ -1600,7 +1579,6 @@ uint dbBlockSearch::getPowerWireVias(ZPtr<ISdb>           sdb,
                                      bool                 vias,
                                      std::vector<dbBox*>& viaTable)
 {
-  uint cnt = 0;
   sdb->startIterator();
   uint wid = 0;
   while ((wid = sdb->getNextWireId()) > 0) {
@@ -1639,10 +1617,6 @@ uint dbBlockSearch::getPowerWires(int                  x1,
   if (_netSdb == NULL)
     return 0;
 
-  uint excludeNetId = 0;
-  if (targetNet != NULL)
-    excludeNetId = targetNet->getId();
-
   bool exludeTable[16];
   for (uint i = 0; i < 16; i++)
     exludeTable[i] = true;
@@ -1665,10 +1639,6 @@ uint dbBlockSearch::getPowerWiresAndVias(int                  x1,
 {
   if ((_netSdb == NULL) || (_netViaSdb == NULL))
     return 0;
-
-  uint excludeNetId = 0;
-  if (targetNet != NULL)
-    excludeNetId = targetNet->getId();
 
   bool exludeTable[16];
   for (uint i = 0; i < 16; i++)
@@ -2596,15 +2566,15 @@ void dbBlockSearch::addNetSBoxes(dbNet* net, uint wtype, bool skipVias)
     for (box_itr = wires.begin(); box_itr != wires.end(); ++box_itr) {
       dbSBox* s = *box_itr;
 
-      uint level = 0;
+      // uint level = 0;
 
       if (s->isVia()) {
         if (skipVias)
           continue;
 
-        level = getViaLevel(s);
+        // level = getViaLevel(s);
       } else {
-        level = s->getTechLayer()->getRoutingLevel();
+        // level = s->getTechLayer()->getRoutingLevel();
       }
       //			_search->addBox(s->xMin(), s->yMin(), s->xMax(),
       // s->yMax(), 				level, s->getId(), 0, wtype);
@@ -2778,13 +2748,14 @@ bool dbBlockSearch::getRCmsg(dbNet* net, uint shapeId)
   uint cornerCnt = _block->getCornerCount();
 
   writeRval(rseg, ":", cornerCnt);
-  sprintf(_tmpBuf256, "RC[%d]=%s Ohms ", rseg->getId(), _tmpBuf128);
+  int pos;
+  pos = sprintf(_tmpBuf256, "RC[%d]=%s Ohms ", rseg->getId(), _tmpBuf128);
 
   double cVal[10];
   rseg->getCapTable(cVal);
   writeRCvalue(cVal, ":", cornerCnt);
 
-  sprintf(_tmpBuf256, "%s Ct=%s fF", _tmpBuf256, _tmpBuf128);
+  sprintf(&_tmpBuf256[pos], "Ct=%s fF", _tmpBuf128);
 
   return true;
 }
@@ -2899,16 +2870,17 @@ void dbBlockSearch::inspectNet()
       typeWord = "Signal Via";
 
     char msg_buf[1024];
-    sprintf(msg_buf,
-            "%s %d of net %d %s Block %s\n",
-            typeWord,
-            shapeId,
-            net->getId(),
-            net->getName().c_str(),
-            _block->getName().c_str());
+    int  pos;
+    pos = sprintf(msg_buf,
+                  "%s %d of net %d %s Block %s\n",
+                  typeWord,
+                  shapeId,
+                  net->getId(),
+                  net->getName().c_str(),
+                  _block->getName().c_str());
 
     if (_dcr->isInspectSubMenu(_signal_wire_id) && getRCmsg(net, shapeId)) {
-      sprintf(msg_buf, "%s %s\n", msg_buf, _tmpBuf256);
+      sprintf(&msg_buf[pos], " %s\n", _tmpBuf256);
     }
 
     _dcr->wireMsg(s.xMin(), s.yMin(), s.xMax(), s.yMax(), level, msg_buf);

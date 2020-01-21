@@ -1,7 +1,5 @@
 #include <tcl.h>
 
-using namespace std;
-
 extern "C"
 {
     extern int Opendbtcl_Init(Tcl_Interp* interp);

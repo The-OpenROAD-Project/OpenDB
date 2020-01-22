@@ -89,6 +89,11 @@ add_library(opendb
     gs.cpp
     grids.cpp
     logger.cpp 
+    tmg_conn.cpp
+    tmg_conn_g.cpp
+    tmg_conn_s.cpp
+    tmg_conn_w.cpp
+    wOrder.cpp
 )
 
 target_include_directories(opendb

@@ -27,6 +27,7 @@
 #include "dbSet.h"
 #include "dbTypes.h"
 #include "geom.h"
+#include "wOrder.h"
 using namespace odb;
 %}
 
@@ -72,3 +73,4 @@ using namespace odb;
 %include "dbRtTree.h"
 %include "dbgdefines.h"
 %include "dbCCSegSet.h"
+%include "wOrder.h"

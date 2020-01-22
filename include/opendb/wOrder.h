@@ -40,7 +40,11 @@ namespace odb {
 class dbBlock;
 class dbNet;
 
-void orderWires(dbBlock* b, bool force, int maxLrngth = 0);
+void orderWires(dbBlock* b,
+                bool     force,
+                int      cutLength = 0,
+                int      maxLength = 0,
+                bool     quiet     = false);
 void orderWires(dbBlock*    b,
                 const char* net_name_or_id,
                 bool        force,

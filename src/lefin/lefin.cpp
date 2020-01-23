@@ -909,6 +909,16 @@ void lefin::macro(lefiMacro* macro)
   if (macro->hasSiteName()) {
     dbSite* site = _lib->findSite(macro->siteName());
 
+    if (site == NULL) {
+      // look in the other libs
+      for (dbLib* lib : _db->getLibs()) {
+        site = lib->findSite(macro->siteName());
+        if (site) {
+          break;
+        }
+      }
+    }
+
     if (site == NULL)
       notice(0,
              "warning: macro %s references unkown site %s\n",

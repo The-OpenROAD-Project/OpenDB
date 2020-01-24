@@ -1962,7 +1962,7 @@ defNonDefaultRuleAttrs
 defNonDefaultRuleAttr
     : '+' HARDSPACING_K { non_default_ruleR->hardSpacing(); }
 
-    | '+' LAYER_K ident WIDTH_K NUM_DOUBLE { non_default_ruleR->beginLayerRule(*$3, $5 ); }
+    | '+' LAYER_K ident WIDTH_K NUM_INT { non_default_ruleR->beginLayerRule(*$3, $5 ); }
          defNonDefaultRuleLayerAttrOpts { release($3); non_default_ruleR->endLayerRule(); }
     | '+' VIA_K ident { non_default_ruleR->via(*$3); release($3); }
     | '+' VIARULE_K ident { non_default_ruleR->viaRule(*$3); release($3); }
@@ -1976,9 +1976,9 @@ defNonDefaultRuleLayerAttrOpts
     ;
 
 defNonDefaultRuleLayerAttrOpt
-    : DIAGWIDTH_K NUM_DOUBLE
-    | SPACING_K NUM_DOUBLE { non_default_ruleR->spacing($2); }
-    | WIREEXT_K NUM_DOUBLE { non_default_ruleR->wireExt($2); }
+    : DIAGWIDTH_K NUM_INT
+    | SPACING_K NUM_INT { non_default_ruleR->spacing($2); }
+    | WIREEXT_K NUM_INT { non_default_ruleR->wireExt($2); }
     ;
 
 defStyles

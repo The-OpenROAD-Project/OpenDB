@@ -637,8 +637,13 @@ void lefin::layer(lefiLayer* layer)
           cur_rule->setEol(dbdist(w), dbdist(wn), false, 0, 0, false);
         }
       } else if (layer->hasSpacingName(j)) {
-        dbTechLayer* tmply = NULL;
-        assert(tmply = _tech->findLayer(layer->spacingName(j)));
+        dbTechLayer* tmply = _tech->findLayer(layer->spacingName(j));
+        if (tmply == nullptr) {
+          odb::error(0, "In layer %s, spacing layer %s not found\n", 
+                     layer->name(),
+                     layer->spacingName(j));
+          assert(tmply);
+        }
         cur_rule->setCutLayer4Spacing(tmply);
       } else
         l->setSpacing(dbdist(layer->spacing(j)));
@@ -908,6 +913,16 @@ void lefin::macro(lefiMacro* macro)
 
   if (macro->hasSiteName()) {
     dbSite* site = _lib->findSite(macro->siteName());
+
+    if (site == NULL) {
+      // look in the other libs
+      for (dbLib* lib : _db->getLibs()) {
+        site = lib->findSite(macro->siteName());
+        if (site) {
+          break;
+        }
+      }
+    }
 
     if (site == NULL)
       notice(0,
@@ -1763,7 +1778,6 @@ bool lefin::readLef(const char* lef_file)
 
   if (_via_cnt)
     notice(0, "    Created %d technology vias\n", _via_cnt);
-
   if (_master_cnt)
     notice(0, "    Created %d library cells\n", _master_cnt);
 

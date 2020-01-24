@@ -19,6 +19,10 @@
 #include "dbgdefines.h"
 #include "dbCCSegSet.h"
 #include "dbSet.h"
+#include "dbTypes.h"
+#include "geom.h"
+#include "wOrder.h"
+
 using namespace odb;
 %}
 
@@ -38,6 +42,7 @@ using namespace odb;
 
 %include "geom.h"
 %include "db.h"
+%include "polygon.i"
 
 %include "dbhelpers.i"  
 %include "dbdiff.i"
@@ -54,3 +59,4 @@ using namespace odb;
 %include "dbRtTree.h"
 %include "dbgdefines.h"
 %include "dbCCSegSet.h"
+%include "wOrder.h"

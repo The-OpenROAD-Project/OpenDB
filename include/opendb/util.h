@@ -42,8 +42,11 @@
 #include "atypes.h"
 
 unsigned int AthHashFunction(char* key, unsigned int len, unsigned int prime);
-// int Ath__double2int(double v);
-// int AthResourceLog(char *title, int smallScale=0);
+int Ath__double2int(double v);
+
+namespace odb {
+int AthResourceLog(const char *title, int smallScale=0);
+}  // namespace odb
 
 // Simple list
 template <class T>

@@ -73,11 +73,11 @@ class Ath__parser
   FILE*  getDbgFP();
   int    createWords();
   int    mkWords(int ii);
-  int    mkWords(const char* word, char* sep = NULL);
+  int    mkWords(const char* word, const char* sep = NULL);
   int    makeWords(const char* headSubWord);
   bool   startWord(const char* headSubWord);
-  int    get2Double(const char* word, char* sep, double& v1, double& v2);
-  int    get2Int(const char* word, char* sep, int& v1, int& v2);
+  int    get2Double(const char* word, const char* sep, double& v1, double& v2);
+  int    get2Int(const char* word, const char* sep, int& v1, int& v2);
   int    skipToEnd(char* endWord);
   int    skipToEnd(char* endWord, char* name);
   int    readLineAndBreak(int prevWordCnt = -1);
@@ -89,13 +89,13 @@ class Ath__parser
   int    parseNextLine(char continuationChar = '\0');
   int    parseOneMoreLine(int jj);
   char*  get(int ii);
-  char*  get(int start, char* prefix);
+  char*  get(int start, const char* prefix);
   int    getInt(int ii);
   int    getInt(int n, int start);
   double getDouble(int ii);
   int    getIntFromDouble(int ii);
   void   getDoubleArray(Ath__array1D<double>* A, int start, double mult = 1.0);
-  Ath__array1D<double>* readDoubleArray(char* keyword, int start);
+  Ath__array1D<double>* readDoubleArray(const char* keyword, int start);
   int                   getIntFromDouble(int ii, int lefUnits);
   int                   reportProgress(FILE* fp);
   int                   reportLines(FILE* fp);
@@ -116,9 +116,9 @@ class Ath__parser
   int getWordCountTo(int start, char rightParenth);
 
   int   getDefCoord(int ii, int prev);
-  void  syntaxError(char* msg);
+  void  syntaxError(const char* msg);
   bool  mkDir(char* word);
-  int   mkDirTree(char* word, char* sep);
+  int   mkDirTree(const char* word, const char* sep);
   bool  isPlusKeyword(int ii, char* key1);
   char* getRequiredPlusKeyword(int ii, char* key1);
   char* getPlusKeyword(int ii);
@@ -126,9 +126,9 @@ class Ath__parser
   bool  isSeparator(char a);
   char* getValue(int start, char* key);
 
-  void resetSeparator(char* s);
-  void addSeparator(char* s);
-  bool isKeyword(int ii, char* key1);
+  void resetSeparator(const char* s);
+  void addSeparator(const char* s);
+  bool isKeyword(int ii, const char* key1);
   void resetLineNum(int v);
   int  getLineNum();
   bool isDigit(int ii, int jj);

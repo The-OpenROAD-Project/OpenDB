@@ -35,6 +35,7 @@
 #include <unistd.h>
 #endif
 #include <string>
+
 #include "ZComponents.h"
 #include "db.h"
 #include "dbArrayTable.h"
@@ -2378,6 +2379,13 @@ void dbBlock::setBufferAltered(bool value)
   _dbBlock* block               = (_dbBlock*) this;
   block->_flags._buffer_altered = value ? 1 : 0;
 }
+
+dbBlockSearch* dbBlock::getSearchDb()
+{
+  _dbBlock* block = (_dbBlock*) this;
+  return block->_searchDb;
+}
+
 #ifdef ZUI
 ZPtr<ISdb> dbBlock::getSignalNetSdb(ZContext& context, dbTech* tech)
 {
@@ -3566,6 +3574,24 @@ void dbBlock::setDrivingItermsforNets()
         break;
       }
     }
+  }
+}
+
+void dbBlock::preExttreeMergeRC(double max_cap, uint corner)
+{
+  if (!getExtControl()->_exttreePreMerg)
+    return;
+  if (max_cap == 0.0)
+    max_cap = 10.0;
+  if (getExtControl()->_exttreeMaxcap >= max_cap)
+    return;
+  getExtControl()->_exttreeMaxcap = max_cap;
+  dbSet<dbNet>           bnets    = getNets();
+  dbSet<dbNet>::iterator net_itr;
+  dbNet*                 net;
+  for (net_itr = bnets.begin(); net_itr != bnets.end(); ++net_itr) {
+    net = *net_itr;
+    net->preExttreeMergeRC(max_cap, corner);
   }
 }
 

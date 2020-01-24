@@ -113,10 +113,18 @@ void definRegion::type(defRegionType type)
 void definRegion::inst(const char* name)
 {
   if (_cur_region) {
-    dbInst* inst = _block->findInst(name);
-
-    if (inst)
-      _cur_region->addInst(inst);
+    std::string pname = name;
+    size_t pname_length = pname.length();
+    if (pname[pname.length() - 1] == '*') {
+      size_t prefix_length = pname_length - 1;
+      std::string prefix = pname.substr(0, pname_length - 1);
+      for (dbInst* inst : _block->getInsts()) {
+	const char *inst_name = inst->getConstName();
+	if (strncmp(inst_name, prefix.c_str(), prefix_length) == 0) {
+	  _cur_region->addInst(inst);
+	}
+      }
+    }
   }
 }
 

@@ -36,6 +36,11 @@
 // These goofy looking protection checks save sending the contents of the
 // include file through the C preprocessor to improve compile times. -cherry
 
+#include <list>
+#include <set>
+#include <string>
+#include <vector>
+
 #include "ISdb.h"
 #include "ads.h"
 #include "dbObject.h"
@@ -44,13 +49,7 @@
 #include "dbTypes.h"
 #include "dbViaParams.h"
 #include "geom.h"
-
 #include "logger.h"
-
-#include <list>
-#include <set>
-#include <string>
-#include <vector>
 
 #define ADS_MAX_CORNER 10
 
@@ -1169,7 +1168,7 @@ class dbBlock : public dbObject
   ///
   /// Get search database object for fast area searches on physical objects
   ///
-  /// dbBlockSearch *getSearchDb();
+  dbBlockSearch* getSearchDb();
 
   ///
   /// reset _netSdb
@@ -1297,7 +1296,7 @@ class dbBlock : public dbObject
   ///
   /// merge rsegs before doing exttree
   ///
-  // void preExttreeMergeRC(double max_cap, uint corner);
+  void preExttreeMergeRC(double max_cap, uint corner);
 
   ///
   /// clear
@@ -2083,7 +2082,7 @@ class dbNet : public dbObject
   dbSet<dbSWire> getSWires();
 
   ///
-  /// Get the wire of thie net.
+  /// Get the wire of this net.
   /// Returns NULL if this net has no wire.
   ///
   dbWire* getWire();
@@ -4318,7 +4317,7 @@ class dbRSeg : public dbObject
   ///
   /// do merge rsegs
   ///
-  // void mergeRCs(std::vector<dbRSeg *> & mrsegs);
+  void mergeRCs(std::vector<dbRSeg*>& mrsegs);
 
   ///
   /// Adjust the capacitance of this RC segment for this process corner.

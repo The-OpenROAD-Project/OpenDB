@@ -187,7 +187,7 @@ class dbCreateNetUtil
                             dbTechLayer* layer,
                             uint         sboxId);
   void    setCurrentNet(dbNet* net);
-  dbNet*  createSpecialNet(dbNet* origNet, char* name);
+  dbNet*  createSpecialNet(dbNet* origNet, const char* name);
   void    allocMapArray(uint n);
   void    checkAndSet(uint id);
   dbInst* createInst(dbInst* inst0);

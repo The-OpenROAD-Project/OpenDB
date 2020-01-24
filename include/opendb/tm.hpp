@@ -35,21 +35,10 @@
 
 #include <string.h>
 
-#ifndef ADS_TM_BIND_H
 #include "tm_bind.h"
-#endif
-
-#ifndef ADS_ZSESSION_H
 #include "ZSession.h"
-#endif
-
-#ifndef ADS_ZNAMESPACE_H
 #include "ZNamespace.h"
-#endif
-
-#ifndef ADS_ZEXCEPTION_H
 #include "ZException.h"
-#endif
 
 namespace odb {
 

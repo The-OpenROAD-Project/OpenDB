@@ -25,6 +25,7 @@ set (OPENDB_SWIG_FILES
     ${PROJECT_SOURCE_DIR}/src/swig/tcl/dbenums.i
     ${PROJECT_SOURCE_DIR}/src/swig/tcl/parserenums.i
     ${PROJECT_SOURCE_DIR}/src/swig/tcl/dbhelpers.i
+    ${PROJECT_SOURCE_DIR}/src/swig/tcl/polygon.i
 )
 
 add_custom_command(OUTPUT ${CMAKE_CURRENT_BINARY_DIR}/opendb_wrap.cpp

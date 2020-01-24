@@ -637,8 +637,8 @@ void lefin::layer(lefiLayer* layer)
           cur_rule->setEol(dbdist(w), dbdist(wn), false, 0, 0, false);
         }
       } else if (layer->hasSpacingName(j)) {
-        dbTechLayer* tmply = NULL;
-        assert(tmply = _tech->findLayer(layer->spacingName(j)));
+        dbTechLayer* tmply = _tech->findLayer(layer->spacingName(j));
+        assert(tmply);
         cur_rule->setCutLayer4Spacing(tmply);
       } else
         l->setSpacing(dbdist(layer->spacing(j)));

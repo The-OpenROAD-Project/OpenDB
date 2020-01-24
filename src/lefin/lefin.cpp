@@ -638,7 +638,12 @@ void lefin::layer(lefiLayer* layer)
         }
       } else if (layer->hasSpacingName(j)) {
         dbTechLayer* tmply = _tech->findLayer(layer->spacingName(j));
-        assert(tmply);
+        if (tmply == nullptr) {
+          odb::error(0, "In layer %s, spacing layer %s not found\n", 
+                     layer->name(),
+                     layer->spacingName(j));
+          assert(tmply);
+        }
         cur_rule->setCutLayer4Spacing(tmply);
       } else
         l->setSpacing(dbdist(layer->spacing(j)));
@@ -1773,7 +1778,6 @@ bool lefin::readLef(const char* lef_file)
 
   if (_via_cnt)
     notice(0, "    Created %d technology vias\n", _via_cnt);
-
   if (_master_cnt)
     notice(0, "    Created %d library cells\n", _master_cnt);
 

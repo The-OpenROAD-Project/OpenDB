@@ -880,6 +880,11 @@ void lefin::macro(lefiMacro* macro)
   if (_master == NULL)
     return;
 
+  for (int i = 0; i < macro->numProperties(); i++) {
+    dbStringProperty::create(_master, macro->propName(i), 
+                             macro->propValue(i));
+  }
+
   if (macro->hasClass()) {
     dbMasterType type(macro->macroClass());
     _master->setType(type);

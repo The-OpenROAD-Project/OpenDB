@@ -4,13 +4,12 @@ set data_dir [file join $tests_dir "data"]
 set opendb_dir [file dirname $tests_dir]
 source [file join $tcl_dir "test_helpers.tcl"]
 
-source [file join [file dirname [info script]] "test_helpers.tcl"]
-
 # Open database, load lef and design
 
 set db [dbDatabase_create]
-set chip [odb_read_design $db  $data_dir/Nangate45/NangateOpenCellLibrary.mod.lef $data_dir/gcd/floorplan.def]
-set lib [lindex [$db getLibs] 0]
+set lib [odb_read_lef $db [file join $data_dir "Nangate45" "NangateOpenCellLibrary.mod.lef"]]
+odb_read_def $db [file join $data_dir "gcd" "floorplan.def"]
+set chip [$db getChip]
 
 # Block checks
 

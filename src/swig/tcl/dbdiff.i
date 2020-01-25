@@ -1,4 +1,5 @@
 %{
+#include "defin.h"
 
 bool
 db_diff(odb::dbDatabase *db1,

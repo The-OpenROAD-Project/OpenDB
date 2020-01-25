@@ -5,13 +5,11 @@ set opendb_dir [file dirname $tests_dir]
 source [file join $tcl_dir "test_helpers.tcl"]
 
 set db [dbDatabase_create]
-set chip [odb_read_design $db $data_dir/gscl45nm.lef $data_dir/design.def]
-set lib [lindex [$db getLibs] 0]
+set lib [odb_read_lef $db [file join $data_dir "gscl45nm.lef"]]
 set tech [$db getTech]
-if {$chip == "NULL"} {
-    puts "Read DEF Failed"
-    exit 1
-}
+odb_read_def $db [file join $data_dir "design.def"]
+set chip [$db getChip]
+
 set vias [$tech getVias]
 set via1 [lindex $vias 0]
 set layer1 [$via1 getBottomLayer]

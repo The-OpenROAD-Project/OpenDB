@@ -5,21 +5,12 @@ set opendb_dir [file dirname $tests_dir]
 source [file join $tcl_dir "test_helpers.tcl"]
 
 set db [dbDatabase_create]
-set chip [odb_read_design $db $data_dir/Nangate45/NangateOpenCellLibrary.mod.lef $data_dir/gcd/floorplan.def]
-
+set lib [odb_read_lef $db [file join $data_dir "Nangate45" "NangateOpenCellLibrary.mod.lef"]]
+odb_read_def $db [file join $data_dir "gcd" "floorplan.def"]
+set chip [$db getChip]
 set tech [$db getTech]
 
-if {$tech == "NULL"} {
-    puts "Read tech Failed"
-    exit 1
-}
-
 set block [$chip getBlock]
-
-if {$block == "NULL"} {
-    puts "Read block Failed"
-    exit 1
-}
 
 set routing_layers_count [$tech getRoutingLayerCount]
 

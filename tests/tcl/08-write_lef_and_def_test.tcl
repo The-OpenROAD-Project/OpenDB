@@ -5,14 +5,15 @@ set opendb_dir [file dirname $tests_dir]
 source [file join $tcl_dir "test_helpers.tcl"]
 
 set db [dbDatabase_create]
-set chip [odb_read_design $db $data_dir/gscl45nm.lef $data_dir/design.def]
-set lib [lindex [$db getLibs] 0]
+set lib [odb_read_lef $db [file join $data_dir "gscl45nm.lef"]]
+odb_read_def $db [file join $data_dir "design.def"]
+set chip [$db getChip]
 set block [$chip getBlock]
-set lef_write_result [odb_write_lef $lib $opendb_dir/build/test.lef]
+set lef_write_result [odb_write_lef $lib [file join $opendb_dir "build" "test.lef"]]
 if {$lef_write_result != 1} {
     exit 1
 }
-set def_write_result [odb_write_def $block $opendb_dir/build/test.def]
+set def_write_result [odb_write_def $block [file join $opendb_dir "build" "test.def"]]
 if {$def_write_result != 1} {
     exit 1
 }

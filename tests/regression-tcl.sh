@@ -3,9 +3,6 @@ set -e
 BASE_DIR=$(dirname $0)
 APP=$BASE_DIR/../build/src/swig/tcl/opendbtcl
 
-echo $BASE_DIR
-echo $APP
-
 echo "Running tests.."
 echo "================="
 
@@ -31,11 +28,6 @@ echo ""
 
 echo "[5] Read DEF"
 $APP $BASE_DIR/tcl/05-read_def_test.tcl
-echo "SUCCESS!"
-echo ""
-
-echo "[6] Read design"
-$APP $BASE_DIR/tcl/06-read_design_test.tcl
 echo "SUCCESS!"
 echo ""
 
@@ -84,11 +76,6 @@ $APP $BASE_DIR/tcl/15-row_settings_test.tcl
 echo "SUCCESS!"
 echo ""
 
-echo "[16] Wrtie def versions test"
-$APP $BASE_DIR/tcl/16-write_def_versions_test.tcl
-echo "SUCCESS!"
-echo ""
-
 echo "[17] Database read/write test"
 $APP $BASE_DIR/tcl/17-db_read-write_test.tcl
 echo "SUCCESS!"
@@ -103,3 +90,4 @@ echo "[19] Polygon operations test"
 $APP $BASE_DIR/tcl/19-polygon_test.tcl
 echo "SUCCESS!"
 echo ""
+

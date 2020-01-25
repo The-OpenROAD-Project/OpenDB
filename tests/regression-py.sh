@@ -9,12 +9,12 @@ echo "================"
 
 echo "[1] Importing opendbpy package"
 python3 $BASE_DIR/python/01-import_package_test.py
-echo "SUCESS!"
+echo "SUCCESS!"
 echo ""
 
 echo "[2] Reading lef files"
 python3 $BASE_DIR/python/02-read_lef_test.py
-echo "SUCESS!"
+echo "SUCCESS!"
 echo ""
 
 
@@ -30,11 +30,6 @@ echo ""
 
 echo "[5] Read DEF"
 python3 $BASE_DIR/python/05-read_def_test.py
-echo "SUCCESS!"
-echo ""
-
-echo "[6] Read design"
-python3 $BASE_DIR/python/06-read_design_test.py
 echo "SUCCESS!"
 echo ""
 
@@ -80,11 +75,6 @@ echo ""
 
 echo "[15] Database row create test"
 python3 $BASE_DIR/python/15-row_settings_test.py
-echo "SUCCESS!"
-echo ""
-
-echo "[16] Wrtie def versions test"
-python3 $BASE_DIR/python/16-write_def_versions_test.py
 echo "SUCCESS!"
 echo ""
 

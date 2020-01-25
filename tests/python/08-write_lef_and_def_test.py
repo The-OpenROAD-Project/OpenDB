@@ -7,8 +7,9 @@ opendb_dir = os.path.abspath(os.path.join(tests_dir, os.pardir))
 data_dir = os.path.join(tests_dir, "data")
 
 db = odb.dbDatabase.create()
-chip = odb.odb_read_design(db, [os.path.join(data_dir, "gscl45nm.lef")], [os.path.join(data_dir, "design.def")])
-libs = db.getLibs()
+lib = odb.odb_read_lef(db, os.path.join(data_dir, "gscl45nm.lef"))
+odb.odb_read_def(db, os.path.join(data_dir, "design.def"))
+chip = db.getChip()
 block = chip.getBlock()
-result = odb.odb_write_lef(libs[0], os.path.join(opendb_dir, "build", "lef.out"))
+result = odb.odb_write_lef(lib, os.path.join(opendb_dir, "build", "lef.out"))
 assert result==1, "LEF not written"

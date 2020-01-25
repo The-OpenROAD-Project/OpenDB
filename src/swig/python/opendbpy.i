@@ -2,18 +2,11 @@
 
 %{
 #define SWIG_FILE_WITH_INIT
-#include "dbObject.h"
+#include "geom.h"
 #include "db.h"
-#include "lefin.h"
-#include "lefout.h"
 #include "dbShape.h"
-#include "defin.h"
-#include "defout.h"
-#include "dbExtControl.h"
 #include "dbViaParams.h"
-#include "dbId.h"
 #include "dbRtEdge.h"
-#include "dbStream.h"
 #include "dbWireCodec.h"
 #include "dbBlockCallBackObj.h"
 #include "dbIterator.h"
@@ -26,12 +19,8 @@
 #include "dbgdefines.h"
 #include "dbCCSegSet.h"
 #include "dbSet.h"
-#include "geom.h"
 using namespace odb;
 %}
-
-
-
 
 %include <stl.i>
 %include <typemaps.i>
@@ -47,26 +36,18 @@ using namespace odb;
    $1 = PyInt_Check($input) ? 1 : 0;
 }
 
-%include "dbtypes.i"
-%include "dboperators.i"
 %include "dbenums.i"
-%include "dbhelpers.i"
 %include "parserenums.i"
-%include "../tcl/dbdiff.i"
+%include "dbtypes.i"
 
 %include "geom.h"
-%include "dbObject.h"
-%include "dbViaParams.h"
 %include "db.h"
-%include "lefin.h"
-%include "lefout.h"
-%include "defin.h"
-%include "defout.h"
-%include "dbExtControl.h"
-%include "dbtable2.h"
-%include "dbId.h"
+
+%include "dbhelpers.i"
+%include "../tcl/dbdiff.i"
+
+%include "dbViaParams.h"
 %include "dbRtEdge.h"
-%include "dbStream.h"
 %include "dbWireCodec.h"
 %include "dbBlockCallBackObj.h"
 %include "dbIterator.h"
@@ -74,8 +55,6 @@ using namespace odb;
 %include "dbTransform.h"
 %include "dbWireGraph.h"
 %include "dbBlockSet.h"
-%include "dbMap.h"
 %include "dbRtTree.h"
 %include "dbgdefines.h"
 %include "dbCCSegSet.h"
-%include "dbSet.h"

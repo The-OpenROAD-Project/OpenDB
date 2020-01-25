@@ -53,6 +53,10 @@
 #include "definIPinProps.h"
 #include "def_parser.hpp"
 
+#if defined(__clang__)
+#pragma(clang, ignored -Wdeprecated-register)
+#endif
+
 // Default readers.
 static definIBlockage  default_blockageR;
 static definIComponent default_componentR;

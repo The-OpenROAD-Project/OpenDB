@@ -11,12 +11,17 @@ target_include_directories(opendbtcl
         ${PROJECT_SOURCE_DIR}/include/opendb
     PRIVATE
         ${CMAKE_CURRENT_SOURCE_DIR}/src/swig/tcl
+    SYSTEM
+        ${Boost_INCLUDE_DIRS}
+        TCL
 )
 
 target_link_libraries(opendbtcl
     PUBLIC
         opendb
+    SYSTEM
         tcl
+	${Boost_LIBRARIES}
 )
 
 set (OPENDB_SWIG_FILES

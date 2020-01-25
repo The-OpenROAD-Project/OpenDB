@@ -20,7 +20,8 @@ configure_file (
 )
 
 find_package(TCL)
-include_directories(${TCL_INCLUDE_PATH})
+
+find_package(boost)
 
 ############################################################################
 ################################# Targets ##################################

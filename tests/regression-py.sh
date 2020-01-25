@@ -3,7 +3,6 @@ set -e
 BASE_DIR=$(dirname $0)
 
 export PYTHONPATH=$BASE_DIR/../build/src/swig/python:$PYTHONPATH
-python3 $SETUP_FILE install --user --prefix=
 
 echo "Running tests .."
 echo "================"

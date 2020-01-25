@@ -8,6 +8,7 @@ target_include_directories(tm
     PUBLIC
         $<INSTALL_INTERFACE:include/opendb>
         $<BUILD_INTERFACE:${PROJECT_SOURCE_DIR}/include/opendb>
+        ${TCL_INCLUDE_PATH}
     PRIVATE
         ${PROJECT_SOURCE_DIR}/src/tm
 )

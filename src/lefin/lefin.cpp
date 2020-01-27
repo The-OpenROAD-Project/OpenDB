@@ -47,6 +47,7 @@
 #include <list>
 #include <string>
 #include <vector>
+
 #include "db.h"
 #include "dbTransform.h"
 #include "geom.h"
@@ -626,7 +627,8 @@ void lefin::layer(lefiLayer* layer)
       } else if (layer->hasSpacingName(j)) {
         dbTechLayer* tmply = _tech->findLayer(layer->spacingName(j));
         if (tmply == nullptr) {
-          odb::error(0, "In layer %s, spacing layer %s not found\n", 
+          odb::error(0,
+                     "In layer %s, spacing layer %s not found\n",
                      layer->name(),
                      layer->spacingName(j));
           assert(tmply);
@@ -868,8 +870,7 @@ void lefin::macro(lefiMacro* macro)
     return;
 
   for (int i = 0; i < macro->numProperties(); i++) {
-    dbStringProperty::create(_master, macro->propName(i), 
-                             macro->propValue(i));
+    dbStringProperty::create(_master, macro->propName(i), macro->propValue(i));
   }
 
   if (macro->hasClass()) {

@@ -176,7 +176,10 @@ void tmg_conn_search_internal::addShape(int lev,int xlo,int ylo,int xhi,int yhi,
   tcs_lev *slev = _levV[lev];
   if (slev->shape_list==NULL) {
     slev->shape_list = s;
-    slev->xlo = xlo; slev->ylo = ylo; slev->xhi = xhi; slev->yhi = yhi;
+    slev->xlo = xlo; 
+    slev->ylo = ylo; 
+    slev->xhi = xhi; 
+    slev->yhi = yhi;
   } else {
     slev->last_shape->next = s;
     if (xlo < slev->xlo) slev->xlo = xlo;
@@ -325,7 +328,10 @@ static void tcs_lev_add(tcs_lev *bin,tcs_shape *s)
 {
   if (bin->shape_list==NULL) {
     bin->shape_list = s;
-    bin->xlo = s->xlo; bin->ylo = s->ylo; bin->xhi = s->xhi; bin->yhi = s->yhi;
+    bin->xlo = s->xlo; 
+    bin->ylo = s->ylo; 
+    bin->xhi = s->xhi; 
+    bin->yhi = s->yhi;
   } else {
     bin->last_shape->next = s;
     if (s->xlo < bin->xlo) bin->xlo = s->xlo;

@@ -49,22 +49,6 @@ inline unsigned int hash_string(const char* str)
   return hash;
 }
 
-inline int streq(const char* s1, const char* s2)
-{
-do_str_cmp:
-  char c1 = *s1++;
-  char c2 = *s2++;
-
-  if (c1 != c2)
-    return 0;
-
-  if (c1 == 0)
-    return 1;
-
-  goto do_str_cmp;
-  return 0;
-}
-
 template <class T>
 dbHashTable<T>::dbHashTable()
 {
@@ -220,7 +204,7 @@ T* dbHashTable<T>::find(const char* name)
   while (cur != 0) {
     T* entry = _obj_tbl->getPtr(cur);
 
-    if (streq(entry->_name, name))
+    if (strcmp(entry->_name, name))
       return entry;
 
     cur = entry->_next_entry;
@@ -243,7 +227,7 @@ int dbHashTable<T>::hasMember(const char* name)
   while (cur != 0) {
     T* entry = _obj_tbl->getPtr(cur);
 
-    if (streq(entry->_name, name))
+    if (strcmp(entry->_name, name))
       return true;
 
     cur = entry->_next_entry;

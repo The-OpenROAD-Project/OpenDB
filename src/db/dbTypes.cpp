@@ -53,46 +53,30 @@ bool dbIdValidation::isId(const char* inid)
   return true;
 }
 
-static bool streq(const char* s1, const char* s2)
-{
-  if (!(s1 && s2))
-    return !((s1 && *s1) || (s2 && *s2));
-
-  while (*s1 && *s2) {
-    if (toupper(*s1) != toupper(*s2))
-      return false;
-
-    ++s1;
-    ++s2;
-  }
-
-  return (*s1 == *s2);
-}
-
 dbOrientType::dbOrientType(const char* orient)
 {
-  if (streq(orient, "R0"))
+  if (strcasecmp(orient, "R0"))
     _value = R0;
 
-  else if (streq(orient, "R90"))
+  else if (strcasecmp(orient, "R90"))
     _value = R90;
 
-  else if (streq(orient, "R180"))
+  else if (strcasecmp(orient, "R180"))
     _value = R180;
 
-  else if (streq(orient, "R270"))
+  else if (strcasecmp(orient, "R270"))
     _value = R270;
 
-  else if (streq(orient, "MY"))
+  else if (strcasecmp(orient, "MY"))
     _value = MY;
 
-  else if (streq(orient, "MYR90"))
+  else if (strcasecmp(orient, "MYR90"))
     _value = MYR90;
 
-  else if (streq(orient, "MX"))
+  else if (strcasecmp(orient, "MX"))
     _value = MX;
 
-  else if (streq(orient, "MXR90"))
+  else if (strcasecmp(orient, "MXR90"))
     _value = MXR90;
 
   else
@@ -157,31 +141,31 @@ const char* dbOrientType::getString() const
 
 dbSigType::dbSigType(const char* value)
 {
-  if (streq(value, "SIGNAL"))
+  if (strcasecmp(value, "SIGNAL"))
     _value = SIGNAL;
 
-  else if (streq(value, "POWER"))
+  else if (strcasecmp(value, "POWER"))
     _value = POWER;
 
-  else if (streq(value, "GROUND"))
+  else if (strcasecmp(value, "GROUND"))
     _value = GROUND;
 
-  else if (streq(value, "CLOCK"))
+  else if (strcasecmp(value, "CLOCK"))
     _value = CLOCK;
 
-  else if (streq(value, "ANALOG"))
+  else if (strcasecmp(value, "ANALOG"))
     _value = ANALOG;
 
-  else if (streq(value, "ANALOG"))
+  else if (strcasecmp(value, "ANALOG"))
     _value = ANALOG;
 
-  else if (streq(value, "RESET"))
+  else if (strcasecmp(value, "RESET"))
     _value = RESET;
 
-  else if (streq(value, "SCAN"))
+  else if (strcasecmp(value, "SCAN"))
     _value = SCAN;
 
-  else if (streq(value, "TIEOFF"))
+  else if (strcasecmp(value, "TIEOFF"))
     _value = TIEOFF;
 
   else
@@ -246,16 +230,16 @@ const char* dbSigType::getString() const
 
 dbIoType::dbIoType(const char* value)
 {
-  if (streq(value, "INPUT"))
+  if (strcasecmp(value, "INPUT"))
     _value = INPUT;
 
-  else if (streq(value, "OUTPUT"))
+  else if (strcasecmp(value, "OUTPUT"))
     _value = OUTPUT;
 
-  else if (streq(value, "INOUT"))
+  else if (strcasecmp(value, "INOUT"))
     _value = INOUT;
 
-  else if (streq(value, "FEEDTHRU"))
+  else if (strcasecmp(value, "FEEDTHRU"))
     _value = FEEDTHRU;
 
   else
@@ -304,25 +288,25 @@ const char* dbIoType::getString() const
 
 dbPlacementStatus::dbPlacementStatus(const char* value)
 {
-  if (streq(value, "NONE"))
+  if (strcasecmp(value, "NONE"))
     _value = NONE;
 
-  else if (streq(value, "UNPLACED"))
+  else if (strcasecmp(value, "UNPLACED"))
     _value = UNPLACED;
 
-  else if (streq(value, "SUGGESTED"))
+  else if (strcasecmp(value, "SUGGESTED"))
     _value = SUGGESTED;
 
-  else if (streq(value, "PLACED"))
+  else if (strcasecmp(value, "PLACED"))
     _value = PLACED;
 
-  else if (streq(value, "LOCKED"))
+  else if (strcasecmp(value, "LOCKED"))
     _value = LOCKED;
 
-  else if (streq(value, "FIRM"))
+  else if (strcasecmp(value, "FIRM"))
     _value = FIRM;
 
-  else if (streq(value, "COVER"))
+  else if (strcasecmp(value, "COVER"))
     _value = COVER;
 
   else
@@ -391,70 +375,70 @@ dbMasterType::dbMasterType(const char* value)
 {
   _value = NONE;
 
-  if (streq(value, "NONE"))
+  if (strcasecmp(value, "NONE"))
     _value = NONE;
 
-  else if (streq(value, "COVER"))
+  else if (strcasecmp(value, "COVER"))
     _value = COVER;
 
-  else if (streq(value, "RING"))
+  else if (strcasecmp(value, "RING"))
     _value = RING;
 
-  else if (streq(value, "BLOCK"))
+  else if (strcasecmp(value, "BLOCK"))
     _value = BLOCK;
 
-  else if (streq(value, "PAD"))
+  else if (strcasecmp(value, "PAD"))
     _value = PAD;
 
-  else if (streq(value, "PAD INPUT"))
+  else if (strcasecmp(value, "PAD INPUT"))
     _value = PAD_INPUT;
 
-  else if (streq(value, "PAD OUTPUT"))
+  else if (strcasecmp(value, "PAD OUTPUT"))
     _value = PAD_OUTPUT;
 
-  else if (streq(value, "PAD INOUT"))
+  else if (strcasecmp(value, "PAD INOUT"))
     _value = PAD_INOUT;
 
-  else if (streq(value, "PAD POWER"))
+  else if (strcasecmp(value, "PAD POWER"))
     _value = PAD_POWER;
 
-  else if (streq(value, "PAD SPACER"))
+  else if (strcasecmp(value, "PAD SPACER"))
     _value = PAD_SPACER;
 
-  else if (streq(value, "CORE"))
+  else if (strcasecmp(value, "CORE"))
     _value = CORE;
 
-  else if (streq(value, "CORE FEEDTHRU"))
+  else if (strcasecmp(value, "CORE FEEDTHRU"))
     _value = CORE_FEEDTHRU;
 
-  else if (streq(value, "CORE TIEHIGH"))
+  else if (strcasecmp(value, "CORE TIEHIGH"))
     _value = CORE_TIEHIGH;
 
-  else if (streq(value, "CORE TIELOW"))
+  else if (strcasecmp(value, "CORE TIELOW"))
     _value = CORE_TIELOW;
 
-  else if (streq(value, "CORE SPACER"))
+  else if (strcasecmp(value, "CORE SPACER"))
     _value = CORE_SPACER;
 
-  else if (streq(value, "ENDCAP"))
+  else if (strcasecmp(value, "ENDCAP"))
     _value = ENDCAP;
 
-  else if (streq(value, "ENDCAP PRE"))
+  else if (strcasecmp(value, "ENDCAP PRE"))
     _value = ENDCAP_PRE;
 
-  else if (streq(value, "ENDCAP POST"))
+  else if (strcasecmp(value, "ENDCAP POST"))
     _value = ENDCAP_POST;
 
-  else if (streq(value, "ENDCAP TOPLEFT"))
+  else if (strcasecmp(value, "ENDCAP TOPLEFT"))
     _value = ENDCAP_TOPLEFT;
 
-  else if (streq(value, "ENDCAP TOPRIGHT"))
+  else if (strcasecmp(value, "ENDCAP TOPRIGHT"))
     _value = ENDCAP_TOPRIGHT;
 
-  else if (streq(value, "ENDCAP BOTTOMLEFT"))
+  else if (strcasecmp(value, "ENDCAP BOTTOMLEFT"))
     _value = ENDCAP_BOTTOMLEFT;
 
-  else if (streq(value, "ENDCAP BOTTOMRIGHT"))
+  else if (strcasecmp(value, "ENDCAP BOTTOMRIGHT"))
     _value = ENDCAP_BOTTOMRIGHT;
 }
 
@@ -572,19 +556,19 @@ const char* dbMasterType::getString() const
 
 dbTechLayerType::dbTechLayerType(const char* value)
 {
-  if (streq(value, "ROUTING"))
+  if (strcasecmp(value, "ROUTING"))
     _value = ROUTING;
 
-  else if (streq(value, "CUT"))
+  else if (strcasecmp(value, "CUT"))
     _value = CUT;
 
-  else if (streq(value, "MASTERSLICE"))
+  else if (strcasecmp(value, "MASTERSLICE"))
     _value = MASTERSLICE;
 
-  else if (streq(value, "OVERLAP"))
+  else if (strcasecmp(value, "OVERLAP"))
     _value = OVERLAP;
 
-  else if (streq(value, "IMPLANT"))
+  else if (strcasecmp(value, "IMPLANT"))
     _value = IMPLANT;
 
   else
@@ -641,13 +625,13 @@ const char* dbTechLayerType::getString() const
 
 dbTechLayerDir::dbTechLayerDir(const char* value)
 {
-  if (streq(value, "NONE"))
+  if (strcasecmp(value, "NONE"))
     _value = NONE;
 
-  else if (streq(value, "HORIZONTAL"))
+  else if (strcasecmp(value, "HORIZONTAL"))
     _value = HORIZONTAL;
 
-  else if (streq(value, "VERTICAL"))
+  else if (strcasecmp(value, "VERTICAL"))
     _value = VERTICAL;
 
   else
@@ -692,45 +676,45 @@ const char* dbTechLayerDir::getString() const
 
 dbBoxOwner::dbBoxOwner(const char* value)
 {
-  if (streq(value, "UNKNOWN"))
+  if (strcasecmp(value, "UNKNOWN"))
     _value = UNKNOWN;
 
-  else if (streq(value, "BLOCK"))
+  else if (strcasecmp(value, "BLOCK"))
     _value = BLOCK;
 
-  else if (streq(value, "INST"))
+  else if (strcasecmp(value, "INST"))
     _value = INST;
 
-  else if (streq(value, "BTERM"))
+  else if (strcasecmp(value, "BTERM"))
     _value = BTERM;
 
-  else if (streq(value, "BPIN"))
+  else if (strcasecmp(value, "BPIN"))
     _value = BPIN;
 
-  else if (streq(value, "BPIN"))
+  else if (strcasecmp(value, "BPIN"))
     _value = BPIN;
 
-  else if (streq(value, "VIA"))
+  else if (strcasecmp(value, "VIA"))
     _value = VIA;
 
-  else if (streq(value, "OBSTRUCTION"))
+  else if (strcasecmp(value, "OBSTRUCTION"))
     _value = OBSTRUCTION;
 
-  else if (streq(value, "BLOCKAGE"))
+  else if (strcasecmp(value, "BLOCKAGE"))
     _value = BLOCKAGE;
 
-  else if (streq(value, "MASTER"))
+  else if (strcasecmp(value, "MASTER"))
     _value = MASTER;
 
-  else if (streq(value, "MPIN"))
+  else if (strcasecmp(value, "MPIN"))
     _value = MPIN;
 
-  else if (streq(value, "TECH VIA"))
+  else if (strcasecmp(value, "TECH VIA"))
     _value = TECH_VIA;
 
-  else if (streq(value, "SWIRE"))
+  else if (strcasecmp(value, "SWIRE"))
     _value = SWIRE;
-  else if (streq(value, "REGION"))
+  else if (strcasecmp(value, "REGION"))
     _value = REGION;
 }
 
@@ -813,22 +797,22 @@ const char* dbBoxOwner::getString() const
 dbWireType::dbWireType(const char* value)
 {
   _value = NONE;
-  if (streq(value, "NONE"))
+  if (strcasecmp(value, "NONE"))
     _value = NONE;
 
-  else if (streq(value, "COVER"))
+  else if (strcasecmp(value, "COVER"))
     _value = COVER;
 
-  else if (streq(value, "FIXED"))
+  else if (strcasecmp(value, "FIXED"))
     _value = FIXED;
 
-  else if (streq(value, "ROUTED"))
+  else if (strcasecmp(value, "ROUTED"))
     _value = ROUTED;
 
-  else if (streq(value, "SHIELD"))
+  else if (strcasecmp(value, "SHIELD"))
     _value = SHIELD;
 
-  else if (streq(value, "NOSHIELD"))
+  else if (strcasecmp(value, "NOSHIELD"))
     _value = NOSHIELD;
 }
 
@@ -882,40 +866,40 @@ const char* dbWireType::getString() const
 
 dbWireShapeType::dbWireShapeType(const char* value)
 {
-  if (streq(value, "NONE"))
+  if (strcasecmp(value, "NONE"))
     _value = NONE;
 
-  else if (streq(value, "RING"))
+  else if (strcasecmp(value, "RING"))
     _value = RING;
 
-  else if (streq(value, "PADRING"))
+  else if (strcasecmp(value, "PADRING"))
     _value = PADRING;
 
-  else if (streq(value, "BLOCKRING"))
+  else if (strcasecmp(value, "BLOCKRING"))
     _value = BLOCKRING;
 
-  else if (streq(value, "STRIPE"))
+  else if (strcasecmp(value, "STRIPE"))
     _value = STRIPE;
 
-  else if (streq(value, "FOLLOWPIN"))
+  else if (strcasecmp(value, "FOLLOWPIN"))
     _value = FOLLOWPIN;
 
-  else if (streq(value, "IOWIRE"))
+  else if (strcasecmp(value, "IOWIRE"))
     _value = IOWIRE;
 
-  else if (streq(value, "COREWIRE"))
+  else if (strcasecmp(value, "COREWIRE"))
     _value = COREWIRE;
 
-  else if (streq(value, "BLOCKWIRE"))
+  else if (strcasecmp(value, "BLOCKWIRE"))
     _value = BLOCKWIRE;
 
-  else if (streq(value, "BLOCKAGEWIRE"))
+  else if (strcasecmp(value, "BLOCKAGEWIRE"))
     _value = BLOCKAGEWIRE;
 
-  else if (streq(value, "FILLWIRE"))
+  else if (strcasecmp(value, "FILLWIRE"))
     _value = FILLWIRE;
 
-  else if (streq(value, "DRCFILL"))
+  else if (strcasecmp(value, "DRCFILL"))
     _value = DRCFILL;
 }
 
@@ -993,13 +977,13 @@ const char* dbWireShapeType::getString() const
 
 dbSiteClass::dbSiteClass(const char* value)
 {
-  if (streq(value, "NONE"))
+  if (strcasecmp(value, "NONE"))
     _value = NONE;
 
-  else if (streq(value, "PAD"))
+  else if (strcasecmp(value, "PAD"))
     _value = PAD;
 
-  else if (streq(value, "CORE"))
+  else if (strcasecmp(value, "CORE"))
     _value = CORE;
 }
 
@@ -1044,9 +1028,9 @@ const char* dbSiteClass::getString() const
 ///
 dbOnOffType::dbOnOffType(const char* instr)
 {
-  if (streq(instr, "ON"))
+  if (strcasecmp(instr, "ON"))
     _value = ON;
-  else if (streq(instr, "OFF"))
+  else if (strcasecmp(instr, "OFF"))
     _value = OFF;
   else
     _value = OFF;
@@ -1104,9 +1088,9 @@ bool dbOnOffType::isSet() const
 ///
 dbClMeasureType::dbClMeasureType(const char* instr)
 {
-  if (streq(instr, "MAXXY"))
+  if (strcasecmp(instr, "MAXXY"))
     _value = MAXXY;
-  else if (streq(instr, "EUCLIDEAN"))
+  else if (strcasecmp(instr, "EUCLIDEAN"))
     _value = EUCLIDEAN;
   else
     _value = EUCLIDEAN;
@@ -1134,7 +1118,7 @@ const char* dbClMeasureType::getString() const
 //
 dbRowDir::dbRowDir(const char* value)
 {
-  if (streq(value, "HORIZONTAL"))
+  if (strcasecmp(value, "HORIZONTAL"))
     _value = HORIZONTAL;
 
   else

@@ -472,6 +472,18 @@ bool lefin_parse(lefin* lef, const char* file_name)
   lefrSetLogFunction(errorCB);
   lefrSetWarningLogFunction(warningCB);
   lefrSetLineNumberFunction(lineNumberCB);
+
+  // Available callbacks not registered - FIXME??
+  // lefrSetDensityCbk
+  // lefrSetExtensionCbk
+  // lefrSetFixedMaskCbk
+  // lefrSetMacroClassTypeCbk
+  // lefrSetMacroFixedMaskCbk
+  // lefrSetMacroForeignCbk
+  // lefrSetMacroOriginCbk
+  // lefrSetMacroSiteCbk
+  // lefrSetMacroSizeCbk
+
   lefrSetDeltaNumberLines(1000000);
   lefrInit();
 

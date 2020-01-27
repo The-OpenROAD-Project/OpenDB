@@ -251,14 +251,14 @@ int _enableMemCount(ClientData data,
     case 0:
       AthSignalInstaller(SIGALRM, NULL);
       ualarm(0, 0);
-      notice(0, "Athena Memory Counter Disabled.\n");
+      notice(0, "OpenDB Memory Counter Disabled.\n");
       return TCL_OK;
 
     case 1:
       AthSignalInstaller(SIGALRM, AthMemCounter);
       notice(
           0,
-          "Athena Memory Counter installed in silent mode with interval %f.\n",
+          "OpenDB Memory Counter installed in silent mode with interval %f.\n",
           delay);
       break;
 
@@ -266,7 +266,7 @@ int _enableMemCount(ClientData data,
       AthSignalInstaller(SIGALRM, AthMemCounterp);
       notice(
           0,
-          "Athena Memory Counter installed in display mode with interval %f.\n",
+          "OpenDB Memory Counter installed in display mode with interval %f.\n",
           delay);
       break;
 

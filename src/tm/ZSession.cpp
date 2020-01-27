@@ -47,11 +47,7 @@ ZSession::ZSession(ZArgs* in, ZArgs* out) : ZTechModule<ZSession>(in, out)
 
   char address[32];
 
-#ifdef ATHENA_64BIT
   snprintf(address, 32, "0x%llx", (uint64) this);
-#else
-  snprintf(address, 32, "0x%x", (uint) this);
-#endif
 
   out_args->session(address);
 }

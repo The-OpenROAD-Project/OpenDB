@@ -30,7 +30,6 @@
 // ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 // POSSIBILITY OF SUCH DAMAGE.
 
-#include "dbTech.h"
 #include "db.h"
 #include "dbBox.h"
 #include "dbBoxItr.h"
@@ -40,6 +39,7 @@
 #include "dbPropertyItr.h"
 #include "dbTable.h"
 #include "dbTable.hpp"
+#include "dbTech.h"
 #include "dbTechLayer.h"
 #include "dbTechLayerAntennaRule.h"
 #include "dbTechLayerItr.h"
@@ -939,8 +939,12 @@ void dbTech::checkLayer(bool typeChk,
 {
   dbSet<dbTechLayer>           layers = getLayers();
   dbSet<dbTechLayer>::iterator itr;
-  if (!typeChk && !widthChk && !pitchChk && !spacingChk)
-    typeChk = widthChk = pitchChk = spacingChk = true;
+  if (!typeChk && !widthChk && !pitchChk && !spacingChk) {
+    typeChk    = true;
+    widthChk   = true;
+    pitchChk   = true;
+    spacingChk = true;
+  }
 
   dbTechLayer*    layer;
   dbTechLayerType type;

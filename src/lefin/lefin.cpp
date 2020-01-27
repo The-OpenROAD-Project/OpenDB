@@ -63,19 +63,6 @@ using LefDefParser::lefrSetRelaxMode;
 
 extern bool lefin_parse(lefin*, const char*);
 
-static bool streq(const char* s1, const char* s2)
-{
-  while (*s1 && *s2) {
-    if (toupper(*s1) != toupper(*s2))
-      return false;
-
-    ++s1;
-    ++s2;
-  }
-
-  return (*s1 == *s2);
-}
-
 lefin::lefin(dbDatabase* db, bool ignore_non_routing_layers)
     : _db(db),
       _tech(NULL),
@@ -695,8 +682,8 @@ void lefin::layer(lefiLayer* layer)
     cur_cut_rule = dbTechMinCutRule::create(l);
     from_above = from_below = false;
     if (layer->hasMinimumcutConnection(j)) {
-      from_above = streq(layer->minimumcutConnection(j), "FROMABOVE");
-      from_below = streq(layer->minimumcutConnection(j), "FROMBELOW");
+      from_above = strcasecmp(layer->minimumcutConnection(j), "FROMABOVE");
+      from_below = strcasecmp(layer->minimumcutConnection(j), "FROMBELOW");
     }
 
     cur_cut_rule->setMinimumCuts(layer->minimumcut(j),
@@ -1112,7 +1099,7 @@ void lefin::pin(lefiPin* pin)
   dbIoType io_type;
 
   if (pin->hasDirection()) {
-    if (streq(pin->direction(), "OUTPUT TRISTATE"))
+    if (strcasecmp(pin->direction(), "OUTPUT TRISTATE"))
       io_type = dbIoType(dbIoType::OUTPUT);
     else
       io_type = dbIoType(pin->direction());

@@ -30,13 +30,13 @@
 // ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 // POSSIBILITY OF SUCH DAMAGE.
 
-#include "dbTechMinCutOrAreaRule.h"
 #include "db.h"
 #include "dbDatabase.h"
 #include "dbTable.h"
 #include "dbTable.hpp"
 #include "dbTech.h"
 #include "dbTechLayer.h"
+#include "dbTechMinCutOrAreaRule.h"
 #include "lefout.h"
 
 namespace odb {
@@ -209,9 +209,11 @@ void dbTechMinCutRule::setMinimumCuts(uint numcuts,
   _lsm->_cuts  = numcuts;
   _lsm->_width = width;
 
-  if (above_only && below_only)  // For default encoding, rule applies from both
-                                 // above and below
-    above_only = below_only = false;
+  if (above_only && below_only) {  // For default encoding, rule applies from
+                                   // both above and below
+    above_only = false;
+    below_only = false;
+  }
 
   if (above_only)
     _lsm->_flags._rule = MINIMUM_CUT_ABOVE;
@@ -263,7 +265,8 @@ void dbTechMinCutRule::setLengthForCuts(uint length, uint within)
 
 void dbTechMinCutRule::writeLef(lefout& writer) const
 {
-  uint numcuts = 0, cut_width = 0;
+  uint numcuts   = 0;
+  uint cut_width = 0;
   getMinimumCuts(numcuts, cut_width);
   fprintf(writer.out(),
           "    MINIMUMCUT %d  WIDTH %g ",

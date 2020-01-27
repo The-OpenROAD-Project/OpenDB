@@ -95,7 +95,11 @@ inline _dbTechLayerSpacingRule::_dbTechLayerSpacingRule(_dbDatabase*)
   _flags._rule         = TechLayerSpacingRule::DEFAULT;
   _flags._spare_bits   = 0;
   _spacing             = 0;
-  _length_or_influence = _r1min = _r1max = _r2min = _r2max = 0;
+  _length_or_influence = 0;
+  _r1min               = 0;
+  _r1max               = 0;
+  _r2min               = 0;
+  _r2max               = 0;
 }
 
 inline _dbTechLayerSpacingRule::~_dbTechLayerSpacingRule()
@@ -137,7 +141,9 @@ inline _dbTechV55InfluenceEntry::_dbTechV55InfluenceEntry(
 
 inline _dbTechV55InfluenceEntry::_dbTechV55InfluenceEntry(_dbDatabase* db)
 {
-  _width = _within = _spacing = 0;
+  _width   = 0;
+  _within  = 0;
+  _spacing = 0;
 }
 
 inline _dbTechV55InfluenceEntry::~_dbTechV55InfluenceEntry()

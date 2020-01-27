@@ -585,8 +585,10 @@ bool dbITerm::getAvgXY(int* x, int* y)
 {
   dbMTerm* mterm = getMTerm();
   int      nn    = 0;
-  double   xx = 0.0, yy = 0.0;
-  int      px, py;
+  double   xx    = 0.0;
+  double   yy    = 0.0;
+  int      px;
+  int      py;
   dbInst*  inst = getInst();
   inst->getOrigin(px, py);
   adsPoint     origin = adsPoint(px, py);

@@ -471,7 +471,8 @@ void dbBox::getViaBoxes(std::vector<dbShape>& shapes)
 {
   _dbBox* box = (_dbBox*) this;
 
-  int x = 0, y = 0;  // dimitris_fix: compiler warming
+  int x = 0;
+  int y = 0;  // dimitris_fix: compiler warming
   box->getViaXY(x, y);
 
   dbSet<dbBox> boxes;

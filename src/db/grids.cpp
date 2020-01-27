@@ -996,7 +996,7 @@ bool Ath__track::place(Ath__wire* w, int markIndex1, int markIndex2)
     return true;
   }
 
-  Ath__wire* e    = _marker[markIndex1];
+  Ath__wire* e = _marker[markIndex1];
   for (; e != NULL; e = e->_next) {
     if (w->_xy < e->_xy) {
       continue;
@@ -1898,20 +1898,20 @@ void Ath__grid::makeZuiObjects(Ath__zui* zui)
     if (_blockedTrackTable[ii] > 0)
       continue;
 
-    //int ll[2];
-    //int ur[2];
+    // int ll[2];
+    // int ur[2];
 
-    //ll[_dir] = getTrackHeight(ii);
+    // ll[_dir] = getTrackHeight(ii);
 
-    //uint width = tr->_width;
-    //ur[_dir]   = ll[_dir] + width;
+    // uint width = tr->_width;
+    // ur[_dir]   = ll[_dir] + width;
 
     for (uint k = 0; k < 4; k++) {
       for (Ath__wire* w = tr->_marker[k]; w != NULL; w = w->_next) {
-        //int d = (_dir > 0) ? 0 : 1;
+        // int d = (_dir > 0) ? 0 : 1;
 
         // ll[d] = _start + w->_xy * width;
-        //ur[d] = ll[d] + w->_len * width;
+        // ur[d] = ll[d] + w->_len * width;
 
         // zui->addBox(w->_box->getOwner(), Ath_type__bus, 0,0, w->_box->_layer,
         /*zui->addBox(w->_id, Ath_box__bus, Ath_hier__tnet, w->_box->_layer,
@@ -3112,8 +3112,8 @@ Ath__wire* Ath__grid::makeWire(Ath__box* box,
 
   // uint xy1 = 0;
   // uint xy2 = _end / _width;
-  *m1      = 0;
-  *m2      = 3;
+  *m1 = 0;
+  *m2 = 3;
   // if (fullTrack == 0) {
   //   xy1 = getXYbyWidth(ll[d], m1);
   //   xy2 = getXYbyWidth(ur[d], m2);
@@ -3162,8 +3162,8 @@ Ath__wire* Ath__grid::makeWireCut(Ath__box* box,
 
   // int xy1 = 0;
   // int xy2 = _end / _width;
-  *m1     = 0;
-  *m2     = 3;
+  *m1 = 0;
+  *m2 = 3;
   // if (cutFlag == 0)  // cut Low
   //   xy1 = getXYbyWidth(_start + _trackFilledCnt * _width, m1);
   // else
@@ -3185,8 +3185,8 @@ Ath__wire* Ath__grid::makeWireExt(Ath__box* box,
 
   // int xy1 = 0;
   // int xy2 = _end / _width;
-  *m1     = 0;
-  *m2     = 3;
+  *m1 = 0;
+  *m2 = 3;
   // if (extFlag == 0)  // cut Low
   //   xy1 = getXYbyWidth(height, m1);
   // else
@@ -3867,13 +3867,20 @@ void Ath__gridTable::dumpTrackCounts(FILE* fp)
   int        trn;
   uint       offbase;
   uint       liveCnt;
-  uint       talloc, tlive, toffbase, texpand, ttsubtn;
-  talloc = tlive = toffbase = texpand = ttsubtn = 0;
+  uint       talloc   = 0;
+  uint       tlive    = 0;
+  uint       toffbase = 0;
+  uint       texpand  = 0;
+  uint       ttsubtn  = 0;
   for (uint layer = 1; layer < _colCnt; layer++) {
     for (uint dir = 0; dir < _rowCnt; dir++) {
-      topBigTrack = topSubtNum = totalSubtNum = expTrackNum = 0;
-      offbase = liveCnt = 0;
-      tgrid             = _gridTable[dir][layer];
+      topBigTrack  = 0;
+      topSubtNum   = 0;
+      totalSubtNum = 0;
+      expTrackNum  = 0;
+      offbase      = 0;
+      liveCnt      = 0;
+      tgrid        = _gridTable[dir][layer];
       for (trn = 0; trn < (int) tgrid->_trackCnt; trn++) {
         if (tgrid->_trackTable[trn] == NULL)
           continue;
@@ -4197,8 +4204,9 @@ Ath__wire* Ath__gridTable::addBox(dbBox* bb, uint wtype, uint id)
   if (!getRowCol(bb->xMax(), bb->yMax(), &row2, &col2))
           return NULL;
 */
-  uint       row = 0, col = 0;
-  Ath__grid* g = _gridTable[row][col];
+  uint       row = 0;
+  uint       col = 0;
+  Ath__grid* g   = _gridTable[row][col];
 
   g->placeBox(bb, wtype, id);
 

@@ -30,8 +30,8 @@
 // ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 // POSSIBILITY OF SUCH DAMAGE.
 
-#include "dbWire.h"
 #include <algorithm>
+
 #include "db.h"
 #include "dbBlock.h"
 #include "dbBlockCallBackObj.h"
@@ -42,6 +42,7 @@
 #include "dbTable.hpp"
 #include "dbTechLayerRule.h"
 #include "dbVia.h"
+#include "dbWire.h"
 #include "dbWireOpcode.h"
 
 namespace odb {
@@ -432,7 +433,8 @@ void dbWire::shuffleWireSeg(dbNet** newNets, dbRSeg** new_rsegs)
   dbTechLayer** jlayer = (dbTechLayer**) calloc(wlen, sizeof(dbTechLayer*));
   // int xx, yy;
   // dimitri_fix
-  int xx = 0, yy = 0;
+  int xx = 0;
+  int yy = 0;
 
   int* jxx = (int*) calloc(wlen, sizeof(int));
   int* jyy = (int*) calloc(wlen, sizeof(int));
@@ -695,7 +697,8 @@ void dbWire::getShape(int shape_id, dbShape& shape)
 
       // dimitri_fix LOOK_AGAIN WirePoint pnt;
       WirePoint pnt;
-      pnt._x = 0, pnt._y = 0;
+      pnt._x = 0;
+      pnt._y = 0;
       getPrevPoint(
           tech, block, wire->_opcodes, wire->_data, shape_id, false, pnt);
       adsRect b;
@@ -722,7 +725,8 @@ void dbWire::getCoord(int jid, int& x, int& y)
   dbTech*  tech  = getDb()->getTech();
   // dimitri_fix LOOK_AGAIN WirePoint pnt;
   WirePoint pnt;
-  pnt._x = 0, pnt._y = 0;
+  pnt._x = 0;
+  pnt._y = 0;
   getPrevPoint(tech, block, wire->_opcodes, wire->_data, jid, false, pnt);
   x = pnt._x;
   y = pnt._y;

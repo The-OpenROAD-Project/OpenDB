@@ -30,8 +30,8 @@
 // ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 // POSSIBILITY OF SUCH DAMAGE.
 
-#include "dbNet.h"
 #include <algorithm>
+
 #include "db.h"
 #include "dbBTerm.h"
 #include "dbBTermItr.h"
@@ -49,6 +49,7 @@
 #include "dbInst.h"
 #include "dbJournal.h"
 #include "dbMTerm.h"
+#include "dbNet.h"
 #include "dbRSeg.h"
 #include "dbRSegItr.h"
 #include "dbSWire.h"
@@ -608,7 +609,7 @@ void set_symmetric_diff(dbDiff&                 diff,
 
 std::string dbNet::getName()
 {
-  _dbNet*  net = (_dbNet*) this;
+  _dbNet* net = (_dbNet*) this;
   return net->_name;
 }
 
@@ -2865,7 +2866,8 @@ dbNet::createTerms4SingleNet(int x1, int y1, int x2, int y2, dbTechLayer *inly)
   uint hwidth = fwidth/2;
 
   std::pair<dbBTerm *,dbBTerm *> retpr;
-  retpr.first = retpr.second = NULL;
+  retpr.first  = NULL;
+  retpr.second = NULL;
 
   std::string term_str(this->getName());
   term_str = term_str + "_BL";

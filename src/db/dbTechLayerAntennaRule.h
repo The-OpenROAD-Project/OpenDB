@@ -83,8 +83,10 @@ inline _ARuleFactor::_ARuleFactor(const _ARuleFactor& f)
 
 inline _ARuleFactor::_ARuleFactor()
 {
-  _factor = _factor_diffuse = 1.0;
-  _explicit = _explicit_diffuse = false;
+  _factor = 1.0;
+  _factor_diffuse = _factor;
+  _explicit = false;
+  _explicit_diffuse = _explicit;
 }
 
 inline _ARuleFactor::~_ARuleFactor()

@@ -87,7 +87,9 @@ inline _dbTechMinCutRule::_dbTechMinCutRule(_dbDatabase* db)
   _flags._cuts_length = 0;
   _flags._spare_bits  = 0;
   _cuts               = 0;
-  _width = _length = _within = 0;
+  _width              = 0;
+  _length             = 0;
+  _within             = 0;
 }
 
 inline _dbTechMinCutRule::~_dbTechMinCutRule()

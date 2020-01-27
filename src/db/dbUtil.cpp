@@ -1542,7 +1542,8 @@ std::pair<dbBTerm*, dbBTerm*> dbCreateNetUtil::createTerms4SingleNet(
     dbTechLayer* inly)
 {
   std::pair<dbBTerm*, dbBTerm*> retpr;
-  retpr.first = retpr.second = NULL;
+  retpr.first = NULL;
+  retpr.second = NULL;
 
   std::string term_str(net->getName());
   term_str        = term_str + "_BL";

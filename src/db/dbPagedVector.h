@@ -37,7 +37,6 @@
 #include "ads.h"
 #include "dbDiff.h"
 #include "dbStream.h"
-
 #include "logger.h"
 namespace odb {
 
@@ -150,13 +149,15 @@ unsigned int dbPagedVector<T, P, S>::getIdx(uint chunkSize, const T& ival)
 template <class T, const uint P, const uint S>
 void dbPagedVector<T, P, S>::freeIdx(uint idx)
 {
-  if (_freedIdxHead == -1)
-    _freedIdxHead = _freedIdxTail = idx;
-  else {
+  if (_freedIdxHead == -1) {
+    _freedIdxHead = idx;
+    _freedIdxTail = idx;
+  } else {
     unsigned int page   = (_freedIdxTail & ~(P - 1)) >> S;
     unsigned int offset = _freedIdxTail & (P - 1);
     uint*        fidxp  = (uint*) (&_pages[page][offset]);
-    *fidxp = _freedIdxTail = idx;
+    *fidxp              = idx;
+    _freedIdxTail       = idx;
   }
 }
 

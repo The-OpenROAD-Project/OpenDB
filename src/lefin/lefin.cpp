@@ -134,8 +134,7 @@ static void create_path_box(dbObject*    obj,
 {
   int x1, x2, y1, y2;
 
-  if ((cur_x == prev_x) && (cur_y == prev_y))  // single point
-  {
+  if ((cur_x == prev_x) && (cur_y == prev_y)) {  // single point
     x1 = cur_x - dw;
     y1 = cur_y - dw;
     x2 = cur_x + dw;
@@ -145,8 +144,7 @@ static void create_path_box(dbObject*    obj,
       dbBox::create((dbMPin*) obj, layer, x1, y1, x2, y2);
     else
       dbBox::create((dbMaster*) obj, layer, x1, y1, x2, y2);
-  } else if (cur_x == prev_x)  // vert. path
-  {
+  } else if (cur_x == prev_x) {  // vert. path
     x1 = cur_x - dw;
     x2 = cur_x + dw;
 
@@ -162,8 +160,7 @@ static void create_path_box(dbObject*    obj,
       dbBox::create((dbMPin*) obj, layer, x1, y1, x2, y2);
     else
       dbBox::create((dbMaster*) obj, layer, x1, y1, x2, y2);
-  } else if (cur_y == prev_y)  // horiz. path
-  {
+  } else if (cur_y == prev_y) {  // horiz. path
     y1 = cur_y - dw;
     y2 = cur_y + dw;
 

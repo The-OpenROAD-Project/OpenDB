@@ -154,7 +154,7 @@ class lefin
   void arrayBegin(const char* name);
   void array(lefiArray* a);
   void arrayEnd(const char* name);
-  void busBitChars(const char* busBit);
+  int  busBitChars(const char* busBit);
   void caseSense(int caseSense);
   void clearance(const char* name);
   void divider(const char* name);

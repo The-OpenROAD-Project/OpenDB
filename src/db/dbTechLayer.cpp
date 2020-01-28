@@ -30,12 +30,12 @@
 // ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 // POSSIBILITY OF SUCH DAMAGE.
 
-#include "dbTechLayer.h"
 #include "db.h"
 #include "dbDatabase.h"
 #include "dbTable.h"
 #include "dbTable.hpp"
 #include "dbTech.h"
+#include "dbTechLayer.h"
 #include "dbTechLayerAntennaRule.h"
 #include "dbTechLayerSpacingRule.h"
 #include "dbTechMinCutOrAreaRule.h"
@@ -53,10 +53,10 @@ bool _dbTechLayer::operator==(const _dbTechLayer& rhs) const
   if (_flags._direction != rhs._flags._direction)
     return false;
 
-  if (_flags._has_max_width != rhs._flags._has_max_width)
+  if (_flags._minstep_type != rhs._flags._minstep_type)
     return false;
 
-  if (_flags._has_min_step != rhs._flags._has_min_step)
+  if (_flags._has_max_width != rhs._flags._has_max_width)
     return false;
 
   if (_flags._has_thickness != rhs._flags._has_thickness)
@@ -125,6 +125,15 @@ bool _dbTechLayer::operator==(const _dbTechLayer& rhs) const
   if (_max_width != rhs._max_width)
     return false;
 
+  if (_min_width != rhs._min_width)
+    return false;
+
+  if (_min_step_max_length != rhs._min_step_max_length)
+    return false;
+
+  if (_min_step_max_edges != rhs._min_step_max_edges)
+    return false;
+
   if (_pt._width != rhs._pt._width)
     return false;
 
@@ -189,8 +198,8 @@ void _dbTechLayer::differences(dbDiff&             diff,
   DIFF_BEGIN
   DIFF_FIELD(_flags._type);
   DIFF_FIELD(_flags._direction);
+  DIFF_FIELD(_flags._minstep_type);
   DIFF_FIELD(_flags._has_max_width);
-  DIFF_FIELD(_flags._has_min_step);
   DIFF_FIELD(_flags._has_thickness);
   DIFF_FIELD(_flags._has_area);
   DIFF_FIELD(_flags._has_protrusion);
@@ -213,7 +222,9 @@ void _dbTechLayer::differences(dbDiff&             diff,
   DIFF_FIELD(_thickness);
   DIFF_FIELD(_min_step);
   DIFF_FIELD(_max_width);
-  DIFF_FIELD(_max_width);
+  DIFF_FIELD(_min_width);
+  DIFF_FIELD(_min_step_max_length);
+  DIFF_FIELD(_min_step_max_edges);
   DIFF_FIELD(_pt._length);
   DIFF_FIELD(_pt._from_width);
   DIFF_FIELD(_name);
@@ -237,8 +248,8 @@ void _dbTechLayer::out(dbDiff& diff, char side, const char* field) const
   DIFF_OUT_BEGIN
   DIFF_OUT_FIELD(_flags._type);
   DIFF_OUT_FIELD(_flags._direction);
+  DIFF_OUT_FIELD(_flags._minstep_type);
   DIFF_OUT_FIELD(_flags._has_max_width);
-  DIFF_OUT_FIELD(_flags._has_min_step);
   DIFF_OUT_FIELD(_flags._has_thickness);
   DIFF_OUT_FIELD(_flags._has_area);
   DIFF_OUT_FIELD(_flags._has_protrusion);
@@ -261,7 +272,9 @@ void _dbTechLayer::out(dbDiff& diff, char side, const char* field) const
   DIFF_OUT_FIELD(_thickness);
   DIFF_OUT_FIELD(_min_step);
   DIFF_OUT_FIELD(_max_width);
-  DIFF_OUT_FIELD(_max_width);
+  DIFF_OUT_FIELD(_min_width);
+  DIFF_OUT_FIELD(_min_step_max_length);
+  DIFF_OUT_FIELD(_min_step_max_edges);
   DIFF_OUT_FIELD(_pt._length);
   DIFF_OUT_FIELD(_pt._from_width);
   DIFF_OUT_FIELD(_name);
@@ -288,29 +301,39 @@ void _dbTechLayer::out(dbDiff& diff, char side, const char* field) const
 
 _dbTechLayer::_dbTechLayer(_dbDatabase* db)
 {
-  _flags._type      = dbTechLayerType::ROUTING;
-  _flags._direction = dbTechLayerDir::NONE;
-  _flags._has_area = _flags._has_thickness = 0;
-  _flags._has_min_step = _flags._has_max_width = 0;
-  _flags._has_protrusion                       = 0;
-  _flags._has_alias                            = 0;
-  _flags._has_xy_pitch                         = 0;
-  _flags._has_xy_offset                        = 0;
-  _flags._spare_bits                           = 0;
-  _pitch_x = _pitch_y = 0;
-  _offset_x = _offset_y = 0;
-  _width                = 0;
-  _spacing              = 0;
-  _resistance           = 0.0;
-  _capacitance          = 0.0;
-  _edge_capacitance     = 0.0;
-  _wire_extension       = 0;
-  _number               = 0;
-  _rlevel               = 0;
-  _area                 = 0.0;
-  _thickness = _min_step = 0;
-  _pt._width = _pt._length = _pt._from_width = 0;
-  _max_width                                 = MAX_INT;
+  _flags._type           = dbTechLayerType::ROUTING;
+  _flags._direction      = dbTechLayerDir::NONE;
+  _flags._minstep_type   = dbTechLayerMinStepType();
+  _flags._has_area       = 0;
+  _flags._has_thickness  = 0;
+  _flags._has_max_width  = 0;
+  _flags._has_protrusion = 0;
+  _flags._has_alias      = 0;
+  _flags._has_xy_pitch   = 0;
+  _flags._has_xy_offset  = 0;
+  _flags._spare_bits     = 0;
+  _pitch_x               = 0;
+  _pitch_y               = 0;
+  _offset_x              = 0;
+  _offset_y              = 0;
+  _width                 = 0;
+  _spacing               = 0;
+  _resistance            = 0.0;
+  _capacitance           = 0.0;
+  _edge_capacitance      = 0.0;
+  _wire_extension        = 0;
+  _number                = 0;
+  _rlevel                = 0;
+  _area                  = 0.0;
+  _thickness             = 0;
+  _min_step              = -1;
+  _pt._width             = 0;
+  _pt._length            = 0;
+  _pt._from_width        = 0;
+  _max_width             = MAX_INT;
+  _min_width             = 0;
+  _min_step_max_length   = -1;
+  _min_step_max_edges    = -1;
   _v55sp_length_idx.clear();
   _v55sp_width_idx.clear();
   _v55sp_spacing.clear();
@@ -369,7 +392,10 @@ _dbTechLayer::_dbTechLayer(_dbDatabase* db, const _dbTechLayer& l)
       _area(l._area),
       _thickness(l._thickness),
       _min_step(l._min_step),
+      _min_step_max_length(l._min_step_max_length),
+      _min_step_max_edges(l._min_step_max_edges),
       _max_width(l._max_width),
+      _min_width(l._min_width),
       _pt(l._pt),
       _name(NULL),
       _alias(NULL),
@@ -444,7 +470,10 @@ dbOStream& operator<<(dbOStream& stream, const _dbTechLayer& layer)
   stream << layer._area;
   stream << layer._thickness;
   stream << layer._min_step;
+  stream << layer._min_step_max_length;
+  stream << layer._min_step_max_edges;
   stream << layer._max_width;
+  stream << layer._min_width;
   stream << layer._pt._width;
   stream << layer._pt._length;
   stream << layer._pt._from_width;
@@ -488,7 +517,10 @@ dbIStream& operator>>(dbIStream& stream, _dbTechLayer& layer)
   stream >> layer._area;
   stream >> layer._thickness;
   stream >> layer._min_step;
+  stream >> layer._min_step_max_length;
+  stream >> layer._min_step_max_edges;
   stream >> layer._max_width;
+  stream >> layer._min_width;
   stream >> layer._pt._width;
   stream >> layer._pt._length;
   stream >> layer._pt._from_width;
@@ -576,7 +608,7 @@ void dbTechLayer::setAlias(const char* alias)
   ZALLOCATED(layer->_alias);
 }
 
-uint dbTechLayer::getWidth()
+uint dbTechLayer::getWidth() const
 {
   _dbTechLayer* layer = (_dbTechLayer*) this;
   return layer->_width;
@@ -688,7 +720,8 @@ void dbTechLayer::getMaxWideDRCRange(int& owidth, int& olength)
   _dbTechLayer*                 layer = (_dbTechLayer*) this;
   dbSet<dbTechLayerSpacingRule> v54rules;
 
-  owidth = olength = getWidth();
+  owidth  = getWidth();
+  olength = owidth;
 
   if (getV54SpacingRules(v54rules)) {
     dbSet<dbTechLayerSpacingRule>::iterator ritr;
@@ -696,8 +729,10 @@ void dbTechLayer::getMaxWideDRCRange(int& owidth, int& olength)
 
     for (ritr = v54rules.begin(); ritr != v54rules.end(); ++ritr) {
       if ((*ritr)->getRange(rmin, rmax)) {
-        if (rmin > (uint) owidth)
-          owidth = olength = rmin;
+        if (rmin > (uint) owidth) {
+          owidth  = rmin;
+          olength = rmin;
+        }
       }
     }
   }
@@ -716,7 +751,8 @@ void dbTechLayer::getMinWideDRCRange(int& owidth, int& olength)
   _dbTechLayer*                 layer = (_dbTechLayer*) this;
   dbSet<dbTechLayerSpacingRule> v54rules;
 
-  owidth = olength = getWidth();
+  owidth  = getWidth();
+  olength = owidth;
 
   if (getV54SpacingRules(v54rules)) {
     dbSet<dbTechLayerSpacingRule>::iterator ritr;
@@ -725,8 +761,10 @@ void dbTechLayer::getMinWideDRCRange(int& owidth, int& olength)
 
     for (ritr = v54rules.begin(); ritr != v54rules.end(); ++ritr) {
       if ((*ritr)->getRange(rmin, rmax)) {
-        if ((rmin < (uint) owidth) || !range_found)
-          owidth = olength = rmin;
+        if ((rmin < (uint) owidth) || !range_found) {
+          owidth  = rmin;
+          olength = rmin;
+        }
       }
     }
   }
@@ -1072,16 +1110,28 @@ void dbTechLayer::setMaxWidth(uint max_width)
   layer->_max_width            = max_width;
 }
 
+uint dbTechLayer::getMinWidth() const
+{
+  _dbTechLayer* layer = (_dbTechLayer*) this;
+  return layer->_min_width;
+}
+
+void dbTechLayer::setMinWidth(uint min_width)
+{
+  _dbTechLayer* layer = (_dbTechLayer*) this;
+  layer->_min_width   = min_width;
+}
+
 bool dbTechLayer::hasMinStep() const
 {
   _dbTechLayer* layer = (_dbTechLayer*) this;
-  return (layer->_flags._has_min_step);
+  return (layer->_min_step >= 0);
 }
 
 uint dbTechLayer::getMinStep() const
 {
   _dbTechLayer* layer = (_dbTechLayer*) this;
-  if (layer->_flags._has_min_step)
+  if (layer->_min_step >= 0)
     return layer->_min_step;
 
   return 0;  // Default
@@ -1089,9 +1139,8 @@ uint dbTechLayer::getMinStep() const
 
 void dbTechLayer::setMinStep(uint min_step)
 {
-  _dbTechLayer* layer         = (_dbTechLayer*) this;
-  layer->_flags._has_min_step = 1;
-  layer->_min_step            = min_step;
+  _dbTechLayer* layer = (_dbTechLayer*) this;
+  layer->_min_step    = min_step;
 }
 
 bool dbTechLayer::hasProtrusion() const
@@ -1158,9 +1207,10 @@ int dbTechLayer::getPitchY()
 
 void dbTechLayer::setPitch(int pitch)
 {
-  _dbTechLayer* layer = (_dbTechLayer*) this;
-  layer->_pitch_x = layer->_pitch_y = pitch;
-  layer->_flags._has_xy_pitch       = false;
+  _dbTechLayer* layer         = (_dbTechLayer*) this;
+  layer->_pitch_x             = pitch;
+  layer->_pitch_y             = pitch;
+  layer->_flags._has_xy_pitch = false;
 }
 
 void dbTechLayer::setPitchXY(int pitch_x, int pitch_y)
@@ -1197,9 +1247,10 @@ int dbTechLayer::getOffsetY()
 
 void dbTechLayer::setOffset(int offset)
 {
-  _dbTechLayer* layer = (_dbTechLayer*) this;
-  layer->_offset_x = layer->_offset_y = offset;
-  layer->_flags._has_xy_offset        = false;
+  _dbTechLayer* layer          = (_dbTechLayer*) this;
+  layer->_offset_x             = offset;
+  layer->_offset_y             = offset;
+  layer->_flags._has_xy_offset = false;
 }
 
 void dbTechLayer::setOffsetXY(int offset_x, int offset_y)
@@ -1226,6 +1277,54 @@ void dbTechLayer::setDirection(dbTechLayerDir direction)
 {
   _dbTechLayer* layer      = (_dbTechLayer*) this;
   layer->_flags._direction = direction.getValue();
+}
+
+dbTechLayerMinStepType dbTechLayer::getMinStepType() const
+{
+  _dbTechLayer* layer = (_dbTechLayer*) this;
+  return dbTechLayerMinStepType(layer->_flags._minstep_type);
+}
+
+void dbTechLayer::setMinStepType(dbTechLayerMinStepType type)
+{
+  _dbTechLayer* layer         = (_dbTechLayer*) this;
+  layer->_flags._minstep_type = type.getValue();
+}
+
+bool dbTechLayer::hasMinStepMaxLength() const
+{
+  _dbTechLayer* layer = (_dbTechLayer*) this;
+  return layer->_min_step_max_length >= 0;
+}
+
+uint dbTechLayer::getMinStepMaxLength() const
+{
+  _dbTechLayer* layer = (_dbTechLayer*) this;
+  return layer->_min_step_max_length;
+}
+
+void dbTechLayer::setMinStepMaxLength(uint length)
+{
+  _dbTechLayer* layer         = (_dbTechLayer*) this;
+  layer->_min_step_max_length = length;
+}
+
+bool dbTechLayer::hasMinStepMaxEdges() const
+{
+  _dbTechLayer* layer = (_dbTechLayer*) this;
+  return layer->_min_step_max_edges >= 0;
+}
+
+uint dbTechLayer::getMinStepMaxEdges() const
+{
+  _dbTechLayer* layer = (_dbTechLayer*) this;
+  return layer->_min_step_max_edges;
+}
+
+void dbTechLayer::setMinStepMaxEdges(uint edges)
+{
+  _dbTechLayer* layer         = (_dbTechLayer*) this;
+  layer->_min_step_max_edges = edges;
 }
 
 dbTechLayerType dbTechLayer::getType()

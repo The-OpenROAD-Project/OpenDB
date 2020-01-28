@@ -71,8 +71,8 @@ lefin::lefin(dbDatabase* db, bool ignore_non_routing_layers)
       _create_tech(false),
       _create_lib(false),
       _skip_obstructions(false),
-      _left_bus_delimeter(0),
-      _right_bus_delimeter(0),
+      _left_bus_delimeter('['),
+      _right_bus_delimeter(']'),
       _hier_delimeter(0),
       _layer_cnt(0),
       _master_cnt(0),
@@ -95,8 +95,8 @@ void lefin::init()
   _master              = NULL;
   _create_tech         = false;
   _create_lib          = false;
-  _left_bus_delimeter  = 0;
-  _right_bus_delimeter = 0;
+  _left_bus_delimeter  = '[';
+  _right_bus_delimeter = ']';
   _hier_delimeter      = 0;
   _layer_cnt           = 0;
   _master_cnt          = 0;
@@ -187,11 +187,10 @@ static void create_path_box(dbObject*    obj,
 bool lefin::addGeoms(dbObject* object, bool is_pin, lefiGeometries* geometry)
 {
   int          count = geometry->numItems();
-  int          i;
   dbTechLayer* layer = NULL;
   int          dw    = 0;
 
-  for (i = 0; i < count; i++) {
+  for (int i = 0; i < count; i++) {
     _master_modified = true;
 
     switch (geometry->itemType(i)) {
@@ -388,6 +387,13 @@ bool lefin::addGeoms(dbObject* object, bool is_pin, lefiGeometries* geometry)
         }
       }
 
+      // FIXME??
+      case lefiGeomUnknown: // error
+      case lefiGeomLayerExceptPgNetE:
+      case lefiGeomLayerMinSpacingE:
+      case lefiGeomLayerRuleWidthE:
+      case lefiGeomClassE:
+
       default:
         break;
     }
@@ -403,33 +409,32 @@ void lefin::createPolygon(dbObject*        object,
                           double           offset_x,
                           double           offset_y)
 {
-  std::vector<adsPoint> P;
-  int                   j;
+  std::vector<adsPoint> points;
 
-  for (j = 0; j < p->numPoints; ++j) {
+  for (int j = 0; j < p->numPoints; ++j) {
     int x = dbdist(p->x[j] + offset_x);
     int y = dbdist(p->y[j] + offset_y);
-    P.push_back(adsPoint(x, y));
+    points.push_back(adsPoint(x, y));
   }
 
   if (p->numPoints < 4)
     return;
 
-  if (P[0] == P[P.size() - 1])
-    P.pop_back();
+  if (points[0] == points[points.size() - 1])
+    points.pop_back();
 
   if (p->numPoints < 4)
     return;
 
-  if (!polygon_is_clockwise(P))
-    std::reverse(P.begin(), P.end());
+  if (!polygon_is_clockwise(points))
+    std::reverse(points.begin(), points.end());
 
-  std::vector<adsRect> R;
-  decompose_polygon(P, R);
+  std::vector<adsRect> rects;
+  decompose_polygon(points, rects);
 
   std::vector<adsRect>::iterator itr;
 
-  for (itr = R.begin(); itr != R.end(); ++itr) {
+  for (itr = rects.begin(); itr != rects.end(); ++itr) {
     adsRect& r = *itr;
 
     if (is_pin)
@@ -460,14 +465,21 @@ void lefin::arrayEnd(const char* name)
   /* Gate arrays not supported */
 }
 
-void lefin::busBitChars(const char* busBit)
+int lefin::busBitChars(const char* busBit)
 {
-  if ((busBit[0] != '\0') && (busBit[1] != '\0')) {
-    _left_bus_delimeter  = busBit[0];
-    _right_bus_delimeter = busBit[1];
-    if (_lib)
-      _lib->setBusDelimeters(_left_bus_delimeter, _right_bus_delimeter);
+  if (busBit[0] == '\0' || busBit[1] == '\0') {
+    odb::error(0, "invalid BUSBITCHARS (%s)\n", busBit);
+    return STOP_PARSE;
   }
+
+  _left_bus_delimeter  = busBit[0];
+  _right_bus_delimeter = busBit[1];
+
+  if (_lib) {
+    _lib->setBusDelimeters(_left_bus_delimeter, _right_bus_delimeter);
+  }
+
+  return PARSE_OK;
 }
 
 void lefin::caseSense(int caseSense)
@@ -482,8 +494,7 @@ void lefin::clearance(const char* name)
 
 void lefin::divider(const char* div)
 {
-  if (div[0] != '\0')
-    _hier_delimeter = div[0];
+  _hier_delimeter = div[0];
 }
 
 void lefin::noWireExt(const char* name)
@@ -566,13 +577,15 @@ void lefin::layer(lefiLayer* layer)
   if (layer->hasWidth())
     l->setWidth(dbdist(layer->width()));
 
+  if (layer->hasMinwidth())
+    l->setMinWidth(dbdist(layer->minwidth()));
+  else if (type == dbTechLayerType::ROUTING)
+    l->setMinWidth(l->getWidth());
+
   if (layer->hasPitch())
     l->setPitch(dbdist(layer->pitch()));
   else if (layer->hasXYPitch())
     l->setPitchXY(dbdist(layer->pitchX()), dbdist(layer->pitchY()));
-
-  if (layer->hasWidth())
-    l->setWidth(dbdist(layer->width()));
 
   if (layer->hasOffset())
     l->setOffset(dbdist(layer->offset()));
@@ -816,8 +829,18 @@ void lefin::layer(lefiLayer* layer)
   if (layer->hasMaxwidth())
     l->setMaxWidth(dbdist(layer->maxwidth()));
 
-  if (layer->hasMinstep())
+  if (layer->hasMinstep()) {
     l->setMinStep(dbdist(layer->minstep(0)));
+    if (layer->hasMinstepType(0)) {
+      l->setMinStepType(layer->minstepType(0));
+    }
+    if (layer->hasMinstepLengthsum(0)) {
+      l->setMinStepMaxLength(dbdist(layer->minstepLengthsum(0)));
+    }
+    if (layer->hasMinstepMaxedges(0)) {
+      l->setMinStepMaxEdges(layer->minstepMaxedges(0));
+    }
+  }
 
   if (layer->hasProtrusion())
     l->setProtrusion(dbdist(layer->protrusionWidth1()),

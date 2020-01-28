@@ -5742,7 +5742,7 @@ class dbTechLayer : public dbObject
   ///
   /// Get the minimum path-width.
   ///
-  uint getWidth();
+  uint getWidth() const;
   void setWidth(int width);
 
   ///
@@ -5858,12 +5858,29 @@ class dbTechLayer : public dbObject
   void setMaxWidth(uint max_width);
 
   ///
+  ///  Get/set min width parameter.
+  ///
+  uint getMinWidth() const;
+  void setMinWidth(uint max_width);
+
+  ///
   ///  Get/set MINSTEP parameter.  This interface is used when a
   ///  reasonable default exists.
   ///
-  bool hasMinStep() const;
-  uint getMinStep() const;
-  void setMinStep(uint min_step);
+  bool                   hasMinStep() const;
+  uint                   getMinStep() const;
+  void                   setMinStep(uint min_step);
+
+  dbTechLayerMinStepType getMinStepType() const;
+  void                   setMinStepType(dbTechLayerMinStepType type);
+
+  bool                   hasMinStepMaxLength() const;
+  uint                   getMinStepMaxLength() const;
+  void                   setMinStepMaxLength(uint length);
+
+  bool                   hasMinStepMaxEdges() const;
+  uint                   getMinStepMaxEdges() const;
+  void                   setMinStepMaxEdges(uint edges);
 
   ///
   ///  Get/set PROTRUSIONWIDTH parameter.  This interface is used when a

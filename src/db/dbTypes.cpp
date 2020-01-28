@@ -674,6 +674,57 @@ const char* dbTechLayerDir::getString() const
   return value;
 }
 
+dbTechLayerMinStepType::dbTechLayerMinStepType(const char* value)
+{
+  if (strcasecmp(value, "INSIDECORNER"))
+    _value = INSIDE_CORNER;
+
+  else if (strcasecmp(value, "OUTSIDECORNER"))
+    _value = OUTSIDE_CORNER;
+
+  else if (strcasecmp(value, "STEP"))
+    _value = STEP;
+
+  else
+    _value = OUTSIDE_CORNER;
+}
+
+dbTechLayerMinStepType::dbTechLayerMinStepType(Value value)
+{
+  _value = value;
+}
+
+dbTechLayerMinStepType::dbTechLayerMinStepType()
+{
+  _value = OUTSIDE_CORNER;
+}
+
+dbTechLayerMinStepType::dbTechLayerMinStepType(const dbTechLayerMinStepType& value)
+{
+  _value = value._value;
+}
+
+const char* dbTechLayerMinStepType::getString() const
+{
+  const char* value = "";
+
+  switch (_value) {
+    case INSIDE_CORNER:
+      value = "INSIDECORNER";
+      break;
+
+    case OUTSIDE_CORNER:
+      value = "OUTSIDECORNER";
+      break;
+
+    case STEP:
+      value = "STEP";
+      break;
+  }
+
+  return value;
+}
+
 dbBoxOwner::dbBoxOwner(const char* value)
 {
   if (strcasecmp(value, "UNKNOWN"))

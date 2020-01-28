@@ -60,17 +60,17 @@ class _dbTechLayer : public dbObject
 
   struct _LyFlags
   {
-    dbTechLayerType::Value _type : 4;
-    dbTechLayerDir::Value  _direction : 4;
-    uint                   _has_max_width : 1;
-    uint                   _has_min_step : 1;
-    uint                   _has_thickness : 1;
-    uint                   _has_area : 1;
-    uint                   _has_protrusion : 1;
-    uint                   _has_alias : 1;
-    uint                   _has_xy_pitch : 1;
-    uint                   _has_xy_offset : 1;
-    uint                   _spare_bits : 16;
+    dbTechLayerType::Value        _type : 4;
+    dbTechLayerDir::Value         _direction : 4;
+    dbTechLayerMinStepType::Value _minstep_type : 2;
+    uint                          _has_max_width : 1;
+    uint                          _has_thickness : 1;
+    uint                          _has_area : 1;
+    uint                          _has_protrusion : 1;
+    uint                          _has_alias : 1;
+    uint                          _has_xy_pitch : 1;
+    uint                          _has_xy_offset : 1;
+    uint                          _spare_bits : 15;
   } _flags;
 
   uint   _pitch_x;
@@ -87,8 +87,12 @@ class _dbTechLayer : public dbObject
   uint   _rlevel;
   double _area;
   uint   _thickness;
-  uint   _min_step;
   uint   _max_width;
+  int    _min_width;
+  int    _min_step;
+  int    _min_step_max_length;
+  int    _min_step_max_edges;
+  
   struct
   {  // Protrusion
     uint _width;

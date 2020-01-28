@@ -471,6 +471,60 @@ class dbTechLayerDir
 };
 
 ///
+/// Defines the type of min step rule
+///
+class dbTechLayerMinStepType
+{
+ public:
+  enum Value
+  {
+    INSIDE_CORNER,
+    OUTSIDE_CORNER,
+    STEP
+  };
+
+  ///
+  /// Create a dbTechLayerMinStepType instance with an explicit type.
+  /// The explicit type must be a string of one of the
+  ///  following values: "INSIDECORNER", "OUTSIDECORNER", "STEP"
+  ///
+  dbTechLayerMinStepType(const char* type);
+
+  ///
+  /// Create a dbTechLayerMinStepType instance with an explicit type.
+  ///
+  dbTechLayerMinStepType(Value value);
+
+  ///
+  /// Create a dbTechLayerMinStepType instance with value = "OUTSIDE_CORNER".
+  ///
+  dbTechLayerMinStepType();
+
+  ///
+  /// Copy constructor.
+  ///
+  dbTechLayerMinStepType(const dbTechLayerMinStepType& value);
+
+  ///
+  /// Returns the layer-direction.
+  ///
+  Value getValue() const { return _value; }
+
+  ///
+  /// Returns the layer-direction as a string.
+  ///
+  const char* getString() const;
+
+  ///
+  /// Cast operator
+  ///
+  operator Value() const { return _value; }
+
+ private:
+  Value _value;
+};
+
+///
 /// Defines the type of cell a master represents.
 ///
 class dbRowDir

@@ -50,11 +50,11 @@ endif()
 include(${SWIG_USE_FILE})
 
 option(BUILD_PYTHON "Build Python SWIG module" ON)
-if(!OPENROAD_BUILD AND BUILD_PYTHON)
+if(NOT OPENROAD_BUILD AND BUILD_PYTHON)
     add_subdirectory(src/swig/python)
 endif()
 
 option(BUILD_TCL "Build TCL SWIG module" ON)
-if(!OPENROAD_BUILD AND BUILD_TCL)
+if(NOT OPENROAD_BUILD AND BUILD_TCL)
     add_subdirectory(src/swig/tcl)
 endif()

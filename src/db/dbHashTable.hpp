@@ -203,7 +203,7 @@ T* dbHashTable<T>::find(const char* name)
   while (cur != 0) {
     T* entry = _obj_tbl->getPtr(cur);
 
-    if (strcmp(entry->_name, name))
+    if (strcmp(entry->_name, name) == 0)
       return entry;
 
     cur = entry->_next_entry;
@@ -226,7 +226,7 @@ int dbHashTable<T>::hasMember(const char* name)
   while (cur != 0) {
     T* entry = _obj_tbl->getPtr(cur);
 
-    if (strcmp(entry->_name, name))
+    if (strcmp(entry->_name, name) == 0)
       return true;
 
     cur = entry->_next_entry;

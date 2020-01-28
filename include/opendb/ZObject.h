@@ -30,8 +30,7 @@
 // ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 // POSSIBILITY OF SUCH DAMAGE.
 
-#ifndef ADS_ZOBJECT_H
-#define ADS_ZOBJECT_H
+#pragma once
 
 #include "ZComponents.h"
 #include "ZException.h"
@@ -236,4 +235,4 @@ class ZPtr
 
 }  // namespace odb
 
-#endif
+

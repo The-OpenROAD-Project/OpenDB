@@ -30,8 +30,7 @@
 // ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 // POSSIBILITY OF SUCH DAMAGE.
 
-#ifndef INST_H
-#define INST_H
+#pragma once
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -220,4 +219,4 @@ class Ath__instTable
   void         makeGrid(Ath__box* box, uint minCellWidth, uint minCellHeight);
 };
 
-#endif
+

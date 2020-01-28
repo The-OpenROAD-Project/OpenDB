@@ -30,8 +30,7 @@
 // ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 // POSSIBILITY OF SUCH DAMAGE.
 
-#ifndef ADS_DB_SET_H
-#define ADS_DB_SET_H
+#pragma once
 
 #include "dbIterator.h"
 
@@ -226,4 +225,4 @@ inline dbSetIterator<T> dbSetIterator<T>::operator++(int)
 #include "dbBlockSet.h"
 #include "dbCCSegSet.h"
 
-#endif
+

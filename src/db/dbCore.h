@@ -30,8 +30,7 @@
 // ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 // POSSIBILITY OF SUCH DAMAGE.
 
-#ifndef ADS_DB_CORE_H
-#define ADS_DB_CORE_H
+#pragma once
 
 ///
 /// This file contains the core objects that everything is
@@ -204,4 +203,4 @@ inline dbObjectPage* dbObject::getObjectPage() const
 
 }  // namespace odb
 
-#endif
+

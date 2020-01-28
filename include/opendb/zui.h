@@ -30,8 +30,7 @@
 // ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 // POSSIBILITY OF SUCH DAMAGE.
 
-#ifndef ZUI_H
-#define ZUI_H
+#pragma once
 
 #include <assert.h>
 #include <stdio.h>
@@ -514,4 +513,4 @@ class Ath__zui
   uint tcl_file_append(uint lineLimit);
 };
 
-#endif
+

@@ -35,10 +35,7 @@
 #include "dbDatabase.h"
 #include "dbInst.h"
 #include "dbNet.h"
-
-#ifndef ADS_DB_PRINTCONTROL_H
 #include "dbPrintControl.h"
-#endif
 
 namespace odb {
 

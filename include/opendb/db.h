@@ -30,8 +30,7 @@
 // ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 // POSSIBILITY OF SUCH DAMAGE.
 
-#ifndef ADS_DB_H
-#define ADS_DB_H
+#pragma once
 
 #include <list>
 #include <set>
@@ -6858,4 +6857,4 @@ class dbViaParams : private _dbViaParams
 
 }  // namespace odb
 
-#endif
+

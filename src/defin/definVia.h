@@ -30,8 +30,7 @@
 // ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 // POSSIBILITY OF SUCH DAMAGE.
 
-#ifndef ADS_DEFIN_VIA_H
-#define ADS_DEFIN_VIA_H
+#pragma once
 
 #include "ads.h"
 #include "db.h"
@@ -70,4 +69,4 @@ class definVia : public definIVia, public definBase
 
 }  // namespace odb
 
-#endif
+

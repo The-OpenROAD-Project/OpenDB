@@ -30,8 +30,7 @@
 // ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 // POSSIBILITY OF SUCH DAMAGE.
 
-#ifndef DBGDEFINES_H
-#define DBGDEFINES_H
+#pragma once
 
 #include "ads.h"
 
@@ -59,4 +58,4 @@ class debugMsgFilter
 
 }  // namespace odb
 
-#endif
+

@@ -36,8 +36,7 @@
 // Author: W. Scott
 //
 
-#ifndef ARNOLD1_H
-#define ARNOLD1_H
+#pragma once
 
 #include "ads.h"
 
@@ -212,4 +211,4 @@ class ar1_reduce
 };
 
 }  // namespace odb
-#endif
+

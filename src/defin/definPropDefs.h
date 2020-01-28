@@ -30,8 +30,7 @@
 // ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 // POSSIBILITY OF SUCH DAMAGE.
 
-#ifndef ADS_DEFIN_PROP_DEFS_H
-#define ADS_DEFIN_PROP_DEFS_H
+#pragma once
 
 #include "definBase.h"
 #include "definIPropDefs.h"
@@ -85,4 +84,4 @@ class definPropDefs : public definIPropDefs, public definBase
 
 }  // namespace odb
 
-#endif
+

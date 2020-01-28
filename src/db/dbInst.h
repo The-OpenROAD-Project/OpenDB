@@ -30,19 +30,13 @@
 // ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 // POSSIBILITY OF SUCH DAMAGE.
 
-#ifndef ADS_DB_INST_H
-#define ADS_DB_INST_H
+#pragma once
 
 #include "ads.h"
 #include "dbId.h"
 #include "dbObject.h"
 #include "dbTypes.h"
-
-#ifndef ADS_DB_VECTOR_H
 #include "dbVector.h"  // disconnect the child-iterm
-
-#endif
-
 #include "dbDatabase.h"
 
 namespace odb {
@@ -118,4 +112,4 @@ dbIStream& operator>>(dbIStream& stream, _dbInst& inst);
 
 }  // namespace odb
 
-#endif
+

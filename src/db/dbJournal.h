@@ -30,8 +30,7 @@
 // ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 // POSSIBILITY OF SUCH DAMAGE.
 
-#ifndef ADS_DB_JOURNAL_H
-#define ADS_DB_JOURNAL_H
+#pragma once
 
 #include "ads.h"
 #include "dbJournalLog.h"
@@ -182,4 +181,4 @@ dbOStream& operator<<(dbOStream& stream, const dbJournal& jrnl);
 
 }  // namespace odb
 
-#endif
+

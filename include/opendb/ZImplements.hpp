@@ -30,8 +30,7 @@
 // ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 // POSSIBILITY OF SUCH DAMAGE.
 
-#ifndef ADS_ZIMPLEMENTS_HPP
-#define ADS_ZIMPLEMENTS_HPP
+#pragma once
 
 #include "ads.h"
 #include "ZSession.h"
@@ -86,4 +85,4 @@ int ZImplements<CLASS, INTERFACE>::QueryInterface(ZInterfaceID iid, void** p)
 
 }  // namespace odb
 
-#endif
+

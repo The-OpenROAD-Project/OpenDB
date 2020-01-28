@@ -30,8 +30,7 @@
 // ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 // POSSIBILITY OF SUCH DAMAGE.
 
-#ifndef ADS_ZCOMPONENTS_H
-#define ADS_ZCOMPONENTS_H
+#pragma once
 
 #include "ads.h"
 
@@ -78,4 +77,4 @@ enum ZInterfaceID
 
 }  // namespace odb
 
-#endif
+

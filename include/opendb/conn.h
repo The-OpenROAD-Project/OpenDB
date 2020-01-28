@@ -30,8 +30,7 @@
 // ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 // POSSIBILITY OF SUCH DAMAGE.
 
-#ifndef CONN_H
-#define CONN_H
+#pragma once
 
 #include "array1.h"
 #include "array2d.h"
@@ -332,4 +331,4 @@ class Ath__qBus
   Ath__p2pConn* get(uint ii);
 };
 
-#endif
+

@@ -30,8 +30,7 @@
 // ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 // POSSIBILITY OF SUCH DAMAGE.
 
-#ifndef ADS_DB_MAP_HPP
-#define ADS_DB_MAP_HPP
+#pragma once
 
 #include "ZException.h"
 
@@ -101,4 +100,4 @@ inline D& dbMap<T, D>::operator[](T* object)
 
 }  // namespace odb
 
-#endif
+

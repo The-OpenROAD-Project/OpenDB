@@ -35,6 +35,8 @@
 ** Author: Mattias Hembruch
 */
 
+#pragma once
+
 #include <ctype.h>
 #include <limits.h>
 #include <stdio.h>

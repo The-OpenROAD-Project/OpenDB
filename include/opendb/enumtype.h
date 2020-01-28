@@ -30,8 +30,7 @@
 // ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 // POSSIBILITY OF SUCH DAMAGE.
 
-#ifndef ENUMTYPE_H
-#define ENUMTYPE_H
+#pragma once
 
 #include <assert.h>
 #include <stdio.h>
@@ -71,4 +70,4 @@ class Ath__associateArray
   void getNameList(char* buff);
 };
 
-#endif
+

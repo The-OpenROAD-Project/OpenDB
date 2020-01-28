@@ -30,8 +30,7 @@
 // ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 // POSSIBILITY OF SUCH DAMAGE.
 
-#ifndef ADS_DCR_ZGUIDB_H
-#define ADS_DCR_ZGUIDB_H
+#pragma once
 
 #include "IZgui.h"
 
@@ -73,4 +72,4 @@ class ZguiDb : public ZImplements<ZguiDb, IZgui>
 
 }  // namespace odb
 
-#endif
+

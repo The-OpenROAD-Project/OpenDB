@@ -30,8 +30,7 @@
 // ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 // POSSIBILITY OF SUCH DAMAGE.
 
-#ifndef SY_LIB_H
-#define SY_LIB_H
+#pragma once
 
 #include "ads.h"
 #include "db.h"
@@ -251,4 +250,4 @@ sy_library* liberty_read(FILE* fp, char* file);
 void sy_lib_set_power(sy_library* lib, int power);
 
 }  // namespace odb
-#endif
+

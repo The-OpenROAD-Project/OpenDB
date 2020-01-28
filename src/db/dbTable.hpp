@@ -30,28 +30,16 @@
 // ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 // POSSIBILITY OF SUCH DAMAGE.
 
+#pragma once
+
 #include <string.h>
 #include <new>
 
-#ifndef ADS_DB_DIFF_H
 #include "dbDiff.h"
-#endif
-
-#ifndef ADS_ZEXCEPTION_H
 #include "ZException.h"
-#endif
-
-#ifndef ADS_DB_TABLE_H
 #include "dbTable.h"
-#endif
-
-#ifndef ADS_DB_STREAM_H
 #include "dbStream.h"
-#endif
-
-#ifndef ADS_DB_DATABASE_H
 #include "dbDatabase.h"
-#endif
 
 //#define ADS_DB_CHECK_STREAM
 

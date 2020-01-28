@@ -30,8 +30,7 @@
 // ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 // POSSIBILITY OF SUCH DAMAGE.
 
-#ifndef ADS_ZFACTORY_H
-#define ADS_ZFACTORY_H
+#pragma once
 
 #include "ZObject.h"
 #include "ads.h"
@@ -120,4 +119,4 @@ class ZFactoryImpl : public ZFactory
 
 }  // namespace odb
 
-#endif
+

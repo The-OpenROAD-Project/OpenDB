@@ -30,8 +30,7 @@
 // ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 // POSSIBILITY OF SUCH DAMAGE.
 
-#ifndef ADS_DEFIN_ROW_H
-#define ADS_DEFIN_ROW_H
+#pragma once
 
 #include <string.h>
 #include <map>
@@ -87,4 +86,4 @@ class definRow : public definIRow, public definBase
 
 }  // namespace odb
 
-#endif
+

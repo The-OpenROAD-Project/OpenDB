@@ -30,8 +30,7 @@
 // ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 // POSSIBILITY OF SUCH DAMAGE.
 
-#ifndef ADS_TM_H
-#define ADS_TM_H
+#pragma once
 
 #ifndef _TCL
 #include <tcl.h>
@@ -238,4 +237,4 @@ class ZTechModule : public ZInterface
 
 }  // namespace odb
 
-#endif
+

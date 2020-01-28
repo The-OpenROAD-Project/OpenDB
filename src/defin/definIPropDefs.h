@@ -30,8 +30,7 @@
 // ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 // POSSIBILITY OF SUCH DAMAGE.
 
-#ifndef ADS_DEFIN_IPROP_DEFS_H
-#define ADS_DEFIN_IPROP_DEFS_H
+#pragma once
 
 #include "definTypes.h"
 
@@ -49,4 +48,4 @@ class definIPropDefs
   virtual void endDefinitions() {}
 };
 
-#endif
+

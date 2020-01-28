@@ -30,8 +30,7 @@
 // ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 // POSSIBILITY OF SUCH DAMAGE.
 
-#ifndef ADS_DB_PAGED_VECTOR_H
-#define ADS_DB_PAGED_VECTOR_H
+#pragma once
 
 #include "ZException.h"
 #include "ads.h"
@@ -384,4 +383,4 @@ inline dbIStream& operator>>(dbIStream& stream, dbPagedVector<T, P, S>& v)
 
 }  // namespace odb
 
-#endif
+

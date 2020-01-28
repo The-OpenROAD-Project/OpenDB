@@ -30,8 +30,7 @@
 // ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 // POSSIBILITY OF SUCH DAMAGE.
 
-#ifndef ADS_DB_ROUTE_TREE_H
-#define ADS_DB_ROUTE_TREE_H
+#pragma once
 
 #include <vector>
 
@@ -247,4 +246,4 @@ inline dbRtSegment* dbRtTree::createSegment(dbRtNode*         src,
 
 }  // namespace odb
 
-#endif
+

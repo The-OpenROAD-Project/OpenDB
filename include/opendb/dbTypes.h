@@ -30,8 +30,7 @@
 // ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 // POSSIBILITY OF SUCH DAMAGE.
 
-#ifndef ADS_DB_TYPES_H
-#define ADS_DB_TYPES_H
+#pragma once
 
 #include "ads.h"
 
@@ -1074,4 +1073,4 @@ class Ads_NoCopy
 
 }  // namespace odb
 
-#endif
+

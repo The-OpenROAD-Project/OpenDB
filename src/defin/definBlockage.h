@@ -30,8 +30,7 @@
 // ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 // POSSIBILITY OF SUCH DAMAGE.
 
-#ifndef ADS_DEFIN_BLOCKAGE_H
-#define ADS_DEFIN_BLOCKAGE_H
+#pragma once
 
 #include "ads.h"
 #include "definBase.h"
@@ -81,4 +80,4 @@ class definBlockage : public definIBlockage, public definBase
 
 }  // namespace odb
 
-#endif
+

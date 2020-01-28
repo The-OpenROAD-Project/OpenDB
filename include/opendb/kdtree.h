@@ -33,8 +33,8 @@
 /*-------------------------------------------------------------
 ////	AUTHOR: SANJEEV MAHAJAN
 ---------------------------------------------------------------*/
-#ifndef _KDTREE_H
-#define _KDTREE_H
+#pragma once
+
 #include "darr.h"
 #include "hash.h"
 enum Cuttype
@@ -122,4 +122,4 @@ class Kdtree
   void  printNodeRec(Node* nd);
 };
 
-#endif
+

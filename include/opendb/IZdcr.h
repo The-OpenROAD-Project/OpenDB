@@ -30,8 +30,7 @@
 // ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 // POSSIBILITY OF SUCH DAMAGE.
 
-#ifndef ADS_DCR_IZDCR_H
-#define ADS_DCR_IZDCR_H
+#pragma once
 
 #include "ZObject.h"
 #include "ads.h"
@@ -215,4 +214,4 @@ class IZdcr : public ZObject
 
 }  // namespace odb
 
-#endif
+

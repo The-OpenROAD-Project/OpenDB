@@ -30,8 +30,7 @@
 // ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 // POSSIBILITY OF SUCH DAMAGE.
 
-#ifndef ADS_DB_JOURNAL_LOG_H
-#define ADS_DB_JOURNAL_LOG_H
+#pragma once
 
 #include "ads.h"
 #include "dbPagedVector.h"
@@ -91,4 +90,4 @@ class dbJournalLog
 
 }  // namespace odb
 
-#endif
+

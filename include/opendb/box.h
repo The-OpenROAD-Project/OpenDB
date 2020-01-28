@@ -30,8 +30,7 @@
 // ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 // POSSIBILITY OF SUCH DAMAGE.
 
-#ifndef BOX_H
-#define BOX_H
+#pragma once
 
 #include <stdio.h>
 #include <string.h>
@@ -132,4 +131,4 @@ class Ath__trans
   int  getY(int y);
 };
 
-#endif
+

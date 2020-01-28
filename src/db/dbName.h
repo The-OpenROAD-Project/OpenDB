@@ -30,8 +30,7 @@
 // ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 // POSSIBILITY OF SUCH DAMAGE.
 
-#ifndef ADS_DB_NAME_H
-#define ADS_DB_NAME_H
+#pragma once
 
 #include "ads.h"
 #include "dbId.h"
@@ -74,4 +73,4 @@ dbIStream& operator>>(dbIStream& stream, _dbName& n);
 
 }  // namespace odb
 
-#endif
+

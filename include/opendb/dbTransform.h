@@ -30,8 +30,7 @@
 // ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 // POSSIBILITY OF SUCH DAMAGE.
 
-#ifndef ADS_DB_TRANSFORM_H
-#define ADS_DB_TRANSFORM_H
+#pragma once
 
 #include "ads.h"
 #include "dbTypes.h"
@@ -131,4 +130,4 @@ inline void dbTransform::invert()
 
 }  // namespace odb
 
-#endif
+

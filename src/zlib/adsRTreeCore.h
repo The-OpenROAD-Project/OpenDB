@@ -30,8 +30,7 @@
 // ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 // POSSIBILITY OF SUCH DAMAGE.
 
-#ifndef ADS_RTREE_CORE_H
-#define ADS_RTREE_CORE_H
+#pragma once
 
 #include "ads.h"
 #include "adsAllocator.h"
@@ -120,4 +119,4 @@ class adsRTreeCore
 
 }  // namespace odb
 
-#endif
+

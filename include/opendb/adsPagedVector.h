@@ -30,8 +30,7 @@
 // ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 // POSSIBILITY OF SUCH DAMAGE.
 
-#ifndef ADS_DB_PAGED_VECTOR_H
-#define ADS_DB_PAGED_VECTOR_H
+#pragma once
 
 #include "ads.h"
 
@@ -420,4 +419,4 @@ void adsPagedVector<T, P, S>::push_back(const T& item)
 
 }  // namespace odb
 
-#endif
+

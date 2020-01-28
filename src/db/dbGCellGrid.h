@@ -30,8 +30,7 @@
 // ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 // POSSIBILITY OF SUCH DAMAGE.
 
-#ifndef ADS_DB_GCELL_GRID_H
-#define ADS_DB_GCELL_GRID_H
+#pragma once
 
 #include "ads.h"
 #include "dbId.h"
@@ -117,4 +116,4 @@ inline dbIStream& operator>>(dbIStream& stream, _dbGCellGrid& grid)
 
 }  // namespace odb
 
-#endif
+

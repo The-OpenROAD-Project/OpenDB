@@ -49,14 +49,12 @@ namespace odb {
         // bits. There are 3 bits for various flags.
 
 //
-// opcodes                            BIT: 7 6 5 4 3 2 1 0 ---- (W W W) ==
-// WOP_<WIRE_TYPE>,
-//                                                         T ==
-//                                                         WOP_VIA_EXIT_TOP, E
-//                                                         == WOP_EXTENSION, D
-//                                                         == WOP_DEFAULT_WIDTH,
-//                                                         B == WOP_BLOCK_RULE
-//                                                         X == unused bit
+// opcodes             BIT: 7 6 5 4 3 2 1 0 ---- (W W W) ==  WOP_<WIRE_TYPE>,
+//                                               T == WOP_VIA_EXIT_TOP,
+//                                               E == WOP_EXTENSION,
+//                                               D == WOP_DEFAULT_WIDTH,
+//                                               B == WOP_BLOCK_RULE
+//                                               X == unused bit
 #define WOP_PATH 0      //  W W W X 0 0 0 0 :  operand = layer-id
 #define WOP_SHORT 1     //  W W W X 0 0 0 1 :  operand = junction-id
 #define WOP_JUNCTION 2  //  W W W X 0 0 1 0 :  operand = junction-id

@@ -694,8 +694,8 @@ void lefin::layer(lefiLayer* layer)
     cur_cut_rule = dbTechMinCutRule::create(l);
     from_above = from_below = false;
     if (layer->hasMinimumcutConnection(j)) {
-      from_above = strcasecmp(layer->minimumcutConnection(j), "FROMABOVE");
-      from_below = strcasecmp(layer->minimumcutConnection(j), "FROMBELOW");
+      from_above = strcasecmp(layer->minimumcutConnection(j), "FROMABOVE") == 0;
+      from_below = strcasecmp(layer->minimumcutConnection(j), "FROMBELOW") == 0;
     }
 
     cur_cut_rule->setMinimumCuts(layer->minimumcut(j),
@@ -1120,7 +1120,7 @@ void lefin::pin(lefiPin* pin)
   dbIoType io_type;
 
   if (pin->hasDirection()) {
-    if (strcasecmp(pin->direction(), "OUTPUT TRISTATE"))
+    if (strcasecmp(pin->direction(), "OUTPUT TRISTATE") == 0)
       io_type = dbIoType(dbIoType::OUTPUT);
     else
       io_type = dbIoType(pin->direction());

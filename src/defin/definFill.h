@@ -30,8 +30,7 @@
 // ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 // POSSIBILITY OF SUCH DAMAGE.
 
-#ifndef ADS_DEFIN_FILL_H
-#define ADS_DEFIN_FILL_H
+#pragma once
 
 #include "ads.h"
 #include "definBase.h"
@@ -59,4 +58,4 @@ class definFill : public definIFill, public definBase
 
 }  // namespace odb
 
-#endif
+

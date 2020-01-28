@@ -35,8 +35,8 @@
 /////   AUTHOR: SANJEEV MAHAJAN
 _________________________________________________________________*/
 
-#ifndef _DGRAPH_H
-#define _DGRAPH_H
+#pragma once
+
 #include <stdio.h>
 #include <stdlib.h>
 #include "hash.h"
@@ -96,4 +96,4 @@ class Dgraph
   Hash<Dedge*, int>*            _curnei;
   Darr<int>                     sources;
 };
-#endif
+

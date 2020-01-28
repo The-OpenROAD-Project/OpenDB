@@ -30,8 +30,7 @@
 // ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 // POSSIBILITY OF SUCH DAMAGE.
 
-#ifndef ADS_DB_TECH_LAYERRULE_H
-#define ADS_DB_TECH_LAYERRULE_H
+#pragma once
 
 #include "ads.h"
 #include "dbId.h"
@@ -103,4 +102,4 @@ dbIStream& operator>>(dbIStream& stream, _dbTechLayerRule& rule);
 
 }  // namespace odb
 
-#endif
+

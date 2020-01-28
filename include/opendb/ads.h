@@ -30,8 +30,7 @@
 // ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 // POSSIBILITY OF SUCH DAMAGE.
 
-#ifndef ADS_H
-#define ADS_H
+#pragma once
 
 #include <assert.h>
 #include <float.h>
@@ -76,4 +75,4 @@ typedef unsigned long long uint64;
 #define ZSUBMENUID(x, y) x * 10 + y
 #endif
 
-#endif
+

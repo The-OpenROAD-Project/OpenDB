@@ -35,8 +35,7 @@
 #include <assert.h>
 //#define _CRTDBG_MAP_ALLOC
 
-#ifndef UTIL_H
-#define UTIL_H
+#pragma once
 
 #include "array1.h"
 #include "atypes.h"
@@ -479,4 +478,4 @@ unsigned int prime)
   }
 };
 
-#endif
+

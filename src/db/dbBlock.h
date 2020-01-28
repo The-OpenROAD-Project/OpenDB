@@ -30,8 +30,7 @@
 // ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 // POSSIBILITY OF SUCH DAMAGE.
 
-#ifndef ADS_DB_BLOCK_H
-#define ADS_DB_BLOCK_H
+#pragma once
 
 #include "ads.h"
 #include "dbCore.h"
@@ -47,9 +46,7 @@
 #include <list>
 
 /*DELETE
-#ifndef ADS_DCR_ISDB_H
 #include "ISdb.h"
-#endif
 */
 namespace odb {
 
@@ -264,4 +261,4 @@ dbIStream& operator>>(dbIStream& stream, _dbBlock& block);
 
 }  // namespace odb
 
-#endif
+

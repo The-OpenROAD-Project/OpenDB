@@ -30,8 +30,7 @@
 // ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 // POSSIBILITY OF SUCH DAMAGE.
 
-#ifndef DB1_H
-#define DB1_H
+#pragma once
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -88,4 +87,4 @@ class Ath__db
   void  deallocBlockNames(uint m);
 };
 
-#endif
+

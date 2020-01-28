@@ -30,8 +30,7 @@
 // ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 // POSSIBILITY OF SUCH DAMAGE.
 
-#ifndef ADS_DB_MATRIX_H
-#define ADS_DB_MATRIX_H
+#pragma once
 
 #include "ads.h"
 #include "dbDiff.h"
@@ -267,4 +266,4 @@ inline void dbMatrix<T>::out(dbDiff& diff, char side, const char* field) const
 
 }  // namespace odb
 
-#endif
+

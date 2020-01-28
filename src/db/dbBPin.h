@@ -30,8 +30,7 @@
 // ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 // POSSIBILITY OF SUCH DAMAGE.
 
-#ifndef ADS_DB_BPIN_H
-#define ADS_DB_BPIN_H
+#pragma once
 
 #include "ads.h"
 #include "dbId.h"
@@ -81,4 +80,4 @@ dbOStream& operator<<(dbOStream& stream, const _dbBPin& bpin);
 
 }  // namespace odb
 
-#endif
+

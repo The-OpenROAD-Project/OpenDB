@@ -30,8 +30,7 @@
 // ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 // POSSIBILITY OF SUCH DAMAGE.
 
-#ifndef MISC_GLOBAL_H
-#define MISC_GLOBAL_H
+#pragma once
 
 #include <string.h>
 
@@ -56,4 +55,4 @@ void  end_htimer(char* msg);
 char* replace_string(const char* start, char search, const char* replace);
 }  // namespace odb
 
-#endif
+

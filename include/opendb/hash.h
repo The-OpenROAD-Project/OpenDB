@@ -33,8 +33,8 @@
 /*---------------------------------------------------------
 //////		AUTHOR: SANJEEV MAHAJAN
 ------------------------------------------------------------*/
-#ifndef _HASH_H
-#define _HASH_H
+#pragma once
+
 #include <string.h>
 #include "darr.h"
 typedef unsigned long int ub4;
@@ -417,4 +417,4 @@ class HashN : public HashG<char*, Val>
   }
   int equal(char* key1, char* key2) { return !strcmp(key1, key2); }
 };
-#endif
+

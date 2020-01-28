@@ -30,8 +30,7 @@
 // ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 // POSSIBILITY OF SUCH DAMAGE.
 
-#ifndef ADS_ZEXCEPTION_H
-#define ADS_ZEXCEPTION_H
+#pragma once
 
 #include "ads.h"
 
@@ -97,4 +96,4 @@ class ZAssert : public ZException
 
 }  // namespace odb
 
-#endif
+

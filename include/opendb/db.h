@@ -30,11 +30,7 @@
 // ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 // POSSIBILITY OF SUCH DAMAGE.
 
-#ifndef ADS_DB_H
-#define ADS_DB_H
-
-// These goofy looking protection checks save sending the contents of the
-// include file through the C preprocessor to improve compile times. -cherry
+#pragma once
 
 #include <list>
 #include <set>
@@ -6861,4 +6857,4 @@ class dbViaParams : private _dbViaParams
 
 }  // namespace odb
 
-#endif
+

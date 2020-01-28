@@ -30,8 +30,7 @@
 // ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 // POSSIBILITY OF SUCH DAMAGE.
 
-#ifndef ADS_DB_ROUTE_EDGE_H
-#define ADS_DB_ROUTE_EDGE_H
+#pragma once
 
 #include "ads.h"
 #include "adsDList.h"
@@ -321,4 +320,4 @@ class dbRtVWire : public dbRtEdge
 
 }  // namespace odb
 
-#endif
+

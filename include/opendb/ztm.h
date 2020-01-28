@@ -32,10 +32,9 @@
 
 // ZROUTE TECHNOLOGY MODULES -- PUBLIC INTERFACE
 
-#ifndef ZTM_PKG_H
-#define ZTM_PKG_H
+#pragma once
 
 // temporary event posting routine for phuck
 int zevent(Tcl_Interp*, const char*, const char*);
 
-#endif
+

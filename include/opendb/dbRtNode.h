@@ -30,8 +30,7 @@
 // ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 // POSSIBILITY OF SUCH DAMAGE.
 
-#ifndef ADS_DB_ROUTE_NODE_H
-#define ADS_DB_ROUTE_NODE_H
+#pragma once
 
 #include "ads.h"
 #include "adsDList.h"
@@ -250,4 +249,4 @@ class dbRtNode
 
 }  // namespace odb
 
-#endif
+

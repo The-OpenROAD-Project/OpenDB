@@ -30,8 +30,7 @@
 // ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 // POSSIBILITY OF SUCH DAMAGE.
 
-#ifndef ADS_DB_SITE_H
-#define ADS_DB_SITE_H
+#pragma once
 
 #include "ads.h"
 #include "dbHashTable.h"
@@ -100,4 +99,4 @@ inline dbIStream& operator>>(dbIStream& stream, _dbSite& site)
 
 }  // namespace odb
 
-#endif
+

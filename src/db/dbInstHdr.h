@@ -30,8 +30,7 @@
 // ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 // POSSIBILITY OF SUCH DAMAGE.
 
-#ifndef ADS_DB_INST_HDR_H
-#define ADS_DB_INST_HDR_H
+#pragma once
 
 #include "ads.h"
 #include "dbId.h"
@@ -89,4 +88,4 @@ dbIStream& operator>>(dbIStream& stream, _dbInstHdr& inst_hdr);
 
 }  // namespace odb
 
-#endif
+

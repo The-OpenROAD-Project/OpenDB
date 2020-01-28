@@ -30,8 +30,7 @@
 // ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 // POSSIBILITY OF SUCH DAMAGE.
 
-#ifndef ADS_ZIMPLEMENTS_H
-#define ADS_ZIMPLEMENTS_H
+#pragma once
 
 #include "ZInterface.h"
 #include "ZObject.h"
@@ -91,4 +90,4 @@ class ZImplements : public ZInterface, public INTERFACE
 
 }  // namespace odb
 
-#endif
+

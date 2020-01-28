@@ -30,8 +30,7 @@
 // ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 // POSSIBILITY OF SUCH DAMAGE.
 
-#ifndef ADS_DEFIN_IGCELL_H
-#define ADS_DEFIN_IGCELL_H
+#pragma once
 
 #include "definTypes.h"
 
@@ -42,4 +41,4 @@ class definIGCell
   virtual void gcell(defDirection dir, int orig, int count, int step) {}
 };
 
-#endif
+

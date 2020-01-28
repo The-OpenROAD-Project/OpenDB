@@ -30,8 +30,7 @@
 // ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 // POSSIBILITY OF SUCH DAMAGE.
 
-#ifndef ADS_DEFIN_READER_H
-#define ADS_DEFIN_READER_H
+#pragma once
 
 #include "ads.h"
 #include "definBase.h"
@@ -114,4 +113,4 @@ class definReader : public definIReader, public definBase
 
 }  // namespace odb
 
-#endif
+

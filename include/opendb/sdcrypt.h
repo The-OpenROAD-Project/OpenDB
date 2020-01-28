@@ -49,8 +49,7 @@
 //
 // *****************************************************************************
 
-#ifndef SD_CRYPT_H
-#define SD_CRYPT_H
+#pragma once
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -70,4 +69,4 @@ class sdCrypt
                                    char*       dat_buf);
 };
 
-#endif
+

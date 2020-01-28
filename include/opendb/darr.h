@@ -35,8 +35,8 @@
 ---------------------------------------------------------------*/
 #include <stdlib.h>
 #include "assert.h"
-#ifndef _DARR_H
-#define _DARR_H
+#pragma once
+
 template <class T>
 class Darr
 {
@@ -142,4 +142,4 @@ void Darr<T>::dsort(int cmp(const void* a, const void* b))
 {
   qsort(_ar, _n, sizeof(T), cmp);
 }
-#endif
+

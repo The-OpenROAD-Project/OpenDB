@@ -30,8 +30,7 @@
 // ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 // POSSIBILITY OF SUCH DAMAGE.
 
-#ifndef ITYPE_H
-#define ITYPE_H
+#pragma once
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -124,4 +123,4 @@ class Ath__itype
   unsigned int cnt2type(unsigned int cnt);
 };
 
-#endif
+

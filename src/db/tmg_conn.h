@@ -29,12 +29,9 @@
 // OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 // OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-#ifndef TMG_CONN_H
-#define TMG_CONN_H
+#pragma once
 
-#ifndef ADS_H
 #include "ads.h"
-#endif
 
 namespace odb {
 
@@ -240,5 +237,5 @@ class tmg_conn_search {
 
 }  // namespace odb
 
-#endif
+
 

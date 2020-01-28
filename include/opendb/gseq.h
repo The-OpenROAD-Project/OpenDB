@@ -29,8 +29,7 @@
 // CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
 // ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 // POSSIBILITY OF SUCH DAMAGE.
-#ifndef ADS_GSEQ_H
-#define ADS_GSEQ_H
+#pragma once
 
 #include "ads.h"
 #include "array1.h"
@@ -282,4 +281,4 @@ class gs
 
 }  // namespace odb
 
-#endif
+

@@ -30,8 +30,7 @@
 // ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 // POSSIBILITY OF SUCH DAMAGE.
 
-#ifndef TECH_H
-#define TECH_H
+#pragma once
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -66,4 +65,4 @@ class Ath__tech
   uint  readDBheader(FILE* fp, char* keyword, char* obj_type);
 };
 
-#endif
+

@@ -30,8 +30,7 @@
 // ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 // POSSIBILITY OF SUCH DAMAGE.
 
-#ifndef TCL2CPP_H
-#define TCL2CPP_H
+#pragma once
 
 #ifdef _WIN32
 #include "direct.h"
@@ -92,4 +91,4 @@ class Ath__tcl2Cpp
   uint  getArgCnt();
 };
 
-#endif
+

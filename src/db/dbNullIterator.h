@@ -30,8 +30,7 @@
 // ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 // POSSIBILITY OF SUCH DAMAGE.
 
-#ifndef ADS_DB_NULL_ITERATOR_H
-#define ADS_DB_NULL_ITERATOR_H
+#pragma once
 
 #include "ads.h"
 #include "dbIterator.h"
@@ -58,4 +57,4 @@ class dbNullIterator : public dbIterator
 
 }  // namespace odb
 
-#endif
+

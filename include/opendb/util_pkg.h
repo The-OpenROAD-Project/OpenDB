@@ -30,8 +30,7 @@
 // ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 // POSSIBILITY OF SUCH DAMAGE.
 
-#ifndef UTIL_PKG_H
-#define UTIL_PKG_H
+#pragma once
 
 #define TCLCMD(tclcmd, cppcmd) \
   Tcl_CreateObjCommand(        \
@@ -41,4 +40,4 @@
   int cppcmd(                        \
       ClientData cdata, Tcl_Interp* interp, int objc, Tcl_Obj* CONST objv[]);
 
-#endif
+

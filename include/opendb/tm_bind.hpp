@@ -30,8 +30,7 @@
 // ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 // POSSIBILITY OF SUCH DAMAGE.
 
-#ifndef ADS_TM_BIND_HPP
-#define ADS_TM_BIND_HPP
+#pragma once
 
 namespace odb {
 template <class M>
@@ -343,4 +342,4 @@ ZConfig<M>* ZBindings<M>::findConfig(const char* name)
 
 }  // namespace odb
 
-#endif
+

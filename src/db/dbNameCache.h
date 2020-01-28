@@ -30,8 +30,7 @@
 // ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 // POSSIBILITY OF SUCH DAMAGE.
 
-#ifndef ADS_DB_NAME_CACHE_H
-#define ADS_DB_NAME_CACHE_H
+#pragma once
 
 #include "dbHashTable.h"
 
@@ -80,4 +79,4 @@ dbOStream& operator<<(dbOStream& stream, const _dbNameCache& net);
 dbIStream& operator>>(dbIStream& stream, _dbNameCache& net);
 
 }  // namespace odb
-#endif
+

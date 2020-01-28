@@ -30,8 +30,7 @@
 // ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 // POSSIBILITY OF SUCH DAMAGE.
 
-#ifndef ADS_DEFIN_NET_H
-#define ADS_DEFIN_NET_H
+#pragma once
 
 #include "ads.h"
 #include "dbWireCodec.h"
@@ -125,4 +124,4 @@ class definNet : public definINet, public definBase
 
 }  // namespace odb
 
-#endif
+

@@ -30,8 +30,7 @@
 // ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 // POSSIBILITY OF SUCH DAMAGE.
 
-#ifndef RCMODEL_H
-#define RCMODEL_H
+#pragma once
 
 #include "ads.h"
 #include "arnoldi1.h"
@@ -85,4 +84,4 @@ double rcmodel_ctot(rcmodel* mod);
 double rcmodel_max_elmore(rcmodel* mod);
 
 }  // namespace odb
-#endif
+

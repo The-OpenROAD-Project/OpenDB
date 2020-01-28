@@ -30,6 +30,8 @@
 // ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 // POSSIBILITY OF SUCH DAMAGE.
 
+#pragma once
+
 inline unsigned int hash_string(const char* str)
 {
   unsigned int hash = 0;

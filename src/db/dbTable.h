@@ -30,8 +30,7 @@
 // ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 // POSSIBILITY OF SUCH DAMAGE.
 
-#ifndef ADS_DB_TABLE_H
-#define ADS_DB_TABLE_H
+#pragma once
 
 #include "ZException.h"
 #include "ads.h"
@@ -185,4 +184,4 @@ dbIStream& operator>>(dbIStream& stream, dbTable<T>& table);
 
 }  // namespace odb
 
-#endif
+

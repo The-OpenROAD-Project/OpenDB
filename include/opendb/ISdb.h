@@ -30,8 +30,7 @@
 // ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 // POSSIBILITY OF SUCH DAMAGE.
 
-#ifndef ADS_DCR_ISDB_H
-#define ADS_DCR_ISDB_H
+#pragma once
 
 #include "ads.h"
 #include "geom.h"
@@ -177,4 +176,4 @@ class ISdb : public ZObject
 };
 }  // namespace odb
 
-#endif
+

@@ -30,8 +30,7 @@
 // ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 // POSSIBILITY OF SUCH DAMAGE.
 
-#ifndef ADS_DB_DATABASE_H
-#define ADS_DB_DATABASE_H
+#pragma once
 
 #include "ads.h"
 #include "dbCore.h"
@@ -123,4 +122,4 @@ dbIStream& operator>>(dbIStream& stream, _dbDatabase& db);
 
 }  // namespace odb
 
-#endif
+

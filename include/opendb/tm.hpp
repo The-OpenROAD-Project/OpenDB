@@ -30,8 +30,7 @@
 // ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 // POSSIBILITY OF SUCH DAMAGE.
 
-#ifndef ADS_TM_HPP
-#define ADS_TM_HPP
+#pragma once
 
 #include <string.h>
 
@@ -782,4 +781,4 @@ int ZTechModule<M>::cget(ZArgs* in, ZArgs* out)
 
 }  // namespace odb
 
-#endif
+

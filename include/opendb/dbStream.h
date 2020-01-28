@@ -30,8 +30,7 @@
 // ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 // POSSIBILITY OF SUCH DAMAGE.
 
-#ifndef ADS_DB_STREAM_H
-#define ADS_DB_STREAM_H
+#pragma once
 
 #include <string.h>
 
@@ -303,4 +302,4 @@ class dbIStream
 
 }  // namespace odb
 
-#endif
+

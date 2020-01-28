@@ -30,8 +30,7 @@
 // ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 // POSSIBILITY OF SUCH DAMAGE.
 
-#ifndef ADS_DEFIN_IMPL_H
-#define ADS_DEFIN_IMPL_H
+#pragma once
 
 #include <map>
 #include <vector>
@@ -67,4 +66,4 @@ class definTracks : public definITracks, public definBase
 
 }  // namespace odb
 
-#endif
+

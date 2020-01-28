@@ -30,8 +30,7 @@
 // ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 // POSSIBILITY OF SUCH DAMAGE.
 
-#ifndef ADS_DB_TECH_SAME_NET_RULE_H
-#define ADS_DB_TECH_SAME_NET_RULE_H
+#pragma once
 
 #include "ads.h"
 #include "dbId.h"
@@ -120,4 +119,4 @@ inline dbIStream& operator>>(dbIStream& stream, _dbTechSameNetRule& rule)
 
 }  // namespace odb
 
-#endif
+

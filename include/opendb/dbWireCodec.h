@@ -30,8 +30,7 @@
 // ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 // POSSIBILITY OF SUCH DAMAGE.
 
-#ifndef ADS_DB_WIRE_CODEC_H
-#define ADS_DB_WIRE_CODEC_H
+#pragma once
 
 #include <vector>
 
@@ -637,4 +636,4 @@ void dumpDecoder4Net(dbNet* innet);
 
 }  // namespace odb
 
-#endif
+

@@ -30,8 +30,7 @@
 // ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 // POSSIBILITY OF SUCH DAMAGE.
 
-#ifndef ADS_DBSEARCH_H
-#define ADS_DBSEARCH_H
+#pragma once
 
 #include "ads.h"
 #include "dbId.h"
@@ -502,4 +501,4 @@ class dbBlockSearch
 
 }  // namespace odb
 
-#endif
+

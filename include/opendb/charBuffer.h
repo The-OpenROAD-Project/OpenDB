@@ -30,8 +30,7 @@
 // ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 // POSSIBILITY OF SUCH DAMAGE.
 
-#ifndef CHARBUFFER_H
-#define CHARBUFFER_H
+#pragma once
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -54,4 +53,4 @@ class charStore
   char* getStoredLine(int ii);
 };
 
-#endif
+

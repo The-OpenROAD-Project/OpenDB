@@ -30,8 +30,7 @@
 // ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 // POSSIBILITY OF SUCH DAMAGE.
 
-#ifndef ADS_DB_SHAPE_H
-#define ADS_DB_SHAPE_H
+#pragma once
 
 #include "ZException.h"
 #include "ads.h"
@@ -681,4 +680,4 @@ void dumpWirePaths4Net(dbNet* innet, const char* module_name, const char* tag);
 
 }  // namespace odb
 
-#endif
+

@@ -30,8 +30,7 @@
 // ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 // POSSIBILITY OF SUCH DAMAGE.
 
-#ifndef TYPES_H
-#define TYPES_H
+#pragma once
 
 #include "misc_global.h"
 
@@ -128,4 +127,4 @@ enum Ath__zuiMark
   Ath_mark__context
 };
 
-#endif
+

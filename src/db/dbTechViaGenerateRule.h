@@ -30,8 +30,7 @@
 // ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 // POSSIBILITY OF SUCH DAMAGE.
 
-#ifndef ADS_DB_VIA_GENERATE_RULE_H
-#define ADS_DB_VIA_GENERATE_RULE_H
+#pragma once
 
 #include "ads.h"
 #include "dbId.h"
@@ -91,4 +90,4 @@ dbIStream& operator>>(dbIStream& stream, _dbTechViaGenerateRule& v);
 
 }  // namespace odb
 
-#endif
+

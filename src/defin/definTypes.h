@@ -30,8 +30,7 @@
 // ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 // POSSIBILITY OF SUCH DAMAGE.
 
-#ifndef ADS_DEFIN_TYPES_H
-#define ADS_DEFIN_TYPES_H
+#pragma once
 
 enum defOrient
 {
@@ -139,4 +138,4 @@ struct defPoint
   defPoint(int x, int y) : _x(x), _y(y) {}
 };
 
-#endif
+

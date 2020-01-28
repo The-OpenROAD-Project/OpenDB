@@ -30,11 +30,10 @@
 // ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 // POSSIBILITY OF SUCH DAMAGE.
 
-#include "dbHashTable.h"
+#pragma once
 
-#ifndef ADS_DB_CORE_H
+#include "dbHashTable.h"
 #include "dbCore.h"
-#endif
 
 namespace odb {
 

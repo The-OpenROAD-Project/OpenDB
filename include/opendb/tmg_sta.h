@@ -30,8 +30,7 @@
 // ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 // POSSIBILITY OF SUCH DAMAGE.
 
-#ifndef TMG_STA_H
-#define TMG_STA_H
+#pragma once
 
 #include "ads.h"
 #include "arnoldi1.h"
@@ -203,4 +202,4 @@ class tmg_sta
 
 }  // namespace odb
 
-#endif
+

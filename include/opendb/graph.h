@@ -33,8 +33,8 @@
 /*-------------------------------------------------------------
 ////	AUTHOR: SANJEEV MAHAJAN
 ---------------------------------------------------------------*/
-#ifndef _GRAPH_H
-#define _GRAPH_H
+#pragma once
+
 #include <stdio.h>
 #include <stdlib.h>
 #include "hash.h"
@@ -116,4 +116,4 @@ class Graph
                      int&         k);
   void _dfs_hall(int i, int* vis, int* par, int k);
 };
-#endif
+

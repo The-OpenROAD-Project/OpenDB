@@ -33,9 +33,6 @@
 #ifndef ADS_DB_H
 #define ADS_DB_H
 
-// These goofy looking protection checks save sending the contents of the
-// include file through the C preprocessor to improve compile times. -cherry
-
 #include <list>
 #include <set>
 #include <string>

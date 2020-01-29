@@ -33,6 +33,7 @@
 #include <algorithm>
 #include <list>
 #include <vector>
+
 #include "geom.h"
 
 namespace odb {
@@ -339,30 +340,45 @@ void decompose_polygon(const std::vector<adsPoint>& points,
   decomp.decompose(points, rects);
 }
 
+// See "Orientation of a simple polygon" in
+// https://en.wikipedia.org/wiki/Curve_orientation
+// The a, b, c point names are used to match the wiki page
 bool polygon_is_clockwise(const std::vector<adsPoint>& P)
 {
   if (P.size() < 3)
     return false;
 
-  int    i, j, k;
-  int    n = P.size();
-  double a = 0.0;
+  int n = P.size();
 
-  for (i = 0; i < n; ++i) {
-    j = i + 1;
-    if (j == n)
-      j = 0;
-
-    k = i - 1;
-    if (k == -1)
-      k = 0;
-
-    int64 dy = (int64) P[j].getY() - (int64) P[k].getY();
-    int64 m  = P[i].getX() * dy;
-    a += (double) m;
+  // find a point on the convex hull of the polygon
+  // Here we use the lowest-most in Y with lowest in X as a tie breaker
+  int yMin = std::numeric_limits<int>::max();
+  int xMin = std::numeric_limits<int>::max();
+  int b;  // the index of the point we are seeking
+  for (int i = 0; i < n; ++i) {
+    int x = P[i].x();
+    int y = P[i].y();
+    if (y < yMin || (y == yMin && x < xMin)) {
+      b    = i;
+      yMin = y;
+      xMin = x;
+    }
   }
 
-  return a < 0.0;
+  int a = b > 0 ? b - 1 : n - 1;  // previous pt to b
+  int c = b < n - 1 ? b + 1 : 0;  // next pt to b
+
+  double xa = P[a].getX();
+  double ya = P[a].getY();
+
+  double xb = P[b].getX();
+  double yb = P[b].getY();
+
+  double xc = P[c].getX();
+  double yc = P[c].getY();
+
+  double det = (xb * yc + xa * yb + ya * xc) - (ya * xb + yb * xc + xa * yc);
+  return det < 0.0;
 }
 
 }  // namespace odb

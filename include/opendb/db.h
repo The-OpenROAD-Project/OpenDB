@@ -6433,8 +6433,10 @@ class dbTechMinCutRule : public dbObject
                                           uint width,
                                           bool above_only,
                                           bool below_only);
-  bool                     getLengthForCuts(uint& length, uint& within) const;
-  void                     setLengthForCuts(uint length, uint within);
+  bool                     getCutDistance(uint& cut_distance) const;
+  void                     setCutDistance(uint cut_distance);
+  bool                     getLengthForCuts(uint& length, uint& distance) const;
+  void                     setLengthForCuts(uint length, uint distance);
   bool                     isAboveOnly() const;
   bool                     isBelowOnly() const;
   void                     writeLef(lefout& writer) const;

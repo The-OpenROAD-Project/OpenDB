@@ -50,10 +50,11 @@ class _dbTechMinCutRule : public dbObject
  public:
   // PERSISTENT-MEMBERS
   TechMinCutRule::_Flword _flags;
-  uint                    _cuts;
+  uint                    _num_cuts;
   uint                    _width;
+  int                     _cut_distance;
   uint                    _length;
-  uint                    _within;
+  uint                    _distance;
 
   _dbTechMinCutRule(_dbDatabase* db, const _dbTechMinCutRule& r);
   _dbTechMinCutRule(_dbDatabase* db);
@@ -73,10 +74,11 @@ class _dbTechMinCutRule : public dbObject
 inline _dbTechMinCutRule::_dbTechMinCutRule(_dbDatabase*             db,
                                             const _dbTechMinCutRule& r)
     : _flags(r._flags),
-      _cuts(r._cuts),
+      _num_cuts(r._num_cuts),
       _width(r._width),
+      _cut_distance(r._cut_distance),
       _length(r._length),
-      _within(r._within)
+      _distance(r._distance)
 {
 }
 
@@ -85,10 +87,11 @@ inline _dbTechMinCutRule::_dbTechMinCutRule(_dbDatabase* db)
   _flags._rule        = TechMinCutRule::NONE;
   _flags._cuts_length = 0;
   _flags._spare_bits  = 0;
-  _cuts               = 0;
+  _num_cuts           = 0;
   _width              = 0;
+  _cut_distance       = -1;
   _length             = 0;
-  _within             = 0;
+  _distance           = 0;
 }
 
 inline _dbTechMinCutRule::~_dbTechMinCutRule()
@@ -148,5 +151,3 @@ dbOStream& operator<<(dbOStream& stream, const _dbTechMinEncRule& rule);
 dbIStream& operator>>(dbIStream& stream, _dbTechMinEncRule& rule);
 
 }  // namespace odb
-
-

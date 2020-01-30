@@ -703,6 +703,10 @@ void lefin::layer(lefiLayer* layer)
                                  from_above,
                                  from_below);
 
+    if (layer->hasMinimumcutWithin(j)) {
+      cur_cut_rule->setCutDistance(dbdist(layer->minimumcutWithin(j)));
+    }
+
     if (layer->hasMinimumcutNumCuts(j))
       cur_cut_rule->setLengthForCuts(dbdist(layer->minimumcutLength(j)),
                                      dbdist(layer->minimumcutDistance(j)));

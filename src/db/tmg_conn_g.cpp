@@ -1292,6 +1292,10 @@ void tmg_conn::adjustShapes()
 #if 0
   if (adjust_done && !adjust_failed)
     notice(0, "adjusted shapes for net %d %s\n",_net->getId(),_net->getName().c_str());
+#else
+  // quiet compiler warnings
+  (void) adjust_done;
+  (void) adjust_failed;
 #endif
 }
 

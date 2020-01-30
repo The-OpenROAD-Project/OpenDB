@@ -388,7 +388,7 @@ bool lefin::addGeoms(dbObject* object, bool is_pin, lefiGeometries* geometry)
       }
 
       // FIXME??
-      case lefiGeomUnknown: // error
+      case lefiGeomUnknown:  // error
       case lefiGeomLayerExceptPgNetE:
       case lefiGeomLayerMinSpacingE:
       case lefiGeomLayerRuleWidthE:
@@ -662,29 +662,26 @@ void lefin::layer(lefiLayer* layer)
                                       dbdist(cur_ifl->distance(iflidx)),
                                       dbdist(cur_ifl->spacing(iflidx)));
       }
-    } else  // Assume parallel run length spacing table
-    {       /* TODO
-            lefiParallel *cur_ipl = cur_sptbl->parallel();
-            int wddx,lndx;
-      
-            l->initV55LengthIndex(cur_ipl->numLength());
-            for (lndx = 0; lndx < cur_ipl->numLength(); lndx++)
-              l->addV55LengthEntry(dbdist(cur_ipl->length(lndx)));
-      
-            l->initV55WidthIndex(cur_ipl->numWidth());
-            l->initV55SpacingTable(cur_ipl->numWidth(),
-                                   cur_ipl->numLength());
-            for (wddx = 0; wddx < cur_ipl->numWidth(); wddx++)
-              {
-                l->addV55WidthEntry(dbdist(cur_ipl->width(wddx)));
-                for (lndx = 0; lndx < cur_ipl->numLength(); lndx++)
-                  {
-                    l->addV55SpacingTableEntry(wddx,lndx,dbdist(cur_ipl->widthSpacing(wddx,lndx)));
-                    if ((wddx == 0) && (lndx == 0))
-                        l->setSpacing(dbdist(cur_ipl->widthSpacing(wddx,lndx)));
-                  }
-              }
-*/
+    } else if (cur_sptbl->isParallel()) {
+      lefiParallel* cur_ipl = cur_sptbl->parallel();
+      int           wddx, lndx;
+
+      l->initV55LengthIndex(cur_ipl->numLength());
+      for (lndx = 0; lndx < cur_ipl->numLength(); lndx++)
+        l->addV55LengthEntry(dbdist(cur_ipl->length(lndx)));
+
+      l->initV55WidthIndex(cur_ipl->numWidth());
+      l->initV55SpacingTable(cur_ipl->numWidth(), cur_ipl->numLength());
+      for (wddx = 0; wddx < cur_ipl->numWidth(); wddx++) {
+        l->addV55WidthEntry(dbdist(cur_ipl->width(wddx)));
+        for (lndx = 0; lndx < cur_ipl->numLength(); lndx++) {
+          l->addV55SpacingTableEntry(
+              wddx, lndx, dbdist(cur_ipl->widthSpacing(wddx, lndx)));
+          if ((wddx == 0) && (lndx == 0))
+            l->setSpacing(dbdist(cur_ipl->widthSpacing(wddx, lndx)));
+        }
+      }
+    } else {  // two width spacing rule
     }
   }
 

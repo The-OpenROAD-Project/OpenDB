@@ -682,6 +682,21 @@ void lefin::layer(lefiLayer* layer)
         }
       }
     } else {  // two width spacing rule
+      lefiTwoWidths* cur_two = cur_sptbl->twoWidths();
+
+      l->initTwoWidths(cur_two->numWidth());
+      for (int i = 0; i < cur_two->numWidth(); i++) {
+        l->addTwoWidthsIndexEntry(dbdist(cur_two->width(i)));
+      }
+
+      for (int i = 0; i < cur_two->numWidth(); i++) {
+        assert(cur_two->numWidth() == cur_two->numWidthSpacing(i));
+
+        for (int j = 0; j < cur_two->numWidth(); j++) {
+          l->addTwoWidthsSpacingTableEntry(
+              i, j, dbdist(cur_two->widthSpacing(i, j)));
+        }
+      }
     }
   }
 

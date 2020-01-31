@@ -110,6 +110,10 @@ class _dbTechLayer : public dbObject
   dbVector<uint>                     _v55sp_length_idx;
   dbVector<uint>                     _v55sp_width_idx;
   dbMatrix<uint>                     _v55sp_spacing;
+
+  dbVector<uint>                     _two_widths_sp_idx;
+  dbMatrix<uint>                     _two_widths_sp_spacing;
+
   dbId<_dbTechLayerAntennaRule>      _oxide1;
   dbId<_dbTechLayerAntennaRule>      _oxide2;
 

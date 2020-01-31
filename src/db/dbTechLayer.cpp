@@ -896,6 +896,76 @@ bool dbTechLayer::getV55InfluenceRules(
   return true;
 }
 
+bool dbTechLayer::hasTwoWidthsSpacingRules() const
+{
+  _dbTechLayer* layer = (_dbTechLayer*) this;
+  return ((layer->_two_widths_sp_idx.size() > 0)
+          && (layer->_two_widths_sp_spacing.numElems() > 0));
+}
+
+void dbTechLayer::printTwoWidthsSpacingRules(lefout& writer) const
+{
+  _dbTechLayer* layer = (_dbTechLayer*) this;
+
+  fprintf(writer.out(), "SPACINGTABLE TWOWIDTHS");
+  dbVector<uint>::const_iterator itr;
+  uint                           wddx, lndx;
+
+  for (wddx = 0, itr = layer->_two_widths_sp_idx.begin();
+       itr != layer->_two_widths_sp_idx.end();
+       wddx++, itr++) {
+    fprintf(writer.out(), "\n  WIDTH %.3f\t", writer.lefdist(*itr));
+    for (lndx = 0; lndx < layer->_two_widths_sp_spacing.numCols(); lndx++)
+      fprintf(writer.out(),
+              " %.3f",
+              writer.lefdist(layer->_two_widths_sp_spacing(wddx, lndx)));
+  }
+
+  fprintf(writer.out(), " ;\n");
+}
+
+bool dbTechLayer::getTwoWidthsSpacingTable(
+    std::vector<std::vector<uint> >& sptbl) const
+{
+  _dbTechLayer* layer = (_dbTechLayer*) this;
+
+  if (layer->_two_widths_sp_spacing.numElems() == 0)
+    return false;
+
+  uint i, j;
+  sptbl.clear();
+  sptbl.resize(layer->_two_widths_sp_spacing.numRows());
+  std::vector<uint> tmpvec;
+  tmpvec.reserve(layer->_two_widths_sp_spacing.numCols());
+  for (i = 0; i < layer->_two_widths_sp_spacing.numRows(); i++) {
+    tmpvec.clear();
+    for (j = 0; j < layer->_two_widths_sp_spacing.numCols(); j++)
+      tmpvec.push_back(layer->_two_widths_sp_spacing(i, j));
+    sptbl[i] = tmpvec;
+  }
+
+  return true;
+}
+
+void dbTechLayer::initTwoWidths(uint num_widths)
+{
+  _dbTechLayer* layer = (_dbTechLayer*) this;
+  layer->_two_widths_sp_idx.reserve(num_widths);
+  layer->_two_widths_sp_spacing.resize(num_widths, num_widths);
+}
+
+void dbTechLayer::addTwoWidthsIndexEntry(uint width)
+{
+  _dbTechLayer* layer = (_dbTechLayer*) this;
+  layer->_two_widths_sp_idx.push_back(width);
+}
+
+void dbTechLayer::addTwoWidthsSpacingTableEntry(uint inrow, uint incol, uint spacing)
+{
+  _dbTechLayer* layer                 = (_dbTechLayer*) this;
+  layer->_two_widths_sp_spacing(inrow, incol) = spacing;
+}
+
 bool dbTechLayer::getMinimumCutRules(std::vector<dbTechMinCutRule*>& cut_rules)
 {
   cut_rules.clear();

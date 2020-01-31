@@ -5791,6 +5791,17 @@ class dbTechLayer : public dbObject
   dbSet<dbTechV55InfluenceEntry> getV55InfluenceEntries();
 
   ///
+  /// API for version 5.7 two widths spacing rules, expressed as a 2D matrix
+  /// with index tables
+  ///
+  bool hasTwoWidthsSpacingRules() const;
+  void printTwoWidthsSpacingRules(lefout& writer) const;
+  bool getTwoWidthsSpacingTable(std::vector<std::vector<uint> >& sptbl) const;
+
+  void initTwoWidths(uint num_widths);
+  void addTwoWidthsIndexEntry(uint width);
+  void addTwoWidthsSpacingTableEntry(uint inrow, uint incol, uint spacing);
+  ///
   ///  create container for layer specific antenna rules
   ///  currently only oxide1 (default) and oxide2 models supported.
   ///

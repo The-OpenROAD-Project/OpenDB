@@ -38,12 +38,6 @@ namespace odb {
 
 static std::map<int, ZFactory*> _factories;
 
-void adsRegisterZFactory(ZFactory* factory, ZComponentID cid)
-{
-  assert(_factories[cid] == NULL);
-  _factories[cid] = factory;
-}
-
 int adsCreateComponent(const ZContext& context,
                        ZComponentID    cid,
                        ZInterfaceID    iid,

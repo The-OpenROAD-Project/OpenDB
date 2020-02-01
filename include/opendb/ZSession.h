@@ -32,18 +32,19 @@
 
 #pragma once
 
-#include "tm.h"
+#include "ZInterface.h"
 
 namespace odb {
 
 class ZNamespace;
 
-class ZSession : public ZTechModule<ZSession>
+class ZSession : public ZInterface
 {
  public:
   ZNamespace* _ns;
+  dbDatabase* _db;
 
-  ZSession(ZArgs* in, ZArgs* out);
+  ZSession();
   ~ZSession();
   friend class ZInterface;
 };

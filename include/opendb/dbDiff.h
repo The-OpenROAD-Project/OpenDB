@@ -32,12 +32,13 @@
 
 #pragma once
 
+#include <vector>
+#include <string>
 #include "ads.h"
 #include "dbId.h"
 #include "dbObject.h"
 #include "dbTypes.h"
 #include "geom.h"
-#include "tm.h"
 
 namespace odb {
 

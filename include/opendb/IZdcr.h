@@ -38,8 +38,6 @@
 
 namespace odb {
 
-class IZgui;
-
 ///
 /// IZdcr
 ///
@@ -71,7 +69,6 @@ class IZdcr : public ZObject
                         FILE*       outFP)
       = 0;
   virtual void chipAttr(char* layers, uint n, bool def) = 0;
-  virtual void addGui(ZPtr<IZgui> z)                    = 0;
 
   virtual void init(ZContext&   context,
                     bool        dbEnv,

@@ -5,13 +5,9 @@ add_library(zutil
     mem.cpp
     parse.cpp
     graph.cpp
-    kdtree.cpp
-    gz.cpp
     debug_filter.cpp
     poly_decomp.cpp
-    b100.cpp xf.cpp
-    dgraph.cpp
-    charBuffer.cpp
+    b100.cpp
 )
 
 target_include_directories(zutil

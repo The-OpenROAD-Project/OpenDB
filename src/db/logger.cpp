@@ -38,7 +38,6 @@
 #include <signal.h>
 #include <time.h>
 #include "logger.h"
-#include "sdcrypt.h"
 
 extern "C" {
 void Zrouter_InitLogger(Tcl_Interp* interp)

@@ -39,7 +39,7 @@
 #endif
 
 #include "ads.h"
-#include "tm.h"
+#include "ZInterface.h"
 
 namespace odb {
 

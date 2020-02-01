@@ -32,6 +32,7 @@
 
 #pragma once
 
+#include <cstdint>
 #include "ads.h"
 #include "dbDatabase.h"
 #include "dbId.h"
@@ -81,7 +82,7 @@ class _dbBTerm : public dbObject
   dbId<_dbBPin>  _bpins;         // Up hierarchy: TWG
   dbId<_dbBPin>  _ground_pin;
   dbId<_dbBPin>  _supply_pin;
-  uint32_t       _sta_vertex_id;  // not saved
+  std::uint32_t  _sta_vertex_id;  // not saved
 
   _dbBTerm(_dbDatabase*);
   _dbBTerm(_dbDatabase*, const _dbBTerm& b);

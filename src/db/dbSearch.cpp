@@ -38,7 +38,6 @@
 #include "dbTable.h"
 #include "dbTable.hpp"
 #include "dbTypes.h"
-#include "zui.h"
 
 //#define NEW_TRACKS
 
@@ -57,15 +56,6 @@ dbBlockSearch::dbBlockSearch(dbBlock* blk, dbTech* tech)
   _instSdb      = NULL;
   _trackSdb     = NULL;
 
-  _dcr  = NULL;
-  _igui = NULL;
-
-  _labelNum  = 10;
-  _labelName = new char*[10];
-  _labelVal  = new double[10];
-  for (uint ii = 0; ii < _labelNum; ii++)
-    _labelName[ii] = new char[16];
-
   initMenuIds();
 
   _skipCutBoxes = false;
@@ -82,18 +72,6 @@ dbBlockSearch::~dbBlockSearch()
     delete _netViaSdb;
   if (_trackSdb != NULL)
     delete _trackSdb;
-
-  for (uint ii = 0; ii < _labelNum; ii++)
-    delete[] _labelName[ii];
-  delete[] _labelName;
-  delete[] _labelVal;
-}
-void dbBlockSearch::setGui(ZPtr<IZgui> igui, ZPtr<IZdcr> dcr)
-{
-  _igui = igui;
-  _dcr  = dcr;
-
-  initSubMenus();
 }
 
 void dbBlockSearch::initMenuIds()
@@ -121,76 +99,6 @@ void dbBlockSearch::initMenuIds()
 
   _power_wire_id = 11;
   _power_via_id  = 12;
-}
-void dbBlockSearch::initSubMenus()
-{
-  _blockMenuId = _dcr->getMenuId("block");
-
-  _dcr->addSubMenu(_blockMenuId, "bbox", _block_bb_id);
-  _dcr->addSubMenu(_blockMenuId, "pin", _block_pin_id);
-  _dcr->addSubMenu(_blockMenuId, "obs", _block_obs_id);
-  _dcr->addSubMenu(_blockMenuId, "track", _block_track_id);
-
-  _instMenuId = _dcr->getMenuId("inst");
-
-  _dcr->addSubMenu(_instMenuId, "bbox", _inst_bb_id);
-  _dcr->addSubMenu(_instMenuId, "pin", _inst_pin_id);
-  _dcr->addSubMenu(_instMenuId, "obs", _inst_obs_id);
-  _dcr->addSubMenu(_instMenuId, "white", _inst_white_id);
-
-  _signalMenuId = _dcr->getMenuId("signal");
-
-  _dcr->addSubMenu(_signalMenuId, "wire", _signal_wire_id);
-  _dcr->addSubMenu(_signalMenuId, "via", _signal_via_id);
-
-  _powerMenuId = _dcr->getMenuId("power");
-
-  _dcr->addSubMenu(_powerMenuId, "wire", _power_wire_id);
-  _dcr->addSubMenu(_powerMenuId, "via", _power_via_id);
-
-  _inst_bb_menu_self_id = _dcr->addPullDownMenu(
-      _instMenuId, _inst_bb_id, "self", "Inst Attributes");
-  _inst_bb_menu_inst1_id = _dcr->addPullDownMenu(
-      _instMenuId, _inst_bb_id, "inst1/links", "Inst Flight Lines");
-  _inst_bb_menu_inst2_id = _dcr->addPullDownMenu(
-      _instMenuId, _inst_bb_id, "inst2/group", "Inst Connectivity");
-  _inst_bb_menu_inst3_id = _dcr->addPullDownMenu(
-      _instMenuId, _inst_bb_id, "inst3/group", "Inst Connectivity+wires");
-  _inst_bb_menu_inst4_id = _dcr->addPullDownMenu(
-      _instMenuId, _inst_bb_id, "inst4/group", "Inst Flight Lines New");
-
-  _inst_pin_menu_self_id = _dcr->addPullDownMenu(
-      _instMenuId, _inst_pin_id, "self", "Pin Attributes");
-  _inst_pin_menu_net1_id = _dcr->addPullDownMenu(
-      _instMenuId, _inst_pin_id, "net1/group", "Pin/Net Connectivity");
-  _inst_pin_menu_net2_id = _dcr->addPullDownMenu(
-      _instMenuId, _inst_pin_id, "net2/group", "Pin/Net Connectivity+Context");
-
-  _signal_wire_menu_self_id = _dcr->addPullDownMenu(
-      _signalMenuId, _signal_wire_id, "self", "Net Attributes");
-  _signal_wire_menu_net1_id = _dcr->addPullDownMenu(
-      _signalMenuId, _signal_wire_id, "net1/group", "Net Connectivity");
-  _signal_wire_menu_net2_id = _dcr->addPullDownMenu(
-      _signalMenuId, _signal_wire_id, "net2/group", "Net Connectivity+Context");
-  _signal_wire_menu_net3_id = _dcr->addPullDownMenu(
-      _signalMenuId, _signal_wire_id, "net3/group", "Net Tunnel");
-
-  _power_wire_menu_self_id = _dcr->addPullDownMenu(
-      _powerMenuId, _power_wire_id, "self", "Net Attributes");
-  _power_wire_menu_net1_id = _dcr->addPullDownMenu(
-      _powerMenuId, _power_wire_id, "net1/group", "Net Connectivity");
-  _power_wire_menu_net2_id = _dcr->addPullDownMenu(
-      _powerMenuId, _power_wire_id, "net2/group", "Net Connectivity+Context");
-
-  _block_bb_menu_self_id = _dcr->addPullDownMenu(
-      _blockMenuId, _block_bb_id, "self", "Block Attributes");
-  //_block_bb_menu_pin1_id= _dcr->addPullDownMenu(_blockMenuId, _block_bb_id,
-  //"net1/group", "Pin/Net Connectivity");
-
-  _block_pin_menu_self_id = _dcr->addPullDownMenu(
-      _blockMenuId, _block_pin_id, "self", "Pin Attributes");
-  _block_pin_menu_pin1_id = _dcr->addPullDownMenu(
-      _blockMenuId, _block_pin_id, "net1/group", "Pin/Net Connectivity");
 }
 uint dbBlockSearch::getBbox(int* x1, int* y1, int* x2, int* y2)
 {
@@ -269,21 +177,6 @@ void dbBlockSearch::makeNetViaSdb(ZContext& context)
   _netViaSdb->initSearchForNets(_tech, _block);
   _netViaSdb->addPowerNets(_block, _power_via_id, false);
   //    _netViaSdb->addSignalNets(_block, _signal_via_id, false);
-}
-ZPtr<IZgui> dbBlockSearch::createGuiPlug(ZPtr<IZdcr> dcr, ZContext& context)
-{
-  ZPtr<IZgui> igui;
-  if (adsNewComponent(context, ZCID(ZguiDb), igui) != Z_OK) {
-    assert(0);
-  }
-  ZALLOCATED(igui);
-
-  setGui(igui, dcr);
-  igui->setGuiContext(this);
-
-  dcr->addGui(igui);
-
-  return igui;
 }
 
 void dbBlockSearch::makeSignalNetSdb(ZContext& context)
@@ -464,41 +357,6 @@ uint dbBlockSearch::addTracks(dbTrackGrid* g,
   return cnt;
 }
 #endif
-void dbBlockSearch::chip_get(ZPtr<IZdcr> dcr)
-{
-  if (!dcr->isBlockSelected(_blockId))
-    return;
-
-  _dcr = dcr;
-
-  //	Ath__zui *zui= _dcr->getZui();
-  // uint hier= 0;
-  // uint box= 1;
-
-  uint visualGap = 1000;
-  uint tileLayer = 15;
-
-  // uint boxCnt= 0;
-
-  _dcr->setBlockId(_blockId);
-
-  // dbBox *bb= _block->getBBox();
-  getBlockBox(tileLayer, visualGap, false);
-
-  getBlockObs(false);
-
-  getInstBoxes(false);
-  getInstShapes(false, false, false);
-
-  // handle->white(_zui, Ath_hier__inst, false);
-
-  getWiresAndVias_all(NULL, false);
-
-  dbSet<dbBTerm> bterms = _block->getBTerms();
-  addBtermBoxes(bterms, false);
-
-  getTracks(false);
-}
 
 uint dbBlockSearch::getViaLevel(dbSBox* s)
 {
@@ -596,72 +454,7 @@ uint dbBlockSearch::getBlockObs(bool ignoreFlags)
 
   return cnt;
 }
-uint dbBlockSearch::addLabelNum(int  x1,
-                                int  y1,
-                                int  x2,
-                                int  y2,
-                                uint level,
-                                int  label)
-{
-  sprintf(_labelName[0], " label { %d } ", label);
 
-  // level= 11;
-
-  return _dcr->addBoxAndMsg(_blockId,
-                            _inst_bb_id,
-                            _instMenuId,
-                            level,
-                            x1,
-                            y1,
-                            x2,
-                            y2,
-                            0,
-                            _labelName[0]);
-}
-uint dbBlockSearch::addLabel(int   x1,
-                             int   y1,
-                             int   x2,
-                             int   y2,
-                             uint  level,
-                             char* label)
-{
-  sprintf(_labelName[0], " label { %s } ", label);
-
-  return _dcr->addBoxAndMsg(_blockId,
-                            _block_bb_id,
-                            _blockMenuId,
-                            level,
-                            x1,
-                            y1,
-                            x2,
-                            y2,
-                            0,
-                            _labelName[0]);
-}
-uint dbBlockSearch::getBlockBox(uint level, uint dd, bool ignoreFlag)
-{
-  if (!_dcr->getSubMenuFlag(_blockMenuId, _block_bb_id))
-    return 0;
-
-  adsRect s;
-  _block->getDieArea(s);
-
-  //	return _dcr->addBox(_blockId, _block_bb_id, _blockMenuId, level,
-  //					  s.xMin()+dd, s.yMin()+dd, s.xMax()-dd,
-  // s.yMax()-dd, 0);
-
-  level = 0;
-  return _dcr->addBoxAndMsg(_blockId,
-                            _block_bb_id,
-                            _blockMenuId,
-                            level,
-                            s.xMin() + dd,
-                            s.yMin() + dd,
-                            s.xMax() - dd,
-                            s.yMax() - dd,
-                            0,
-                            "color yellow4");
-}
 uint dbBlockSearch::addInstBox(dbInst* inst)
 {
   dbBox* s = inst->getBBox();
@@ -1178,10 +971,6 @@ uint dbBlockSearch::addWireViaCoords(uint menuId,
                                      uint wireId,
                                      uint shapeId)
 {
-  // uint labelCnt= 2;
-  strcpy(_labelName[0], "R=");
-  strcpy(_labelName[1], "C=");
-
   // wireVia=true, wire
   if (shapeId > 0) {
     dbShape s;

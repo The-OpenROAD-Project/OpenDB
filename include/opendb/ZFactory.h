@@ -42,12 +42,6 @@ class ZObject;
 class ZFactory;
 
 ///
-/// adsRegisterZFactory - Register this factory and return the class-id this
-/// factory represents.
-///
-void adsRegisterZFactory(ZFactory* factory, ZComponentID cid);
-
-///
 /// ZFactory - Class factory interface
 ///
 class ZFactory
@@ -83,39 +77,6 @@ class ZFactoryImpl : public ZFactory
     return Z_ERROR_NO_INTERFACE;
   }
 };
-
-///
-/// ZREGISTER_FACTORY - This macro is used to register a class implmentation.
-///
-/// This macro must be added to main/factories.cpp
-///
-#define REGISTER_ZFACTORY(IMPL, INFC)             \
-  extern void adsRegisterZFactory_##IMPL##INFC(); \
-  adsRegisterZFactory_##IMPL##INFC();
-
-#define DECLARE_ZFACTORY(IMPL, INFC)                 \
-  using namespace odb;                               \
-  void adsRegisterZFactory_##IMPL##INFC()            \
-  {                                                  \
-    static ZFactoryImpl<IMPL, INFC>* factory = NULL; \
-    if (factory == NULL) {                           \
-      factory = new ZFactoryImpl<IMPL, INFC>;        \
-      assert(factory);                               \
-      adsRegisterZFactory(factory, ZCID(IMPL));      \
-    }                                                \
-  }
-
-#define DECLARE_ZFACTORY_CID(IMPL, INFC, CID)        \
-  using namespace odb;                               \
-  void adsRegisterZFactory_##IMPL##INFC()            \
-  {                                                  \
-    static ZFactoryImpl<IMPL, INFC>* factory = NULL; \
-    if (factory == NULL) {                           \
-      factory = new ZFactoryImpl<IMPL, INFC>;        \
-      assert(factory);                               \
-      adsRegisterZFactory(factory, CID);             \
-    }                                                \
-  }
 
 }  // namespace odb
 

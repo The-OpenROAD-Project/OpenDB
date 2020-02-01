@@ -42,7 +42,6 @@
 #include "net.h"
 #include "qtype.h"
 #include "wire.h"
-#include "zui.h"
 
 Ath__qCoord::Ath__qCoord(int n, int min, int max)
 {

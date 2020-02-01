@@ -39,7 +39,6 @@
 
 #include "misc_global.h"
 #include "qtype.h"
-#include "zui.h"
 
 void Ath__quadTable::createEdgePins(Ath__qPin* src,
                                     Ath__qPin* dst,

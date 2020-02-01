@@ -43,10 +43,6 @@
 #include <wire.h>
 #include "ISdb.h"
 #include "IZdcr.h"
-#include "IZgui.h"
-//#include "db.h"
-
-// class Groute;
 
 namespace odb {
 
@@ -68,10 +64,8 @@ class dbBlockSearch
   ZPtr<ISdb> _netViaSdb;
   ZPtr<ISdb> _instSdb;
   ZPtr<ISdb> _trackSdb;
-  // ZPtr<IZdcr> _extGuiDcr;
 
   ZPtr<IZdcr> _dcr;
-  ZPtr<IZgui> _igui;
 
   uint _blockMenuId;
 
@@ -117,10 +111,6 @@ class dbBlockSearch
   uint _power_wire_id;
   uint _power_via_id;
 
-  uint    _labelNum;
-  char**  _labelName;
-  double* _labelVal;
-
   char _tmpBuf128[128];
   char _tmpBuf256[256];
   bool _skipCutBoxes;
@@ -142,9 +132,6 @@ class dbBlockSearch
   ZPtr<ISdb> getNetSdb(ZContext & context);
   ZPtr<ISdb> getNetSdb();
 
-  void        setGui(ZPtr<IZgui> igui, ZPtr<IZdcr> dcr);
-  ZPtr<IZgui> createGuiPlug(ZPtr<IZdcr> dcr, ZContext& context);
-
   void initSubMenus();
   void initMenuIds();
   uint getBbox(int* x1, int* y1, int* x2, int* y2);
@@ -155,8 +142,6 @@ class dbBlockSearch
   void makeNetViaSdb(ZContext& context);
   uint makeInstSearchDb();
   void makeNetWireSearchDb();
-  void chip_get(ZPtr<IZdcr> dcr);
-  uint getBlockBox(uint level, uint dd, bool ignoreFlag);
 
   uint addViaCoordsFromWire(uint menuId,
                             uint subMenuId,
@@ -480,8 +465,6 @@ class dbBlockSearch
                 int     labelCnt,
                 char**  label,
                 double* val);
-  uint addLabelNum(int x1, int y1, int x2, int y2, uint level, int label);
-  uint addLabel(int x1, int y1, int x2, int y2, uint level, char* label);
   uint addFlightLines(dbInst* inst);
 
   // 2/10/2011

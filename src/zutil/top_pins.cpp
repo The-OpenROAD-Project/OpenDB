@@ -39,7 +39,6 @@
 
 #include "misc_global.h"
 #include "qtype.h"
-#include "zui.h"
 
 int Ath__quadTable::getTileXlo(uint row, uint col)
 {

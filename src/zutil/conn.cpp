@@ -32,7 +32,6 @@
 
 #include "conn.h"
 #include "wire.h"
-#include "zui.h"
 
 Ath__connWord::Ath__connWord(uint r1, uint c1)
 {

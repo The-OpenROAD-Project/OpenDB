@@ -40,7 +40,6 @@
 #include "conn.h"
 #include "tech.h"
 #include "wire.h"
-#include "zui.h"
 
 using namespace odb;
 

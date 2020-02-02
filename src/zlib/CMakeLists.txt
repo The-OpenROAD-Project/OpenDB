@@ -1,6 +1,5 @@
 add_library(zlib
     ZException.cpp
-    adsRTreeCore.cpp
 )
 
 target_include_directories(zlib

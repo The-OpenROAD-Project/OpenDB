@@ -68,78 +68,6 @@ enum ZValueType
   Z_DBOBJECT
 };
 
-///////////////////////////////////////////////////////
-// ZEvent - Alternative interface for generating events
-///////////////////////////////////////////////////////
-class ZEvent
-{
-  struct Attr
-  {
-    const char* _name;
-    ZValueType  _type;
-    union
-    {
-      int          _int;
-      unsigned int _uint;
-      double       _dbl;
-      const char*  _str;
-      dbObject*    _dbobj;
-      ZObject*     _zobj;
-    } _value;
-
-    Attr(const char* name);
-    ~Attr();
-    void clearValue();
-  };
-
-  const char*        _name;
-  std::vector<Attr*> _attrs;
-  Attr*              find(const char* attr);
-
-  ZEvent& operator=(const ZEvent& e);
-  ZEvent(const ZEvent& e);
-
- public:
-  ZEvent(const char* name);
-  ~ZEvent();
-
-  // Add a new attribute value pair.
-  // Return false, if the attr already exists
-  void add(const char* attr, bool value);
-  void add(const char* attr, char* value);
-  void add(const char* attr, char value);
-  void add(const char* attr, short value);
-  void add(const char* attr, int value);
-  void add(const char* attr, unsigned char value);
-  void add(const char* attr, unsigned short value);
-  void add(const char* attr, unsigned int value);
-  void add(const char* attr, float value);
-  void add(const char* attr, double value);
-  void add(const char* attr, ZObject* value);
-  void add(const char* attr, dbObject* value);
-  void add(const char* attr, const adsRect& value);
-  void add(const char* attr, adsPoint value);
-
-  // Change an existing attribute value pair.
-  // Return false, if the attr does not exists
-  void change(const char* attr, bool value);
-  void change(const char* attr, char* value);
-  void change(const char* attr, char value);
-  void change(const char* attr, short value);
-  void change(const char* attr, int value);
-  void change(const char* attr, unsigned char value);
-  void change(const char* attr, unsigned short value);
-  void change(const char* attr, unsigned int value);
-  void change(const char* attr, float value);
-  void change(const char* attr, double value);
-  void change(const char* attr, ZObject* value);
-  void change(const char* attr, dbObject* value);
-  void change(const char* attr, const adsRect& value);
-  void change(const char* attr, adsPoint value);
-
-  friend class ZInterface;
-};
-
 /////////////////////////////////////////////////////
 /// ZContext - Context the software is running in.
 /////////////////////////////////////////////////////
@@ -181,10 +109,6 @@ class ZInterface
   //    z->event("foo", "x", "10", "y", "11", 0 );
   // Throws ZException
   int event(const char* name, const char* attr1, const char* val, ...);
-
-  // Post an event.
-  // Throws ZException
-  int event(const ZEvent& e);
 
   // idle event
   int idle(int level);

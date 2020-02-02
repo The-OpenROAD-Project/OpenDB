@@ -6,7 +6,6 @@ add_library(zutil
     parse.cpp
     graph.cpp
     poly_decomp.cpp
-    b100.cpp
 )
 
 target_include_directories(zutil

@@ -16,7 +16,6 @@
 #include "dbBlockSet.h"
 #include "dbMap.h"
 #include "dbRtTree.h"
-#include "dbgdefines.h"
 #include "dbCCSegSet.h"
 #include "dbSet.h"
 using namespace odb;
@@ -56,5 +55,4 @@ using namespace odb;
 %include "dbWireGraph.h"
 %include "dbBlockSet.h"
 %include "dbRtTree.h"
-%include "dbgdefines.h"
 %include "dbCCSegSet.h"

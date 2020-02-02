@@ -5,7 +5,6 @@ add_library(zutil
     mem.cpp
     parse.cpp
     graph.cpp
-    debug_filter.cpp
     poly_decomp.cpp
     b100.cpp
 )

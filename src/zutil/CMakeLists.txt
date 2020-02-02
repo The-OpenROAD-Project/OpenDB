@@ -1,6 +1,6 @@
 add_library(zutil
     misc_functions.cpp
-    atypes.cpp files.cpp
+    files.cpp
     name.cpp
     mem.cpp
     parse.cpp

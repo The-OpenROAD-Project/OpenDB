@@ -40,7 +40,6 @@
 
 #include "array1.h"
 #include "dbtable2.h"
-#include "enumtype.h"
 #include "parse.h"
 
 char* ATH__allocCharWord(int n);
@@ -72,7 +71,6 @@ class Ath__mtermTable
 {
  private:
   Ath__dbtable2<Ath__mterm>* _dbtable;
-  Ath__associateArray*       _dirType;
 
   void initTypes();
 

@@ -15,7 +15,8 @@ RUN wget https://dl.fedoraproject.org/pub/epel/epel-release-latest-7.noarch.rpm
 RUN yum install -y epel-release-latest-7.noarch.rpm
 
 # Install dev and runtime dependencies
-RUN yum install -y tcl-devel tcl tk libstdc++ boost-devel
+RUN yum install -y tcl-devel tcl tk libstdc++ boost-devel \
+                   zlib-devel
 
 # Install python dev
 RUN yum install -y https://centos7.iuscommunity.org/ius-release.rpm && \

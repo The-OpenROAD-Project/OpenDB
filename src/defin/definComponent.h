@@ -38,7 +38,6 @@
 
 #include "ads.h"
 #include "definBase.h"
-#include "definIComponent.h"
 
 namespace odb {
 
@@ -47,7 +46,7 @@ class dbMaster;
 class dbLib;
 class dbSite;
 
-class definComponent : public definIComponent, public definBase
+class definComponent : public definBase
 {
   struct ltstr
   {
@@ -70,10 +69,10 @@ class definComponent : public definIComponent, public definBase
 
   /// Component interface methods
   virtual void begin(const char* name, const char* cell);
-  virtual void placement(defPlacement status, int x, int y, defOrient orient);
+  virtual void placement(int status, int x, int y, int orient);
   virtual void region(const char* region);
   virtual void halo(int left, int bottom, int right, int top);
-  virtual void source(defSource source);
+  virtual void source(dbSourceType source);
   virtual void weight(int weight);
   virtual void property(const char* name, const char* value);
   virtual void property(const char* name, int value);

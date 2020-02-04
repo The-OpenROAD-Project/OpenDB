@@ -35,7 +35,6 @@
 #include "ads.h"
 #include "dbTypes.h"
 #include "definBase.h"
-#include "definIPinProps.h"
 #include "geom.h"
 
 namespace odb {
@@ -43,7 +42,7 @@ namespace odb {
 class dbObject;
 class dbBTerm;
 
-class definPinProps : public definIPinProps, public definBase
+class definPinProps : public definBase
 {
  private:
   dbObject* _cur_obj;

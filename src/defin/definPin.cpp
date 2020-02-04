@@ -146,61 +146,23 @@ void definPin::pinSpecial()
   _cur_bterm->setSpecial();
 }
 
-void definPin::pinUse(defSigType type)
+void definPin::pinUse(dbSigType type)
 {
   if (_cur_bterm == NULL)
     return;
 
-  switch (type) {
-    case DEF_SIG_ANALOG:
-      _cur_bterm->setSigType(dbSigType::ANALOG);
-      break;
-    case DEF_SIG_CLOCK:
-      _cur_bterm->setSigType(dbSigType::CLOCK);
-      break;
-    case DEF_SIG_GROUND:
-      _cur_bterm->setSigType(dbSigType::GROUND);
-      break;
-    case DEF_SIG_POWER:
-      _cur_bterm->setSigType(dbSigType::POWER);
-      break;
-    case DEF_SIG_RESET:
-      _cur_bterm->setSigType(dbSigType::RESET);
-      break;
-    case DEF_SIG_SCAN:
-      _cur_bterm->setSigType(dbSigType::SCAN);
-      break;
-    case DEF_SIG_SIGNAL:
-      _cur_bterm->setSigType(dbSigType::SIGNAL);
-      break;
-    case DEF_SIG_TIEOFF:
-      _cur_bterm->setSigType(dbSigType::TIEOFF);
-      break;
-  }
+  _cur_bterm->setSigType(type);
 }
 
-void definPin::pinDirection(defIoType type)
+void definPin::pinDirection(dbIoType type)
 {
   if (_cur_bterm == NULL)
     return;
 
-  switch (type) {
-    case DEF_IO_INPUT:
-      _cur_bterm->setIoType(dbIoType::INPUT);
-      break;
-    case DEF_IO_OUTPUT:
-      _cur_bterm->setIoType(dbIoType::OUTPUT);
-      break;
-    case DEF_IO_INOUT:
-      _cur_bterm->setIoType(dbIoType::INOUT);
-      break;
-    case DEF_IO_FEEDTHRU:
-      _cur_bterm->setIoType(dbIoType::FEEDTHRU);
-      break;
-  }
+  _cur_bterm->setIoType(type);
 }
 
-void definPin::pinPlacement(defPlacement status, int x, int y, defOrient orient)
+void definPin::pinPlacement(defPlacement status, int x, int y, dbOrientType orient)
 {
   if (_cur_bterm == NULL)
     return;
@@ -223,33 +185,7 @@ void definPin::pinPlacement(defPlacement status, int x, int y, defOrient orient)
       break;
   }
 
-  switch (orient) {
-    case DEF_ORIENT_N:
-      _orient = dbOrientType::R0;
-      break;
-    case DEF_ORIENT_S:
-      _orient = dbOrientType::R180;
-      break;
-    case DEF_ORIENT_E:
-      _orient = dbOrientType::R270;
-      break;
-    case DEF_ORIENT_W:
-      _orient = dbOrientType::R90;
-      break;
-    case DEF_ORIENT_FN:
-      _orient = dbOrientType::MY;
-      break;
-    case DEF_ORIENT_FS:
-      _orient = dbOrientType::MX;
-      break;
-    case DEF_ORIENT_FE:
-      _orient = dbOrientType::MYR90;
-      break;
-    case DEF_ORIENT_FW:
-      _orient = dbOrientType::MXR90;
-      break;
-  }
-
+  _orient = orient;
   _has_placement = true;
 }
 

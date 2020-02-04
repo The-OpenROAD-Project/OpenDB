@@ -30,12 +30,13 @@
 // ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 // POSSIBILITY OF SUCH DAMAGE.
 
-#include "definRow.h"
 #include <ctype.h>
 #include <stdio.h>
 #include <stdlib.h>
+
 #include "db.h"
 #include "dbShape.h"
+#include "definRow.h"
 
 namespace odb {
 
@@ -94,14 +95,14 @@ dbSite* definRow::getSite(const char* name)
   return NULL;
 }
 
-void definRow::begin(const char* name,
-                     const char* site_name,
-                     int         x,
-                     int         y,
-                     defOrient   orient,
-                     defRow      direction,
-                     int         num_sites,
-                     int         spacing)
+void definRow::begin(const char*  name,
+                     const char*  site_name,
+                     int          x,
+                     int          y,
+                     dbOrientType orient,
+                     defRow       direction,
+                     int          num_sites,
+                     int          spacing)
 {
   dbSite* site = getSite(site_name);
 
@@ -114,42 +115,13 @@ void definRow::begin(const char* name,
     return;
   }
 
-  dbOrientType ornt;
-
-  switch (orient) {
-    case DEF_ORIENT_N:
-      ornt = dbOrientType::R0;
-      break;
-    case DEF_ORIENT_S:
-      ornt = dbOrientType::R180;
-      break;
-    case DEF_ORIENT_E:
-      ornt = dbOrientType::R270;
-      break;
-    case DEF_ORIENT_W:
-      ornt = dbOrientType::R90;
-      break;
-    case DEF_ORIENT_FN:
-      ornt = dbOrientType::MY;
-      break;
-    case DEF_ORIENT_FS:
-      ornt = dbOrientType::MX;
-      break;
-    case DEF_ORIENT_FE:
-      ornt = dbOrientType::MYR90;
-      break;
-    case DEF_ORIENT_FW:
-      ornt = dbOrientType::MXR90;
-      break;
-  }
-
   if (direction == DEF_VERTICAL)
     _cur_row = dbRow::create(_block,
                              name,
                              site,
                              dbdist(x),
                              dbdist(y),
-                             ornt,
+                             orient,
                              dbRowDir::VERTICAL,
                              num_sites,
                              dbdist(spacing));
@@ -159,7 +131,7 @@ void definRow::begin(const char* name,
                              site,
                              dbdist(x),
                              dbdist(y),
-                             ornt,
+                             orient,
                              dbRowDir::HORIZONTAL,
                              num_sites,
                              dbdist(spacing));

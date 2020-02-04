@@ -32,13 +32,12 @@
 
 #pragma once
 
+#include <map>
+#include <string>
+
 #include "ads.h"
 #include "dbWireCodec.h"
 #include "definBase.h"
-#include "definINet.h"
-
-#include <map>
-#include <string>
 
 namespace odb {
 
@@ -50,7 +49,7 @@ class dbTechLayer;
 class dbTechLayerRule;
 class dbTechNonDefaultRule;
 
-class definNet : public definINet, public definBase
+class definNet : public definBase
 {
   bool                          _skip_signal_connections;
   bool                          _skip_wires;
@@ -73,8 +72,8 @@ class definNet : public definINet, public definBase
   dbTechNonDefaultRule*         _rule_for_path;
   std::map<std::string, dbVia*> _rotated_vias;
 
-  void                  getUniqueViaName(std::string& viaName);
-  dbVia*                getRotatedVia(const char* via_name, int orient);
+  void   getUniqueViaName(std::string& viaName);
+  dbVia* getRotatedVia(const char* via_name, dbOrientType orient);
   dbTechNonDefaultRule* findNonDefaultRule(const char* name);
 
  public:
@@ -86,8 +85,8 @@ class definNet : public definINet, public definBase
   virtual void beginMustjoin(const char* iname, const char* pname);
   virtual void connection(const char* iname, const char* pname);
   virtual void nonDefaultRule(const char* rule);
-  virtual void use(defSigType type);
-  virtual void wire(defWireType type);
+  virtual void use(dbSigType type);
+  virtual void wire(dbWireType type);
   virtual void path(const char* layer);
   virtual void pathStyle(int style);
   virtual void pathTaper(const char* layer);
@@ -95,10 +94,10 @@ class definNet : public definINet, public definBase
   virtual void pathPoint(int x, int y);
   virtual void pathPoint(int x, int y, int ext);
   virtual void pathVia(const char* via);
-  virtual void pathVia(const char* via, int def_orient);
+  virtual void pathVia(const char* via, dbOrientType orient);
   virtual void pathEnd();
   virtual void wireEnd();
-  virtual void source(defSource source);
+  virtual void source(dbSourceType source);
   virtual void weight(int weight);
   virtual void fixedbump();
   virtual void xtalk(int value);
@@ -111,7 +110,6 @@ class definNet : public definINet, public definBase
   // void netBeginCreate( const char * name );
   // void netBeginReplace( const char * name );
 
- public:
   definNet();
   virtual ~definNet();
   void init();
@@ -123,5 +121,3 @@ class definNet : public definINet, public definBase
 };
 
 }  // namespace odb
-
-

@@ -34,7 +34,6 @@
 
 #include "ads.h"
 #include "definBase.h"
-#include "definINonDefaultRule.h"
 #include "geom.h"
 
 namespace odb {
@@ -42,12 +41,12 @@ namespace odb {
 class dbTechNonDefaultRule;
 class dbTechLayerRule;
 
-class definNonDefaultRule : public definINonDefaultRule, public definBase
+class definNonDefaultRule : public definBase
 {
   dbTechNonDefaultRule* _cur_rule;
   dbTechLayerRule*      _cur_layer_rule;
 
-  virtual void beginRules(int n);
+ public:
   virtual void beginRule(const char* name);
   virtual void hardSpacing();
   virtual void via(const char* name);
@@ -61,9 +60,7 @@ class definNonDefaultRule : public definINonDefaultRule, public definBase
   virtual void property(const char* name, int value);
   virtual void property(const char* name, double value);
   virtual void endRule();
-  virtual void endRules();
 
- public:
   definNonDefaultRule();
   virtual ~definNonDefaultRule();
   void init();

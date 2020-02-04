@@ -72,7 +72,7 @@ void definFill::fillRect(int x1, int y1, int x2, int y2)
   y2 = dbdist(y2);
 }
 
-void definFill::fillPolygon(std::vector<defPoint>& points)
+void definFill::fillPolygon(std::vector<adsPoint>& points)
 {
 }
 

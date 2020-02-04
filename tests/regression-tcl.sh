@@ -91,3 +91,7 @@ $APP $BASE_DIR/tcl/19-polygon_test.tcl
 echo "SUCCESS!"
 echo ""
 
+echo "[20] DEF parser test"
+$APP $BASE_DIR/tcl/20-def_parser_test.tcl
+echo "SUCCESS!"
+echo ""

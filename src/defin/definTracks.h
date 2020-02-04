@@ -37,7 +37,6 @@
 
 #include "ads.h"
 #include "definBase.h"
-#include "definITracks.h"
 
 namespace odb {
 
@@ -49,16 +48,16 @@ struct Track
   int _count;
 };
 
-class definTracks : public definITracks, public definBase
+class definTracks : public definBase
 {
   Track _track;
 
+ public:
   /// Track interface methods
   virtual void tracksBegin(defDirection dir, int orig, int count, int step);
   virtual void tracksLayer(const char* layer);
   virtual void tracksEnd();
 
- public:
   definTracks();
   virtual ~definTracks();
   void init();

@@ -515,6 +515,7 @@ class dbWireDecoder
   int          _x;
   int          _y;
   bool         _default_width;
+  bool         _block_rule;
   dbTechLayer* _layer;
   int          _operand;
   int          _operand2;

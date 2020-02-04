@@ -32,11 +32,13 @@
 
 #pragma once
 
-#include "ads.h"
-#include "definTypes.h"
-#include "geom.h"
-
 #include <vector>
+
+#include "ads.h"
+#include "defiMisc.hpp"
+#include "definTypes.h"
+#include "dbTypes.h"
+#include "geom.h"
 
 namespace odb {
 
@@ -87,8 +89,18 @@ class definBase
       points.push_back(point);
     }
   }
+
+  void translate(const defiPoints& defpoints, std::vector<adsPoint>& points)
+  {
+    points.clear();
+
+    for (int i = 0; i < defpoints.numPoints; ++i) {
+      adsPoint point(dbdist(defpoints.x[i]), dbdist(defpoints.y[i]));
+      points.push_back(point);
+    }
+  }
+
+  static dbOrientType translate_orientation(int orient);
 };
 
 }  // namespace odb
-
-

@@ -30,7 +30,6 @@
 // ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 // POSSIBILITY OF SUCH DAMAGE.
 
-#include "dbTechNonDefaultRule.h"
 #include "db.h"
 #include "dbBlock.h"
 #include "dbDatabase.h"
@@ -39,6 +38,7 @@
 #include "dbTech.h"
 #include "dbTechLayer.h"
 #include "dbTechLayerRule.h"
+#include "dbTechNonDefaultRule.h"
 #include "dbTechSameNetRule.h"
 #include "dbTechVia.h"
 
@@ -240,13 +240,16 @@ dbTechLayerRule* dbTechNonDefaultRule::getLayerRule(dbTechLayer* layer_)
 {
   _dbTechNonDefaultRule* rule  = (_dbTechNonDefaultRule*) this;
   _dbTechLayer*          layer = (_dbTechLayer*) layer_;
-  _dbTech*               tech  = rule->getTech();
   dbId<_dbTechLayerRule> id    = rule->_layer_rules[layer->_number];
 
   if (id == 0)
     return NULL;
 
-  return (dbTechLayerRule*) tech->_layer_rule_tbl->getPtr(id);
+  if (rule->_flags._block_rule == 0) {
+    return (dbTechLayerRule*) rule->getTech()->_layer_rule_tbl->getPtr(id);
+  } else {
+    return (dbTechLayerRule*) rule->getBlock()->_layer_rule_tbl->getPtr(id);
+  }
 }
 
 void dbTechNonDefaultRule::getLayerRules(

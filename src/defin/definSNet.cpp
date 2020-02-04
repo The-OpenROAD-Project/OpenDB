@@ -30,14 +30,15 @@
 // ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 // POSSIBILITY OF SUCH DAMAGE.
 
-#include "definSNet.h"
 #include <ctype.h>
 #include <stdio.h>
 #include <stdlib.h>
+
 #include "create_box.h"
 #include "db.h"
 #include "dbShape.h"
 #include "definPolygon.h"
+#include "definSNet.h"
 
 namespace odb {
 
@@ -157,9 +158,11 @@ void definSNet::connection(const char* iname, const char* tname, bool synth)
     if (iname[1] == 'I' || iname[1] == 'i') {
       if (iname[2] == 'N' || iname[2] == 'n') {
         if (iname[3] == 0) {
-          if (_block->findBTerm(tname) == NULL) {
-            dbBTerm::create(_cur_net, tname);
+          dbBTerm* bterm = _block->findBTerm(tname);
+          if (bterm == NULL) {
+            bterm = dbBTerm::create(_cur_net, tname);
           }
+          bterm->setSpecial();
 
           return;
         }
@@ -192,65 +195,20 @@ void definSNet::connection(const char* iname, const char* tname, bool synth)
   iterm->setSpecial();
 }
 
-void definSNet::use(defSigType type)
+void definSNet::use(dbSigType type)
 {
   if ((_cur_net == NULL) || (_replace_wires == true))
     return;
 
-  switch (type) {
-    case DEF_SIG_ANALOG:
-      _cur_net->setSigType(dbSigType::ANALOG);
-      break;
-    case DEF_SIG_CLOCK:
-      _cur_net->setSigType(dbSigType::CLOCK);
-      break;
-    case DEF_SIG_GROUND:
-      _cur_net->setSigType(dbSigType::GROUND);
-      break;
-    case DEF_SIG_POWER:
-      _cur_net->setSigType(dbSigType::POWER);
-      break;
-    case DEF_SIG_RESET:
-      _cur_net->setSigType(dbSigType::RESET);
-      break;
-    case DEF_SIG_SCAN:
-      _cur_net->setSigType(dbSigType::SCAN);
-      break;
-    case DEF_SIG_SIGNAL:
-      _cur_net->setSigType(dbSigType::SIGNAL);
-      break;
-    case DEF_SIG_TIEOFF:
-      _cur_net->setSigType(dbSigType::TIEOFF);
-      break;
-  }
+  _cur_net->setSigType(type);
 }
 
-void definSNet::source(defSource source)
+void definSNet::source(dbSourceType source)
 {
   if ((_cur_net == NULL) || (_replace_wires == true))
     return;
 
-  switch (source) {
-    case DEF_DIST:
-      _cur_net->setSourceType(dbSourceType::DIST);
-      break;
-
-    case DEF_NETLIST:
-      _cur_net->setSourceType(dbSourceType::NETLIST);
-      break;
-
-    case DEF_TEST:
-      _cur_net->setSourceType(dbSourceType::TEST);
-      break;
-
-    case DEF_TIMING:
-      _cur_net->setSourceType(dbSourceType::TIMING);
-      break;
-
-    case DEF_USER:
-      _cur_net->setSourceType(dbSourceType::USER);
-      break;
-  }
+  _cur_net->setSourceType(source);
 }
 
 void definSNet::weight(int weight)
@@ -319,35 +277,19 @@ void definSNet::polygon(const char* layer_name, std::vector<defPoint>& points)
   }
 }
 
-void definSNet::wire(defWireType type, const char* shield)
+void definSNet::wire(dbWireType type, const char* shield)
 {
   if (_skip_special_wires)
     return;
 
-  switch (type) {
-    case DEF_WIRE_COVER:
-      _wire_type = dbWireType::COVER;
-      break;
-    case DEF_WIRE_FIXED:
-      _wire_type = dbWireType::FIXED;
-      break;
-    case DEF_WIRE_ROUTED:
-      _wire_type = dbWireType::ROUTED;
-      break;
-    case DEF_WIRE_NOSHIELD:
-      _wire_type = dbWireType::NOSHIELD;
-      break;
-    case DEF_WIRE_SHIELD: {
-      _wire_type  = dbWireType::SHIELD;
-      _shield_net = _block->findNet(shield);
+  _wire_type = type;
+  if (type == dbWireType::SHIELD) {
+    _shield_net = _block->findNet(shield);
 
-      if (_shield_net == NULL) {
-        notice(0, "error: SHIELD net (%s) does not exists.\n", shield);
-        _wire_type = dbWireType::NONE;
-        // UNCOMMENT Dimitri 10192012   ++_errors;
-        ++_errors;
-      }
-      break;
+    if (_shield_net == NULL) {
+      notice(0, "error: SHIELD net (%s) does not exists.\n", shield);
+      _wire_type = dbWireType::NONE;
+      ++_errors;
     }
   }
 

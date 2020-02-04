@@ -96,12 +96,12 @@ void definVia::viaCutSize(int xSize, int ySize)
   _params->setYCutSize(dbdist(ySize));
 }
 
-void definVia::viaLayers(const char* botName,
-                         const char* cutName,
-                         const char* topName)
+bool definVia::viaLayers(const char* botName,
+                        const char* cutName,
+                        const char* topName)
 {
   if (_cur_via == NULL)
-    return;
+    return false;
 
   if (_params == NULL)
     _params = new dbViaParams();
@@ -111,7 +111,7 @@ void definVia::viaLayers(const char* botName,
   if (bot == NULL) {
     notice(0, "error: undefined layer (%s) referenced\n", botName);
     ++_errors;
-    return;
+    return false;
   }
 
   dbTechLayer* cut = _tech->findLayer(cutName);
@@ -119,7 +119,7 @@ void definVia::viaLayers(const char* botName,
   if (cut == NULL) {
     notice(0, "error: undefined layer (%s) referenced\n", cutName);
     ++_errors;
-    return;
+    return false;
   }
 
   dbTechLayer* top = _tech->findLayer(topName);
@@ -127,12 +127,13 @@ void definVia::viaLayers(const char* botName,
   if (top == NULL) {
     notice(0, "error: undefined layer (%s) referenced\n", topName);
     ++_errors;
-    return;
+    return false;
   }
 
   _params->setTopLayer(top);
   _params->setBottomLayer(bot);
   _params->setCutLayer(cut);
+  return true;
 }
 
 void definVia::viaCutSpacing(int xSpacing, int ySpacing)

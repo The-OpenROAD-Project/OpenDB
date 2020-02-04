@@ -30,7 +30,6 @@
 // ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 // POSSIBILITY OF SUCH DAMAGE.
 
-#include "dbTechLayerRule.h"
 #include "db.h"
 #include "dbBlock.h"
 #include "dbDatabase.h"
@@ -38,6 +37,7 @@
 #include "dbTable.hpp"
 #include "dbTech.h"
 #include "dbTechLayer.h"
+#include "dbTechLayerRule.h"
 #include "dbTechNonDefaultRule.h"
 
 namespace odb {
@@ -199,9 +199,15 @@ dbTechNonDefaultRule* dbTechLayerRule::getNonDefaultRule()
   if (rule->_non_default_rule == 0)
     return NULL;
 
-  _dbTech* tech = rule->getTech();
-  return (dbTechNonDefaultRule*) tech->_non_default_rule_tbl->getPtr(
-      rule->_non_default_rule);
+  if (isBlockRule()) {
+    _dbBlock* block = rule->getBlock();
+    return (dbTechNonDefaultRule*) block->_non_default_rule_tbl->getPtr(
+        rule->_non_default_rule);
+  } else {
+    _dbTech* tech = rule->getTech();
+    return (dbTechNonDefaultRule*) tech->_non_default_rule_tbl->getPtr(
+        rule->_non_default_rule);
+  }
 }
 
 bool dbTechLayerRule::isBlockRule()

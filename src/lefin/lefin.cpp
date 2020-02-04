@@ -1571,7 +1571,7 @@ void lefin::via(lefiVia* via, dbTechNonDefaultRule* rule)
     dbTechViaGenerateRule* gen_rule
         = _tech->findViaGenerateRule(via->viaRuleName());
 
-    if (rule == NULL) {
+    if (gen_rule == NULL) {
       notice(0, "error: missing VIA GENERATE rule %s\n", via->viaRuleName());
       ++_errors;
       return;

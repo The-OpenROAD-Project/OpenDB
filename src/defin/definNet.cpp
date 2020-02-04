@@ -33,6 +33,7 @@
 #include <ctype.h>
 #include <stdio.h>
 #include <stdlib.h>
+
 #include "db.h"
 #include "dbShape.h"
 #include "dbWireCodec.h"
@@ -267,65 +268,20 @@ void definNet::nonDefaultRule(const char* rule)
   }
 }
 
-void definNet::use(defSigType type)
+void definNet::use(dbSigType type)
 {
   if ((_cur_net == NULL) || (_replace_wires == true))
     return;
 
-  switch (type) {
-    case DEF_SIG_ANALOG:
-      _cur_net->setSigType(dbSigType::ANALOG);
-      break;
-    case DEF_SIG_CLOCK:
-      _cur_net->setSigType(dbSigType::CLOCK);
-      break;
-    case DEF_SIG_GROUND:
-      _cur_net->setSigType(dbSigType::GROUND);
-      break;
-    case DEF_SIG_POWER:
-      _cur_net->setSigType(dbSigType::POWER);
-      break;
-    case DEF_SIG_RESET:
-      _cur_net->setSigType(dbSigType::RESET);
-      break;
-    case DEF_SIG_SCAN:
-      _cur_net->setSigType(dbSigType::SCAN);
-      break;
-    case DEF_SIG_SIGNAL:
-      _cur_net->setSigType(dbSigType::SIGNAL);
-      break;
-    case DEF_SIG_TIEOFF:
-      _cur_net->setSigType(dbSigType::TIEOFF);
-      break;
-  }
+  _cur_net->setSigType(type);
 }
 
-void definNet::source(defSource source)
+void definNet::source(dbSourceType source)
 {
   if ((_cur_net == NULL) || (_replace_wires == true))
     return;
 
-  switch (source) {
-    case DEF_DIST:
-      _cur_net->setSourceType(dbSourceType::DIST);
-      break;
-
-    case DEF_NETLIST:
-      _cur_net->setSourceType(dbSourceType::NETLIST);
-      break;
-
-    case DEF_TEST:
-      _cur_net->setSourceType(dbSourceType::TEST);
-      break;
-
-    case DEF_TIMING:
-      _cur_net->setSourceType(dbSourceType::TIMING);
-      break;
-
-    case DEF_USER:
-      _cur_net->setSourceType(dbSourceType::USER);
-      break;
-  }
+  _cur_net->setSourceType(source);
 }
 
 void definNet::weight(int weight)
@@ -352,7 +308,7 @@ void definNet::xtalk(int value)
   _cur_net->setXTalkClass(value);
 }
 
-void definNet::wire(defWireType type)
+void definNet::wire(dbWireType type)
 {
   if (_skip_wires)
     return;
@@ -369,27 +325,7 @@ void definNet::wire(defWireType type)
     _wire_encoder.begin(_wire);
   }
 
-  switch (type) {
-    case DEF_WIRE_COVER:
-      _wire_type = dbWireType::COVER;
-      break;
-    case DEF_WIRE_FIXED:
-      _wire_type = dbWireType::FIXED;
-      break;
-    case DEF_WIRE_ROUTED:
-      _wire_type         = dbWireType::ROUTED;
-      _found_new_routing = true;
-      break;
-    case DEF_WIRE_NOSHIELD:
-      _wire_type         = dbWireType::NOSHIELD;
-      _found_new_routing = true;
-      break;
-    case DEF_WIRE_SHIELD:
-      _wire_type         = dbWireType::SHIELD;
-      _found_new_routing = true;
-      break;
-  }
-
+  _wire_type  = type;
   _taper_rule = NULL;
 }
 
@@ -498,50 +434,41 @@ void definNet::getUniqueViaName(std::string& viaName)
   }
 }
 
-dbVia* definNet::getRotatedVia(const char* via_name, int orient)
+dbVia* definNet::getRotatedVia(const char* via_name, dbOrientType orient)
 {
-  std::string         viaName(via_name);
-  dbOrientType::Value db_orient;
+  std::string viaName(via_name);
 
-  switch (orient) {
-    case DEF_ORIENT_N:
+  switch (orient.getValue()) {
+    case dbOrientType::R0:
       viaName += "_N";
-      db_orient = dbOrientType::R0;
       break;
 
-    case DEF_ORIENT_S:
+    case dbOrientType::R180:
       viaName += "_S";
-      db_orient = dbOrientType::R180;
       break;
 
-    case DEF_ORIENT_E:
+    case dbOrientType::R270:
       viaName += "_E";
-      db_orient = dbOrientType::R270;
       break;
 
-    case DEF_ORIENT_W:
+    case dbOrientType::R90:
       viaName += "_W";
-      db_orient = dbOrientType::R90;
       break;
 
-    case DEF_ORIENT_FN:
+    case dbOrientType::MY:
       viaName += "_FN";
-      db_orient = dbOrientType::MY;
       break;
 
-    case DEF_ORIENT_FS:
+    case dbOrientType::MX:
       viaName += "_FS";
-      db_orient = dbOrientType::MX;
       break;
 
-    case DEF_ORIENT_FE:
+    case dbOrientType::MYR90:
       viaName += "_FE";
-      db_orient = dbOrientType::MYR90;
       break;
 
-    case DEF_ORIENT_FW:
+    case dbOrientType::MXR90:
       viaName += "_FW";
-      db_orient = dbOrientType::MXR90;
       break;
 
     default:
@@ -559,7 +486,7 @@ dbVia* definNet::getRotatedVia(const char* via_name, int orient)
   dbTechVia* tech_via = _tech->findVia(via_name);
 
   if (tech_via) {
-    via = dbVia::create(_block, viaName.c_str(), tech_via, db_orient);
+    via = dbVia::create(_block, viaName.c_str(), tech_via, orient);
   }
 
   else {
@@ -571,18 +498,18 @@ dbVia* definNet::getRotatedVia(const char* via_name, int orient)
       return NULL;
     }
 
-    via = dbVia::create(_block, viaName.c_str(), block_via, db_orient);
+    via = dbVia::create(_block, viaName.c_str(), block_via, orient);
   }
 
   return via;
 }
 
-void definNet::pathVia(const char* via_name, int def_orient)
+void definNet::pathVia(const char* via_name, dbOrientType orient)
 {
   if (_wire == NULL)
     return;
 
-  dbVia* via = getRotatedVia(via_name, def_orient);
+  dbVia* via = getRotatedVia(via_name, orient);
 
   if (via == NULL)
     return;

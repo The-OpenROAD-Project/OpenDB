@@ -34,16 +34,16 @@
 
 #include "ads.h"
 #include "definBase.h"
-#include "definIGCell.h"
 
 namespace odb {
 
-class definGCell : public definIGCell, public definBase
+class definGCell : public definBase
 {
+ public:
+
   /// GCell interface methods
   virtual void gcell(defDirection dir, int orig, int count, int step);
 
- public:
   definGCell();
   virtual ~definGCell();
   void init();

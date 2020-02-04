@@ -53,12 +53,6 @@ void definNonDefaultRule::init()
   definBase::init();
 }
 
-void definNonDefaultRule::beginRules(int n)
-{
-  _cur_rule       = NULL;
-  _cur_layer_rule = NULL;
-}
-
 void definNonDefaultRule::beginRule(const char* name)
 {
   _cur_layer_rule = NULL;
@@ -217,10 +211,6 @@ void definNonDefaultRule::endRule()
     if (!props.empty() && props.orderReversed())
       props.reverse();
   }
-}
-
-void definNonDefaultRule::endRules()
-{
 }
 
 }  // namespace odb

@@ -31,9 +31,11 @@
 // POSSIBILITY OF SUCH DAMAGE.
 
 #include <stdio.h>
+
+#include <limits>
 #include <set>
 #include <string>
-#include <limits>
+
 #include "db.h"
 #include "dbMap.h"
 #include "dbWireCodec.h"
@@ -892,7 +894,9 @@ void defout_impl::writeBTerm(dbBTerm* bterm)
       }
     }
 
-    fprintf(_out, " + USE %s", defSigType(bterm->getSigType()));
+    const char* sig_type = defSigType(bterm->getSigType());
+    fprintf(_out, " + USE %s", sig_type);
+    
     fprintf(_out, " ;\n");
   } else
     notice(0,
@@ -1219,6 +1223,13 @@ void defout_impl::writeSNet(dbNet* net)
   }
 
   int i = 0;
+
+  for (dbBTerm* bterm : net->getBTerms()) {
+    if ((++i & 7) == 0) {
+      fprintf(_out, "\n    ");
+    }
+    fprintf(_out, " ( PIN %s )", bterm->getName().c_str());
+  }
 
   char                     ttname[dbObject::max_name_length];
   dbSet<dbITerm>::iterator iterm_itr;

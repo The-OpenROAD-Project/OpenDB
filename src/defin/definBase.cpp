@@ -30,8 +30,9 @@
 // ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 // POSSIBILITY OF SUCH DAMAGE.
 
-#include "definBase.h"
 #include "db.h"
+#include "defiUtil.hpp"
+#include "definBase.h"
 
 namespace odb {
 
@@ -67,6 +68,29 @@ void definBase::setTech(dbTech* tech)
 void definBase::setBlock(dbBlock* block)
 {
   _block = block;
+}
+
+dbOrientType definBase::translate_orientation(int orient)
+{
+  switch (orient) {
+    case DEF_ORIENT_N:
+      return dbOrientType::R0;
+    case DEF_ORIENT_S:
+      return dbOrientType::R180;
+    case DEF_ORIENT_E:
+      return dbOrientType::R270;
+    case DEF_ORIENT_W:
+      return dbOrientType::R90;
+    case DEF_ORIENT_FN:
+      return dbOrientType::MY;
+    case DEF_ORIENT_FS:
+      return dbOrientType::MX;
+    case DEF_ORIENT_FE:
+      return dbOrientType::MYR90;
+    case DEF_ORIENT_FW:
+      return dbOrientType::MXR90;
+  }
+  assert(0);
 }
 
 }  // namespace odb

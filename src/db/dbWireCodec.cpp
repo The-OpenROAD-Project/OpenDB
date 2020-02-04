@@ -835,6 +835,7 @@ nextOpCode:
 
     case WOP_RULE:
       _default_width = false;
+      _block_rule = (opcode & WOP_BLOCK_RULE);
       return _opcode = RULE;
 
     case WOP_X: {
@@ -1005,7 +1006,11 @@ dbTechLayerRule* dbWireDecoder::getRule() const
 {
   ZASSERT(_opcode == RULE);
 
-  return dbTechLayerRule::getTechLayerRule(_tech, _operand);
+  if (_block_rule) {
+    return dbTechLayerRule::getTechLayerRule(_block, _operand);
+  } else {
+    return dbTechLayerRule::getTechLayerRule(_tech, _operand);
+  }
 }
 
 void dbWireDecoder::getPoint(int& x, int& y) const

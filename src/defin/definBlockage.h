@@ -34,14 +34,13 @@
 
 #include "ads.h"
 #include "definBase.h"
-#include "definIBlockage.h"
 
 namespace odb {
 
 class dbTechLayer;
 class dbInst;
 
-class definBlockage : public definIBlockage, public definBase
+class definBlockage : public definBase
 {
   dbTechLayer* _layer;
   dbInst*      _inst;
@@ -53,6 +52,7 @@ class definBlockage : public definIBlockage, public definBase
   int          _min_spacing;
   int          _effective_width;
 
+ public:
   // Routing Blockage interface methods
   virtual void blockageRoutingBegin(const char* layer);
   virtual void blockageRoutingComponent(const char* comp);
@@ -62,7 +62,7 @@ class definBlockage : public definIBlockage, public definBase
   virtual void blockageRoutingMinSpacing(int spacing);
   virtual void blockageRoutingEffectiveWidth(int width);
   virtual void blockageRoutingRect(int x1, int y1, int x2, int y2);
-  virtual void blockageRoutingPolygon(std::vector<defPoint>& points);
+  virtual void blockageRoutingPolygon(const std::vector<adsPoint>& points);
   virtual void blockageRoutingEnd();
 
   // Placement Blockage interface methods
@@ -72,7 +72,6 @@ class definBlockage : public definIBlockage, public definBase
   virtual void blockagePlacementRect(int x1, int y1, int x2, int y2);
   virtual void blockagePlacementEnd();
 
- public:
   definBlockage();
   virtual ~definBlockage();
   void init();

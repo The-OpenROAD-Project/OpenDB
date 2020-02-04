@@ -38,7 +38,6 @@
 #include "ads.h"
 #include "db.h"
 #include "definBase.h"
-#include "definISNet.h"
 
 namespace odb {
 
@@ -46,7 +45,7 @@ class dbSWire;
 class dbNet;
 class dbTechLayer;
 
-class definSNet : public definISNet, public definBase
+class definSNet : public definBase
 {
   bool            _skip_special_wires;
   bool            _skip_shields;
@@ -76,10 +75,10 @@ class definSNet : public definISNet, public definBase
   virtual void connection(const char* iname,
                           const char* pname,
                           bool        synthesized);
-  virtual void use(defSigType type);
+  virtual void use(dbSigType type);
   virtual void rect(const char* layer, int x1, int y1, int x2, int y2);
   virtual void polygon(const char* layer, std::vector<defPoint>& points);
-  virtual void wire(defWireType type, const char* shield);
+  virtual void wire(dbWireType type, const char* shield);
   virtual void path(const char* layer, int width);
   virtual void pathStyle(int style);
   virtual void pathShape(const char* type);
@@ -93,7 +92,7 @@ class definSNet : public definISNet, public definBase
                             int         stepY);
   virtual void pathEnd();
   virtual void wireEnd();
-  virtual void source(defSource source);
+  virtual void source(dbSourceType source);
   virtual void weight(int weight);
   virtual void fixedbump();
   virtual void property(const char* name, const char* value);
@@ -103,7 +102,6 @@ class definSNet : public definISNet, public definBase
 
   void connect_all(dbNet*, const char* term);
 
- public:
   definSNet();
   virtual ~definSNet();
   void init();

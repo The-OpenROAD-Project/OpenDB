@@ -30,12 +30,15 @@
 // ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 // POSSIBILITY OF SUCH DAMAGE.
 
-#include "definComponent.h"
 #include <ctype.h>
 #include <stdio.h>
 #include <stdlib.h>
+
 #include "db.h"
 #include "dbTransform.h"
+#include "definComponent.h"
+#include "defiComponent.hpp"
+#include "defiUtil.hpp"
 
 namespace odb {
 
@@ -165,25 +168,22 @@ void definComponent::begin(const char* iname, const char* mname)
     notice(0, "\t\tCreated %d Insts\n", _inst_cnt);
 }
 
-void definComponent::placement(defPlacement status,
-                               int          x,
-                               int          y,
-                               defOrient    orient)
+void definComponent::placement(int status, int x, int y, int orient)
 {
   if (_cur_inst == NULL)
     return;
 
   switch (status) {
-    case DEF_PLACEMENT_FIXED:
+    case DEFI_COMPONENT_FIXED:
       _cur_inst->setPlacementStatus(dbPlacementStatus::FIRM);
       break;
-    case DEF_PLACEMENT_COVER:
+    case DEFI_COMPONENT_COVER:
       _cur_inst->setPlacementStatus(dbPlacementStatus::COVER);
       break;
-    case DEF_PLACEMENT_PLACED:
+    case DEFI_COMPONENT_PLACED:
       _cur_inst->setPlacementStatus(dbPlacementStatus::PLACED);
       break;
-    case DEF_PLACEMENT_UNPLACED:
+    case DEFI_COMPONENT_UNPLACED:
       _cur_inst->setPlacementStatus(dbPlacementStatus::UNPLACED);
       break;
   }
@@ -242,32 +242,12 @@ void definComponent::region(const char* name)
   region->addInst(_cur_inst);
 }
 
-void definComponent::source(defSource source)
+void definComponent::source(dbSourceType source)
 {
   if (_cur_inst == NULL)
     return;
 
-  switch (source) {
-    case DEF_DIST:
-      _cur_inst->setSourceType(dbSourceType::DIST);
-      break;
-
-    case DEF_NETLIST:
-      _cur_inst->setSourceType(dbSourceType::NETLIST);
-      break;
-
-    case DEF_TEST:
-      _cur_inst->setSourceType(dbSourceType::TEST);
-      break;
-
-    case DEF_TIMING:
-      _cur_inst->setSourceType(dbSourceType::TIMING);
-      break;
-
-    case DEF_USER:
-      _cur_inst->setSourceType(dbSourceType::USER);
-      break;
-  }
+  _cur_inst->setSourceType(source);
 }
 
 void definComponent::weight(int weight)

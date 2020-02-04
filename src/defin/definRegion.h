@@ -34,13 +34,12 @@
 
 #include "ads.h"
 #include "definBase.h"
-#include "definIRegion.h"
 
 namespace odb {
 
 class dbRegion;
 
-class definRegion : public definIRegion, public definBase
+class definRegion : public definBase
 {
   dbRegion* _cur_region;
 

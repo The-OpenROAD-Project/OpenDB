@@ -1229,6 +1229,24 @@ const char* dbRegionType::getString() const
   return value;
 }
 
+dbSourceType::dbSourceType(const char* value)
+{
+  if (strcasecmp(value, "NETLIST") == 0)
+    _value = NETLIST;
+
+  else if (strcasecmp(value, "DIST") == 0)
+    _value = DIST;
+
+  else if (strcasecmp(value, "USER") == 0)
+    _value = USER;
+
+  else if (strcasecmp(value, "TIMING") == 0)
+    _value = TIMING;
+
+  else
+    _value = NETLIST;
+}
+
 const char* dbSourceType::getString() const
 {
   const char* value = "";

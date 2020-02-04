@@ -33,12 +33,12 @@
 #pragma once
 
 #include <string.h>
+
 #include <map>
 #include <vector>
 
 #include "ads.h"
 #include "definBase.h"
-#include "definIRow.h"
 
 namespace odb {
 
@@ -46,7 +46,7 @@ class dbSite;
 class dbLib;
 class dbRow;
 
-class definRow : public definIRow, public definBase
+class definRow : public definBase
 {
   struct ltstr
   {
@@ -61,15 +61,16 @@ class definRow : public definIRow, public definBase
   std::vector<dbLib*>                           _libs;
   dbRow*                                        _cur_row;
 
+ public:
   /// Row interface methods
-  virtual void begin(const char* name,
-                     const char* site,
-                     int         origin_x,
-                     int         origin_y,
-                     defOrient   orient,
-                     defRow      direction,
-                     int         num_sites,
-                     int         spacing);
+  virtual void begin(const char*  name,
+                     const char*  site,
+                     int          origin_x,
+                     int          origin_y,
+                     dbOrientType orient,
+                     defRow       direction,
+                     int          num_sites,
+                     int          spacing);
   virtual void property(const char* name, const char* value);
   virtual void property(const char* name, int value);
   virtual void property(const char* name, double value);
@@ -77,7 +78,6 @@ class definRow : public definIRow, public definBase
 
   dbSite* getSite(const char* name);
 
- public:
   definRow();
   virtual ~definRow();
   void init();
@@ -85,5 +85,3 @@ class definRow : public definIRow, public definBase
 };
 
 }  // namespace odb
-
-

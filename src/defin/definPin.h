@@ -32,21 +32,20 @@
 
 #pragma once
 
+#include <string>
+
 #include "ads.h"
 #include "dbTypes.h"
 #include "definBase.h"
-#include "definIPin.h"
 #include "definPolygon.h"
 #include "geom.h"
-
-#include <string>
 
 namespace odb {
 
 class dbBTerm;
 class dbTechLayer;
 
-class definPin : public definIPin, public definBase
+class definPin : public definBase
 {
   struct Rect
   {
@@ -102,16 +101,17 @@ class definPin : public definIPin, public definBase
   void addRect(Rect& r);
   void addPolygon(Polygon& p);
 
+ public:
   // Pin interface methods
   virtual void pinsBegin(int n);
   virtual void pinBegin(const char* name, const char* net);
   virtual void pinSpecial();
-  virtual void pinUse(defSigType type);
-  virtual void pinDirection(defIoType type);
+  virtual void pinUse(dbSigType type);
+  virtual void pinDirection(dbIoType type);
   virtual void pinPlacement(defPlacement status,
                             int          x,
                             int          y,
-                            defOrient    orient);
+                            dbOrientType orient);
   virtual void pinMinSpacing(int spacing);
   virtual void pinEffectiveWidth(int width);
   virtual void pinRect(const char* layer, int x1, int y1, int x2, int y2);
@@ -121,12 +121,9 @@ class definPin : public definIPin, public definBase
   virtual void pinEnd();
   virtual void pinsEnd();
 
- public:
   definPin();
   virtual ~definPin();
   void init();
 };
 
 }  // namespace odb
-
-

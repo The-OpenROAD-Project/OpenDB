@@ -124,6 +124,14 @@ void definRegion::inst(const char* name)
 	  _cur_region->addInst(inst);
 	}
       }
+    } else {
+      dbInst* inst = _block->findInst(name);
+      if (inst == NULL) {
+        notice(0, "error: netlist component (%s) is not defined\n", name);
+        ++_errors;
+        return;
+      }
+      _cur_region->addInst(inst);
     }
   }
 }

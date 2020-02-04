@@ -34,7 +34,7 @@
 
 #include "ads.h"
 #include "definBase.h"
-#include "definIReader.h"
+#include "defrReader.hpp"
 
 namespace odb {
 
@@ -53,7 +53,7 @@ class definNonDefaultRule;
 class definPropDefs;
 class definPinProps;
 
-class definReader : public definIReader, public definBase
+class definReader : public definBase
 {
   dbDatabase*             _db;
   definBlockage*          _blockageR;
@@ -77,9 +77,7 @@ class definReader : public definIReader, public definBase
   void init();
   void setLibs(std::vector<dbLib*>& lib_names);
 
-  virtual void dieArea(const std::vector<defPoint>& points);
   virtual void error(const char* msg);
-  virtual void units(int d);
   virtual void line(int line_num);
 
   void setTech(dbTech* tech);
@@ -89,6 +87,129 @@ class definReader : public definIReader, public definBase
   bool replaceWires(const char* file);
   void replaceWires();
   int  errors();
+
+  // Parser callbacks
+  static int blockageCallback(defrCallbackType_e type,
+                              defiBlockage*      blockage,
+                              defiUserData       data);
+
+  static int componentsCallback(defrCallbackType_e type,
+                                defiComponent*     comp,
+                                defiUserData       data);
+
+  static int componentMaskShiftCallback(
+      defrCallbackType_e           type,
+      defiComponentMaskShiftLayer* shiftLayers,
+      defiUserData                 data);
+
+  static int dieAreaCallback(defrCallbackType_e type,
+                             defiBox*           box,
+                             defiUserData       data);
+
+  static int extensionCallback(defrCallbackType_e type,
+                               const char*        extension,
+                               defiUserData       data);
+
+  static int fillsCallback(defrCallbackType_e type,
+                           int                count,
+                           defiUserData       data);
+
+  static int fillCallback(defrCallbackType_e type,
+                          defiFill*          fill,
+                          defiUserData       data);
+
+  static int gcellGridCallback(defrCallbackType_e type,
+                               defiGcellGrid*     grid,
+                               defiUserData       data);
+
+  static int groupNameCallback(defrCallbackType_e type,
+                               const char*        name,
+                               defiUserData       data);
+  static int groupMemberCallback(defrCallbackType_e type,
+                                 const char*        member,
+                                 defiUserData       data);
+
+  static int groupCallback(defrCallbackType_e type,
+                           defiGroup*         group,
+                           defiUserData       data);
+
+  static int historyCallback(defrCallbackType_e type,
+                             const char*        extension,
+                             defiUserData       data);
+
+  static int netCallback(defrCallbackType_e type,
+                         defiNet*           net,
+                         defiUserData       data);
+
+  static int nonDefaultRuleCallback(defrCallbackType_e type,
+                                    defiNonDefault*    rule,
+                                    defiUserData       data);
+
+  static int pinCallback(defrCallbackType_e type,
+                         defiPin*           pin,
+                         defiUserData       data);
+
+  static int pinsEndCallback(defrCallbackType_e type,
+                             void*              v,
+                             defiUserData       data);
+
+  static int pinPropCallback(defrCallbackType_e type,
+                             defiPinProp*       prop,
+                             defiUserData       data);
+
+  static int pinsStartCallback(defrCallbackType_e type,
+                               int                number,
+                               defiUserData       data);
+
+  static int propCallback(defrCallbackType_e type,
+                          defiProp*          prop,
+                          defiUserData       data);
+  static int propEndCallback(defrCallbackType_e type,
+                             void*              v,
+                             defiUserData       data);
+  static int propStartCallback(defrCallbackType_e type,
+                               void*              v,
+                               defiUserData       data);
+
+  static int regionCallback(defrCallbackType_e type,
+                            defiRegion*        region,
+                            defiUserData       data);
+
+  static int rowCallback(defrCallbackType_e type,
+                         defiRow*           row,
+                         defiUserData       data);
+
+  static int scanchainsCallback(defrCallbackType_e type,
+                                int                count,
+                                defiUserData       data);
+
+  static int slotsCallback(defrCallbackType_e type,
+                           int                count,
+                           defiUserData       data);
+
+  static int specialNetCallback(defrCallbackType_e type,
+                                defiNet*           net,
+                                defiUserData       data);
+
+  static int stylesCallback(defrCallbackType_e type,
+                            int                count,
+                            defiUserData       data);
+
+  static int technologyCallback(defrCallbackType_e type,
+                                const char*        name,
+                                defiUserData       data);
+
+  static int trackCallback(defrCallbackType_e type,
+                           defiTrack*         track,
+                           defiUserData       data);
+
+  static int unitsCallback(defrCallbackType_e type,
+                           double             number,
+                           defiUserData       data);
+
+  static int viaCallback(defrCallbackType_e type,
+                         defiVia*           via,
+                         defiUserData       data);
 
  public:
   definReader(dbDatabase* db);
@@ -112,5 +233,3 @@ class definReader : public definIReader, public definBase
 };
 
 }  // namespace odb
-
-

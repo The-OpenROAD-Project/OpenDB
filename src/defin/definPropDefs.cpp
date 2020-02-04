@@ -30,8 +30,8 @@
 // ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 // POSSIBILITY OF SUCH DAMAGE.
 
-#include "definPropDefs.h"
 #include "db.h"
+#include "definPropDefs.h"
 
 namespace odb {
 
@@ -60,9 +60,9 @@ void definPropDefs::endDefinitions()
   }
 }
 
-void definPropDefs::begin(defObjectType obj_type,
-                          const char*   name,
-                          defPropType   prop_type)
+void definPropDefs::begin(const char* obj_type,
+                          const char* name,
+                          defPropType prop_type)
 {
   if (_defs == NULL) {
     _defs = dbProperty::find(_block, "__ADS_DEF_PROPERTY_DEFINITIONS__");
@@ -72,54 +72,10 @@ void definPropDefs::begin(defObjectType obj_type,
           _block, "__ADS_DEF_PROPERTY_DEFINITIONS__", 0);
   }
 
-  const char* otype;
-
-  switch (obj_type) {
-    case DEF_COMPONENT:
-      otype = "COMPONENT";
-      break;
-
-    case DEF_COMPONENTPIN:
-      otype = "COMPONENTPIN";
-      break;
-
-    case DEF_DESIGN:
-      otype = "DESIGN";
-      break;
-
-    case DEF_GROUP:
-      otype = "GROUP";
-      break;
-
-    case DEF_NET:
-      otype = "NET";
-      break;
-
-    case DEF_REGION:
-      otype = "REGION";
-      break;
-
-    case DEF_ROW:
-      otype = "ROW";
-      break;
-
-    case DEF_SPECIALNET:
-      otype = "SPECIALNET";
-      break;
-
-    case DEF_NONDEFAULTRULE:
-      otype = "NONDEFAULTRULE";
-      break;
-
-    default:
-      throw ZException("Unknown defObjectType");
-  }
-
-  dbProperty* obj = dbProperty::find(_defs, otype);
+  dbProperty* obj = dbProperty::find(_defs, obj_type);
 
   if (obj == NULL) {
-    if (obj == NULL)
-      obj = dbIntProperty::create(_defs, otype, 0);
+      obj = dbIntProperty::create(_defs, obj_type, 0);
   }
 
   _prop = dbProperty::find(obj, name);

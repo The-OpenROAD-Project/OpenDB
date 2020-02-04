@@ -137,14 +137,12 @@ void definBlockage::blockageRoutingRect(int x1, int y1, int x2, int y2)
     o->setEffectiveWidth(dbdist(_effective_width));
 }
 
-void definBlockage::blockageRoutingPolygon(std::vector<defPoint>& points)
+void definBlockage::blockageRoutingPolygon(const std::vector<adsPoint>& points)
 {
   if (_layer == NULL)
     return;
 
-  std::vector<adsPoint> P;
-  translate(points, P);
-  definPolygon         polygon(P);
+  definPolygon         polygon(points);
   std::vector<adsRect> R;
   polygon.decompose(R);
 

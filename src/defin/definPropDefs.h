@@ -32,10 +32,9 @@
 
 #pragma once
 
-#include "definBase.h"
-#include "definIPropDefs.h"
-
 #include <string>
+
+#include "definBase.h"
 
 namespace odb {
 
@@ -64,7 +63,7 @@ namespace odb {
 
 class dbProperty;
 
-class definPropDefs : public definIPropDefs, public definBase
+class definPropDefs : public definBase
 {
   dbProperty* _defs;
   dbProperty* _prop;
@@ -72,16 +71,16 @@ class definPropDefs : public definIPropDefs, public definBase
  public:
   virtual ~definPropDefs() {}
   virtual void beginDefinitions();
-  virtual void begin(defObjectType, const char*, defPropType);
-  virtual void value(const char*);
-  virtual void value(int);
-  virtual void value(double);
-  virtual void range(int, int);
-  virtual void range(double, double);
+  virtual void begin(const char* obj_type,
+                     const char* name,
+                     defPropType prop_type);
+  virtual void value(const char* value);
+  virtual void value(int value);
+  virtual void value(double value);
+  virtual void range(int minV, int maxV);
+  virtual void range(double minV, double maxV);
   virtual void end();
   virtual void endDefinitions();
 };
 
 }  // namespace odb
-
-

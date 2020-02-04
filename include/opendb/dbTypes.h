@@ -1093,6 +1093,7 @@ class dbSourceType
     TEST
   };
 
+  dbSourceType(const char* value);
   dbSourceType(Value inval) { _value = inval; }
   dbSourceType() { _value = NONE; }
   Value       getValue() const { return _value; }

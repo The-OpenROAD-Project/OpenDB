@@ -34,23 +34,22 @@
 
 #include "ads.h"
 #include "definBase.h"
-#include "definIFill.h"
 
 namespace odb {
 
 class dbTechLayer;
 
-class definFill : public definIFill, public definBase
+class definFill : public definBase
 {
   dbTechLayer* _cur_layer;
 
+ public:
   // Fill interface methods
   virtual void fillBegin(const char* layer);
   virtual void fillRect(int x1, int y1, int x2, int y2);
-  virtual void fillPolygon(std::vector<defPoint>& points);
+  virtual void fillPolygon(std::vector<adsPoint>& points);
   virtual void fillEnd();
 
- public:
   definFill();
   virtual ~definFill();
   void init();

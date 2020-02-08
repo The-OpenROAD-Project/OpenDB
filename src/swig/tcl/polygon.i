@@ -22,29 +22,35 @@ Polygon90Set* odb_newSetFromRect(int xLo, int yLo, int xHi, int yHi)
   return new Polygon90Set({poly});
 }
   
-void odb_bloatSet(Polygon90Set* set, int bloating)
+Polygon90Set* odb_bloatSet(const Polygon90Set* set, int bloating)
 {
-  *set += bloating;
+  return new Polygon90Set(*set + bloating);
 }
 
-void odb_shrinkSet(Polygon90Set* set, int shrinking)
+Polygon90Set* odb_shrinkSet(const Polygon90Set* set, int shrinking)
 {
-  *set -= shrinking;
+  return new Polygon90Set(*set - shrinking);
 }
 
-void odb_andSet(Polygon90Set* set1, const Polygon90Set* set2)
+Polygon90Set* odb_andSet(const Polygon90Set* set1, const Polygon90Set* set2)
 {
-  *set1 &= *set2;
+  Polygon90Set* result = new Polygon90Set;
+  assign(*result, *set1 & *set2);
+  return result;
 }
 
-void odb_orSet(Polygon90Set* set1, const Polygon90Set* set2)
+Polygon90Set* odb_orSet(const Polygon90Set* set1, const Polygon90Set* set2)
 {
-  *set1 |= *set2;
+  Polygon90Set* result = new Polygon90Set;
+  assign(*result, *set1 | *set2);
+  return result;
 }
 
-void odb_subtractSet(Polygon90Set* set1, const Polygon90Set* set2)
+Polygon90Set* odb_subtractSet(const Polygon90Set* set1, const Polygon90Set* set2)
 {
-  *set1 -= *set2;
+  Polygon90Set* result = new Polygon90Set;
+  assign(*result, *set1 - *set2);
+  return result;
 }
 
 std::vector<Polygon90> odb_getPolygons(const Polygon90Set* set)
@@ -73,9 +79,18 @@ Polygon90Set* odb_newSetFromRect(int xLo, int yLo, int xHi, int yHi);
 std::vector<odb::adsPoint> odb_getPoints(const Polygon90* polygon);
 std::vector<Polygon90> odb_getPolygons(const Polygon90Set* set);
 
-// All modify the first arg
-void odb_bloatSet(Polygon90Set* set, int bloating);
-void odb_shrinkSet(Polygon90Set* set, int shrinking);
-void odb_andSet(Polygon90Set* set1, const Polygon90Set* set2);
-void odb_orSet(Polygon90Set* set1, const Polygon90Set* set2);
-void odb_subtractSet(Polygon90Set* set1, const Polygon90Set* set2);
+
+%newobject odb_bloatSet;
+Polygon90Set* odb_bloatSet(Polygon90Set* set, int bloating);
+
+%newobject odb_shrinkSet;
+Polygon90Set* odb_shrinkSet(Polygon90Set* set, int shrinking);
+
+%newobject odb_andSet;
+Polygon90Set* odb_andSet(Polygon90Set* set1, const Polygon90Set* set2);
+
+%newobject odb_orSet;
+Polygon90Set* odb_orSet(Polygon90Set* set1, const Polygon90Set* set2);
+
+%newobject odb_subtractSet;
+Polygon90Set* odb_subtractSet(Polygon90Set* set1, const Polygon90Set* set2);

@@ -30,7 +30,6 @@
 // ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 // POSSIBILITY OF SUCH DAMAGE.
 
-#include "dbTechLayerAntennaRule.h"
 #include "db.h"
 #include "dbDatabase.h"
 #include "dbMaster.h"
@@ -38,6 +37,7 @@
 #include "dbTable.hpp"
 #include "dbTech.h"
 #include "dbTechLayer.h"
+#include "dbTechLayerAntennaRule.h"
 #include "lefout.h"
 
 namespace odb {
@@ -759,6 +759,51 @@ void dbTechAntennaPinModel::addMaxCutCAREntry(double inval, dbTechLayer* refly)
 {
   _dbTechAntennaPinModel* xmod = (_dbTechAntennaPinModel*) this;
   _dbTechAntennaAreaElement::create(xmod->_max_cut_car, inval, refly);
+}
+
+void _dbTechAntennaPinModel::getAntennaValues(
+    const dbVector<_dbTechAntennaAreaElement*>&   elements,
+    std::vector<std::pair<double, dbTechLayer*>>& result) const
+{
+  dbDatabase* db   = (dbDatabase*) getDatabase();
+  _dbTech*    tech = (_dbTech*) db->getTech();
+
+  for (auto elem : elements) {
+    dbTechLayer*       layer   = nullptr;
+    dbId<_dbTechLayer> layerId = elem->getLayerId();
+    if (layerId.isValid()) {
+      layer = (dbTechLayer*) tech->_layer_tbl->getPtr(layerId);
+    }
+    result.emplace_back(elem->getArea(), layer);
+  }
+}
+
+void dbTechAntennaPinModel::getGateArea(
+    std::vector<std::pair<double, dbTechLayer*>>& data)
+{
+  _dbTechAntennaPinModel* xmod = (_dbTechAntennaPinModel*) this;
+  xmod->getAntennaValues(xmod->_gate_area, data);
+}
+
+void dbTechAntennaPinModel::getMaxAreaCAR(
+    std::vector<std::pair<double, dbTechLayer*>>& data)
+{
+  _dbTechAntennaPinModel* xmod = (_dbTechAntennaPinModel*) this;
+  xmod->getAntennaValues(xmod->_max_area_car, data);
+}
+
+void dbTechAntennaPinModel::getMaxSideAreaCAR(
+    std::vector<std::pair<double, dbTechLayer*>>& data)
+{
+  _dbTechAntennaPinModel* xmod = (_dbTechAntennaPinModel*) this;
+  xmod->getAntennaValues(xmod->_max_sidearea_car, data);
+}
+
+void dbTechAntennaPinModel::getMaxCutCAR(
+    std::vector<std::pair<double, dbTechLayer*>>& data)
+{
+  _dbTechAntennaPinModel* xmod = (_dbTechAntennaPinModel*) this;
+  xmod->getAntennaValues(xmod->_max_cut_car, data);
 }
 
 void dbTechAntennaPinModel::writeLef(dbTech* tech, lefout& writer) const

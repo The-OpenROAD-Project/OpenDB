@@ -216,6 +216,9 @@ class _dbTechAntennaAreaElement
                    const _dbTechAntennaAreaElement& rhs) const;
   void out(dbDiff& diff, char side, const char* field) const;
 
+  double             getArea() const { return _area; }
+  dbId<_dbTechLayer> getLayerId() const { return _lyidx; }
+
  private:
   _dbTechAntennaAreaElement();
   double             _area;
@@ -247,6 +250,9 @@ class _dbTechAntennaPinModel : public dbObject
                    const char*                   field,
                    const _dbTechAntennaPinModel& rhs) const;
   void out(dbDiff& diff, char side, const char* field) const;
+
+  void getAntennaValues(const dbVector<_dbTechAntennaAreaElement*>&   elements,
+                        std::vector<std::pair<double, dbTechLayer*>>& result) const;
 };
 
 dbOStream& operator<<(dbOStream& stream, const _dbTechAntennaPinModel& inmod);

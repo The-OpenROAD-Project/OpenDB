@@ -6546,6 +6546,12 @@ class dbTechAntennaPinModel : public dbObject
   void addMaxAreaCAREntry(double inval, dbTechLayer* refly = NULL);
   void addMaxSideAreaCAREntry(double inval, dbTechLayer* refly = NULL);
   void addMaxCutCAREntry(double inval, dbTechLayer* refly = NULL);
+
+  void getGateArea(std::vector<std::pair<double, dbTechLayer*>>& data);
+  void getMaxAreaCAR(std::vector<std::pair<double, dbTechLayer*>>& data);
+  void getMaxSideAreaCAR(std::vector<std::pair<double, dbTechLayer*>>& data);
+  void getMaxCutCAR(std::vector<std::pair<double, dbTechLayer*>>& data);
+
   void writeLef(dbTech* tech, lefout& writer) const;
 
   static dbTechAntennaPinModel* getAntennaPinModel(dbMaster* master, uint dbid);

@@ -41,7 +41,7 @@ add_subdirectory(src/tm)
 ################################# SWIG #####################################
 ############################################################################
 
-set(SWIG_REQUIRED_VERSION "2.0")
+set(SWIG_REQUIRED_VERSION "3.0")
 find_package(SWIG REQUIRED)
 if(${SWIG_VERSION} VERSION_LESS ${SWIG_REQUIRED_VERSION})
   message(FATAL_ERROR "SWIG version ${SWIG_VERSION} must be at least ${SWIG_REQUIRED_VERSION}")

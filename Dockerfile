@@ -3,7 +3,7 @@ LABEL maintainer "Abdelrahman Hosny <abdelrahman_hosny@brown.edu>"
 
 # Install Development Environment
 RUN yum group install -y "Development Tools"
-RUN yum install -y wget git
+RUN yum install -y wget git pcre-devel
 RUN yum -y install centos-release-scl && \
     yum -y install devtoolset-8 devtoolset-8-libatomic-devel
 RUN wget https://cmake.org/files/v3.14/cmake-3.14.0-Linux-x86_64.sh && \

@@ -14,6 +14,16 @@ RUN wget https://cmake.org/files/v3.14/cmake-3.14.0-Linux-x86_64.sh && \
 RUN wget https://dl.fedoraproject.org/pub/epel/epel-release-latest-7.noarch.rpm
 RUN yum install -y epel-release-latest-7.noarch.rpm
 
+# Install SWIG
+RUN yum remove -y swig \
+    && wget https://github.com/swig/swig/archive/rel-4.0.1.tar.gz \
+    && tar xfz rel-4.0.1.tar.gz \
+    && rm -rf rel-4.0.1.tar.gz \
+    && cd swig-rel-4.0.1 \
+    && ./autogen.sh && ./configure --prefix=/usr && make -j $(nproc) && make install \
+    && cd .. \
+    && rm -rf swig-rel-4.0.1
+
 # Install dev and runtime dependencies
 RUN yum install -y tcl-devel tcl tk libstdc++ boost-devel \
                    zlib-devel

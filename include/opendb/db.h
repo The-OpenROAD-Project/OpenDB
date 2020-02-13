@@ -5402,6 +5402,9 @@ class dbMTerm : public dbObject
   dbTechAntennaPinModel* getOxide2AntennaModel() const;
   void                   writeAntennaLef(lefout& writer) const;
 
+  // From LEF's ANTENNADIFFAREA on the MACRO's PIN
+  void getDiffArea(std::vector<std::pair<double, dbTechLayer*>>& data);
+
   void* staPort();
   void  staSetPort(void* port);
 

@@ -82,9 +82,9 @@ inline _ARuleFactor::_ARuleFactor(const _ARuleFactor& f)
 
 inline _ARuleFactor::_ARuleFactor()
 {
-  _factor = 1.0;
-  _factor_diffuse = _factor;
-  _explicit = false;
+  _factor           = 1.0;
+  _factor_diffuse   = _factor;
+  _explicit         = false;
   _explicit_diffuse = _explicit;
 }
 
@@ -251,13 +251,13 @@ class _dbTechAntennaPinModel : public dbObject
                    const _dbTechAntennaPinModel& rhs) const;
   void out(dbDiff& diff, char side, const char* field) const;
 
-  void getAntennaValues(const dbVector<_dbTechAntennaAreaElement*>&   elements,
-                        std::vector<std::pair<double, dbTechLayer*>>& result) const;
+  static void getAntennaValues(
+      _dbDatabase*                                  db,
+      const dbVector<_dbTechAntennaAreaElement*>&   elements,
+      std::vector<std::pair<double, dbTechLayer*>>& result);
 };
 
 dbOStream& operator<<(dbOStream& stream, const _dbTechAntennaPinModel& inmod);
 dbIStream& operator>>(dbIStream& stream, _dbTechAntennaPinModel& inmod);
 
 }  // namespace odb
-
-

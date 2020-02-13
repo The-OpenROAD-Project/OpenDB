@@ -762,11 +762,11 @@ void dbTechAntennaPinModel::addMaxCutCAREntry(double inval, dbTechLayer* refly)
 }
 
 void _dbTechAntennaPinModel::getAntennaValues(
+    _dbDatabase*                                  db,
     const dbVector<_dbTechAntennaAreaElement*>&   elements,
-    std::vector<std::pair<double, dbTechLayer*>>& result) const
+    std::vector<std::pair<double, dbTechLayer*>>& result)
 {
-  dbDatabase* db   = (dbDatabase*) getDatabase();
-  _dbTech*    tech = (_dbTech*) db->getTech();
+  _dbTech* tech = (_dbTech*) ((dbDatabase*) db)->getTech();
 
   for (auto elem : elements) {
     dbTechLayer*       layer   = nullptr;
@@ -782,28 +782,28 @@ void dbTechAntennaPinModel::getGateArea(
     std::vector<std::pair<double, dbTechLayer*>>& data)
 {
   _dbTechAntennaPinModel* xmod = (_dbTechAntennaPinModel*) this;
-  xmod->getAntennaValues(xmod->_gate_area, data);
+  xmod->getAntennaValues(getDatabase(), xmod->_gate_area, data);
 }
 
 void dbTechAntennaPinModel::getMaxAreaCAR(
     std::vector<std::pair<double, dbTechLayer*>>& data)
 {
   _dbTechAntennaPinModel* xmod = (_dbTechAntennaPinModel*) this;
-  xmod->getAntennaValues(xmod->_max_area_car, data);
+  xmod->getAntennaValues(getDatabase(), xmod->_max_area_car, data);
 }
 
 void dbTechAntennaPinModel::getMaxSideAreaCAR(
     std::vector<std::pair<double, dbTechLayer*>>& data)
 {
   _dbTechAntennaPinModel* xmod = (_dbTechAntennaPinModel*) this;
-  xmod->getAntennaValues(xmod->_max_sidearea_car, data);
+  xmod->getAntennaValues(getDatabase(), xmod->_max_sidearea_car, data);
 }
 
 void dbTechAntennaPinModel::getMaxCutCAR(
     std::vector<std::pair<double, dbTechLayer*>>& data)
 {
   _dbTechAntennaPinModel* xmod = (_dbTechAntennaPinModel*) this;
-  xmod->getAntennaValues(xmod->_max_cut_car, data);
+  xmod->getAntennaValues(getDatabase(), xmod->_max_cut_car, data);
 }
 
 void dbTechAntennaPinModel::writeLef(dbTech* tech, lefout& writer) const

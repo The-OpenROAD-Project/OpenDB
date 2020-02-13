@@ -30,11 +30,11 @@
 // ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 // POSSIBILITY OF SUCH DAMAGE.
 
-#include "dbMTerm.h"
 #include "db.h"
 #include "dbDatabase.h"
 #include "dbLib.h"
 #include "dbMPinItr.h"
+#include "dbMTerm.h"
 #include "dbMaster.h"
 #include "dbTable.h"
 #include "dbTable.hpp"
@@ -461,6 +461,13 @@ dbTechAntennaPinModel* dbMTerm::getOxide2AntennaModel() const
   _dbMaster* master = (_dbMaster*) getOwner();
   return (dbTechAntennaPinModel*) master->_antenna_pin_model_tbl->getPtr(
       mterm->_oxide2);
+}
+
+void dbMTerm::getDiffArea(std::vector<std::pair<double, dbTechLayer*>>& data)
+{
+  _dbMTerm* mterm = (_dbMTerm*) this;
+  _dbTechAntennaPinModel::getAntennaValues(
+      getDatabase(), mterm->_diffarea, data);
 }
 
 void dbMTerm::writeAntennaLef(lefout& writer) const

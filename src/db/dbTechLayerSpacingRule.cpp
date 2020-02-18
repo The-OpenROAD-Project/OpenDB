@@ -30,13 +30,13 @@
 // ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 // POSSIBILITY OF SUCH DAMAGE.
 
-#include "dbTechLayerSpacingRule.h"
 #include "db.h"
 #include "dbDatabase.h"
 #include "dbTable.h"
 #include "dbTable.hpp"
 #include "dbTech.h"
 #include "dbTechLayer.h"
+#include "dbTechLayerSpacingRule.h"
 #include "lefout.h"
 
 namespace odb {
@@ -48,6 +48,21 @@ bool _dbTechLayerSpacingRule::operator==(
     const _dbTechLayerSpacingRule& rhs) const
 {
   if (_flags._rule != rhs._flags._rule)
+    return false;
+
+  if (_flags._except_same_pgnet != rhs._flags._except_same_pgnet)
+    return false;
+
+  if (_flags._cut_stacking != rhs._flags._cut_stacking)
+    return false;
+
+  if (_flags._cut_center_to_center != rhs._flags._cut_center_to_center)
+    return false;
+
+  if (_flags._cut_same_net != rhs._flags._cut_same_net)
+    return false;
+
+  if (_flags._cut_parallel_overlap != rhs._flags._cut_parallel_overlap)
     return false;
 
   if (_spacing != rhs._spacing)
@@ -68,6 +83,9 @@ bool _dbTechLayerSpacingRule::operator==(
   if (_r2max != rhs._r2max)
     return false;
 
+  if (_cut_area != rhs._cut_area)
+    return false;
+
   if (_layer != rhs._layer)
     return false;
 
@@ -84,12 +102,18 @@ void _dbTechLayerSpacingRule::differences(
 {
   DIFF_BEGIN
   DIFF_FIELD(_flags._rule);
+  DIFF_FIELD(_flags._except_same_pgnet);
+  DIFF_FIELD(_flags._cut_stacking);
+  DIFF_FIELD(_flags._cut_center_to_center);
+  DIFF_FIELD(_flags._cut_same_net);
+  DIFF_FIELD(_flags._cut_parallel_overlap);
   DIFF_FIELD(_spacing);
   DIFF_FIELD(_length_or_influence);
   DIFF_FIELD(_r1min);
   DIFF_FIELD(_r1max);
   DIFF_FIELD(_r2min);
   DIFF_FIELD(_r2max);
+  DIFF_FIELD(_cut_area);
   DIFF_FIELD(_layer);
   DIFF_FIELD(_cut_layer_below);
   DIFF_END
@@ -101,12 +125,18 @@ void _dbTechLayerSpacingRule::out(dbDiff&     diff,
 {
   DIFF_OUT_BEGIN
   DIFF_OUT_FIELD(_flags._rule);
+  DIFF_OUT_FIELD(_flags._except_same_pgnet);
+  DIFF_OUT_FIELD(_flags._cut_stacking);
+  DIFF_OUT_FIELD(_flags._cut_center_to_center);
+  DIFF_OUT_FIELD(_flags._cut_same_net);
+  DIFF_OUT_FIELD(_flags._cut_parallel_overlap);
   DIFF_OUT_FIELD(_spacing);
   DIFF_OUT_FIELD(_length_or_influence);
   DIFF_OUT_FIELD(_r1min);
   DIFF_OUT_FIELD(_r1max);
   DIFF_OUT_FIELD(_r2min);
   DIFF_OUT_FIELD(_r2max);
+  DIFF_OUT_FIELD(_cut_area);
   DIFF_OUT_FIELD(_layer);
   DIFF_OUT_FIELD(_cut_layer_below);
   DIFF_END
@@ -167,6 +197,7 @@ dbOStream& operator<<(dbOStream& stream, const _dbTechLayerSpacingRule& rule)
   stream << rule._r1max;
   stream << rule._r2min;
   stream << rule._r2max;
+  stream << rule._cut_area;
   stream << rule._layer;
   stream << rule._cut_layer_below;
   return stream;
@@ -182,6 +213,7 @@ dbIStream& operator>>(dbIStream& stream, _dbTechLayerSpacingRule& rule)
   stream >> rule._r1max;
   stream >> rule._r2min;
   stream >> rule._r2max;
+  stream >> rule._cut_area;
   stream >> rule._layer;
   stream >> rule._cut_layer_below;
 
@@ -229,6 +261,66 @@ void dbTechLayerSpacingRule::setSpacing(uint spacing)
 {
   _dbTechLayerSpacingRule* _lsp = (_dbTechLayerSpacingRule*) this;
   _lsp->_spacing                = spacing;
+}
+
+bool dbTechLayerSpacingRule::getCutStacking() const
+{
+  _dbTechLayerSpacingRule* _lsp = (_dbTechLayerSpacingRule*) this;
+  return _lsp->_flags._cut_stacking;
+}
+
+void dbTechLayerSpacingRule::setCutStacking(bool stacking)
+{
+  _dbTechLayerSpacingRule* _lsp = (_dbTechLayerSpacingRule*) this;
+  _lsp->_flags._cut_stacking    = stacking;
+}
+
+bool dbTechLayerSpacingRule::getCutCenterToCenter() const
+{
+  _dbTechLayerSpacingRule* _lsp = (_dbTechLayerSpacingRule*) this;
+  return _lsp->_flags._cut_center_to_center;
+}
+
+void dbTechLayerSpacingRule::setCutCenterToCenter(bool c2c)
+{
+  _dbTechLayerSpacingRule* _lsp      = (_dbTechLayerSpacingRule*) this;
+  _lsp->_flags._cut_center_to_center = c2c;
+}
+
+bool dbTechLayerSpacingRule::getCutSameNet() const
+{
+  _dbTechLayerSpacingRule* _lsp = (_dbTechLayerSpacingRule*) this;
+  return _lsp->_flags._cut_same_net;
+}
+
+void dbTechLayerSpacingRule::setCutSameNet(bool same_net)
+{
+  _dbTechLayerSpacingRule* _lsp = (_dbTechLayerSpacingRule*) this;
+  _lsp->_flags._cut_same_net    = same_net;
+}
+
+bool dbTechLayerSpacingRule::getCutParallelOverlap() const
+{
+  _dbTechLayerSpacingRule* _lsp = (_dbTechLayerSpacingRule*) this;
+  return _lsp->_flags._cut_parallel_overlap;
+}
+
+void dbTechLayerSpacingRule::setCutParallelOverlap(bool overlap)
+{
+  _dbTechLayerSpacingRule* _lsp      = (_dbTechLayerSpacingRule*) this;
+  _lsp->_flags._cut_parallel_overlap = overlap;
+}
+
+uint dbTechLayerSpacingRule::getCutArea() const
+{
+  _dbTechLayerSpacingRule* _lsp = (_dbTechLayerSpacingRule*) this;
+  return _lsp->_cut_area;
+}
+
+void dbTechLayerSpacingRule::setCutArea(uint area)
+{
+  _dbTechLayerSpacingRule* _lsp = (_dbTechLayerSpacingRule*) this;
+  _lsp->_cut_area               = area;
 }
 
 bool dbTechLayerSpacingRule::isUnconditional() const
@@ -315,17 +407,18 @@ bool dbTechLayerSpacingRule::getRangeRange(uint& rmin, uint& rmax) const
 
 bool dbTechLayerSpacingRule::getAdjacentCuts(uint& numcuts,
                                              uint& within,
-                                             uint& spacing) const
+                                             uint& spacing,
+                                             bool& except_same_pgnet) const
 {
   _dbTechLayerSpacingRule* _lsp = (_dbTechLayerSpacingRule*) this;
 
   if (_lsp->_flags._rule != ADJACENT_CUTS_INFLUENCE)
     return false;
 
-  spacing = _lsp->_spacing;
-  within  = _lsp->_length_or_influence;
-  numcuts = _lsp->_r1min;
-
+  spacing           = _lsp->_spacing;
+  within            = _lsp->_length_or_influence;
+  numcuts           = _lsp->_r1min;
+  except_same_pgnet = _lsp->_flags._except_same_pgnet;
   return true;
 }
 
@@ -505,17 +598,19 @@ bool dbTechLayerSpacingRule::getEol(uint& width,
 
 void dbTechLayerSpacingRule::setAdjacentCuts(uint numcuts,
                                              uint within,
-                                             uint spacing)
+                                             uint spacing,
+                                             bool except_same_pgnet)
 {
   _dbTechLayerSpacingRule* _lsp = (_dbTechLayerSpacingRule*) this;
 
   assert((_lsp->_flags._rule == DEFAULT)
          || (_lsp->_flags._rule == ADJACENT_CUTS_INFLUENCE));
 
-  _lsp->_flags._rule         = ADJACENT_CUTS_INFLUENCE;
-  _lsp->_spacing             = spacing;
-  _lsp->_length_or_influence = within;
-  _lsp->_r1min               = numcuts;
+  _lsp->_flags._rule              = ADJACENT_CUTS_INFLUENCE;
+  _lsp->_flags._except_same_pgnet = except_same_pgnet;
+  _lsp->_spacing                  = spacing;
+  _lsp->_length_or_influence      = within;
+  _lsp->_r1min                    = numcuts;
 }
 
 void dbTechLayerSpacingRule::setCutLayer4Spacing(dbTechLayer* cutly)
@@ -552,9 +647,27 @@ dbTechLayerSpacingRule* dbTechLayerSpacingRule::getTechLayerSpacingRule(
 void dbTechLayerSpacingRule::writeLef(lefout& writer) const
 {
   uint         rmin, rmax, length_or_influence, cut_spacing, numcuts;
+  bool         except_same_pgnet;
   dbTechLayer* rulely;
 
   fprintf(writer.out(), "    SPACING %g ", writer.lefdist(getSpacing()));
+
+  if (getCutCenterToCenter()) {
+    fprintf(writer.out(), "    CENTERTOCENTER ");
+  }
+
+  if (getCutSameNet()) {
+    fprintf(writer.out(), "    SAMENET ");
+  }
+
+  if (getCutParallelOverlap()) {
+    fprintf(writer.out(), "    PARALLELOVERLAP ");
+  }
+
+  if (getCutArea() > 0) {
+    fprintf(writer.out(), "    AREA %g ", writer.lefdist(getCutArea()));
+  }
+
   if (getRange(rmin, rmax)) {
     fprintf(writer.out(),
             "RANGE %g %g ",
@@ -587,11 +700,17 @@ void dbTechLayerSpacingRule::writeLef(lefout& writer) const
               writer.lefdist(rmax));
   } else if (getCutLayer4Spacing(rulely)) {
     fprintf(writer.out(), "LAYER %s ", rulely->getName().c_str());
-  } else if (getAdjacentCuts(numcuts, length_or_influence, cut_spacing)) {
+  } else if (getAdjacentCuts(numcuts,
+                             length_or_influence,
+                             cut_spacing,
+                             except_same_pgnet)) {
     fprintf(writer.out(),
             "ADJACENTCUTS %d WITHIN %g ",
             numcuts,
             writer.lefdist(length_or_influence));
+    if (except_same_pgnet) {
+      fprintf(writer.out(), "EXCEPTSAMEPGNET ");
+    }
   } else {
     uint width, within, parallelSpace, parallelWithin;
     bool parallelEdge, twoEdges;

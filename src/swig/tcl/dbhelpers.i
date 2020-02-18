@@ -53,6 +53,12 @@ odb_write_lef(odb::dbLib* lib, const char* path) {
   return writer.writeTechAndLib(lib, path);
 }
 
+int
+odb_write_tech_lef(odb::dbTech* tech, const char* path) {
+  lefout writer;
+  return writer.writeTech(tech, path);
+}
+
 odb::dbDatabase*
 odb_read_db(odb::dbDatabase* db, const char* db_path)
 {
@@ -99,6 +105,9 @@ odb_write_def(odb::dbBlock* block, const char* path,
 	      odb::defout::Version version = odb::defout::Version::DEF_5_8);
 int
 odb_write_lef(odb::dbLib* lib, const char* path);
+
+int
+odb_write_tech_lef(odb::dbTech* tech, const char* path);
 
 odb::dbDatabase*
 odb_read_db(odb::dbDatabase* db, const char* db_path);

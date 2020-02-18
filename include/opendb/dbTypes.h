@@ -956,7 +956,12 @@ enum _RuleType
 struct _Flword
 {
   _RuleType _rule : 4;
-  uint      _spare_bits : 28;
+  bool      _except_same_pgnet : 1;
+  bool      _cut_stacking : 1;
+  bool      _cut_center_to_center : 1;
+  bool      _cut_same_net : 1;
+  bool      _cut_parallel_overlap : 1;
+  uint      _spare_bits : 23;
 };
 
 const char* getString(_RuleType type);

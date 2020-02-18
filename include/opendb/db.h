@@ -6393,8 +6393,16 @@ class dbTechLayerSpacingRule : public dbObject
   bool getInfluence(uint& influence) const;
   bool getInfluenceRange(uint& rmin, uint& rmax) const;
   bool getRangeRange(uint& rmin, uint& rmax) const;
-  bool getAdjacentCuts(uint& numcuts, uint& within, uint& spacing) const;
+  bool getAdjacentCuts(uint& numcuts,
+                       uint& within,
+                       uint& spacing,
+                       bool& except_same_pgnet) const;
   bool getCutLayer4Spacing(dbTechLayer*& outly) const;
+  bool getCutStacking() const;
+  bool getCutCenterToCenter() const;
+  bool getCutSameNet() const;
+  bool getCutParallelOverlap() const;
+  uint getCutArea() const;
   void writeLef(lefout& writer) const;
 
   void setLengthThreshold(uint threshold);
@@ -6405,8 +6413,16 @@ class dbTechLayerSpacingRule : public dbObject
   void setInfluence(uint influence);
   void setInfluenceRange(uint rmin, uint rmax);
   void setRangeRange(uint rmin, uint rmax);
-  void setAdjacentCuts(uint numcuts, uint within, uint spacing);
+  void setAdjacentCuts(uint numcuts,
+                       uint within,
+                       uint spacing,
+                       bool except_same_pgnet);
   void setCutLayer4Spacing(dbTechLayer* cutly);
+  void setCutStacking(bool stacking);
+  void setCutCenterToCenter(bool c2c);
+  void setCutSameNet(bool same_net);
+  void setCutParallelOverlap(bool overlap);
+  void setCutArea(uint area);
   void setEol(uint width,
               uint within,
               bool parallelEdge,

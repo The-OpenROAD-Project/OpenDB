@@ -56,6 +56,7 @@ class _dbTechLayerSpacingRule : public dbObject
   uint                          _r1max;
   uint                          _r2min;
   uint                          _r2max;
+  uint                          _cut_area;
   dbId<_dbTechLayer>            _layer;
   dbId<_dbTechLayer>            _cut_layer_below;
 
@@ -84,6 +85,7 @@ inline _dbTechLayerSpacingRule::_dbTechLayerSpacingRule(
       _r1max(r._r1max),
       _r2min(r._r2min),
       _r2max(r._r2max),
+      _cut_area(r._cut_area),
       _layer(r._layer),
       _cut_layer_below(r._cut_layer_below)
 {
@@ -91,14 +93,20 @@ inline _dbTechLayerSpacingRule::_dbTechLayerSpacingRule(
 
 inline _dbTechLayerSpacingRule::_dbTechLayerSpacingRule(_dbDatabase*)
 {
-  _flags._rule         = TechLayerSpacingRule::DEFAULT;
-  _flags._spare_bits   = 0;
-  _spacing             = 0;
-  _length_or_influence = 0;
-  _r1min               = 0;
-  _r1max               = 0;
-  _r2min               = 0;
-  _r2max               = 0;
+  _flags._rule                 = TechLayerSpacingRule::DEFAULT;
+  _flags._except_same_pgnet    = false;
+  _flags._cut_stacking         = false;
+  _flags._cut_center_to_center = false;
+  _flags._cut_same_net         = false;
+  _flags._cut_parallel_overlap = false;
+  _flags._spare_bits           = 0;
+  _spacing                     = 0;
+  _length_or_influence         = 0;
+  _r1min                       = 0;
+  _r1max                       = 0;
+  _r2min                       = 0;
+  _r2max                       = 0;
+  _cut_area                    = 0;
 }
 
 inline _dbTechLayerSpacingRule::~_dbTechLayerSpacingRule()
@@ -154,5 +162,3 @@ dbOStream& operator<<(dbOStream&                      stream,
 dbIStream& operator>>(dbIStream& stream, _dbTechV55InfluenceEntry& infitem);
 
 }  // namespace odb
-
-

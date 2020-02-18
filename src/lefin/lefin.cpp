@@ -598,6 +598,16 @@ void lefin::layer(lefiLayer* layer)
     for (j = 0; j < layer->numSpacing(); j++) {
       cur_rule = dbTechLayerSpacingRule::create(l);
       cur_rule->setSpacing(dbdist(layer->spacing(j)));
+
+      cur_rule->setCutStacking(layer->hasSpacingLayerStack(j));
+      cur_rule->setCutCenterToCenter(layer->hasSpacingCenterToCenter(j));
+      cur_rule->setCutSameNet(layer->hasSpacingSamenet(j));
+      cur_rule->setCutParallelOverlap(layer->hasSpacingParallelOverlap(j));
+      cur_rule->setCutParallelOverlap(layer->hasSpacingParallelOverlap(j));
+      if (layer->hasSpacingArea(j)) {
+        cur_rule->setCutArea(dbdist(layer->spacingArea(j)));
+      }
+
       if (layer->hasSpacingRange(j)) {
         cur_rule->setRange(dbdist(layer->spacingRangeMin(j)),
                            dbdist(layer->spacingRangeMax(j)));
@@ -621,7 +631,8 @@ void lefin::layer(lefiLayer* layer)
       } else if (layer->hasSpacingAdjacent(j)) {
         cur_rule->setAdjacentCuts(layer->spacingAdjacentCuts(j),
                                   dbdist(layer->spacingAdjacentWithin(j)),
-                                  dbdist(layer->spacing(j)));
+                                  dbdist(layer->spacing(j)),
+                                  layer->hasSpacingSamenetPGonly(j));
       } else if (layer->hasSpacingEndOfLine(j)) {
         double w  = layer->spacingEolWidth(j);
         double wn = layer->spacingEolWithin(j);

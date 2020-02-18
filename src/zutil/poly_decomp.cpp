@@ -354,7 +354,7 @@ bool polygon_is_clockwise(const std::vector<adsPoint>& P)
   // Here we use the lowest-most in Y with lowest in X as a tie breaker
   int yMin = std::numeric_limits<int>::max();
   int xMin = std::numeric_limits<int>::max();
-  int b;  // the index of the point we are seeking
+  int b = 0;  // the index of the point we are seeking
   for (int i = 0; i < n; ++i) {
     int x = P[i].x();
     int y = P[i].y();

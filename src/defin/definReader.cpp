@@ -884,7 +884,7 @@ int definReader::pinCallback(defrCallbackType_e type,
   }
 
   if (pin->hasPlacement()) {
-    defPlacement type;
+    defPlacement type = DEF_PLACEMENT_UNPLACED;
     if (pin->isPlaced()) {
       type = DEF_PLACEMENT_PLACED;
     } else if (pin->isCover()) {
@@ -957,7 +957,7 @@ int definReader::propCallback(defrCallbackType_e type,
       break;
     default:
       assert(0);
-      break;
+      return PARSE_ERROR;
   }
 
   // The prop type should be upper case for consistency

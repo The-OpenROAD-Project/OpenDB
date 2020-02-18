@@ -1289,66 +1289,7 @@ dbNet* dbCreateNetUtil::copyNet(dbNet* net,
 
   return newNet;
 }
-//#define STANDARD_1
-#ifdef STANDARD_1
-dbNet* dbCreateNetUtil::createNetSingleWire(adsRect& r,
-                                            uint     level,
-                                            uint     netId,
-                                            uint     shapeId)
-{
-  bool skipBterms = false;
-  char netName[128];
-  sprintf(netName, "N%d", netId);
 
-  dbSWire* swire       = NULL;
-  dbNet*   existingNet = _block->findNet(netName);
-  if (existingNet == NULL) {
-    dbShape s;
-    dbNet*  newNet = createNetSingleWire(netName,
-                                        r.xMin(),
-                                        r.yMin(),
-                                        r.xMax(),
-                                        r.yMax(),
-                                        level,
-                                        true /*skipBterms*/);
-
-    /*dbRtTree m;
-    m.decode(newNet->getWire());
-    m.encode(newNet->getWire());*/
-
-    if (shapeId > 0)
-      setFirstShapeProperty(newNet, shapeId);
-    return newNet;
-  } else {
-    sprintf(netName, "N%d_%d", netId, shapeId);
-    dbNet* newNet = createNetSingleWire(netName,
-                                        r.xMin(),
-                                        r.yMin(),
-                                        r.xMax(),
-                                        r.yMax(),
-                                        level,
-                                        true /*skipBterms*/);
-
-    if (newNet != NULL) {
-      if (shapeId > 0)
-        setFirstShapeProperty(newNet, shapeId);
-
-      existingNet->getWire()->append(newNet->getWire(), true);
-      dbNet::destroy(newNet);
-      /*
-      dbRtTree m;
-      m.decode(existingNet->getWire());
-      dbRtTree s;
-      s.decode(newNet->getWire());
-      m.move(&s);
-      m.encode(existingNet->getWire());
-      dbNet::destroy(newNet);
-      */
-    }
-    return newNet;
-  }
-}
-#else
 dbNet* dbCreateNetUtil::createNetSingleWire(adsRect& r,
                                             uint     level,
                                             uint     netId,
@@ -1398,7 +1339,6 @@ dbNet* dbCreateNetUtil::createNetSingleWire(adsRect& r,
     return newNet;
   }
 }
-#endif
 
 dbNet* dbCreateNetUtil::createNetSingleWire(const char* netName,
                                             int         x1,

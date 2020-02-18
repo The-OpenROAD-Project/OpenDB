@@ -719,8 +719,12 @@ int definReader::netCallback(defrCallbackType_e type,
             break;
 
           case DEFIPATH_RECT:
-            reader->error("RECT in net's routing is unsupported");
-            return PARSE_ERROR;
+            // TODO: disable error until TritonRoute stops writing these
+            //   as many of our existing DEFs have these
+            // reader->error("RECT in net's routing is unsupported");
+            // return PARSE_ERROR;
+            warning(0, "RECT in net's routing is unsupported and will be ignored");
+            break;
 
           case DEFIPATH_VIRTUALPOINT:
             reader->error("VIRTUAL in net's routing is unsupported");

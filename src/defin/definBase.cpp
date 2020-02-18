@@ -91,6 +91,7 @@ dbOrientType definBase::translate_orientation(int orient)
       return dbOrientType::MXR90;
   }
   assert(0);
+  return dbOrientType::R0;
 }
 
 }  // namespace odb

@@ -32,7 +32,6 @@
 
 #include "dbUtil.h"
 #include "db.h"
-#include "dbRtTree.h"
 #include "dbShape.h"
 #include "dbWireCodec.h"
 

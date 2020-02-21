@@ -81,30 +81,31 @@ class definNet : public definBase
   int _net_iterm_cnt;
 
   /// Net interface methods
-  virtual void begin(const char* name);
-  virtual void beginMustjoin(const char* iname, const char* pname);
-  virtual void connection(const char* iname, const char* pname);
-  virtual void nonDefaultRule(const char* rule);
-  virtual void use(dbSigType type);
-  virtual void wire(dbWireType type);
-  virtual void path(const char* layer);
-  virtual void pathStyle(int style);
-  virtual void pathTaper(const char* layer);
-  virtual void pathTaperRule(const char* layer, const char* rule);
-  virtual void pathPoint(int x, int y);
-  virtual void pathPoint(int x, int y, int ext);
-  virtual void pathVia(const char* via);
-  virtual void pathVia(const char* via, dbOrientType orient);
-  virtual void pathEnd();
-  virtual void wireEnd();
-  virtual void source(dbSourceType source);
-  virtual void weight(int weight);
-  virtual void fixedbump();
-  virtual void xtalk(int value);
-  virtual void property(const char* name, const char* value);
-  virtual void property(const char* name, int value);
-  virtual void property(const char* name, double value);
-  virtual void end();
+  void begin(const char* name);
+  void beginMustjoin(const char* iname, const char* pname);
+  void connection(const char* iname, const char* pname);
+  void nonDefaultRule(const char* rule);
+  void use(dbSigType type);
+  void wire(dbWireType type);
+  void path(const char* layer);
+  void pathStyle(int style);
+  void pathTaper(const char* layer);
+  void pathTaperRule(const char* layer, const char* rule);
+  void pathPoint(int x, int y);
+  void pathPoint(int x, int y, int ext);
+  void pathVia(const char* via);
+  void pathVia(const char* via, dbOrientType orient);
+  bool pathRect(int deltaX1, int deltaY1, int deltaX2, int deltaY2);
+  void pathEnd();
+  void wireEnd();
+  void source(dbSourceType source);
+  void weight(int weight);
+  void fixedbump();
+  void xtalk(int value);
+  void property(const char* name, const char* value);
+  void property(const char* name, int value);
+  void property(const char* name, double value);
+  void end();
 
   void pathBegin(const char* layer);
   // void netBeginCreate( const char * name );
@@ -112,7 +113,7 @@ class definNet : public definBase
 
   definNet();
   virtual ~definNet();
-  void init();
+  virtual void init() override;
   void skipWires() { _skip_wires = true; }
   void skipConnections() { _skip_signal_connections = true; }
   void replaceWires() { _replace_wires = true; }

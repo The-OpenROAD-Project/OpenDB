@@ -718,13 +718,20 @@ int definReader::netCallback(defrCallbackType_e type,
             return PARSE_ERROR;  // callback issues error
             break;
 
-          case DEFIPATH_RECT:
-            // TODO: disable error until TritonRoute stops writing these
-            //   as many of our existing DEFs have these
-            // reader->error("RECT in net's routing is unsupported");
-            // return PARSE_ERROR;
-            warning(0, "RECT in net's routing is unsupported and will be ignored");
+          case DEFIPATH_RECT: {
+            int deltaX1;
+            int deltaY1;
+            int deltaX2;
+            int deltaY2;
+            path->getViaRect(&deltaX1, &deltaY1, &deltaX2, &deltaY2);
+            bool ok = netR->pathRect(deltaX1, deltaY1, deltaX2, deltaY2);
+
+            if (!ok) {
+              reader->error("RECT in net's routing is unsupported");
+              return PARSE_ERROR;
+            }
             break;
+          }
 
           case DEFIPATH_VIRTUALPOINT:
             reader->error("VIRTUAL in net's routing is unsupported");

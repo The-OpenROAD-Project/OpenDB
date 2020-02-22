@@ -133,11 +133,11 @@ class adsRect
 
  public:
   adsRect();
-  adsRect(const adsRect& r);
+  adsRect(const adsRect& r) = default;
   adsRect(const adsPoint p1, const adsPoint p2);
   adsRect(int x1, int y1, int x2, int y2);
 
-  adsRect& operator=(const adsRect& r);
+  adsRect& operator=(const adsRect& r) = default;
   bool     operator==(const adsRect& r) const;
   bool     operator!=(const adsRect& r) const;
   bool     operator<(const adsRect& r) const;
@@ -388,14 +388,6 @@ inline adsRect::adsRect()
   _xlo = _ylo = _xhi = _yhi = 0;
 }
 
-inline adsRect::adsRect(const adsRect& r)
-{
-  _xlo = r._xlo;
-  _ylo = r._ylo;
-  _xhi = r._xhi;
-  _yhi = r._yhi;
-}
-
 inline adsRect::adsRect(int x1, int y1, int x2, int y2)
 {
   if (x1 < x2) {
@@ -479,15 +471,6 @@ inline void adsRect::init(int x1, int y1, int x2, int y2)
     _ylo = y2;
     _yhi = y1;
   }
-}
-
-inline adsRect& adsRect::operator=(const adsRect& r)
-{
-  _xlo = r._xlo;
-  _ylo = r._ylo;
-  _xhi = r._xhi;
-  _yhi = r._yhi;
-  return *this;
 }
 
 inline bool adsRect::operator==(const adsRect& r) const

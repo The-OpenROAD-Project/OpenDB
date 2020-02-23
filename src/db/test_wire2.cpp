@@ -93,10 +93,6 @@ class Timer
 };
 #endif
 
-void foo(dbShape& s)
-{
-}
-
 struct WireShape
 {
   dbWire*      wire;

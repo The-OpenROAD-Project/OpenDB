@@ -42,9 +42,7 @@
 #include "array1.h"
 #include "dbtable2.h"
 #include "inst.h"
-
-char* ATH__allocCharWord(int n);
-void  ATH__deallocCharWord(char* a);
+#include "misc_global.h"
 
 class Ath__iterm;
 class Ath__zui;

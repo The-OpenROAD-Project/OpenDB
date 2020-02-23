@@ -97,7 +97,7 @@ uint dbSWireItr::begin(dbObject* parent)
   return net->_swires;
 }
 
-uint dbSWireItr::end(dbObject* parent)
+uint dbSWireItr::end(dbObject* /* unused: parent */)
 {
   return 0;
 }

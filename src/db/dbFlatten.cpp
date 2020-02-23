@@ -920,7 +920,7 @@ void dbFlatten::copySWire(dbNet* dst, dbNet* src, dbSWire* src_swire)
   }
 }
 
-bool dbFlatten::canCopyWire(dbWire* wire_, dbSigType::Value sig_type)
+bool dbFlatten::canCopyWire(dbWire* /* unused: wire_ */, dbSigType::Value sig_type)
 {
   //_dbWire * wire = (_dbWire *) wire_;
 
@@ -1254,7 +1254,7 @@ uint dbFlatten::adjustParentNode(dbNet* dstNet, uint srcTermId)
   return 0;
 }
 
-void dbFlatten::createTop1stRseg(dbNet* src, dbNet* dst)
+void dbFlatten::createTop1stRseg(dbNet* /* unused: src */, dbNet* dst)
 {
   if (dst->getWire() != NULL)
     return;

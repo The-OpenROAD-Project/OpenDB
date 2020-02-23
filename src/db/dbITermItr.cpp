@@ -106,7 +106,7 @@ uint dbNetITermItr::begin(dbObject* parent)
   return (uint) net->_iterms;
 }
 
-uint dbNetITermItr::end(dbObject* parent)
+uint dbNetITermItr::end(dbObject* /* unused: parent */)
 {
   return 0;
 }
@@ -138,7 +138,7 @@ bool dbInstITermItr::orderReversed()
   return false;
 }
 
-void dbInstITermItr::reverse(dbObject* parent)
+void dbInstITermItr::reverse(dbObject* /* unused: parent */)
 {
 }
 
@@ -169,7 +169,7 @@ uint dbInstITermItr::begin(dbObject* parent)
   return inst->_iterms[0];
 }
 
-uint dbInstITermItr::end(dbObject* parent)
+uint dbInstITermItr::end(dbObject* /* unused: parent */)
 {
   return 0;
 }

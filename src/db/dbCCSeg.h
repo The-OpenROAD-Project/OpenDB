@@ -78,7 +78,7 @@ class _dbCCSeg : public dbObject
   _dbCCSeg(_dbDatabase* db, const _dbCCSeg& s);
   ~_dbCCSeg();
 
-  const int       idx(dbId<_dbCapNode> n) { return n == _cap_node[0] ? 0 : 1; }
+  int             idx(dbId<_dbCapNode> n) { return n == _cap_node[0] ? 0 : 1; }
   dbId<_dbCCSeg>& next(dbId<_dbCapNode> n) { return _next[idx(n)]; }
 
   bool operator==(const _dbCCSeg& rhs) const;
@@ -137,5 +137,3 @@ inline dbIStream& operator>>(dbIStream& stream, _dbCCSeg& seg)
 }
 
 }  // namespace odb
-
-

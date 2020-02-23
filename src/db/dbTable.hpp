@@ -444,7 +444,7 @@ bool dbTable<T>::orderReversed()
 }
 
 template <class T>
-void dbTable<T>::reverse(dbObject* parent)
+void dbTable<T>::reverse(dbObject* /* unused: parent */)
 {
 }
 
@@ -455,19 +455,19 @@ uint dbTable<T>::sequential()
 }
 
 template <class T>
-uint dbTable<T>::size(dbObject* parent)
+uint dbTable<T>::size(dbObject* /* unused: parent */)
 {
   return size();
 }
 
 template <class T>
-uint dbTable<T>::begin(dbObject* parent)
+uint dbTable<T>::begin(dbObject* /* unused: parent */)
 {
   return _bottom_idx;
 }
 
 template <class T>
-uint dbTable<T>::end(dbObject* parent)
+uint dbTable<T>::end(dbObject* /* unused: parent */)
 {
   return 0;
 }

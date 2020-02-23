@@ -45,10 +45,10 @@ void Zrouter_InitLogger(Tcl_Interp* interp)
   odb::Logger::initLogger(interp);
 }
 
-int _getBits(ClientData  data,
+int _getBits(ClientData  /* unused: data */,
              Tcl_Interp* interp,
-             int         objc,
-             Tcl_Obj* CONST objv[])
+             int         /* unused: objc */,
+             Tcl_Obj* CONST /* unused: objv */[])
 {
 #if defined __linux__
 #if defined __i386__
@@ -71,10 +71,10 @@ int _getBits(ClientData  data,
 
   return TCL_OK;
 }
-int _getCompileTime(ClientData  data,
+int _getCompileTime(ClientData  /* unused: data */,
                     Tcl_Interp* interp,
-                    int         objc,
-                    Tcl_Obj* CONST objv[])
+                    int         /* unused: objc */,
+                    Tcl_Obj* CONST /* unused: objv */[])
 {
   // dimitri not sure on the effect of the change
   // Tcl_AppendResult(interp,__DATE__" "__TIME__,NULL);
@@ -82,10 +82,10 @@ int _getCompileTime(ClientData  data,
   return TCL_OK;
 }
 
-int _getCVSData(ClientData  data,
-                Tcl_Interp* interp,
-                int         objc,
-                Tcl_Obj* CONST objv[])
+int _getCVSData(ClientData  /* unused: data */,
+                Tcl_Interp* /* unused: interp */,
+                int         /* unused: objc */,
+                Tcl_Obj* CONST /* unused: objv */[])
 {
   // Tcl_AppendResult(interp,CVS_STRING,NULL);
   return TCL_OK;
@@ -101,10 +101,10 @@ int _getCPUTime(ClientData  data,
 }
 #else
 static int ticks = sysconf(_SC_CLK_TCK);
-int _getCPUTime(ClientData data,
+int _getCPUTime(ClientData /* unused: data */,
                 Tcl_Interp* interp,
-                int objc,
-                Tcl_Obj* CONST objv[])
+                int /* unused: objc */,
+                Tcl_Obj* CONST /* unused: objv */[])
 {
   struct tms cput;
   times(&cput);
@@ -145,7 +145,7 @@ WARNREC warnstr[MAX_WARN_STR];
 
 int warncnt = 0;
 
-void _freeDebug(void* data)
+void _freeDebug(void* /* unused: data */)
 {
   for (int i = 0; i < debcnt; i++) {
     free(debstatus[i].mod);
@@ -154,7 +154,7 @@ void _freeDebug(void* data)
   }
 }
 
-void _freeWarnCnt(void* data)
+void _freeWarnCnt(void* /* unused: data */)
 {
   for (int i = 0; i < warncnt; i++) {
     free(warnstr[i].msg);
@@ -184,7 +184,7 @@ void dumpWarn()
 }
 
 // Testing function for memory counter
-int _allocMem(ClientData  data,
+int _allocMem(ClientData  /* unused: data */,
               Tcl_Interp* interp,
               int         objc,
               Tcl_Obj* CONST objv[])
@@ -225,7 +225,7 @@ int _enableMemCount(ClientData  data,
   return TCL_OK;
 }
 #else
-int _enableMemCount(ClientData data,
+int _enableMemCount(ClientData /* unused: data */,
                     Tcl_Interp* interp,
                     int objc,
                     Tcl_Obj* CONST objv[])
@@ -279,7 +279,7 @@ int _enableMemCount(ClientData data,
 }
 #endif
 
-int _setVerbose(ClientData  data,
+int _setVerbose(ClientData  /* unused: data */,
                 Tcl_Interp* interp,
                 int         objc,
                 Tcl_Obj* CONST objv[])
@@ -296,9 +296,9 @@ int _setVerbose(ClientData  data,
 }
 
 char last_failed_mod[1024] = "";
-int  _setDebug(ClientData  data,
-               Tcl_Interp* interp,
-               int         objc,
+int  _setDebug(ClientData  /* unused: data */,
+               Tcl_Interp* /* unused: interp */,
+               int         /* unused: objc */,
                Tcl_Obj* CONST objv[])
 {
   char* mod    = Tcl_GetString(objv[1]);
@@ -428,10 +428,10 @@ void _show_htimer(char* msg, char* mod, char* tag, int idx)
 #endif
 }
 
-int _startTimer(ClientData  data,
+int _startTimer(ClientData  /* unused: data */,
                 Tcl_Interp* interp,
-                int         objc,
-                Tcl_Obj* CONST objv[])
+                int         /* unused: objc */,
+                Tcl_Obj* CONST /* unused: objv */[])
 {
   char buff[128];
   sprintf(buff, "%d", _new_htimer());
@@ -440,9 +440,9 @@ int _startTimer(ClientData  data,
   return TCL_OK;
 }
 
-int _showTimer(ClientData  data,
+int _showTimer(ClientData  /* unused: data */,
                Tcl_Interp* interp,
-               int         objc,
+               int         /* unused: objc */,
                Tcl_Obj* CONST objv[])
 {
   int   idx;
@@ -455,9 +455,9 @@ int _showTimer(ClientData  data,
   return TCL_OK;
 }
 
-int _resetTimer(ClientData  data,
+int _resetTimer(ClientData  /* unused: data */,
                 Tcl_Interp* interp,
-                int         objc,
+                int         /* unused: objc */,
                 Tcl_Obj* CONST objv[])
 {
   int idx;
@@ -466,9 +466,9 @@ int _resetTimer(ClientData  data,
   return TCL_OK;
 }
 
-int _getTimer(ClientData  data,
+int _getTimer(ClientData  /* unused: data */,
               Tcl_Interp* interp,
-              int         objc,
+              int         /* unused: objc */,
               Tcl_Obj* CONST objv[])
 {
   int idx;
@@ -484,10 +484,10 @@ int _getTimer(ClientData  data,
   return TCL_OK;
 }
 
-int _getCWToken(ClientData  data,
+int _getCWToken(ClientData  /* unused: data */,
                 Tcl_Interp* interp,
-                int         objc,
-                Tcl_Obj* CONST objv[])
+                int         /* unused: objc */,
+                Tcl_Obj* CONST /* unused: objv */[])
 {
   // const char *token = sdCrypt::gen_token(SD_CIPHER_KEY,SD_KEY_LENGTH);
   const char* token = "ABCDEFG_NEFELUS";
@@ -525,9 +525,9 @@ void resetWarningCount(const char* msg, int maxcnt, int cnt)
   return;
 }
 
-int _setWarnCount(ClientData  data,
+int _setWarnCount(ClientData  /* unused: data */,
                   Tcl_Interp* interp,
-                  int         objc,
+                  int         /* unused: objc */,
                   Tcl_Obj* CONST objv[])
 {
   char* msg = Tcl_GetString(objv[1]);

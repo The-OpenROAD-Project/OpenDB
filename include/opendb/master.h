@@ -40,10 +40,8 @@
 
 #include "array1.h"
 #include "dbtable2.h"
+#include "misc_global.h"
 #include "parse.h"
-
-char* ATH__allocCharWord(int n);
-void  ATH__deallocCharWord(char* a);
 
 class Ath__mterm
 {

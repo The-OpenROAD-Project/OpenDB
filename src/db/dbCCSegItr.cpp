@@ -96,7 +96,7 @@ uint dbCCSegItr::begin(dbObject* parent)
   return node->_cc_segs;
 }
 
-uint dbCCSegItr::end(dbObject* parent)
+uint dbCCSegItr::end(dbObject* /* unused: parent */)
 {
   return 0;
 }

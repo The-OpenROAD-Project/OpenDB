@@ -48,7 +48,6 @@ class dbBTerm;
 class dbInst;
 class dbTechNonDefaultRule;
 class dbTechLayerRule;
-;
 
 class defout_impl
 {

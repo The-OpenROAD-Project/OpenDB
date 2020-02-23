@@ -140,13 +140,13 @@ class _dbTechV55InfluenceEntry : public dbObject
 };
 
 inline _dbTechV55InfluenceEntry::_dbTechV55InfluenceEntry(
-    _dbDatabase*                    db,
+    _dbDatabase* /* unused: db */,
     const _dbTechV55InfluenceEntry& e)
     : _width(e._width), _within(e._within), _spacing(e._spacing)
 {
 }
 
-inline _dbTechV55InfluenceEntry::_dbTechV55InfluenceEntry(_dbDatabase* db)
+inline _dbTechV55InfluenceEntry::_dbTechV55InfluenceEntry(_dbDatabase* /* unused: db */)
 {
   _width   = 0;
   _within  = 0;

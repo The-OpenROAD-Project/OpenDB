@@ -214,7 +214,7 @@ dbWireGraph::edge_iterator dbWireGraph::deleteEdge(edge_iterator itr)
 
 dbWireGraph::Edge* dbWireGraph::getEdge(uint shape_id)
 {
-  assert((shape_id >= 0) && (shape_id < _junction_map.size()));
+  assert(shape_id < _junction_map.size());
   Node* n = _junction_map[shape_id];
   assert(n->_in_edge);
   return n->_in_edge;

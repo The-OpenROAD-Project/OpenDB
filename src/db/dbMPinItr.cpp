@@ -94,7 +94,7 @@ uint dbMPinItr::begin(dbObject* parent)
   return mterm->_pins;
 }
 
-uint dbMPinItr::end(dbObject* parent)
+uint dbMPinItr::end(dbObject* /* unused: parent */)
 {
   return 0;
 }

@@ -105,7 +105,7 @@ dbInst* dbCreateNetUtil::createInst(dbInst* inst0)
   return inst;
 }
 
-dbBlock* dbCreateNetUtil::createBlock(dbBlock* blk, bool copyViaTable)
+dbBlock* dbCreateNetUtil::createBlock(dbBlock* blk, bool /* unused: copyViaTable */)
 {
   char blk_name[32];
   sprintf(blk_name, "%s__%d", "eco", blk->getId());
@@ -582,7 +582,7 @@ uint dbCreateNetUtil::printDeletedNets(dbBlock* ecoBlock,
   return cnt;
 }
 uint dbCreateNetUtil::printDisconnectedTerms(dbBlock* ecoBlock,
-                                             dbBlock* srcBlock,
+                                             dbBlock* /* unused: srcBlock */,
                                              FILE*    fp)
 {
   uint                   cnt  = 0;
@@ -644,7 +644,7 @@ uint dbCreateNetUtil::printNewNets(dbBlock* ecoBlock,
 }
 uint dbCreateNetUtil::printModifiedNets(dbBlock* ecoBlock,
                                         bool     connectTerm,
-                                        dbBlock* srcBlock,
+                                        dbBlock* /* unused: srcBlock */,
                                         FILE*    fp)
 {
   const char* connectIterm    = "ConnectITerm";
@@ -695,7 +695,7 @@ dbNet* dbCreateNetUtil::createNet(dbNet* nn, bool create, bool destroy)
 
   return net;
 }
-dbITerm* dbCreateNetUtil::updateITerm(dbITerm* iterm, bool disconnect)
+dbITerm* dbCreateNetUtil::updateITerm(dbITerm* iterm, bool /* unused: disconnect */)
 {
   //	if ( !disconnect)
   //		return iterm;
@@ -792,9 +792,9 @@ void dbCreateNetUtil::writeEco(dbBlock*    ecoBlock,
   fclose(fp);
 }
 void dbCreateNetUtil::writeDetailedEco(dbBlock*    ecoBlock,
-                                       dbBlock*    srcBlock,
+                                       dbBlock*    /* unused: srcBlock */,
                                        const char* fileName,
-                                       bool        debug)
+                                       bool        /* unused: debug */)
 {
   char buff_name[1024];
   _milosFormat = true;
@@ -1156,7 +1156,7 @@ dbNet* dbCreateNetUtil::createNetSingleWire(const char*    netName,
 dbSBox* dbCreateNetUtil::createSpecialWire(dbNet*       mainNet,
                                            adsRect&     r,
                                            dbTechLayer* layer,
-                                           uint         sboxId)
+                                           uint         /* unused: sboxId */)
 {
   dbSWire* swire = NULL;
   if (mainNet == NULL)
@@ -1209,7 +1209,7 @@ dbNet* dbCreateNetUtil::createSpecialNet(dbNet* origNet, const char* name)
 dbNet* dbCreateNetUtil::createSpecialNetSingleWire(adsRect&     r,
                                                    dbTechLayer* layer,
                                                    dbNet*       origNet,
-                                                   uint         sboxId)
+                                                   uint         /* unused: sboxId */)
 {
   char netName[128];
   sprintf(netName, "S%d", origNet->getId());

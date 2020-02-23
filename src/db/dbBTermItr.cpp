@@ -30,8 +30,8 @@
 // ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 // POSSIBILITY OF SUCH DAMAGE.
 
-#include "dbBTermItr.h"
 #include "dbBTerm.h"
+#include "dbBTermItr.h"
 #include "dbBlock.h"
 #include "dbNet.h"
 #include "dbTable.h"
@@ -107,7 +107,7 @@ uint dbNetBTermItr::begin(dbObject* parent)
   return net->_bterms;
 }
 
-uint dbNetBTermItr::end(dbObject* parent)
+uint dbNetBTermItr::end(dbObject* /* unused: parent */)
 {
   return 0;
 }

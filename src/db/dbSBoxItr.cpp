@@ -105,7 +105,7 @@ uint dbSBoxItr::begin(dbObject* parent)
   return 0;
 }
 
-uint dbSBoxItr::end(dbObject* parent)
+uint dbSBoxItr::end(dbObject* /* unused: parent */)
 {
   return 0;
 }

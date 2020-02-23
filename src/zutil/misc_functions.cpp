@@ -159,7 +159,7 @@ void AthMaxMem(uint64 size, uint64 res)
   if (res > max_res)
     max_res = res;
 }
-void AthMemCounter(int signo)
+void AthMemCounter(int /* unused: signo */)
 {
   uint64 size;
   uint64 res;
@@ -170,7 +170,7 @@ void AthMemCounter(int signo)
 // for scaling mem output
 #define MS (1024 * 1024)
 #define GS (1024 * 1024 * 1024)
-void AthMemCounterp(int signo)
+void AthMemCounterp(int /* unused: signo */)
 {
   uint64 size;
   uint64 res;

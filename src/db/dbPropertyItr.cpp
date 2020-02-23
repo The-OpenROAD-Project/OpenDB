@@ -96,7 +96,7 @@ uint dbPropertyItr::begin(dbObject* parent)
   return id;
 }
 
-uint dbPropertyItr::end(dbObject* parent)
+uint dbPropertyItr::end(dbObject* /* unused: parent */)
 {
   return 0;
 }

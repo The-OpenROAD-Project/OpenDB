@@ -329,7 +329,7 @@ void definNet::wire(dbWireType type)
   _taper_rule = NULL;
 }
 
-void definNet::pathStyle(int style)
+void definNet::pathStyle(int /* unused: style */)
 {
   notice(0, "error: styles are not supported on wires\n");
   ++_errors;

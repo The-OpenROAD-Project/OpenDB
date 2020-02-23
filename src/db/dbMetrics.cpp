@@ -48,14 +48,18 @@ void _dbMetrics::differences(dbDiff&           diff,
                              const char*       field,
                              const _dbMetrics& rhs) const
 {
+  DIFF_BEGIN
   DIFF_FIELD(_worst_slack);
   DIFF_FIELD(_total_slack);
+  DIFF_END
 }
 
 void _dbMetrics::out(dbDiff& diff, char side, const char* field) const
 {
+  DIFF_OUT_BEGIN
   DIFF_OUT_FIELD(_worst_slack);
   DIFF_OUT_FIELD(_total_slack);
+  DIFF_END
 }
 
 int dbMetrics::getWorstSlack()

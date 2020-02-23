@@ -82,104 +82,124 @@ static int antennaCB(lefrCallbackType_e c, double value, lefiUserData ud)
   return 0;
 }
 
-static int arrayBeginCB(lefrCallbackType_e c, const char* name, lefiUserData ud)
+static int arrayBeginCB(lefrCallbackType_e /* unused: c */,
+                        const char*  name,
+                        lefiUserData ud)
 {
   lefin* lef = (lefin*) ud;
   lef->arrayBegin(name);
   return 0;
 }
 
-static int arrayCB(lefrCallbackType_e c, lefiArray* a, lefiUserData ud)
+static int arrayCB(lefrCallbackType_e /* unused: c */,
+                   lefiArray*   a,
+                   lefiUserData ud)
 {
   lefin* lef = (lefin*) ud;
   lef->array(a);
   return 0;
 }
 
-static int arrayEndCB(lefrCallbackType_e c, const char* name, lefiUserData ud)
+static int arrayEndCB(lefrCallbackType_e /* unused: c */,
+                      const char*  name,
+                      lefiUserData ud)
 {
   lefin* lef = (lefin*) ud;
   lef->arrayEnd(name);
   return 0;
 }
 
-static int busBitCharsCB(lefrCallbackType_e c,
-                         const char*        busBit,
-                         lefiUserData       ud)
+static int busBitCharsCB(lefrCallbackType_e /* unused: c */,
+                         const char*  busBit,
+                         lefiUserData ud)
 {
   lefin* lef = (lefin*) ud;
   lef->busBitChars(busBit);
   return 0;
 }
 
-static int caseSensCB(lefrCallbackType_e c, int caseSense, lefiUserData ud)
+static int caseSensCB(lefrCallbackType_e /* unused: c */,
+                      int          caseSense,
+                      lefiUserData ud)
 {
   lefin* lef = (lefin*) ud;
   lef->caseSense(caseSense);
   return 0;
 }
 
-static int clearanceCB(lefrCallbackType_e c, const char* name, lefiUserData ud)
+static int clearanceCB(lefrCallbackType_e /* unused: c */,
+                       const char*  name,
+                       lefiUserData ud)
 {
   lefin* lef = (lefin*) ud;
   lef->clearance(name);
   return 0;
 }
 
-static int dividerCB(lefrCallbackType_e c, const char* name, lefiUserData ud)
+static int dividerCB(lefrCallbackType_e /* unused: c */,
+                     const char*  name,
+                     lefiUserData ud)
 {
   lefin* lef = (lefin*) ud;
   lef->divider(name);
   return 0;
 }
 
-static int noWireExtCB(lefrCallbackType_e c, const char* name, lefiUserData ud)
+static int noWireExtCB(lefrCallbackType_e /* unused: c */,
+                       const char*  name,
+                       lefiUserData ud)
 {
   lefin* lef = (lefin*) ud;
   lef->noWireExt(name);
   return 0;
 }
 
-static int noiseMarCB(lefrCallbackType_e c,
-                      lefiNoiseMargin*   noise,
-                      lefiUserData       ud)
+static int noiseMarCB(lefrCallbackType_e /* unused: c */,
+                      lefiNoiseMargin* noise,
+                      lefiUserData     ud)
 {
   lefin* lef = (lefin*) ud;
   lef->noiseMargin(noise);
   return 0;
 }
 
-static int edge1CB(lefrCallbackType_e c, double value, lefiUserData ud)
+static int edge1CB(lefrCallbackType_e /* unused: c */,
+                   double       value,
+                   lefiUserData ud)
 {
   lefin* lef = (lefin*) ud;
   lef->edge1(value);
   return 0;
 }
 
-static int edge2CB(lefrCallbackType_e c, double value, lefiUserData ud)
+static int edge2CB(lefrCallbackType_e /* unused: c */,
+                   double       value,
+                   lefiUserData ud)
 {
   lefin* lef = (lefin*) ud;
   lef->edge2(value);
   return 0;
 }
 
-static int edgeScaleCB(lefrCallbackType_e c, double value, lefiUserData ud)
+static int edgeScaleCB(lefrCallbackType_e /* unused: c */,
+                       double       value,
+                       lefiUserData ud)
 {
   lefin* lef = (lefin*) ud;
   lef->edgeScale(value);
   return 0;
 }
 
-static int noiseTableCB(lefrCallbackType_e c,
-                        lefiNoiseTable*    noise,
-                        lefiUserData       ud)
+static int noiseTableCB(lefrCallbackType_e /* unused: c */,
+                        lefiNoiseTable* noise,
+                        lefiUserData    ud)
 {
   lefin* lef = (lefin*) ud;
   lef->noiseTable(noise);
   return 0;
 }
 
-static int correctionCB(lefrCallbackType_e   c,
+static int correctionCB(lefrCallbackType_e /* unused: c */,
                         lefiCorrectionTable* corr,
                         lefiUserData         ud)
 {
@@ -188,180 +208,214 @@ static int correctionCB(lefrCallbackType_e   c,
   return 0;
 }
 
-static int dielectricCB(lefrCallbackType_e c,
-                        double             dielectric,
-                        lefiUserData       ud)
+static int dielectricCB(lefrCallbackType_e /* unused: c */,
+                        double       dielectric,
+                        lefiUserData ud)
 {
   lefin* lef = (lefin*) ud;
   lef->dielectric(dielectric);
   return 0;
 }
 
-static int irdropBeginCB(lefrCallbackType_e c, void* ptr, lefiUserData ud)
+static int irdropBeginCB(lefrCallbackType_e /* unused: c */,
+                         void*        ptr,
+                         lefiUserData ud)
 {
   lefin* lef = (lefin*) ud;
   lef->irdropBegin(ptr);
   return 0;
 }
 
-static int irdropCB(lefrCallbackType_e c, lefiIRDrop* irdrop, lefiUserData ud)
+static int irdropCB(lefrCallbackType_e /* unused: c */,
+                    lefiIRDrop*  irdrop,
+                    lefiUserData ud)
 {
   lefin* lef = (lefin*) ud;
   lef->irdrop(irdrop);
   return 0;
 }
 
-static int irdropEndCB(lefrCallbackType_e c, void* ptr, lefiUserData ud)
+static int irdropEndCB(lefrCallbackType_e /* unused: c */,
+                       void*        ptr,
+                       lefiUserData ud)
 {
   lefin* lef = (lefin*) ud;
   lef->irdropEnd(ptr);
   return 0;
 }
 
-static int layerCB(lefrCallbackType_e c, lefiLayer* layer, lefiUserData ud)
+static int layerCB(lefrCallbackType_e /* unused: c */,
+                   lefiLayer*   layer,
+                   lefiUserData ud)
 {
   lefin* lef = (lefin*) ud;
   lef->layer(layer);
   return 0;
 }
 
-static int macroBeginCB(lefrCallbackType_e c, const char* name, lefiUserData ud)
+static int macroBeginCB(lefrCallbackType_e /* unused: c */,
+                        const char*  name,
+                        lefiUserData ud)
 {
   lefin* lef = (lefin*) ud;
   lef->macroBegin(name);
   return 0;
 }
 
-static int macroCB(lefrCallbackType_e c, lefiMacro* macro, lefiUserData ud)
+static int macroCB(lefrCallbackType_e /* unused: c */,
+                   lefiMacro*   macro,
+                   lefiUserData ud)
 {
   lefin* lef = (lefin*) ud;
   lef->macro(macro);
   return 0;
 }
 
-static int macroEndCB(lefrCallbackType_e c, const char* name, lefiUserData ud)
+static int macroEndCB(lefrCallbackType_e /* unused: c */,
+                      const char*  name,
+                      lefiUserData ud)
 {
   lefin* lef = (lefin*) ud;
   lef->macroEnd(name);
   return 0;
 }
 
-static int manufacturingCB(lefrCallbackType_e c, double num, lefiUserData ud)
+static int manufacturingCB(lefrCallbackType_e /* unused: c */,
+                           double       num,
+                           lefiUserData ud)
 {
   lefin* lef = (lefin*) ud;
   lef->manufacturing(num);
   return 0;
 }
 
-static int maxStackViaCB(lefrCallbackType_e c,
-                         lefiMaxStackVia*   max,
-                         lefiUserData       ud)
+static int maxStackViaCB(lefrCallbackType_e /* unused: c */,
+                         lefiMaxStackVia* max,
+                         lefiUserData     ud)
 {
   lefin* lef = (lefin*) ud;
   lef->maxStackVia(max);
   return 0;
 }
 
-static int minFeatureCB(lefrCallbackType_e c,
-                        lefiMinFeature*    min,
-                        lefiUserData       ud)
+static int minFeatureCB(lefrCallbackType_e /* unused: c */,
+                        lefiMinFeature* min,
+                        lefiUserData    ud)
 {
   lefin* lef = (lefin*) ud;
   lef->minFeature(min);
   return 0;
 }
 
-static int nonDefaultCB(lefrCallbackType_e c,
-                        lefiNonDefault*    def,
-                        lefiUserData       ud)
+static int nonDefaultCB(lefrCallbackType_e /* unused: c */,
+                        lefiNonDefault* def,
+                        lefiUserData    ud)
 {
   lefin* lef = (lefin*) ud;
   lef->nonDefault(def);
   return 0;
 }
 
-static int obstructionCB(lefrCallbackType_e c,
-                         lefiObstruction*   obs,
-                         lefiUserData       ud)
+static int obstructionCB(lefrCallbackType_e /* unused: c */,
+                         lefiObstruction* obs,
+                         lefiUserData     ud)
 {
   lefin* lef = (lefin*) ud;
   lef->obstruction(obs);
   return 0;
 }
 
-static int pinCB(lefrCallbackType_e c, lefiPin* pin, lefiUserData ud)
+static int pinCB(lefrCallbackType_e /* unused: c */,
+                 lefiPin*     pin,
+                 lefiUserData ud)
 {
   lefin* lef = (lefin*) ud;
   lef->pin(pin);
   return 0;
 }
 
-static int propDefBeginCB(lefrCallbackType_e c, void* ptr, lefiUserData ud)
+static int propDefBeginCB(lefrCallbackType_e /* unused: c */,
+                          void*        ptr,
+                          lefiUserData ud)
 {
   lefin* lef = (lefin*) ud;
   lef->propDefBegin(ptr);
   return 0;
 }
 
-static int propDefCB(lefrCallbackType_e c, lefiProp* prop, lefiUserData ud)
+static int propDefCB(lefrCallbackType_e /* unused: c */,
+                     lefiProp*    prop,
+                     lefiUserData ud)
 {
   lefin* lef = (lefin*) ud;
   lef->propDef(prop);
   return 0;
 }
 
-static int propDefEndCB(lefrCallbackType_e c, void* ptr, lefiUserData ud)
+static int propDefEndCB(lefrCallbackType_e /* unused: c */,
+                        void*        ptr,
+                        lefiUserData ud)
 {
   lefin* lef = (lefin*) ud;
   lef->propDefEnd(ptr);
   return 0;
 }
 
-static int siteCB(lefrCallbackType_e c, lefiSite* site, lefiUserData ud)
+static int siteCB(lefrCallbackType_e /* unused: c */,
+                  lefiSite*    site,
+                  lefiUserData ud)
 {
   lefin* lef = (lefin*) ud;
   lef->site(site);
   return 0;
 }
 
-static int spacingBeginCB(lefrCallbackType_e c, void* ptr, lefiUserData ud)
+static int spacingBeginCB(lefrCallbackType_e /* unused: c */,
+                          void*        ptr,
+                          lefiUserData ud)
 {
   lefin* lef = (lefin*) ud;
   lef->spacingBegin(ptr);
   return 0;
 }
 
-static int spacingCB(lefrCallbackType_e c,
-                     lefiSpacing*       spacing,
-                     lefiUserData       ud)
+static int spacingCB(lefrCallbackType_e /* unused: c */,
+                     lefiSpacing* spacing,
+                     lefiUserData ud)
 {
   lefin* lef = (lefin*) ud;
   lef->spacing(spacing);
   return 0;
 }
 
-static int spacingEndCB(lefrCallbackType_e c, void* ptr, lefiUserData ud)
+static int spacingEndCB(lefrCallbackType_e /* unused: c */,
+                        void*        ptr,
+                        lefiUserData ud)
 {
   lefin* lef = (lefin*) ud;
   lef->spacingEnd(ptr);
   return 0;
 }
 
-static int timingCB(lefrCallbackType_e c, lefiTiming* timing, lefiUserData ud)
+static int timingCB(lefrCallbackType_e /* unused: c */,
+                    lefiTiming*  timing,
+                    lefiUserData ud)
 {
   lefin* lef = (lefin*) ud;
   lef->timing(timing);
   return 0;
 }
 
-static int unitsCB(lefrCallbackType_e c, lefiUnits* unit, lefiUserData ud)
+static int unitsCB(lefrCallbackType_e /* unused: c */,
+                   lefiUnits*   unit,
+                   lefiUserData ud)
 {
   lefin* lef = (lefin*) ud;
   lef->units(unit);
   return 0;
 }
 
-static int useMinSpacingCB(lefrCallbackType_e c,
+static int useMinSpacingCB(lefrCallbackType_e /* unused: c */,
                            lefiUseMinSpacing* spacing,
                            lefiUserData       ud)
 {
@@ -370,28 +424,36 @@ static int useMinSpacingCB(lefrCallbackType_e c,
   return 0;
 }
 
-static int versionCB(lefrCallbackType_e c, double num, lefiUserData ud)
+static int versionCB(lefrCallbackType_e /* unused: c */,
+                     double       num,
+                     lefiUserData ud)
 {
   lefin* lef = (lefin*) ud;
   lef->version(num);
   return 0;
 }
 
-static int viaCB(lefrCallbackType_e c, lefiVia* via, lefiUserData ud)
+static int viaCB(lefrCallbackType_e /* unused: c */,
+                 lefiVia*     via,
+                 lefiUserData ud)
 {
   lefin* lef = (lefin*) ud;
   lef->via(via);
   return 0;
 }
 
-static int viaRuleCB(lefrCallbackType_e c, lefiViaRule* rule, lefiUserData ud)
+static int viaRuleCB(lefrCallbackType_e /* unused: c */,
+                     lefiViaRule* rule,
+                     lefiUserData ud)
 {
   lefin* lef = (lefin*) ud;
   lef->viaRule(rule);
   return 0;
 }
 
-static int doneCB(lefrCallbackType_e c, void* ptr, lefiUserData ud)
+static int doneCB(lefrCallbackType_e /* unused: c */,
+                  void*        ptr,
+                  lefiUserData ud)
 {
   lefin* lef = (lefin*) ud;
   lef->done(ptr);

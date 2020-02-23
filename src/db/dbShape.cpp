@@ -112,6 +112,7 @@ bool dbShape::operator<(const dbShape& rhs)
 
       if (r > 0)
         return false;
+      break;
     }
 
     case VIA_BOX: {
@@ -136,6 +137,7 @@ bool dbShape::operator<(const dbShape& rhs)
 
       if (r > 0)
         return false;
+      break;
     }
   }
 

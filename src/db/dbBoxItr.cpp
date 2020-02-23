@@ -202,7 +202,7 @@ uint dbBoxItr::begin(dbObject* parent)
   return 0;
 }
 
-uint dbBoxItr::end(dbObject* parent)
+  uint dbBoxItr::end(dbObject* /* unused: parent */)
 {
   return 0;
 }

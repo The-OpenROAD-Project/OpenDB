@@ -347,7 +347,7 @@ int ZInterface::verbose(int code, const char* msg, ...)
   return event("verbose", verbose_id, buffer, 0);
 }
 
-void ZInterface::error(int code, const char* msg, ...)
+void ZInterface::error(int /* unused: code */, const char* msg, ...)
 {
   char    buffer[8192];
   va_list args;

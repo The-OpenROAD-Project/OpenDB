@@ -121,9 +121,9 @@ class HashG
   int                      _c;
   int                      _m;
   // dummy function
-  virtual ub4 _map(Key key) { return 1; }
+  virtual ub4 _map(Key /* unused: key*/) { return 1; }
   // dummy function
-  virtual int equal(Key key1, Key key2) { return 1; }
+  virtual int equal(Key /* unused: key1*/, Key /* unused: key2*/) { return 1; }
 };
 
 template <class Key, class Val>

@@ -68,7 +68,7 @@ void definPin::init()
   definBase::init();
 }
 
-void definPin::pinsBegin(int n)
+void definPin::pinsBegin(int /* unused: n */)
 {
   _block->getBusDelimeters(_left_bus, _right_bus);
   _bterm_cnt = 0;

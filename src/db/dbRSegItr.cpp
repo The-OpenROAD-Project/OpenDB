@@ -97,7 +97,7 @@ uint dbRSegItr::begin(dbObject* parent)
   return seg->_next;
 }
 
-uint dbRSegItr::end(dbObject* parent)
+uint dbRSegItr::end(dbObject* /* unused: parent */)
 {
   return 0;
 }

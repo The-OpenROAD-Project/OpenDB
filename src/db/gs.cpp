@@ -212,7 +212,7 @@ void gs::init_headers(int width, int height)
   sprintf(ppmheader, "P6\n%d %d\n255\n", width, height);
 }
 
-int gs::setSlices(int _nslices, bool skipMemAlloc)
+int gs::setSlices(int _nslices, bool /* unused: skipMemAlloc */)
 {
   // fprintf(stderr,"setSlices: %d\n",_nslices);
   free_mem();
@@ -1120,10 +1120,10 @@ int gs::write_ppm_file(FILE* fp,
 
 int gs::write_ppm_string(char** s,
                          int    encoding,
-                         int    width,
-                         int    height,
-                         int*   ll,
-                         int*   ur)
+                         int    /* unused: width */,
+                         int    /* unused: height */,
+                         int*   /* unused: ll */,
+                         int*   /* unused: ur */)
 {
   if (!(_init & ALLOCATED)) {
     return -1;

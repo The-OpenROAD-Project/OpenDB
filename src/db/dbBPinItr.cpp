@@ -97,7 +97,7 @@ uint dbBPinItr::begin(dbObject* parent)
   return bterm->_bpins;
 }
 
-uint dbBPinItr::end(dbObject* parent)
+uint dbBPinItr::end(dbObject* /* unused: parent */)
 {
   return 0;
 }

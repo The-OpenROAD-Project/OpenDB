@@ -1827,7 +1827,7 @@ dbWire* dbWire::create(dbNet* net_, bool global_wire)
   return (dbWire*) wire;
 }
 
-dbWire* dbWire::create(dbBlock* block_, bool global_wire)
+dbWire* dbWire::create(dbBlock* block_, bool /* unused: global_wire */)
 {
   _dbBlock* block = (_dbBlock*) block_;
   _dbWire*  wire  = block->_wire_tbl->create();

@@ -483,7 +483,7 @@ void dbRtTree::deleteEdge(dbRtEdge* e, bool destroy_orphan_nodes)
 
 dbRtEdge* dbRtTree::getEdge(uint shape_id)
 {
-  assert((shape_id >= 0) && (shape_id < _edge_map.size()));
+  assert(shape_id < _edge_map.size());
   dbRtEdge* e = _edge_map[shape_id];
   return e;
 }

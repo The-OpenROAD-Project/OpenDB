@@ -1048,6 +1048,7 @@ void dbJournal::redo_updateCapNodeField()
             node_id,
             nnet_id);
       ((dbCapNode*) node)->setNet(nnet_id);
+      break;
     }
     case _dbCapNode::SETNEXT: {
       uint onext;
@@ -1060,6 +1061,7 @@ void dbJournal::redo_updateCapNodeField()
             node_id,
             nnext);
       ((dbCapNode*) node)->setNext(nnext);
+      break;
     }
   }
 }

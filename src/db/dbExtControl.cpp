@@ -84,7 +84,7 @@ dbExtControl::~dbExtControl()
     free(_gndcFactorList);
   if (_ccFactorList)
     free(_ccFactorList);
-};
+}
 
 dbOStream& operator<<(dbOStream& stream, const dbExtControl& extControl)
 {

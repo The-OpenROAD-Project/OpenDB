@@ -71,7 +71,7 @@ class _dbTechMinCutRule : public dbObject
   void out(dbDiff& diff, char side, const char* field) const;
 };
 
-inline _dbTechMinCutRule::_dbTechMinCutRule(_dbDatabase*             db,
+inline _dbTechMinCutRule::_dbTechMinCutRule(_dbDatabase* /* unused: db */,
                                             const _dbTechMinCutRule& r)
     : _flags(r._flags),
       _num_cuts(r._num_cuts),
@@ -82,7 +82,7 @@ inline _dbTechMinCutRule::_dbTechMinCutRule(_dbDatabase*             db,
 {
 }
 
-inline _dbTechMinCutRule::_dbTechMinCutRule(_dbDatabase* db)
+inline _dbTechMinCutRule::_dbTechMinCutRule(_dbDatabase* /* unused: db */)
 {
   _flags._rule        = TechMinCutRule::NONE;
   _flags._cuts_length = 0;
@@ -129,13 +129,13 @@ class _dbTechMinEncRule : public dbObject
   void out(dbDiff& diff, char side, const char* field) const;
 };
 
-inline _dbTechMinEncRule::_dbTechMinEncRule(_dbDatabase*             db,
+inline _dbTechMinEncRule::_dbTechMinEncRule(_dbDatabase* /* unused: db */,
                                             const _dbTechMinEncRule& r)
     : _flags(r._flags), _area(r._area), _width(r._width)
 {
 }
 
-inline _dbTechMinEncRule::_dbTechMinEncRule(_dbDatabase* db)
+inline _dbTechMinEncRule::_dbTechMinEncRule(_dbDatabase* /* unused: db */)
 {
   _flags._has_width  = 0;
   _flags._spare_bits = 0;

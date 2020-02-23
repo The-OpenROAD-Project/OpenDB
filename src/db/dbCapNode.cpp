@@ -230,7 +230,7 @@ void dbCapNode::adjustCapacitance(float factor, uint corner)
   uint        cornerCnt = block->_corners_per_block;
 
   ZASSERT(seg->_flags._foreign > 0);
-  ZASSERT((corner >= 0) && (corner < cornerCnt));
+  ZASSERT(corner < cornerCnt);
   float& value
       = (*block->_c_val_tbl)[(seg->getOID() - 1) * cornerCnt + 1 + corner];
   float prev_value = value;
@@ -270,7 +270,7 @@ double dbCapNode::getCapacitance(uint corner)
   uint        cornerCnt = block->_corners_per_block;
 
   if (seg->_flags._foreign > 0) {
-    ZASSERT((corner >= 0) && (corner < cornerCnt));
+    ZASSERT(corner < cornerCnt);
     return (*block->_c_val_tbl)[(seg->getOID() - 1) * cornerCnt + 1 + corner];
   } else {
     return 0.0;

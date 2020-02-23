@@ -47,7 +47,7 @@ bool dbTechLayerItr::orderReversed()
   return false;
 }
 
-void dbTechLayerItr::reverse(dbObject* parent)
+void dbTechLayerItr::reverse(dbObject* /* unused: parent */)
 {
 }
 
@@ -74,7 +74,7 @@ uint dbTechLayerItr::begin(dbObject* parent)
   return (uint) tech->_bottom;
 }
 
-uint dbTechLayerItr::end(dbObject* parent)
+uint dbTechLayerItr::end(dbObject* /* unused: parent */)
 {
   return 0;
 }

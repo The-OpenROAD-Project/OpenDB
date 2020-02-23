@@ -446,21 +446,21 @@ void lefin::createPolygon(dbObject*        object,
   }
 }
 
-void lefin::antenna(lefin::AntennaType type, double value)
+void lefin::antenna(lefin::AntennaType /* unused: type */, double /* unused: value */)
 {
 }
 
-void lefin::arrayBegin(const char* name)
-{
-  /* Gate arrays not supported */
-}
-
-void lefin::array(lefiArray* a)
+void lefin::arrayBegin(const char* /* unused: name */)
 {
   /* Gate arrays not supported */
 }
 
-void lefin::arrayEnd(const char* name)
+void lefin::array(lefiArray* /* unused: a */)
+{
+  /* Gate arrays not supported */
+}
+
+void lefin::arrayEnd(const char* /* unused: name */)
 {
   /* Gate arrays not supported */
 }
@@ -502,43 +502,43 @@ void lefin::noWireExt(const char* name)
   _tech->setNoWireExtAtPin(dbOnOffType(name));
 }
 
-void lefin::noiseMargin(lefiNoiseMargin* noise)
+void lefin::noiseMargin(lefiNoiseMargin* /* unused: noise */)
 {
 }
 
-void lefin::edge1(double name)
+void lefin::edge1(double /* unused: name */)
 {
 }
 
-void lefin::edge2(double name)
+void lefin::edge2(double /* unused: name */)
 {
 }
 
-void lefin::edgeScale(double name)
+void lefin::edgeScale(double /* unused: name */)
 {
 }
 
-void lefin::noiseTable(lefiNoiseTable* noise)
+void lefin::noiseTable(lefiNoiseTable* /* unused: noise */)
 {
 }
 
-void lefin::correction(lefiCorrectionTable* corr)
+void lefin::correction(lefiCorrectionTable* /* unused: corr */)
 {
 }
 
-void lefin::dielectric(double dielectric)
+void lefin::dielectric(double /* unused: dielectric */)
 {
 }
 
-void lefin::irdropBegin(void* ptr)
+void lefin::irdropBegin(void* /* unused: ptr */)
 {
 }
 
-void lefin::irdrop(lefiIRDrop* irdrop)
+void lefin::irdrop(lefiIRDrop* /* unused: irdrop */)
 {
 }
 
-void lefin::irdropEnd(void* ptr)
+void lefin::irdropEnd(void* /* unused: ptr */)
 {
 }
 
@@ -983,7 +983,7 @@ void lefin::macro(lefiMacro* macro)
     _master->setSymmetryR90();
 }
 
-void lefin::macroEnd(const char* macroName)
+void lefin::macroEnd(const char* /* unused: macroName */)
 {
   if (_master) {
     if (_master_modified) {
@@ -1007,11 +1007,11 @@ void lefin::manufacturing(double num)
   _tech->setManufacturingGrid(dbdist(num));
 }
 
-void lefin::maxStackVia(lefiMaxStackVia* maxStack)
+void lefin::maxStackVia(lefiMaxStackVia* /* unused: maxStack */)
 {
 }
 
-void lefin::minFeature(lefiMinFeature* min)
+void lefin::minFeature(lefiMinFeature* /* unused: min */)
 {
 }
 
@@ -1340,15 +1340,15 @@ void lefin::pin(lefiPin* pin)
   }
 }
 
-void lefin::propDefBegin(void* ptr)
+void lefin::propDefBegin(void* /* unused: ptr */)
 {
 }
 
-void lefin::propDef(lefiProp* prop)
+void lefin::propDef(lefiProp* /* unused: prop */)
 {
 }
 
-void lefin::propDefEnd(void* ptr)
+void lefin::propDefEnd(void* /* unused: ptr */)
 {
 }
 
@@ -1385,7 +1385,7 @@ void lefin::site(lefiSite* lefsite)
     site->setClass(dbSiteClass(lefsite->siteClass()));
 }
 
-void lefin::spacingBegin(void* ptr)
+void lefin::spacingBegin(void* /* unused: ptr */)
 {
 }
 
@@ -1407,11 +1407,11 @@ void lefin::spacing(lefiSpacing* spacing)
   rule->setSpacing(dbdist(spacing->distance()));
 }
 
-void lefin::spacingEnd(void* ptr)
+void lefin::spacingEnd(void* /* unused: ptr */)
 {
 }
 
-void lefin::timing(lefiTiming* timing)
+void lefin::timing(lefiTiming* /* unused: timing */)
 {
 }
 
@@ -1787,7 +1787,7 @@ void lefin::viaGenerateRule(lefiViaRule* viaRule)
   }
 }
 
-void lefin::done(void* ptr)
+void lefin::done(void* /* unused: ptr */)
 {
 }
 

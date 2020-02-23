@@ -94,7 +94,7 @@ uint dbTargetItr::begin(dbObject* parent)
   return mterm->_targets;
 }
 
-uint dbTargetItr::end(dbObject* parent)
+uint dbTargetItr::end(dbObject* /* unused: parent */)
 {
   return 0;
 }

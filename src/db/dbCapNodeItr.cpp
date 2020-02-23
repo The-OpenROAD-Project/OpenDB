@@ -94,7 +94,7 @@ uint dbCapNodeItr::begin(dbObject* parent)
   return net->_cap_nodes;
 }
 
-uint dbCapNodeItr::end(dbObject* parent)
+uint dbCapNodeItr::end(dbObject* /* unused: parent */)
 {
   return 0;
 }

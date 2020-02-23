@@ -93,7 +93,7 @@ uint dbRegionItr::begin(dbObject* parent)
   return region->_children;
 }
 
-uint dbRegionItr::end(dbObject* parent)
+uint dbRegionItr::end(dbObject* /* unused: parent */)
 {
   return 0;
 }

@@ -30,7 +30,6 @@
 // ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 // POSSIBILITY OF SUCH DAMAGE.
 
-#include "dbDatabase.h"
 #include <algorithm>
 #include <map>
 #include <string>
@@ -42,6 +41,7 @@
 #include "dbCCSeg.h"
 #include "dbCapNode.h"
 #include "dbChip.h"
+#include "dbDatabase.h"
 #include "dbExtControl.h"
 #include "dbITerm.h"
 #include "dbJournal.h"
@@ -166,7 +166,7 @@ dbObjectTable* _dbDatabase::getObjectTable(dbObjectType type)
 //
 ////////////////////////////////////////////////////////////////////
 
-_dbDatabase::_dbDatabase(_dbDatabase* db)
+_dbDatabase::_dbDatabase(_dbDatabase* /* unused: db */)
 {
   _magic1       = ADS_DB_MAGIC1;
   _magic2       = ADS_DB_MAGIC2;
@@ -204,7 +204,7 @@ _dbDatabase::_dbDatabase(_dbDatabase* db)
 // This constructor is use by dbDatabase::clear(), so the the unique-id is
 // reset.
 //
-_dbDatabase::_dbDatabase(_dbDatabase* db, int id)
+_dbDatabase::_dbDatabase(_dbDatabase* /* unused: db */, int id)
 {
   _magic1       = ADS_DB_MAGIC1;
   _magic2       = ADS_DB_MAGIC2;
@@ -238,7 +238,7 @@ _dbDatabase::_dbDatabase(_dbDatabase* db, int id)
   ZALLOCATED(_prop_itr);
 }
 
-_dbDatabase::_dbDatabase(_dbDatabase* db, const _dbDatabase& d)
+_dbDatabase::_dbDatabase(_dbDatabase* /* unused: db */, const _dbDatabase& d)
     : _magic1(d._magic1),
       _magic2(d._magic2),
       _schema_major(d._schema_major),

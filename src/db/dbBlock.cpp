@@ -3444,7 +3444,7 @@ int dbBlock::markBackwardsUser2(dbNet*                net,
 {
   std::vector<dbInst*> instsToBeMarked;
 
-  uint n = markBackwardsUser2(net, instsToBeMarked, mark, resultTable);
+  int n = markBackwardsUser2(net, instsToBeMarked, mark, resultTable);
 
   if (n == 0)
     return 0;

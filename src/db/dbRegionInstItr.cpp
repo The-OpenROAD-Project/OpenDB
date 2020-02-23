@@ -104,7 +104,7 @@ uint dbRegionInstItr::begin(dbObject* parent)
   return (uint) region->_insts;
 }
 
-uint dbRegionInstItr::end(dbObject* parent)
+uint dbRegionInstItr::end(dbObject* /* unused: parent */)
 {
   return 0;
 }

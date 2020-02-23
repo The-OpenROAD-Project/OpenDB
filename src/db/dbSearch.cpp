@@ -743,7 +743,7 @@ uint dbBlockSearch::getInstBoxes(int                   x1,
   return cnt;
 }
 
-void dbBlockSearch::getInstBoxes(bool ignoreFlag)
+void dbBlockSearch::getInstBoxes(bool /* unused: ignoreFlag */)
 {
   if (_instSdb == NULL)
     return;
@@ -1345,7 +1345,7 @@ uint dbBlockSearch::getTracks(bool ignoreLayers)
   return cnt;
 }
 #else
-uint dbBlockSearch::getTracks(bool ignoreLayers)
+uint dbBlockSearch::getTracks(bool /* unused: ignoreLayers */)
 {
   if (_trackSdb == NULL)
     return 0;
@@ -2198,7 +2198,7 @@ void dbBlockSearch::getNetBbox(dbNet* net, adsRect& maxRect)
     maxRect.merge(r);
   }
 }
-uint dbBlockSearch::getNetFromDb(dbNet* net, bool ignoreZuiFlags, bool ignoreBB)
+uint dbBlockSearch::getNetFromDb(dbNet* net, bool /* unused: ignoreZuiFlags */, bool ignoreBB)
 {
   uint cnt = 0;
 
@@ -2289,7 +2289,7 @@ uint dbBlockSearch::getNetWires(dbNet* net,
 uint dbBlockSearch::getNetConnectivity(dbNet* net,
                                        bool   contextFlag,
                                        uint   clipMargin,
-                                       bool   ignoreLayerFlags,
+                                       bool   /* unused: ignoreLayerFlags */,
                                        bool   ignoreZuiFlags,
                                        bool   ignoreBB)
 {
@@ -2342,7 +2342,7 @@ uint dbBlockSearch::getConnectivityWires(dbInst* inst, bool ignoreZuiFlags)
   return cnt;
 }
 
-void dbBlockSearch::addNetSBoxes(dbNet* net, uint wtype, bool skipVias)
+void dbBlockSearch::addNetSBoxes(dbNet* net, uint /* unused: wtype */, bool skipVias)
 {
   dbSet<dbSWire>           swires = net->getSWires();
   dbSet<dbSWire>::iterator itr;
@@ -2371,7 +2371,7 @@ void dbBlockSearch::addNetSBoxes(dbNet* net, uint wtype, bool skipVias)
   }
 }
 
-void dbBlockSearch::inspectPowerNet(bool menuFlag)
+void dbBlockSearch::inspectPowerNet(bool /* unused: menuFlag */)
 {
   // if (_dcr->selectAction()) {
   //	if (_dcr->isSelectedMenu("power")||menuFlag)

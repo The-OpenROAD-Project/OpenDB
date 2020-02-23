@@ -144,7 +144,7 @@ void definSNet::begin(const char* name)
   _swire = NULL;
 }
 
-void definSNet::connection(const char* iname, const char* tname, bool synth)
+void definSNet::connection(const char* iname, const char* tname, bool /* unused: synth */)
 {
   if ((_cur_net == NULL) || (_replace_wires == true))
     return;
@@ -322,7 +322,7 @@ void definSNet::path(const char* layer_name, int width)
   }
 }
 
-void definSNet::pathStyle(int style)
+void definSNet::pathStyle(int /* unused: style */)
 {
   notice(0, "error: styles are not supported on wires\n");
   ++_errors;

@@ -54,6 +54,7 @@ class definBase
   int      _dist_factor;
 
   definBase();
+  virtual ~definBase() {}
   void         setTech(dbTech* tech);
   void         setBlock(dbBlock* block);
   void         units(int d);

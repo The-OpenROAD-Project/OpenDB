@@ -573,6 +573,76 @@ int definReader::historyCallback(defrCallbackType_e /* unused: type */,
   return PARSE_ERROR;
 }
 
+// This is a ugly workaround.  We handle precisely the case that a
+// path consists of a single layer/point/rect sequence of min width
+// and nothing more.  This is all TritonRoute writes to DEF currently
+// so that is all we support (used for min area violations).  Anything
+// else will generate a parser error.
+static bool handleRectPath(defiPath* path, definNet* netR)
+{
+  const char* layerName    = nullptr;
+  bool        hasPoint = false;
+  bool        hasRect  = false;
+  int         x;
+  int         y;
+  int         deltaX1;
+  int         deltaY1;
+  int         deltaX2;
+  int         deltaY2;
+
+  path->initTraverse();
+  int pathId;
+  while ((pathId = path->next()) != DEFIPATH_DONE) {
+    switch (pathId) {
+      case DEFIPATH_LAYER: {
+        layerName = path->getLayer();
+        break;
+      }
+      case DEFIPATH_POINT: {
+        if (hasPoint) {
+          return false;
+        }
+        hasPoint = true;
+        path->getPoint(&x, &y);
+        break;
+      }
+      case DEFIPATH_RECT: {
+        if (hasRect) {
+          return false;
+        }
+        hasRect = true;
+        path->getViaRect(&deltaX1, &deltaY1, &deltaX2, &deltaY2);
+        break;
+      }
+      default:
+        return false;
+    }
+  }
+
+  netR->path(layerName);
+  int minWidth = netR->getLayer()->getWidth();
+  int ext = minWidth / 2;
+
+  if (deltaX2 - deltaX1 == minWidth) {  // vertical
+    if (-deltaX1 != deltaX2) { // must be centered on this point
+      return false;
+    }
+    netR->pathPoint(x, y + deltaY1 + ext);
+    netR->pathPoint(x, y + deltaY2 - ext);
+  } else if (deltaY2 - deltaY1 == minWidth) {  // horizontal
+    if (-deltaY1 != deltaY2) { // must be centered on this point
+      return false;
+    }
+    netR->pathPoint(x + deltaX1 + ext, y);
+    netR->pathPoint(x + deltaX2 - ext, y);
+  } else {
+    return false;
+  }
+  netR->pathEnd();
+
+  return true;
+}
+
 int definReader::netCallback(defrCallbackType_e /* unused: type */,
                              defiNet*           net,
                              defiUserData       data)
@@ -662,6 +732,10 @@ int definReader::netCallback(defrCallbackType_e /* unused: type */,
     for (int j = 0; j < wire->numPaths(); ++j) {
       defiPath* path = wire->path(j);
 
+      if (handleRectPath(path, netR)) {
+        continue;
+      }
+
       path->initTraverse();
 
       int pathId;
@@ -718,14 +792,10 @@ int definReader::netCallback(defrCallbackType_e /* unused: type */,
             return PARSE_ERROR;  // callback issues error
             break;
 
-          case DEFIPATH_RECT:
-            // TODO: disable error until TritonRoute stops writing these
-            //   as many of our existing DEFs have these
-            // reader->error("RECT in net's routing is unsupported");
-            // return PARSE_ERROR;
-            warning(0,
-                    "RECT in net's routing is unsupported and will be ignored");
+          case DEFIPATH_RECT: {
+            return PARSE_ERROR;
             break;
+          }
 
           case DEFIPATH_VIRTUALPOINT:
             reader->error("VIRTUAL in net's routing is unsupported");

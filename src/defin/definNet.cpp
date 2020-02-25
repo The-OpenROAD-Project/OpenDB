@@ -402,7 +402,10 @@ void definNet::pathPoint(int x, int y)
   if (_wire == NULL)
     return;
 
-  _wire_encoder.addPoint(dbdist(x), dbdist(y));
+  _prev_x = dbdist(x);
+  _prev_y = dbdist(y);
+
+  _wire_encoder.addPoint(_prev_x, _prev_y);
 }
 
 void definNet::pathPoint(int x, int y, int ext)
@@ -410,7 +413,10 @@ void definNet::pathPoint(int x, int y, int ext)
   if (_wire == NULL)
     return;
 
-  _wire_encoder.addPoint(dbdist(x), dbdist(y), dbdist(ext));
+  _prev_x = dbdist(x);
+  _prev_y = dbdist(y);
+
+  _wire_encoder.addPoint(_prev_x, _prev_y, dbdist(ext));
 }
 
 void definNet::getUniqueViaName(std::string& viaName)

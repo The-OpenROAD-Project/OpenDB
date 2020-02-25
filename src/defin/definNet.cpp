@@ -573,50 +573,6 @@ void definNet::pathVia(const char* via_name)
   }
 }
 
-// We are only supporting a subset of possible values that TritonRoute uses.
-// The use case is for min-width "patch" wires used to fix min area violations
-// (usually stacked vias).  On anything else we return false which triggers
-// a parsing error.  We don't have a native representation so we break
-// the path up at rects and convert them to segments.  All this should
-// be replaced with proper DB support in the future.
-bool definNet::pathRect(int deltaX1, int deltaY1, int deltaX2, int deltaY2)
-{
-  if (_wire == NULL)
-    return true;
-
-  int min_width = _cur_layer->getWidth();
-  int ext = min_width / 2;
-  if (deltaX2 - deltaX1 == min_width) { // vertical
-    if (-deltaX1 != deltaX2) { // must be centered on this point
-      return false;
-    }
-    if (deltaY2 - deltaY1 <= min_width) { // no room for extension
-      return false;
-    }
-    pathEnd();
-    pathPoint(_prev_x, _prev_y + deltaY1 + ext);
-    pathPoint(_prev_x, _prev_y + deltaY2 - ext);
-    pathEnd();
-    pathPoint(_prev_x, _prev_y);
-  } else if (deltaY2 - deltaY1 == min_width) { // horizontal
-    if (-deltaY1 != deltaY2) { // must be centered on this point
-      return false;
-    }
-    if (deltaX2 - deltaX1 <= min_width) { // no room for extension
-      return false;
-    }
-    pathEnd();
-    pathPoint(_prev_x + deltaX1 + ext, _prev_y);
-    pathPoint(_prev_x + deltaX2 - ext, _prev_y);
-    pathEnd();
-    pathPoint(_prev_x, _prev_y);
-  } else {
-    return false;  // not min width
-  }
-
-  return true;
-}
-
 void definNet::pathEnd()
 {
   _cur_layer = NULL;

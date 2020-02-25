@@ -95,7 +95,6 @@ class definNet : public definBase
   void pathPoint(int x, int y, int ext);
   void pathVia(const char* via);
   void pathVia(const char* via, dbOrientType orient);
-  bool pathRect(int deltaX1, int deltaY1, int deltaX2, int deltaY2);
   void pathEnd();
   void wireEnd();
   void source(dbSourceType source);
@@ -110,6 +109,8 @@ class definNet : public definBase
   void pathBegin(const char* layer);
   // void netBeginCreate( const char * name );
   // void netBeginReplace( const char * name );
+
+  dbTechLayer* getLayer() const { return _cur_layer; }
 
   definNet();
   virtual ~definNet();

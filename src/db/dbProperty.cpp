@@ -674,7 +674,7 @@ void dbProperty::writeProperties(dbObject* object, FILE* out)
     std::string name = prop->getName();
     fprintf(out, "    PROPERTY %s ", name.c_str());
     writePropValue(prop, out);
-    fprintf(out, "\n");
+    fprintf(out, ";\n");
   }
 }
 

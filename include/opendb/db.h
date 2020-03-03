@@ -5917,7 +5917,8 @@ class dbTechLayer : public dbObject
   void           setDirection(dbTechLayerDir direction);
 
   ///
-  /// Get/Set the resistance (ohms per square)
+  /// Get/Set the resistance (ohms per square for routing layers;
+  ///                         ohms per cut on via layers)
   ///
   double getResistance();
   void   setResistance(double res);

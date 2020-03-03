@@ -879,8 +879,10 @@ void lefin::layer(lefiLayer* layer)
     l->setDirection(direction);
   }
 
-  if (layer->hasResistance())
+  if (layer->hasResistance()) // routing layers
     l->setResistance(layer->resistance());
+  else if (layer->hasResistancePerCut()) // via layers
+    l->setResistance(layer->resistancePerCut());
 
   if (layer->hasCapacitance())
     l->setCapacitance(layer->capacitance());

@@ -185,7 +185,9 @@ void definComponent::placement(int status, int x, int y, int orient)
       break;
     case DEFI_COMPONENT_UNPLACED:
       _cur_inst->setPlacementStatus(dbPlacementStatus::UNPLACED);
-      break;
+      return;
+    default: // placement status is unset
+      return;
   }
 
   switch (orient) {

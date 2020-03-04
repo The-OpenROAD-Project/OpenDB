@@ -5800,9 +5800,14 @@ class dbTechLayer : public dbObject
   bool hasTwoWidthsSpacingRules() const;
   void printTwoWidthsSpacingRules(lefout& writer) const;
   bool getTwoWidthsSpacingTable(std::vector<std::vector<uint> >& sptbl) const;
+  uint getTwoWidthsSpacingTableNumWidths() const;
+  uint getTwoWidthsSpacingTableWidth(uint row) const;
+  bool getTwoWidthsSpacingTableHasPRL(uint row) const;
+  uint getTwoWidthsSpacingTablePRL(uint row) const;
+  uint getTwoWidthsSpacingTableEntry(uint row, uint col) const;
 
   void initTwoWidths(uint num_widths);
-  void addTwoWidthsIndexEntry(uint width);
+  void addTwoWidthsIndexEntry(uint width, int parallel_run_length = -1);
   void addTwoWidthsSpacingTableEntry(uint inrow, uint incol, uint spacing);
   ///
   ///  create container for layer specific antenna rules

@@ -697,7 +697,8 @@ void lefin::layer(lefiLayer* layer)
 
       l->initTwoWidths(cur_two->numWidth());
       for (int i = 0; i < cur_two->numWidth(); i++) {
-        l->addTwoWidthsIndexEntry(dbdist(cur_two->width(i)));
+        int prl = cur_two->hasWidthPRL(i) ? dbdist(cur_two->widthPRL(i)) : -1;
+        l->addTwoWidthsIndexEntry(dbdist(cur_two->width(i)), prl);
       }
 
       for (int i = 0; i < cur_two->numWidth(); i++) {

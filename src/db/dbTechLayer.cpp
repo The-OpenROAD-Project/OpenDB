@@ -182,6 +182,15 @@ bool _dbTechLayer::operator==(const _dbTechLayer& rhs) const
   if (_v55sp_spacing != rhs._v55sp_spacing)
     return false;
 
+  if (_two_widths_sp_idx != rhs._two_widths_sp_idx)
+    return false;
+
+  if (_two_widths_sp_prl != rhs._two_widths_sp_prl)
+    return false;
+
+  if (_two_widths_sp_spacing != rhs._two_widths_sp_spacing)
+    return false;
+
   if (_oxide1 != rhs._oxide1)
     return false;
 
@@ -238,6 +247,9 @@ void _dbTechLayer::differences(dbDiff&             diff,
   DIFF_VECTOR(_v55sp_length_idx);
   DIFF_VECTOR(_v55sp_width_idx);
   DIFF_MATRIX(_v55sp_spacing);
+  DIFF_VECTOR(_two_widths_sp_idx);
+  DIFF_VECTOR(_two_widths_sp_prl);
+  DIFF_MATRIX(_two_widths_sp_spacing);
   DIFF_FIELD(_oxide1);
   DIFF_FIELD(_oxide2);
   DIFF_END
@@ -288,6 +300,9 @@ void _dbTechLayer::out(dbDiff& diff, char side, const char* field) const
   DIFF_OUT_VECTOR(_v55sp_length_idx);
   DIFF_OUT_VECTOR(_v55sp_width_idx);
   DIFF_OUT_MATRIX(_v55sp_spacing);
+  DIFF_OUT_VECTOR(_two_widths_sp_idx);
+  DIFF_OUT_VECTOR(_two_widths_sp_prl);
+  DIFF_OUT_MATRIX(_two_widths_sp_spacing);
   DIFF_OUT_FIELD(_oxide1);
   DIFF_OUT_FIELD(_oxide2);
   DIFF_END
@@ -404,6 +419,9 @@ _dbTechLayer::_dbTechLayer(_dbDatabase* db, const _dbTechLayer& l)
       _v55sp_length_idx(l._v55sp_length_idx),
       _v55sp_width_idx(l._v55sp_width_idx),
       _v55sp_spacing(l._v55sp_spacing),
+      _two_widths_sp_idx(l._two_widths_sp_idx),
+      _two_widths_sp_prl(l._two_widths_sp_prl),
+      _two_widths_sp_spacing(l._two_widths_sp_spacing),
       _oxide1(l._oxide1),
       _oxide2(l._oxide2)
 {
@@ -488,6 +506,9 @@ dbOStream& operator<<(dbOStream& stream, const _dbTechLayer& layer)
   stream << layer._v55sp_length_idx;
   stream << layer._v55sp_width_idx;
   stream << layer._v55sp_spacing;
+  stream << layer._two_widths_sp_idx;
+  stream << layer._two_widths_sp_prl;
+  stream << layer._two_widths_sp_spacing;
   stream << layer._oxide1;
   stream << layer._oxide2;
 
@@ -535,6 +556,9 @@ dbIStream& operator>>(dbIStream& stream, _dbTechLayer& layer)
   stream >> layer._v55sp_length_idx;
   stream >> layer._v55sp_width_idx;
   stream >> layer._v55sp_spacing;
+  stream >> layer._two_widths_sp_idx;
+  stream >> layer._two_widths_sp_prl;
+  stream >> layer._two_widths_sp_spacing;
   stream >> layer._oxide1;
   stream >> layer._oxide2;
   return stream;
@@ -924,6 +948,36 @@ void dbTechLayer::printTwoWidthsSpacingRules(lefout& writer) const
   fprintf(writer.out(), " ;\n");
 }
 
+uint dbTechLayer::getTwoWidthsSpacingTableEntry(uint row, uint col) const
+{
+  _dbTechLayer* layer = (_dbTechLayer*) this;
+  return layer->_two_widths_sp_spacing(row, col);
+}
+
+uint dbTechLayer::getTwoWidthsSpacingTableNumWidths() const
+{
+  _dbTechLayer* layer = (_dbTechLayer*) this;
+  return layer->_two_widths_sp_idx.size();
+}
+
+uint dbTechLayer::getTwoWidthsSpacingTableWidth(uint row) const
+{
+  _dbTechLayer* layer = (_dbTechLayer*) this;
+  return layer->_two_widths_sp_idx.at(row);
+}
+
+bool dbTechLayer::getTwoWidthsSpacingTableHasPRL(uint row) const
+{
+  _dbTechLayer* layer = (_dbTechLayer*) this;
+  return layer->_two_widths_sp_prl.at(row) >= 0;
+}
+
+uint dbTechLayer::getTwoWidthsSpacingTablePRL(uint row) const
+{
+  _dbTechLayer* layer = (_dbTechLayer*) this;
+  return layer->_two_widths_sp_prl.at(row);
+}
+
 bool dbTechLayer::getTwoWidthsSpacingTable(
     std::vector<std::vector<uint> >& sptbl) const
 {
@@ -954,10 +1008,11 @@ void dbTechLayer::initTwoWidths(uint num_widths)
   layer->_two_widths_sp_spacing.resize(num_widths, num_widths);
 }
 
-void dbTechLayer::addTwoWidthsIndexEntry(uint width)
+void dbTechLayer::addTwoWidthsIndexEntry(uint width, int parallel_run_length)
 {
   _dbTechLayer* layer = (_dbTechLayer*) this;
   layer->_two_widths_sp_idx.push_back(width);
+  layer->_two_widths_sp_prl.push_back(parallel_run_length);
 }
 
 void dbTechLayer::addTwoWidthsSpacingTableEntry(uint inrow, uint incol, uint spacing)

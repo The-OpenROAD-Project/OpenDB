@@ -49,6 +49,7 @@
 #include "lefiUtil.hpp"
 #include "lefin.h"
 #include "lefrReader.hpp"
+#include "logger.h"
 
 namespace odb {
 
@@ -551,8 +552,10 @@ bool lefin_parse(lefin* lef, const char* file_name)
 
   FILE* file = fopen(file_name, "r");
 
-  if (file == NULL)
+  if (file == NULL) {
+    notice(0, "error: Cannot open LEF file %s\n", file_name);
     return false;
+  }
 
   int res = lefrRead(file, file_name, (void*) lef);
 

@@ -8,7 +8,7 @@
 using namespace boost::polygon::operators;
 
 using Polygon90 = boost::polygon::polygon_90_with_holes_data<int>;
-using Polygon90Set = std::vector<Polygon90>;
+using Polygon90Set = boost::polygon::polygon_90_set_data<int>;
 
 Polygon90Set* odb_newSetFromRect(int xLo, int yLo, int xHi, int yHi)
 {
@@ -19,7 +19,8 @@ Polygon90Set* odb_newSetFromRect(int xLo, int yLo, int xHi, int yHi)
   Polygon90 poly;
   poly.set(pts.begin(), pts.end());
 
-  return new Polygon90Set({poly});
+  std::array<Polygon90, 1> arr{poly};
+  return new Polygon90Set(boost::polygon::HORIZONTAL, arr.begin(), arr.end());
 }
   
 Polygon90Set* odb_bloatSet(const Polygon90Set* set, int bloating)
@@ -35,27 +36,29 @@ Polygon90Set* odb_shrinkSet(const Polygon90Set* set, int shrinking)
 Polygon90Set* odb_andSet(const Polygon90Set* set1, const Polygon90Set* set2)
 {
   Polygon90Set* result = new Polygon90Set;
-  assign(*result, *set1 & *set2);
+  *result = *set1 & *set2;
   return result;
 }
 
 Polygon90Set* odb_orSet(const Polygon90Set* set1, const Polygon90Set* set2)
 {
   Polygon90Set* result = new Polygon90Set;
-  assign(*result, *set1 | *set2);
+  *result = *set1 | *set2;
   return result;
 }
 
 Polygon90Set* odb_subtractSet(const Polygon90Set* set1, const Polygon90Set* set2)
 {
   Polygon90Set* result = new Polygon90Set;
-  assign(*result, *set1 - *set2);
+  *result = *set1 - *set2;
   return result;
 }
 
 std::vector<Polygon90> odb_getPolygons(const Polygon90Set* set)
 {
-  return *set;
+  std::vector<Polygon90> s;
+  set->get(s);
+  return s;
 }
 
 std::vector<adsPoint> odb_getPoints(const Polygon90* polygon)

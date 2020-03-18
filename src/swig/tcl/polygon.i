@@ -35,23 +35,17 @@ Polygon90Set* odb_shrinkSet(const Polygon90Set* set, int shrinking)
 
 Polygon90Set* odb_andSet(const Polygon90Set* set1, const Polygon90Set* set2)
 {
-  Polygon90Set* result = new Polygon90Set;
-  *result = *set1 & *set2;
-  return result;
+  return new Polygon90Set(*set1 & *set2);
 }
 
 Polygon90Set* odb_orSet(const Polygon90Set* set1, const Polygon90Set* set2)
 {
-  Polygon90Set* result = new Polygon90Set;
-  *result = *set1 | *set2;
-  return result;
+  return new Polygon90Set(*set1 | *set2);
 }
 
 Polygon90Set* odb_subtractSet(const Polygon90Set* set1, const Polygon90Set* set2)
 {
-  Polygon90Set* result = new Polygon90Set;
-  *result = *set1 - *set2;
-  return result;
+  return new Polygon90Set(*set1 - *set2);
 }
 
 std::vector<Polygon90> odb_getPolygons(const Polygon90Set* set)

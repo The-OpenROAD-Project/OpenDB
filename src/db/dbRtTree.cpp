@@ -30,21 +30,21 @@
 // ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 // POSSIBILITY OF SUCH DAMAGE.
 
-#include "dbRtTree.h"
-#include "adsAllocator.h"
 #include "db.h"
+#include "dbRtTree.h"
 #include "dbWire.h"
 #include "dbWireCodec.h"
+#include "odbAllocator.h"
 
 namespace odb {
 
 // object allocators
-static adsAllocator<dbRtNode>    g_node_alloc;
-static adsAllocator<dbRtSegment> g_segment_alloc;
-static adsAllocator<dbRtTechVia> g_tech_via_alloc;
-static adsAllocator<dbRtVia>     g_via_alloc;
-static adsAllocator<dbRtShort>   g_short_alloc;
-static adsAllocator<dbRtVWire>   g_vwire_alloc;
+static Allocator<dbRtNode>    g_node_alloc;
+static Allocator<dbRtSegment> g_segment_alloc;
+static Allocator<dbRtTechVia> g_tech_via_alloc;
+static Allocator<dbRtVia>     g_via_alloc;
+static Allocator<dbRtShort>   g_short_alloc;
+static Allocator<dbRtVWire>   g_vwire_alloc;
 
 // object "edge" destroyers
 class ObjectDestroy
@@ -228,7 +228,7 @@ void dbRtSegment::getBBox(adsRect& bbox)
       y2 = src_y + dw;
     }
   } else {
-    ZASSERT (src_y == tgt_y);  // horiz. path
+    ZASSERT(src_y == tgt_y);  // horiz. path
     y1 = src_y - dw;
     y2 = src_y + dw;
 
@@ -256,7 +256,6 @@ void dbRtSegment::getBBox(adsRect& bbox)
       x1 = src_x - dw;
       x2 = src_x + dw;
     }
-
   }
 
   bbox.reset(x1, y1, x2, y2);

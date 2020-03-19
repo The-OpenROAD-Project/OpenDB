@@ -32,12 +32,12 @@
 
 #pragma once
 
-#include "odb.h"
-#include "adsDList.h"
+#include <vector>
+
+#include "odbDList.h"
 #include "dbRtEdge.h"
 #include "geom.h"
-
-#include <vector>
+#include "odb.h"
 
 namespace odb {
 
@@ -103,17 +103,17 @@ class dbRtNodeEdgeIterator
 class dbRtNode
 {
  private:
-  int                     _x;
-  int                     _y;
-  int                     _jct_id;
-  dbTechLayer*            _layer;
-  std::vector<dbObject*>  _objects;
-  dbRtTree*               _rt_tree;
-  dbRtEdge*               _head;
-  dbRtEdge*               _tail;
-  adsDListEntry<dbRtNode> _rt_node;
-  bool                    _visited;
-  int                     _bterm_map_id;
+  int                    _x;
+  int                    _y;
+  int                    _jct_id;
+  dbTechLayer*           _layer;
+  std::vector<dbObject*> _objects;
+  dbRtTree*              _rt_tree;
+  dbRtEdge*              _head;
+  dbRtEdge*              _tail;
+  DListEntry<dbRtNode>   _rt_node;
+  bool                   _visited;
+  int                    _bterm_map_id;
 
   void add_edge(dbRtEdge* edge)
   {
@@ -233,7 +233,7 @@ class dbRtNode
   object_iterator begin_objects() { return _objects.begin(); }
   object_iterator end_objects() { return _objects.end(); }
 
-  static adsDListEntry<dbRtNode>* rtNode(dbRtNode* node)
+  static DListEntry<dbRtNode>* rtNode(dbRtNode* node)
   {
     return &node->_rt_node;
   }
@@ -248,5 +248,3 @@ class dbRtNode
 };
 
 }  // namespace odb
-
-

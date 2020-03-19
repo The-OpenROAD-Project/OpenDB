@@ -37,77 +37,79 @@
 namespace odb {
 
 ///
-/// This class implements an instrusive singlely-linked list.
+/// This class implements an instrusive double-linked list.
 ///
-/// See test example below.
+/// See sample test program below.
 ///
 
 template <class T>
-class adsSListEntry
+class DListEntry
 {
  public:
   T* _next;
+  T* _prev;
 };
 
-template <class T, adsSListEntry<T>* ENTRY(T*)>
-class adsSList;
+template <class T, DListEntry<T>*(T*)>
+class DList;
 
-template <class T, adsSListEntry<T>* ENTRY(T*)>
-class adsSListIterator
+template <class T, DListEntry<T>* ENTRY(T*)>
+class DListIterator
 {
   T* _cur;
 
-  T**  NEXT(T* t) { return &ENTRY(t)->_next; }
-  void incr() { _cur = *NEXT(_cur); }
+  void incr() { _cur = NEXT(_cur); }
+  T*&  NEXT(T* n) { return ENTRY(n)->_next; }
 
  public:
-  adsSListIterator() { _cur = NULL; }
-  adsSListIterator(T* cur) { _cur = cur; }
-  adsSListIterator(const adsSListIterator& i) { _cur = i._cur; }
-  adsSListIterator& operator=(const adsSListIterator& i)
+  DListIterator() { _cur = NULL; }
+  DListIterator(T* cur) { _cur = cur; }
+  DListIterator(const DListIterator& i) { _cur = i._cur; }
+  DListIterator& operator=(const DListIterator& i)
   {
     _cur = i._cur;
     return *this;
   }
 
-  bool operator==(const adsSListIterator& i) const { return _cur == i._cur; }
-  bool operator!=(const adsSListIterator& i) const { return _cur != i._cur; }
+  bool operator==(const DListIterator& i) const { return _cur == i._cur; }
+  bool operator!=(const DListIterator& i) const { return _cur != i._cur; }
   T*   operator*() { return _cur; }
-
-  adsSListIterator<T, ENTRY>& operator++()
+  DListIterator<T, ENTRY>& operator++()
   {
     incr();
     return *this;
   }
-
-  adsSListIterator<T, ENTRY> operator++(int)
+  DListIterator<T, ENTRY> operator++(int)
   {
-    adsSListIterator<T, ENTRY> i = *this;
+    DListIterator<T, ENTRY> i = *this;
     incr();
     return i;
   }
 
-  friend class adsSList<T, ENTRY>;
+  friend class DList<T, ENTRY>;
 };
 
-template <class T, adsSListEntry<T>* ENTRY(T*)>
-class adsSList
+template <class T, DListEntry<T>* ENTRY(T*)>
+class DList
 {
   /*
     public:
-      typedef adsSListIterator<T,ENTRY> iterator;
+      typedef DListIterator<T,ENTRY> iterator;
   */
  private:
   T* _head;
   T* _tail;
 
-  T**  NEXT(T* t) { return &ENTRY(t)->_next; }
   bool lessthan(const T& p1, const T& p2) { return *p1 < *p2; }
 
- public:
-  typedef adsSListIterator<T, ENTRY> iterator;
+  T*& NEXT(T* n) { return ENTRY(n)->_next; }
 
-  adsSList()
+  T*& PREV(T* n) { return ENTRY(n)->_prev; }
+
+ public:
+  typedef DListIterator<T, ENTRY> iterator;
+
+  DList()
   {
     _head = NULL;
     _tail = NULL;
@@ -118,27 +120,40 @@ class adsSList
 
   void push_front(T* p)
   {
-    *NEXT(p) = _head;
-    _head    = p;
-
-    if (_tail == NULL)
-      _tail = p;
+    if (_head == NULL) {
+      _head   = p;
+      _tail   = p;
+      NEXT(p) = NULL;
+      PREV(p) = NULL;
+    } else {
+      PREV(_head) = p;
+      NEXT(p)     = _head;
+      PREV(p)     = NULL;
+      _head       = p;
+    }
   }
 
   void push_back(T* p)
   {
     if (_head == NULL) {
-      _head    = p;
-      _tail    = p;
-      *NEXT(p) = NULL;
+      _head   = p;
+      _tail   = p;
+      NEXT(p) = NULL;
+      PREV(p) = NULL;
     } else {
-      *NEXT(_tail) = p;
-      _tail        = p;
-      *NEXT(p)     = NULL;
+      NEXT(_tail) = p;
+      PREV(p)     = _tail;
+      NEXT(p)     = NULL;
+      _tail       = p;
     }
   }
 
-  void swap(adsSList& l)
+  void     clear() { _head = _tail = NULL; }
+  bool     empty() const { return _head == NULL; }
+  iterator begin() { return iterator(_head); }
+  iterator end() { return iterator(NULL); }
+
+  void swap(DList& l)
   {
     T* head = l._head;
     l._head = _head;
@@ -149,44 +164,115 @@ class adsSList
   }
 
   iterator remove(T* p) { return remove(iterator(p)); }
-  bool     empty() const { return _head == NULL; }
-  void     clear()
+
+  void move(typename DList<T, ENTRY>::iterator itr1,
+            typename DList<T, ENTRY>::iterator itr2)
   {
-    _head = NULL;
-    _tail = NULL;
+    if (*itr1 == _head) {
+      if (_head == NULL) {
+        _head       = *itr2;
+        _tail       = *itr2;
+        NEXT(*itr2) = NULL;
+        PREV(*itr2) = NULL;
+      } else {
+        PREV(_head) = *itr2;
+        NEXT(*itr2) = _head;
+        PREV(*itr2) = NULL;
+        _head       = *itr2;
+      }
+    } else {
+      NEXT(PREV(*itr1)) = *itr2;
+      PREV(*itr2)       = PREV(*itr1);
+      NEXT(*itr2)       = *itr1;
+      PREV(*itr1)       = *itr2;
+    }
   }
 
-  iterator begin() { return iterator(_head); }
-  iterator end() { return iterator(NULL); }
+  DListIterator<T, ENTRY> remove(iterator cur)
+  {
+    if (*cur == _head) {
+      if (*cur == _tail) {
+        _head = NULL;
+        _tail = NULL;
+      }
 
-  template <class CMP>
-  void merge(adsSList<T, ENTRY>& l, CMP cmp)
+      else {
+        _head       = NEXT(*cur);
+        PREV(_head) = NULL;
+      }
+    }
+
+    else if (*cur == _tail) {
+      _tail       = PREV(*cur);
+      NEXT(_tail) = NULL;
+    }
+
+    else {
+      NEXT(PREV(*cur)) = NEXT(*cur);
+      PREV(NEXT(*cur)) = PREV(*cur);
+    }
+
+    return iterator(NEXT(*cur));
+  }
+
+  void reverse()
+  {
+    if (_tail == _head)
+      return;
+
+    T* c = _head;
+    T* n = NEXT(c);
+
+    while (n) {
+      T* tmp  = NEXT(n);
+      PREV(c) = n;
+      NEXT(n) = c;
+      c       = n;
+      n       = tmp;
+    }
+
+    T* tmp = _head;
+    _head  = _tail;
+    _tail  = tmp;
+
+    PREV(_head) = NULL;
+    NEXT(_tail) = NULL;
+  }
+
+  int size()
+  {
+    T*  c;
+    int i = 0;
+    for (c = _head; c != NULL; c = NEXT(c))
+      ++i;
+    return i;
+  }
+
+  void merge(DList<T, ENTRY>& l)
   {
     iterator first1 = begin();
     iterator last1  = end();
     iterator first2 = l.begin();
     iterator last2  = l.end();
-    iterator prev1;
 
     while (first1 != last1 && first2 != last2) {
-      if (cmp(**first2, **first1)) {
+      if (lessthan(**first2, **first1)) {
         iterator next = first2;
         ++next;
-        move(prev1, first1, first2);
-        prev1  = first2;
+        move(first1, first2);
         first2 = next;
       } else {
-        prev1 = first1;
         ++first1;
       }
     }
 
     if (first2 != last2) {
       if (_head == NULL) {
-        _head = first2._cur;
+        _head = *first2;
         _tail = l._tail;
       } else {
-        *NEXT(*prev1) = first2._cur;
+        NEXT(_tail)   = *first2;
+        PREV(*first2) = _tail;
         _tail         = l._tail;
       }
     }
@@ -196,137 +282,31 @@ class adsSList
   }
 
   template <class CMP>
-  void sort(CMP cmp)
-  {
-    iterator prev;
-
-    if ((_head != NULL) && (*NEXT(_head) != NULL)) {
-      adsSList<T, ENTRY> carry;
-      adsSList<T, ENTRY> counter[64];
-      int                fill = 0;
-
-      while (!empty()) {
-        T* head = *NEXT(_head);
-        carry.move(prev, carry.begin(), begin());
-        _head = head;
-
-        int i = 0;
-        while (i < fill && !counter[i].empty()) {
-          counter[i].merge(carry, cmp);
-          carry.swap(counter[i++]);
-        }
-        carry.swap(counter[i]);
-        if (i == fill)
-          ++fill;
-      }
-
-      for (int i = 1; i < fill; ++i)
-        counter[i].merge(counter[i - 1], cmp);
-
-      swap(counter[fill - 1]);
-    }
-  }
-
-  void move(typename adsSList<T, ENTRY>::iterator prev1,
-            typename adsSList<T, ENTRY>::iterator itr1,
-            typename adsSList<T, ENTRY>::iterator itr2)
-  {
-    if (itr1._cur == _head) {
-      *NEXT(itr2._cur) = _head;
-
-      if (_head == NULL)
-        _tail = itr2._cur;
-
-      _head = itr2._cur;
-    } else {
-      *NEXT(itr2._cur)  = itr1._cur;
-      *NEXT(prev1._cur) = itr2._cur;
-    }
-  }
-
-  adsSListIterator<T, ENTRY> remove(iterator prev, iterator cur)
-  {
-    if (cur._cur == _head)
-      _head = *NEXT(cur._cur);
-    else {
-      assert(*NEXT(prev._cur) == cur._cur);
-      *NEXT(prev._cur) = *NEXT(cur._cur);
-    }
-
-    if (cur._cur == _tail)
-      _tail = prev._cur;
-
-    return iterator(*NEXT(cur._cur));
-  }
-
-  adsSListIterator<T, ENTRY> remove(iterator cur)
-  {
-    iterator prev;
-    iterator itr;
-
-    for (itr = begin(); itr != end(); prev = itr++)
-      if (itr == cur)
-        return remove(prev, itr);
-
-    return end();
-  }
-
-  void reverse()
-  {
-    if (_head == _tail)
-      return;
-
-    T* l = NULL;
-    T* c;
-    _tail = _head;
-
-    for (c = _head; c != NULL;) {
-      T* n     = *NEXT(c);
-      *NEXT(c) = l;
-      l        = c;
-      c        = n;
-    }
-
-    *NEXT(_tail) = NULL;
-    _head        = l;
-  }
-
-  int size()
-  {
-    T*  c;
-    int i = 0;
-    for (c = _head; c != NULL; c = *NEXT(c))
-      ++i;
-    return i;
-  }
-
-  void merge(adsSList<T, ENTRY>& l)
+  void merge(DList<T, ENTRY>& l, CMP cmp)
   {
     iterator first1 = begin();
     iterator last1  = end();
     iterator first2 = l.begin();
     iterator last2  = l.end();
-    iterator prev1;
 
     while (first1 != last1 && first2 != last2) {
-      if (lessthan(**first2, **first1)) {
+      if (cmp(**first2, **first1)) {
         iterator next = first2;
         ++next;
-        move(prev1, first1, first2);
-        prev1  = first2;
+        move(first1, first2);
         first2 = next;
       } else {
-        prev1 = first1;
         ++first1;
       }
     }
 
     if (first2 != last2) {
       if (_head == NULL) {
-        _head = first2._cur;
+        _head = *first2;
         _tail = l._tail;
       } else {
-        *NEXT(*prev1) = first2._cur;
+        NEXT(_tail)   = *first2;
+        PREV(*first2) = _tail;
         _tail         = l._tail;
       }
     }
@@ -337,16 +317,14 @@ class adsSList
 
   void sort()
   {
-    iterator prev;
-
-    if ((_head != NULL) && (*NEXT(_head) != NULL)) {
-      adsSList<T, ENTRY> carry;
-      adsSList<T, ENTRY> counter[64];
+    if ((_head != NULL) && (NEXT(_head) != NULL)) {
+      DList<T, ENTRY> carry;
+      DList<T, ENTRY> counter[64];
       int                fill = 0;
 
       while (!empty()) {
-        T* head = *NEXT(_head);
-        carry.move(prev, carry.begin(), begin());
+        T* head = NEXT(_head);
+        carry.move(carry.begin(), begin());
         _head = head;
 
         int i = 0;
@@ -365,6 +343,36 @@ class adsSList
       swap(counter[fill - 1]);
     }
   }
+
+  template <class CMP>
+  void sort(CMP cmp)
+  {
+    if ((_head != NULL) && (NEXT(_head) != NULL)) {
+      DList<T, ENTRY> carry;
+      DList<T, ENTRY> counter[64];
+      int                fill = 0;
+
+      while (!empty()) {
+        T* head = NEXT(_head);
+        carry.move(carry.begin(), begin());
+        _head = head;
+
+        int i = 0;
+        while (i < fill && !counter[i].empty()) {
+          counter[i].merge(carry, cmp);
+          carry.swap(counter[i++]);
+        }
+        carry.swap(counter[i]);
+        if (i == fill)
+          ++fill;
+      }
+
+      for (int i = 1; i < fill; ++i)
+        counter[i].merge(counter[i - 1], cmp);
+
+      swap(counter[fill - 1]);
+    }
+  }
 };
 
 }  // namespace odb
@@ -379,16 +387,18 @@ using namespace odb;
 struct elem
 {
     int a;
-    adsSListEntry<elem> entry;
+    DListEntry<elem> entry;
+    elem * next;
 
     elem(int n )
     {
         a = n;
+        next = NULL;
     }
 
     bool operator<( const elem & e ) { return a < e.a; }
     
-    static adsSListEntry<elem> * getEntry( elem * e ) 
+    static DListEntry<elem> * getEntry( elem * e ) 
     {
         return &e->entry;
     }
@@ -426,7 +436,7 @@ main()
         elems[r2] = e;
     }
     
-    adsSList<elem, elem::getEntry> l1;
+    DList<elem, elem::getEntry> l1;
 
     for( i = 0; i < M; ++i )
     {
@@ -436,7 +446,7 @@ main()
     
     l1.sort(cmp());
     
-    adsSList<elem, elem::getEntry>::iterator itr;
+    DList<elem, elem::getEntry>::iterator itr;
 
     for( i = 0, itr = l1.begin(); itr != l1.end(); ++itr, i++ )
     {
@@ -451,7 +461,7 @@ main()
     {
         elem * e = *itr;
         printf("l1: %d\n", e->a );
-        assert( e->a == (M - i) );
+        assert( e->a == (M-i) );
     }
     
 }

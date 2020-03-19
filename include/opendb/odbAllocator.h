@@ -36,8 +36,8 @@
 
 #include "odb.h"
 
-#ifdef ADS_PURIFY
-#define ADS_PURIFY_ALLOCATOR
+#ifdef ODB_PURIFY
+#define ODB_PURIFY_ALLOCATOR
 #endif
 
 namespace odb {
@@ -57,7 +57,7 @@ namespace odb {
 ///
 ///      class Foo {};
 ///
-///      adsAllocator<Foo> alloc;
+///      Allocator<Foo> alloc;
 ///      Foo * p = new(alloc.malloc()) Foo;
 ///      ...
 ///      p->~Foo();
@@ -68,7 +68,7 @@ namespace odb {
 ///    The destroy() method will call the destructor. The example above can
 ///    be recoded as:
 ///
-///      adsAllocator<Foo> alloc;
+///      Allocator<Foo> alloc;
 ///      Foo * p = alloc.create();
 ///      alloc.destroy(p);
 ///
@@ -77,7 +77,7 @@ namespace odb {
 ///      delete p;    // ILLEGAL
 ///
 template <class T>
-class adsAllocator
+class Allocator
 {
   struct chunk
   {
@@ -100,10 +100,10 @@ class adsAllocator
  public:
   // construct an allocator, block-size = number of object reserved per block
   // allocation
-  adsAllocator(int block_size = 128);
+  Allocator(int block_size = 128);
 
   // destroy the allocator, all memory is free'ed...
-  ~adsAllocator();
+  ~Allocator();
 
   // clear the pool, release all memory and resets the pool to it's initial
   // state.
@@ -127,7 +127,7 @@ class adsAllocator
 };
 
 template <class T>
-inline adsAllocator<T>::adsAllocator(int block_size)
+inline Allocator<T>::Allocator(int block_size)
 {
   _block_size = block_size;
   _free_list  = NULL;
@@ -137,19 +137,19 @@ inline adsAllocator<T>::adsAllocator(int block_size)
 }
 
 template <class T>
-inline adsAllocator<T>::~adsAllocator()
+inline Allocator<T>::~Allocator()
 {
   clear();
 }
 
 template <class T>
-inline uint adsAllocator<T>::vm_size() const
+inline uint Allocator<T>::vm_size() const
 {
   return _vm_size;
 }
 
 template <class T>
-inline void adsAllocator<T>::clear()
+inline void Allocator<T>::clear()
 {
   block* b    = _block_list;
   block* next = NULL;
@@ -165,9 +165,9 @@ inline void adsAllocator<T>::clear()
 }
 
 template <class T>
-inline T* adsAllocator<T>::malloc()
+inline T* Allocator<T>::malloc()
 {
-#ifdef ADS_PURIFY_ALLOCATOR
+#ifdef ODB_PURIFY_ALLOCATOR
   _size += sizeof(T);
   return (T*) ::malloc(sizeof(T));
 #else
@@ -181,17 +181,17 @@ inline T* adsAllocator<T>::malloc()
 }
 
 template <class T>
-inline T* adsAllocator<T>::create()
+inline T* Allocator<T>::create()
 {
-  T* t = adsAllocator<T>::malloc();
+  T* t = Allocator<T>::malloc();
   new (t) T;
   return t;
 }
 
 template <class T>
-inline void adsAllocator<T>::free(T* t)
+inline void Allocator<T>::free(T* t)
 {
-#ifdef ADS_PURIFY_ALLOCATOR
+#ifdef ODB_PURIFY_ALLOCATOR
   _size -= sizeof(T);
   ::free((void*) t);
 #else
@@ -203,14 +203,14 @@ inline void adsAllocator<T>::free(T* t)
 }
 
 template <class T>
-inline void adsAllocator<T>::destroy(T* t)
+inline void Allocator<T>::destroy(T* t)
 {
   t->~T();
-  adsAllocator<T>::free(t);
+  Allocator<T>::free(t);
 }
 
 template <class T>
-inline void adsAllocator<T>::new_block()
+inline void Allocator<T>::new_block()
 {
   int obj_size = sizeof(T) < sizeof(chunk) ? sizeof(chunk) : sizeof(T);
   _size += sizeof(block);

@@ -34,9 +34,9 @@
 
 #include <vector>
 
-#include "odb.h"
-#include "adsDList.h"
+#include "odbDList.h"
 #include "dbTypes.h"
+#include "odb.h"
 
 namespace odb {
 
@@ -130,13 +130,13 @@ class dbWireGraph
     };
 
    private:
-    Type                _type;
-    Node*               _src;
-    Node*               _tgt;
-    dbWireType::Value   _wire_type;
-    dbTechLayerRule*    _non_default_rule;
-    adsDListEntry<Edge> _edge_entry;
-    adsDListEntry<Edge> _out_edge_entry;
+    Type              _type;
+    Node*             _src;
+    Node*             _tgt;
+    dbWireType::Value _wire_type;
+    dbTechLayerRule*  _non_default_rule;
+    DListEntry<Edge>  _edge_entry;
+    DListEntry<Edge>  _out_edge_entry;
 
    public:
     Edge(Type type, dbWireType::Value wire_type, dbTechLayerRule* rule)
@@ -154,12 +154,12 @@ class dbWireGraph
     dbWireType::Value wireType() const { return _wire_type; }
     dbTechLayerRule*  nonDefaultRule() const { return _non_default_rule; }
 
-    static adsDListEntry<Edge>* edgeEntry(Edge* edge)
+    static DListEntry<Edge>* edgeEntry(Edge* edge)
     {
       return &edge->_edge_entry;
     }
 
-    static adsDListEntry<Edge>* outEdgeEntry(Edge* edge)
+    static DListEntry<Edge>* outEdgeEntry(Edge* edge)
     {
       return &edge->_out_edge_entry;
     }
@@ -171,17 +171,17 @@ class dbWireGraph
   class Node
   {
    private:
-    int                                 _x;
-    int                                 _y;
-    int                                 _jct_id;
-    dbTechLayer*                        _layer;
-    Edge*                               _in_edge;
-    dbObject*                           _object;
-    adsDList<Edge, &Edge::outEdgeEntry> _out_edges;
-    adsDListEntry<Node>                 _node_entry;
+    int                              _x;
+    int                              _y;
+    int                              _jct_id;
+    dbTechLayer*                     _layer;
+    Edge*                            _in_edge;
+    dbObject*                        _object;
+    DList<Edge, &Edge::outEdgeEntry> _out_edges;
+    DListEntry<Node>                 _node_entry;
 
    public:
-    typedef adsDList<Edge, &Edge::outEdgeEntry>::iterator edge_iterator;
+    typedef DList<Edge, &Edge::outEdgeEntry>::iterator edge_iterator;
 
     Node(int x, int y, dbTechLayer* layer)
         : _x(x),
@@ -204,7 +204,7 @@ class dbWireGraph
     edge_iterator end() { return _out_edges.end(); }
     dbObject*     object() const { return _object; }
 
-    static adsDListEntry<Node>* nodeEntry(Node* node)
+    static DListEntry<Node>* nodeEntry(Node* node)
     {
       return &node->_node_entry;
     }
@@ -361,12 +361,12 @@ class dbWireGraph
                      dbTechLayerRule*  rule = NULL);
 
   // Edge iterator
-  typedef adsDList<Node, &Node::nodeEntry>::iterator node_iterator;
+  typedef DList<Node, &Node::nodeEntry>::iterator node_iterator;
   node_iterator begin_nodes() { return _nodes.begin(); }
   node_iterator end_nodes() { return _nodes.end(); }
 
   // Node iterator
-  typedef adsDList<Edge, &Edge::edgeEntry>::iterator edge_iterator;
+  typedef DList<Edge, &Edge::edgeEntry>::iterator edge_iterator;
   edge_iterator begin_edges() { return _edges.begin(); }
   edge_iterator end_edges() { return _edges.end(); }
 
@@ -388,9 +388,9 @@ class dbWireGraph
                   dbTechLayerRule*    cur_rule);
   void encodePath(dbWireEncoder& encoder, std::vector<Edge*>& path);
 
-  std::vector<Node*>               _junction_map;
-  adsDList<Node, &Node::nodeEntry> _nodes;
-  adsDList<Edge, &Edge::edgeEntry> _edges;
+  std::vector<Node*>            _junction_map;
+  DList<Node, &Node::nodeEntry> _nodes;
+  DList<Edge, &Edge::edgeEntry> _edges;
 };
 
 inline dbWireGraph::Segment* dbWireGraph::createSegment(Node*             src,
@@ -402,5 +402,3 @@ inline dbWireGraph::Segment* dbWireGraph::createSegment(Node*             src,
 }
 
 }  // namespace odb
-
-

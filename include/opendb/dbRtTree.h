@@ -34,11 +34,11 @@
 
 #include <vector>
 
-#include "odb.h"
-#include "adsDList.h"
+#include "odbDList.h"
 #include "dbRtEdge.h"
 #include "dbRtNode.h"
 #include "dbTypes.h"
+#include "odb.h"
 
 namespace odb {
 
@@ -144,13 +144,13 @@ class dbRtTree
                          dbTechLayerRule*  rule = NULL);
 
   // Node iterator
-  typedef adsDList<dbRtNode, &dbRtNode::rtNode>::iterator node_iterator;
+  typedef DList<dbRtNode, &dbRtNode::rtNode>::iterator node_iterator;
 
   node_iterator begin_nodes() { return _nodes.begin(); }
   node_iterator end_nodes() { return _nodes.end(); }
 
   // Edge iterator
-  typedef adsDList<dbRtEdge, &dbRtEdge::rtEdge>::iterator edge_iterator;
+  typedef DList<dbRtEdge, &dbRtEdge::rtEdge>::iterator edge_iterator;
   edge_iterator begin_edges() { return _edges.begin(); }
   edge_iterator end_edges() { return _edges.end(); }
 
@@ -231,9 +231,9 @@ class dbRtTree
                        dbRtEdge* edge,
                        bool      copy_edge_map);
 
-  std::vector<dbRtEdge*>                _edge_map;
-  adsDList<dbRtNode, &dbRtNode::rtNode> _nodes;
-  adsDList<dbRtEdge, &dbRtEdge::rtEdge> _edges;
+  std::vector<dbRtEdge*>             _edge_map;
+  DList<dbRtNode, &dbRtNode::rtNode> _nodes;
+  DList<dbRtEdge, &dbRtEdge::rtEdge> _edges;
 };
 
 inline dbRtSegment* dbRtTree::createSegment(dbRtNode*         src,
@@ -245,5 +245,3 @@ inline dbRtSegment* dbRtTree::createSegment(dbRtNode*         src,
 }
 
 }  // namespace odb
-
-

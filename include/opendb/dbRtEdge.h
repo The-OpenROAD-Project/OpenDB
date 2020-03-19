@@ -32,10 +32,10 @@
 
 #pragma once
 
-#include "odb.h"
-#include "adsDList.h"
+#include "odbDList.h"
 #include "dbTypes.h"
 #include "geom.h"
+#include "odb.h"
 
 namespace odb {
 
@@ -113,20 +113,20 @@ class dbRtEdge
   };
 
  protected:
-  Type                    _type;
-  dbRtNode*               _src;
-  dbRtNode*               _tgt;
-  dbWireType::Value       _wire_type;
-  dbTechLayerRule*        _non_default_rule;
-  double                  _r;
-  double                  _c;
-  dbRtTree*               _rt_tree;
-  dbRtEdge*               _next[2];
-  dbRtEdge*               _prev[2];
-  adsDListEntry<dbRtEdge> _rt_edge;
-  int                     _shape_id;
-  uint                    _property;
-  bool                    _visited;
+  Type                 _type;
+  dbRtNode*            _src;
+  dbRtNode*            _tgt;
+  dbWireType::Value    _wire_type;
+  dbTechLayerRule*     _non_default_rule;
+  double               _r;
+  double               _c;
+  dbRtTree*            _rt_tree;
+  dbRtEdge*            _next[2];
+  dbRtEdge*            _prev[2];
+  DListEntry<dbRtEdge> _rt_edge;
+  int                  _shape_id;
+  uint                 _property;
+  bool                 _visited;
 
   dbRtEdge(Type type, dbWireType::Value wire_type, dbTechLayerRule* rule)
       : _type(type),
@@ -207,7 +207,7 @@ class dbRtEdge
   // Assign a property to this edge
   uint getProperty() { return _property; }
 
-  static adsDListEntry<dbRtEdge>* rtEdge(dbRtEdge* edge)
+  static DListEntry<dbRtEdge>* rtEdge(dbRtEdge* edge)
   {
     return &edge->_rt_edge;
   }
@@ -319,5 +319,3 @@ class dbRtVWire : public dbRtEdge
 };
 
 }  // namespace odb
-
-

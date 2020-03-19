@@ -227,6 +227,7 @@ void definPin::pinRect(const char* layer_name, int x1, int y1, int x2, int y2)
   if (_layer == NULL) {
     notice(0, "error: undefined layer (%s) referenced\n", layer_name);
     ++_errors;
+    return;
   }
 
   adsRect r(dbdist(x1), dbdist(y1), dbdist(x2), dbdist(y2));

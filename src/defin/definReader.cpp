@@ -1236,11 +1236,10 @@ int definReader::unitsCallback(defrCallbackType_e, double d, defiUserData data)
     notice(0,
            "error: The DEF UNITS DISTANCE MICRONS convert factor (%d) is "
            "greater than the database units per micron (%d) value.\n",
-           d,
+           (int) d,
            reader->_tech->getDbUnitsPerMicron());
     ++reader->_errors;
-
-    d = reader->_tech->getDbUnitsPerMicron();
+    return PARSE_ERROR;
   }
 
   reader->units(d);

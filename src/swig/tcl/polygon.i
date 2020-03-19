@@ -43,6 +43,15 @@ Polygon90Set* odb_orSet(const Polygon90Set* set1, const Polygon90Set* set2)
   return new Polygon90Set(*set1 | *set2);
 }
 
+Polygon90Set* odb_orSets(const std::vector<Polygon90Set>& sets)
+{
+  Polygon90Set* result = new Polygon90Set;
+  for (const Polygon90Set& poly_set : sets) {
+    *result |= poly_set;
+  }
+  return result;
+}
+
 Polygon90Set* odb_subtractSet(const Polygon90Set* set1, const Polygon90Set* set2)
 {
   return new Polygon90Set(*set1 - *set2);
@@ -67,6 +76,7 @@ std::vector<adsPoint> odb_getPoints(const Polygon90* polygon)
 
 %template(Points) std::vector<odb::adsPoint>;
 %template(Polygon90Set) std::vector<Polygon90>;
+%template(Polygon90Sets) std::vector<Polygon90Set>;
 
 // Simple constructor
 %newobject odb_newSetFromRect;
@@ -88,6 +98,12 @@ Polygon90Set* odb_andSet(Polygon90Set* set1, const Polygon90Set* set2);
 
 %newobject odb_orSet;
 Polygon90Set* odb_orSet(Polygon90Set* set1, const Polygon90Set* set2);
+
+// It makese no sense to me that we have a vector by value and not
+// pointer but swig seems to automatically add the pointer in the
+// generated wrapper.
+%newobject odb_orSets;
+Polygon90Set* odb_orSets(const std::vector<Polygon90Set>& sets);
 
 %newobject odb_subtractSet;
 Polygon90Set* odb_subtractSet(Polygon90Set* set1, const Polygon90Set* set2);

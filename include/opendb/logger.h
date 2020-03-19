@@ -38,7 +38,7 @@
 #include <sys/times.h>
 #endif
 
-#include "ads.h"
+#include "odb.h"
 #include "ZInterface.h"
 
 namespace odb {

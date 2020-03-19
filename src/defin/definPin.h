@@ -34,7 +34,7 @@
 
 #include <string>
 
-#include "ads.h"
+#include "odb.h"
 #include "dbTypes.h"
 #include "definBase.h"
 #include "definPolygon.h"

@@ -46,7 +46,7 @@ FILE* ATH__openFile(const char* name, const char* type);
 
 void ATH__closeFile(FILE* fp);
 
-#include "ads.h"
+#include "odb.h"
 namespace odb {
 void  start_timer();
 void  end_timer(char* msg);

@@ -32,7 +32,7 @@
 
 #pragma once
 
-#include "ads.h"
+#include "odb.h"
 
 ///
 /// ZINTERFACE - Declare the interface identifier; add to adsInterfaces enum

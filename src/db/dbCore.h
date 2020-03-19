@@ -44,7 +44,7 @@
 ///  dbTablePage
 ///
 
-#include "ads.h"
+#include "odb.h"
 #include "dbAttrTable.h"
 #include "dbId.h"
 #include "dbObject.h"

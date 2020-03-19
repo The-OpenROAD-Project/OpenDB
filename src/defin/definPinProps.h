@@ -32,7 +32,7 @@
 
 #pragma once
 
-#include "ads.h"
+#include "odb.h"
 #include "dbTypes.h"
 #include "definBase.h"
 #include "geom.h"

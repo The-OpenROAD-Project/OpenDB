@@ -39,7 +39,7 @@
 #endif
 
 #include "ZException.h"
-#include "ads.h"
+#include "odb.h"
 #include "geom.h"
 
 namespace odb {

@@ -75,7 +75,7 @@ class dbCreateNetUtil
   uint                                    _mapCnt;
   uint                                    _ecoCnt;
 
-  dbTechVia* getVia(int l1, int l2, adsRect& bbox);
+  dbTechVia* getVia(int l1, int l2, Rect& bbox);
   // dbTechLayerRule * getRule(int routingLayer, int width);
   std::pair<dbBTerm*, dbBTerm*> createTerms4SingleNet(dbNet*       net,
                                                       int          x1,
@@ -174,15 +174,15 @@ class dbCreateNetUtil
                 bool        debug = false);
 
   // 9/11/07
-  dbNet*  createNetSingleWire(adsRect& r, uint level, uint netId, uint shapeId);
-  dbNet*  createSpecialNetSingleWire(adsRect&     r,
+  dbNet*  createNetSingleWire(Rect& r, uint level, uint netId, uint shapeId);
+  dbNet*  createSpecialNetSingleWire(Rect&        r,
                                      dbTechLayer* layer,
                                      dbNet*       origNet,
                                      uint         sboxId);
   uint    getFirstShape(dbNet* net, dbShape& s);
   bool    setFirstShapeProperty(dbNet* net, uint prop);
   dbSBox* createSpecialWire(dbNet*       mainNet,
-                            adsRect&     r,
+                            Rect&        r,
                             dbTechLayer* layer,
                             uint         sboxId);
   void    setCurrentNet(dbNet* net);

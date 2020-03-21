@@ -935,7 +935,7 @@ dbIStream& operator>>(dbIStream& stream, _dbBlock& block)
   return stream;
 }
 
-void _dbBlock::add_rect(const adsRect& rect)
+void _dbBlock::add_rect(const Rect& rect)
 {
   _dbBox* box = _box_tbl->getPtr(_bbox);
 
@@ -943,7 +943,7 @@ void _dbBlock::add_rect(const adsRect& rect)
     box->_rect.merge(rect);
 }
 
-void _dbBlock::remove_rect(const adsRect& rect)
+void _dbBlock::remove_rect(const Rect& rect)
 {
   _dbBox* box = _box_tbl->getPtr(_bbox);
 
@@ -1342,7 +1342,7 @@ void dbBlock::ComputeBBox()
     for (pitr = bpins.begin(); pitr != bpins.end(); ++pitr) {
       dbBPin* bp  = *pitr;
       dbBox*  box = bp->getBox();
-      adsRect r;
+      Rect r;
       box->getBox(r);
       bbox->_rect.merge(r);
     }
@@ -1370,7 +1370,7 @@ void dbBlock::ComputeBBox()
 
   for (witr = wires.begin(); witr != wires.end(); ++witr) {
     dbWire* wire = *witr;
-    adsRect r;
+    Rect r;
     if (wire->getBBox(r)) {
       bbox->_rect.merge(r);
     }
@@ -1727,13 +1727,13 @@ void dbBlock::getMasters(std::vector<dbMaster*>& masters)
   }
 }
 
-void dbBlock::setDieArea(const adsRect& r)
+void dbBlock::setDieArea(const Rect& r)
 {
   _dbBlock* block  = (_dbBlock*) this;
   block->_die_area = r;
 }
 
-void dbBlock::getDieArea(adsRect& r)
+void dbBlock::getDieArea(Rect& r)
 {
   _dbBlock* block = (_dbBlock*) this;
   r               = block->_die_area;
@@ -2493,7 +2493,7 @@ void dbBlock::updateNetFlags(std::vector<dbNet*>& result)
   }
 }
 
-void dbBlock::getWireUpdatedNets(std::vector<dbNet*>& result, adsRect* ibox)
+void dbBlock::getWireUpdatedNets(std::vector<dbNet*>& result, Rect* ibox)
 {
   dbSet<dbNet>           nets = getNets();
   dbSet<dbNet>::iterator nitr;

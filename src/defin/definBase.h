@@ -79,24 +79,24 @@ class definBase
   }
 
   void translate(const std::vector<defPoint>& defpoints,
-                 std::vector<adsPoint>&       points)
+                 std::vector<Point>&       points)
   {
     points.clear();
     std::vector<defPoint>::const_iterator itr;
 
     for (itr = defpoints.begin(); itr != defpoints.end(); ++itr) {
       const defPoint& p = *itr;
-      adsPoint        point(dbdist(p._x), dbdist(p._y));
+      Point        point(dbdist(p._x), dbdist(p._y));
       points.push_back(point);
     }
   }
 
-  void translate(const defiPoints& defpoints, std::vector<adsPoint>& points)
+  void translate(const defiPoints& defpoints, std::vector<Point>& points)
   {
     points.clear();
 
     for (int i = 0; i < defpoints.numPoints; ++i) {
-      adsPoint point(dbdist(defpoints.x[i]), dbdist(defpoints.y[i]));
+      Point point(dbdist(defpoints.x[i]), dbdist(defpoints.y[i]));
       points.push_back(point);
     }
   }

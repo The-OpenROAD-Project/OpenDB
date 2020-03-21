@@ -483,7 +483,7 @@ class dbBox : public dbObject
   ///
   /// Get the box bounding points.
   ///
-  void getBox(adsRect& rect);
+  void getBox(Rect& rect);
 
   ///
   /// Get the translated boxes of this via
@@ -1102,12 +1102,12 @@ class dbBlock : public dbObject
   /// of the geometric elements of the dbBlock. It is generally a constant
   /// declared in DEF.
   ///
-  void setDieArea(const adsRect& rect);
+  void setDieArea(const Rect& rect);
 
   ///
   /// Get the die area. The default die-area is (0,0,0,0).
   ///
-  void getDieArea(adsRect& rect);
+  void getDieArea(Rect& rect);
 
   ///
   /// Set print control
@@ -1302,7 +1302,7 @@ class dbBlock : public dbObject
   ///
   /// get wire_updated nets
   ///
-  void getWireUpdatedNets(std::vector<dbNet*>& nets, adsRect* bbox = NULL);
+  void getWireUpdatedNets(std::vector<dbNet*>& nets, Rect* bbox = NULL);
 
   ///
   /// return the regions of this design
@@ -1902,7 +1902,7 @@ class dbNet : public dbObject
   ///
   /// Assuming no intersection, check if the net is in the bbox.
   ///
-  bool isEnclosed(adsRect* bbox);
+  bool isEnclosed(Rect* bbox);
 
   ///
   /// Returns the mark flag value. This flag specified that the
@@ -2664,7 +2664,7 @@ class dbInst : public dbObject
   /// setLocation(x,y) is equivalent to:
   ///
   ///    dbMaster * master = inst->getMaster();
-  ///    adsRect bbox;
+  ///    Rect bbox;
   ///    master->getBBox(bbox);
   ///    dbTransform t(getOrient());
   ///    t.apply(bbox);
@@ -2691,7 +2691,7 @@ class dbInst : public dbObject
   ///
   ///         int x, y;
   ///         inst->getOrigin(x,y);
-  ///         dbTransform transform( inst->getOrient(), adsPoint(x,y) );
+  ///         dbTransform transform( inst->getOrient(), Point(x,y) );
   ///
   ///         for all shapes of inst:
   ///             transform.apply( shape )
@@ -3518,7 +3518,7 @@ class dbWire : public dbObject
   ///
   /// Get the bounding box of this wire
   ///
-  bool getBBox(adsRect& r);
+  bool getBBox(Rect& r);
 
   ///
   /// Get the total path length contained in this wire.
@@ -3609,7 +3609,7 @@ class dbWire : public dbObject
   ///
   static void copy(dbWire*        dst,
                    dbWire*        src,
-                   const adsRect& bbox,
+                   const Rect& bbox,
                    bool           removeITermsBTerms = true,
                    bool           copyVias           = true);
 
@@ -4755,7 +4755,7 @@ class dbRow : public dbObject
   ///
   /// Get the bounding box of this row
   ///
-  void getBBox(adsRect& bbox);
+  void getBBox(Rect& bbox);
 
   ///
   /// Create a new row.
@@ -5236,7 +5236,7 @@ class dbMaster : public dbObject
   ///
   /// Get the placement bounding box of this master.
   ///
-  void getPlacementBoundary(adsRect& r);
+  void getPlacementBoundary(Rect& r);
 
   ///
   /// Apply the suppiled transform to the master obsutrctions and pin
@@ -5489,13 +5489,13 @@ class dbTarget : public dbObject
   ///
   /// Get the target point of this target.
   ///
-  adsPoint getPoint();
+  Point getPoint();
 
   ///
   /// Create a new master terminal.
   /// Returns NULL if a master terminal with this name already exists
   ///
-  static dbTarget* create(dbMTerm* mterm, dbTechLayer* layer, adsPoint point);
+  static dbTarget* create(dbMTerm* mterm, dbTechLayer* layer, Point point);
 
   ///
   /// Destroy a target
@@ -6278,12 +6278,12 @@ class dbTechViaLayerRule : public dbObject
   ///
   /// Get the rect rule
   ///
-  void getRect(adsRect& r);
+  void getRect(Rect& r);
 
   ///
   /// Set the rect rule
   ///
-  void setRect(const adsRect& r);
+  void setRect(const Rect& r);
 
   ///
   /// returns true if the spacing rule is set

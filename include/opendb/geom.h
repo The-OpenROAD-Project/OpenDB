@@ -47,20 +47,20 @@ namespace odb {
 class dbIStream;
 class dbOStream;
 
-class adsPoint
+class Point
 {
   int _x;
   int _y;
 
  public:
-  adsPoint();
-  adsPoint(const adsPoint& p);
-  adsPoint(int x, int y);
+  Point();
+  Point(const Point& p);
+  Point(int x, int y);
 
-  adsPoint& operator=(const adsPoint& p);
-  bool      operator==(const adsPoint& p) const;
-  bool      operator!=(const adsPoint& p) const;
-  bool      operator<(const adsPoint& p) const;
+  Point& operator=(const Point& p);
+  bool   operator==(const Point& p) const;
+  bool   operator!=(const Point& p) const;
+  bool   operator<(const Point& p) const;
 
   int  getX() const;
   int  getY() const;
@@ -99,7 +99,7 @@ class adsPoint
   // Returns 0 if the vectors are colinear
   // Returns > 0 if the vectors rotate counter clockwise
   // Returns < 0 if the vectors rotate clockwise
-  static int64 crossProduct(adsPoint p0, adsPoint p1, adsPoint p2);
+  static int64 crossProduct(Point p0, Point p1, Point p2);
 
   // compute the rotation direction of the vectors <p0,p1> and <p0,p2>
   // Returns 0 if the vectors are colinear
@@ -112,19 +112,19 @@ class adsPoint
     CW       = -1,
     CCW      = 1
   };
-  static int rotation(adsPoint p0, adsPoint p1, adsPoint p2);
+  static int rotation(Point p0, Point p1, Point p2);
 
   // compute the square distance between two points
-  static uint64 squaredDistance(adsPoint p0, adsPoint p1);
+  static uint64 squaredDistance(Point p0, Point p1);
 
   // compute the manhattan distance between two points
-  static uint64 manhattanDistance(adsPoint p0, adsPoint p1);
+  static uint64 manhattanDistance(Point p0, Point p1);
 
-  friend dbIStream& operator>>(dbIStream& stream, adsPoint& p);
-  friend dbOStream& operator<<(dbOStream& stream, const adsPoint& p);
+  friend dbIStream& operator>>(dbIStream& stream, Point& p);
+  friend dbOStream& operator<<(dbOStream& stream, const Point& p);
 };
 
-class adsRect
+class Rect
 {
   int _xlo;
   int _ylo;
@@ -132,15 +132,15 @@ class adsRect
   int _yhi;
 
  public:
-  adsRect();
-  adsRect(const adsRect& r) = default;
-  adsRect(const adsPoint p1, const adsPoint p2);
-  adsRect(int x1, int y1, int x2, int y2);
+  Rect();
+  Rect(const Rect& r) = default;
+  Rect(const Point p1, const Point p2);
+  Rect(int x1, int y1, int x2, int y2);
 
-  adsRect& operator=(const adsRect& r) = default;
-  bool     operator==(const adsRect& r) const;
-  bool     operator!=(const adsRect& r) const;
-  bool     operator<(const adsRect& r) const;
+  Rect& operator=(const Rect& r) = default;
+  bool     operator==(const Rect& r) const;
+  bool     operator!=(const Rect& r) const;
+  bool     operator<(const Rect& r) const;
 
   // Reinitialize the rectangle
   void init(int x1, int y1, int x2, int y2);
@@ -166,53 +166,53 @@ class adsRect
   void set_ylo(int x1);
   void set_yhi(int x1);
 
-  int      xMin() const;
-  int      yMin() const;
-  int      xMax() const;
-  int      yMax() const;
-  uint     dx() const;
-  uint     dy() const;
-  adsPoint ll() const;
-  adsPoint ul() const;
-  adsPoint ur() const;
-  adsPoint lr() const;
+  int   xMin() const;
+  int   yMin() const;
+  int   xMax() const;
+  int   yMax() const;
+  uint  dx() const;
+  uint  dy() const;
+  Point ll() const;
+  Point ul() const;
+  Point ur() const;
+  Point lr() const;
 
   // Returns the lower point (lower-left)
-  adsPoint low() const;
+  Point low() const;
 
   // Returns the upper point (upper-right)
-  adsPoint high() const;
+  Point high() const;
 
   // A point intersects any part of this rectangle.
-  bool intersects(const adsPoint& p) const;
+  bool intersects(const Point& p) const;
 
   // A rectangle intersects any part of this rectangle.
-  bool intersects(const adsRect& r) const;
+  bool intersects(const Rect& r) const;
 
   // A point intersects the interior of this rectangle
-  bool overlaps(const adsPoint& p) const;
+  bool overlaps(const Point& p) const;
 
   // A rectangle intersects the interior of this rectangle
-  bool overlaps(const adsRect& r) const;
+  bool overlaps(const Rect& r) const;
 
   //  A rectangle is contained in the interior of this rectangle
-  bool contains(const adsRect& r) const;
+  bool contains(const Rect& r) const;
 
   //  A rectangle is completely contained in the interior of this rectangle,
-  bool inside(const adsRect& r) const;
+  bool inside(const Rect& r) const;
 
   // Compute the union of these two rectangles.
-  void merge(const adsRect& r, adsRect& result);
+  void merge(const Rect& r, Rect& result);
 
   // Compute the union of these two rectangles. The result is stored in this
   // rectangle.
-  void merge(const adsRect& r);
+  void merge(const Rect& r);
 
   // Compute the intersection of these two rectangles.
-  void intersection(const adsRect& r, adsRect& result);
+  void intersection(const Rect& r, Rect& result);
 
   // Compute the intersection of these two rectangles.
-  adsRect intersect(const adsRect& r);
+  Rect intersect(const Rect& r);
 
   uint64 area();
   uint64 margin();
@@ -221,66 +221,66 @@ class adsRect
   void printf(FILE* fp, const char* prefix = "");
   void print(const char* prefix = "");
 
-  friend dbIStream& operator>>(dbIStream& stream, adsRect& r);
-  friend dbOStream& operator<<(dbOStream& stream, const adsRect& r);
+  friend dbIStream& operator>>(dbIStream& stream, Rect& r);
+  friend dbOStream& operator<<(dbOStream& stream, const Rect& r);
 };
 
-inline adsPoint::adsPoint()
+inline Point::Point()
 {
   _x = 0;
   _y = 0;
 }
 
-inline adsPoint::adsPoint(const adsPoint& p)
+inline Point::Point(const Point& p)
 {
   _x = p._x;
   _y = p._y;
 }
 
-inline adsPoint::adsPoint(int x, int y)
+inline Point::Point(int x, int y)
 {
   _x = x;
   _y = y;
 }
 
-inline adsPoint& adsPoint::operator=(const adsPoint& p)
+inline Point& Point::operator=(const Point& p)
 {
   _x = p._x;
   _y = p._y;
   return *this;
 }
 
-inline bool adsPoint::operator==(const adsPoint& p) const
+inline bool Point::operator==(const Point& p) const
 {
   return (_x == p._x) && (_y == p._y);
 }
 
-inline bool adsPoint::operator!=(const adsPoint& p) const
+inline bool Point::operator!=(const Point& p) const
 {
   return (_x != p._x) || (_y != p._y);
 }
 
-inline int adsPoint::getX() const
+inline int Point::getX() const
 {
   return _x;
 }
 
-inline int adsPoint::getY() const
+inline int Point::getY() const
 {
   return _y;
 }
 
-inline void adsPoint::setX(int x)
+inline void Point::setX(int x)
 {
   _x = x;
 }
 
-inline void adsPoint::setY(int y)
+inline void Point::setY(int y)
 {
   _y = y;
 }
 
-inline void adsPoint::rotate90()
+inline void Point::rotate90()
 {
   int xp = -_y;
   int yp = _x;
@@ -288,7 +288,7 @@ inline void adsPoint::rotate90()
   _y     = yp;
 }
 
-inline void adsPoint::rotate180()
+inline void Point::rotate180()
 {
   int xp = -_x;
   int yp = -_y;
@@ -296,7 +296,7 @@ inline void adsPoint::rotate180()
   _y     = yp;
 }
 
-inline void adsPoint::rotate270()
+inline void Point::rotate270()
 {
   int xp = _y;
   int yp = -_x;
@@ -304,7 +304,7 @@ inline void adsPoint::rotate270()
   _y     = yp;
 }
 
-inline int64 adsPoint::crossProduct(adsPoint p0, adsPoint p1, adsPoint p2)
+inline int64 Point::crossProduct(Point p0, Point p1, Point p2)
 {
   // because the cross-product might overflow in an "int"
   // 64-bit arithmetic is used here
@@ -317,13 +317,13 @@ inline int64 adsPoint::crossProduct(adsPoint p0, adsPoint p1, adsPoint p2)
   return (x1 - x0) * (y2 - y0) - (x2 - x0) * (y1 - y0);
 }
 
-inline int adsPoint::rotation(adsPoint p0, adsPoint p1, adsPoint p2)
+inline int Point::rotation(Point p0, Point p1, Point p2)
 {
   int64 cp = crossProduct(p0, p1, p2);
   return (cp == 0 ? 0 : cp < 0 ? -1 : 1);
 }
 
-inline uint64 adsPoint::squaredDistance(adsPoint p0, adsPoint p1)
+inline uint64 Point::squaredDistance(Point p0, Point p1)
 {
   int64 x0 = p0._x;
   int64 x1 = p1._x;
@@ -334,7 +334,7 @@ inline uint64 adsPoint::squaredDistance(adsPoint p0, adsPoint p1)
   return (uint64)(dx * dx + dy * dy);
 }
 
-inline uint64 adsPoint::manhattanDistance(adsPoint p0, adsPoint p1)
+inline uint64 Point::manhattanDistance(Point p0, Point p1)
 {
   int64 x0 = p0._x;
   int64 x1 = p1._x;
@@ -349,7 +349,7 @@ inline uint64 adsPoint::manhattanDistance(adsPoint p0, adsPoint p1)
   return (uint64)(dx + dy);
 }
 
-inline bool adsPoint::operator<(const adsPoint& rhs) const
+inline bool Point::operator<(const Point& rhs) const
 {
   if (_x < rhs._x)
     return true;
@@ -360,7 +360,7 @@ inline bool adsPoint::operator<(const adsPoint& rhs) const
   return _y < rhs._y;
 }
 
-inline bool adsRect::operator<(const adsRect& rhs) const
+inline bool Rect::operator<(const Rect& rhs) const
 {
   if (_xlo < rhs._xlo)
     return true;
@@ -383,12 +383,12 @@ inline bool adsRect::operator<(const adsRect& rhs) const
   return _yhi < rhs._yhi;
 }
 
-inline adsRect::adsRect()
+inline Rect::Rect()
 {
   _xlo = _ylo = _xhi = _yhi = 0;
 }
 
-inline adsRect::adsRect(int x1, int y1, int x2, int y2)
+inline Rect::Rect(int x1, int y1, int x2, int y2)
 {
   if (x1 < x2) {
     _xlo = x1;
@@ -407,7 +407,7 @@ inline adsRect::adsRect(int x1, int y1, int x2, int y2)
   }
 }
 
-inline adsRect::adsRect(const adsPoint p1, const adsPoint p2)
+inline Rect::Rect(const Point p1, const Point p2)
 {
   int x1 = p1.getX();
   int y1 = p1.getY();
@@ -430,23 +430,23 @@ inline adsRect::adsRect(const adsPoint p1, const adsPoint p2)
     _yhi = y1;
   }
 }
-inline void adsRect::set_xlo(int x1)
+inline void Rect::set_xlo(int x1)
 {
   _xlo = x1;
 }
-inline void adsRect::set_xhi(int x2)
+inline void Rect::set_xhi(int x2)
 {
   _xhi = x2;
 }
-inline void adsRect::set_ylo(int y1)
+inline void Rect::set_ylo(int y1)
 {
   _ylo = y1;
 }
-inline void adsRect::set_yhi(int y2)
+inline void Rect::set_yhi(int y2)
 {
   _yhi = y2;
 }
-inline void adsRect::reset(int x1, int y1, int x2, int y2)
+inline void Rect::reset(int x1, int y1, int x2, int y2)
 {
   _xlo = x1;
   _xhi = x2;
@@ -454,7 +454,7 @@ inline void adsRect::reset(int x1, int y1, int x2, int y2)
   _yhi = y2;
 }
 
-inline void adsRect::init(int x1, int y1, int x2, int y2)
+inline void Rect::init(int x1, int y1, int x2, int y2)
 {
   if (x1 < x2) {
     _xlo = x1;
@@ -473,19 +473,19 @@ inline void adsRect::init(int x1, int y1, int x2, int y2)
   }
 }
 
-inline bool adsRect::operator==(const adsRect& r) const
+inline bool Rect::operator==(const Rect& r) const
 {
   return (_xlo == r._xlo) && (_ylo == r._ylo) && (_xhi == r._xhi)
          && (_yhi == r._yhi);
 }
 
-inline bool adsRect::operator!=(const adsRect& r) const
+inline bool Rect::operator!=(const Rect& r) const
 {
   return (_xlo != r._xlo) || (_ylo != r._ylo) || (_xhi != r._xhi)
          || (_yhi != r._yhi);
 }
 
-inline uint adsRect::minDXDY()
+inline uint Rect::minDXDY()
 {
   uint DX = dx();
   uint DY = dy();
@@ -494,7 +494,7 @@ inline uint adsRect::minDXDY()
   else
     return DY;
 }
-inline uint adsRect::maxDXDY()
+inline uint Rect::maxDXDY()
 {
   uint DX = dx();
   uint DY = dy();
@@ -503,7 +503,7 @@ inline uint adsRect::maxDXDY()
   else
     return DY;
 }
-inline int adsRect::getDir()
+inline int Rect::getDir()
 {
   uint DX = dx();
   uint DY = dy();
@@ -514,7 +514,7 @@ inline int adsRect::getDir()
   else
     return -1;
 }
-inline void adsRect::moveTo(int x, int y)
+inline void Rect::moveTo(int x, int y)
 {
   uint DX = dx();
   uint DY = dy();
@@ -524,7 +524,7 @@ inline void adsRect::moveTo(int x, int y)
   _yhi    = y + DY;
 }
 
-inline void adsRect::moveDelta(int dx, int dy)
+inline void Rect::moveDelta(int dx, int dy)
 {
   _xlo += dx;
   _ylo += dy;
@@ -532,93 +532,93 @@ inline void adsRect::moveDelta(int dx, int dy)
   _yhi += dy;
 }
 
-inline int adsRect::xMin() const
+inline int Rect::xMin() const
 {
   return _xlo;
 }
-inline int adsRect::yMin() const
+inline int Rect::yMin() const
 {
   return _ylo;
 }
-inline int adsRect::xMax() const
+inline int Rect::xMax() const
 {
   return _xhi;
 }
-inline int adsRect::yMax() const
+inline int Rect::yMax() const
 {
   return _yhi;
 }
-inline adsPoint adsRect::ll() const
+inline Point Rect::ll() const
 {
-  return adsPoint(_xlo, _ylo);
+  return Point(_xlo, _ylo);
 }
-inline adsPoint adsRect::ul() const
+inline Point Rect::ul() const
 {
-  return adsPoint(_xlo, _yhi);
+  return Point(_xlo, _yhi);
 }
-inline adsPoint adsRect::ur() const
+inline Point Rect::ur() const
 {
-  return adsPoint(_xhi, _yhi);
+  return Point(_xhi, _yhi);
 }
-inline adsPoint adsRect::lr() const
+inline Point Rect::lr() const
 {
-  return adsPoint(_xhi, _ylo);
+  return Point(_xhi, _ylo);
 }
-inline uint adsRect::dx() const
+inline uint Rect::dx() const
 {
   return (uint)(_xhi - _xlo);
 }
-inline uint adsRect::dy() const
+inline uint Rect::dy() const
 {
   return (uint)(_yhi - _ylo);
 }
-inline adsPoint adsRect::low() const
+inline Point Rect::low() const
 {
-  return adsPoint(_xlo, _ylo);
+  return Point(_xlo, _ylo);
 }
-inline adsPoint adsRect::high() const
+inline Point Rect::high() const
 {
-  return adsPoint(_xhi, _yhi);
+  return Point(_xhi, _yhi);
 }
 
-inline bool adsRect::intersects(const adsPoint& p) const
+inline bool Rect::intersects(const Point& p) const
 {
   return !((p.getX() < _xlo) || (p.getX() > _xhi) || (p.getY() < _ylo)
            || (p.getY() > _yhi));
 }
 
-inline bool adsRect::intersects(const adsRect& r) const
+inline bool Rect::intersects(const Rect& r) const
 {
   return !((r._xhi < _xlo) || (r._xlo > _xhi) || (r._yhi < _ylo)
            || (r._ylo > _yhi));
 }
 
-inline bool adsRect::overlaps(const adsPoint& p) const
+inline bool Rect::overlaps(const Point& p) const
 {
   return !((p.getX() <= _xlo) || (p.getX() >= _xhi) || (p.getY() <= _ylo)
            || (p.getY() >= _yhi));
 }
 
-inline bool adsRect::overlaps(const adsRect& r) const
+inline bool Rect::overlaps(const Rect& r) const
 {
   return !((r._xhi <= _xlo) || (r._xlo >= _xhi) || (r._yhi <= _ylo)
            || (r._ylo >= _yhi));
 }
 
-inline bool adsRect::contains(const adsRect& r) const
+inline bool Rect::contains(const Rect& r) const
 {
   return (_xlo <= r._xlo) && (_ylo <= r._ylo) && (_xhi >= r._xhi)
          && (_yhi >= r._yhi);
 }
 
-inline bool adsRect::inside(const adsRect& r) const
+inline bool Rect::inside(const Rect& r) const
 {
   return (_xlo < r._xlo) && (_ylo < r._ylo) && (_xhi > r._xhi)
          && (_yhi > r._yhi);
 }
 
 // Compute the union of these two rectangles.
-inline void adsRect::merge(const adsRect& r, adsRect& result)
+inline void Rect::merge(const Rect& r, Rect& result)
 {
   result._xlo = MIN(_xlo, r._xlo);
   result._ylo = MIN(_ylo, r._ylo);
@@ -627,7 +627,7 @@ inline void adsRect::merge(const adsRect& r, adsRect& result)
 }
 
 // Compute the union of these two rectangles.
-inline void adsRect::merge(const adsRect& r)
+inline void Rect::merge(const Rect& r)
 {
   _xlo = MIN(_xlo, r._xlo);
   _ylo = MIN(_ylo, r._ylo);
@@ -636,7 +636,7 @@ inline void adsRect::merge(const adsRect& r)
 }
 
 // Compute the intersection of these two rectangles.
-inline void adsRect::intersection(const adsRect& r, adsRect& result)
+inline void Rect::intersection(const Rect& r, Rect& result)
 {
   if (!intersects(r)) {
     result._xlo = 0;
@@ -652,10 +652,10 @@ inline void adsRect::intersection(const adsRect& r, adsRect& result)
 }
 
 // Compute the intersection of these two rectangles.
-inline adsRect adsRect::intersect(const adsRect& r)
+inline Rect Rect::intersect(const Rect& r)
 {
   assert(intersects(r));
-  adsRect result;
+  Rect result;
   result._xlo = MAX(_xlo, r._xlo);
   result._ylo = MAX(_ylo, r._ylo);
   result._xhi = MIN(_xhi, r._xhi);
@@ -663,40 +663,38 @@ inline adsRect adsRect::intersect(const adsRect& r)
   return result;
 }
 
-inline uint64 adsRect::area()
+inline uint64 Rect::area()
 {
   uint64 a = dx();
   uint64 b = dy();
   return a * b;
 }
 
-inline uint64 adsRect::margin()
+inline uint64 Rect::margin()
 {
   uint64 DX = dx();
   uint64 DY = dy();
   return DX + DX + DY + DY;
 }
 
-inline void adsRect::mergeInit()
+inline void Rect::mergeInit()
 {
   _xlo = INT_MAX;
   _ylo = INT_MAX;
   _xhi = INT_MIN;
   _yhi = INT_MIN;
 }
-inline void adsRect::notice(const char*)
+inline void Rect::notice(const char*)
 {
   ;  // notice(0, "%s%12d %12d - %12d %12d\n", prefix, _xlo, _ylo, dx, dy);
 }
-inline void adsRect::printf(FILE* fp, const char* prefix)
+inline void Rect::printf(FILE* fp, const char* prefix)
 {
   fprintf(fp, "%s%12d %12d - %12d %12d\n", prefix, _xlo, _ylo, dx(), dy());
 }
-inline void adsRect::print(const char* prefix)
+inline void Rect::print(const char* prefix)
 {
   fprintf(stdout, "%s%12d %12d - %12d %12d\n", prefix, _xlo, _ylo, dx(), dy());
 }
 
 }  // namespace odb
-
-

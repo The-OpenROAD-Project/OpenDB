@@ -47,12 +47,12 @@ class dbTechLayer;
 
 class definPin : public definBase
 {
-  struct Rect
+  struct PinRect
   {
     dbTechLayer* _layer;
-    adsRect      _rect;
+    Rect      _rect;
 
-    Rect(dbTechLayer* layer, const adsRect& rect) : _layer(layer), _rect(rect)
+    PinRect(dbTechLayer* layer, const Rect& rect) : _layer(layer), _rect(rect)
     {
     }
   };
@@ -61,7 +61,7 @@ class definPin : public definBase
   {
     dbTechLayer* _layer;
 
-    Polygon(dbTechLayer* layer, const std::vector<adsPoint>& points)
+    Polygon(dbTechLayer* layer, const std::vector<Point>& points)
         : definPolygon(points), _layer(layer)
     {
     }
@@ -88,17 +88,17 @@ class definPin : public definBase
   int                      _effective_width;
   char                     _left_bus;
   char                     _right_bus;
-  adsRect                  _rect;
+  Rect                     _rect;
   dbTechLayer*             _layer;
   bool                     _has_min_spacing;
   bool                     _has_effective_width;
   bool                     _has_placement;
-  std::vector<Rect>        _rects;
+  std::vector<PinRect>     _rects;
   std::vector<Polygon>     _polygons;
   std::vector<Pin>         _ground_pins;
   std::vector<Pin>         _supply_pins;
 
-  void addRect(Rect& r);
+  void addRect(PinRect& r);
   void addPolygon(Polygon& p);
 
  public:

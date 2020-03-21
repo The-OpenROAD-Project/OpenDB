@@ -218,7 +218,7 @@ void definComponent::placement(int status, int x, int y, int orient)
   }
 
   dbMaster* master = _cur_inst->getMaster();
-  adsRect   bbox;
+  Rect   bbox;
   master->getPlacementBoundary(bbox);
   dbTransform t(_cur_inst->getOrient());
   t.apply(bbox);

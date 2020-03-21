@@ -591,7 +591,7 @@ bool dbITerm::getAvgXY(int* x, int* y)
   int      py;
   dbInst*  inst = getInst();
   inst->getOrigin(px, py);
-  adsPoint     origin = adsPoint(px, py);
+  Point     origin = Point(px, py);
   dbOrientType orient = inst->getOrient();
   dbTransform  transform(orient, origin);
 
@@ -603,7 +603,7 @@ bool dbITerm::getAvgXY(int* x, int* y)
     dbSet<dbBox>::iterator box_itr;
     for (box_itr = boxes.begin(); box_itr != boxes.end(); box_itr++) {
       dbBox*  box = *box_itr;
-      adsRect rect;
+      Rect rect;
       box->getBox(rect);
       transform.apply(rect);
       xx += rect.xMin() + rect.xMax();

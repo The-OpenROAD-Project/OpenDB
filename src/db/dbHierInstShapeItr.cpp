@@ -70,7 +70,7 @@ bool dbHierInstShapeItr::iterate_leaf(dbInst* inst, unsigned filter, int level)
 
   int x, y;
   inst->getOrigin(x, y);
-  push_transform(dbTransform(inst->getOrient(), adsPoint(x, y)));
+  push_transform(dbTransform(inst->getOrient(), Point(x, y)));
   dbMaster* master = inst->getMaster();
 
   if (!isFiltered(filter, INST_OBS | INST_VIA)) {
@@ -167,7 +167,7 @@ bool dbHierInstShapeItr::iterate_inst(dbInst* inst, unsigned filter, int level)
 
   int x, y;
   inst->getOrigin(x, y);
-  push_transform(dbTransform(inst->getOrient(), adsPoint(x, y)));
+  push_transform(dbTransform(inst->getOrient(), Point(x, y)));
   dbBlock* child = inst->getChild();
   dbShape  shape;
 
@@ -460,7 +460,7 @@ void dbHierInstShapeItr::transform(dbShape& shape)
 
 void dbHierInstShapeItr::getShape(dbBox* box, dbShape& shape)
 {
-  adsRect r;
+  Rect r;
   box->getBox(r);
   dbTransform& t = _transforms.back();
   t.apply(r);

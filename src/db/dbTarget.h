@@ -57,7 +57,7 @@ class _dbTarget : public dbObject
  public:
   // PERSISTANT-MEMBERS
   _dbTargetFlags     _flags;
-  adsPoint           _point;
+  Point           _point;
   dbId<_dbMTerm>     _mterm;
   dbId<_dbTechLayer> _layer;
   dbId<_dbTarget>    _next;

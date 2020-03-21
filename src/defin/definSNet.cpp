@@ -257,16 +257,16 @@ void definSNet::polygon(const char* layer_name, std::vector<defPoint>& points)
     return;
   }
 
-  std::vector<adsPoint> P;
+  std::vector<Point> P;
   translate(points, P);
   definPolygon         polygon(P);
-  std::vector<adsRect> R;
+  std::vector<Rect> R;
   polygon.decompose(R);
 
-  std::vector<adsRect>::iterator itr;
+  std::vector<Rect>::iterator itr;
 
   for (itr = R.begin(); itr != R.end(); ++itr) {
-    adsRect& r = *itr;
+    Rect& r = *itr;
     dbSBox::create(_swire,
                    layer,
                    r.xMin(),

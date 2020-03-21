@@ -62,7 +62,7 @@ class definBlockage : public definBase
   virtual void blockageRoutingMinSpacing(int spacing);
   virtual void blockageRoutingEffectiveWidth(int width);
   virtual void blockageRoutingRect(int x1, int y1, int x2, int y2);
-  virtual void blockageRoutingPolygon(const std::vector<adsPoint>& points);
+  virtual void blockageRoutingPolygon(const std::vector<Point>& points);
   virtual void blockageRoutingEnd();
 
   // Placement Blockage interface methods

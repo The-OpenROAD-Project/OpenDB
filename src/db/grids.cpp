@@ -3823,7 +3823,7 @@ Ath__gridTable::Ath__gridTable(dbBox* bb,
     for (uint jj = 0; jj < _colCnt; jj++) {
       int  x2  = x1 + colSize;
       uint num = ii * 1000 + jj;
-      // adsRect rectBB(x1, y1, x2, y2);
+      // Rect rectBB(x1, y1, x2, y2);
       _gridTable[ii][jj]
           = new Ath__grid(this, _trackPool, _wirePool, layer, num, markerCnt);
 
@@ -3923,7 +3923,7 @@ void Ath__gridTable::dumpTrackCounts(FILE* fp)
           texpand,
           ttsubtn);
 }
-Ath__gridTable::Ath__gridTable(adsRect* bb,
+Ath__gridTable::Ath__gridTable(Rect* bb,
                                uint     rowCnt,
                                uint     colCnt,
                                uint*    /* unused: width */,
@@ -3983,7 +3983,7 @@ Ath__gridTable::Ath__gridTable(adsRect* bb,
   }
 }
 
-Ath__gridTable::Ath__gridTable(adsRect* bb,
+Ath__gridTable::Ath__gridTable(Rect* bb,
                                uint     layer,
                                uint     dir,
                                uint     width,

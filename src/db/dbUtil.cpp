@@ -353,11 +353,11 @@ uint dbCreateNetUtil::printEcoInst(dbInst* ecoInst, dbBlock* srcBlock, FILE* fp)
   }
   dbBox*  origBox = origInst->getBBox();
   dbBox*  b0      = origInst->getBBox();
-  adsRect r0;
+  Rect r0;
   b0->getBox(r0);
 
   dbBox*  b1 = ecoInst->getBBox();
-  adsRect r1;
+  Rect r1;
   b1->getBox(r1);
 
   // worst case : a box was moved to its original space
@@ -992,7 +992,7 @@ dbTechLayerRule* dbCreateNetUtil::getRule(int routingLayer, int width)
   return rule;
 }
 
-dbTechVia* dbCreateNetUtil::getVia(int l1, int l2, adsRect& bbox)
+dbTechVia* dbCreateNetUtil::getVia(int l1, int l2, Rect& bbox)
 {
   int bot, top;
 
@@ -1056,16 +1056,16 @@ dbNet* dbCreateNetUtil::createNetSingleWire(const char*    netName,
     return NULL;
   }
 
-  adsRect  r(x1, y1, x2, y2);
+  Rect  r(x1, y1, x2, y2);
   int      width;
-  adsPoint p0, p1;
+  Point p0, p1;
 
   if (dir == dbTechLayerDir::VERTICAL) {
     uint dx = r.dx();
 
     // This is dangerous!
     if (dx & 1) {
-      r  = adsRect(x1, y1, x2 + 1, y2);
+      r  = Rect(x1, y1, x2 + 1, y2);
       dx = r.dx();
     }
 
@@ -1080,7 +1080,7 @@ dbNet* dbCreateNetUtil::createNetSingleWire(const char*    netName,
 
     // This is dangerous!
     if (dy & 1) {
-      r  = adsRect(x1, y1, x2, y2 + 1);
+      r  = Rect(x1, y1, x2, y2 + 1);
       dy = r.dy();
     }
 
@@ -1154,7 +1154,7 @@ dbNet* dbCreateNetUtil::createNetSingleWire(const char*    netName,
   return net;
 }
 dbSBox* dbCreateNetUtil::createSpecialWire(dbNet*       mainNet,
-                                           adsRect&     r,
+                                           Rect&     r,
                                            dbTechLayer* layer,
                                            uint         /* unused: sboxId */)
 {
@@ -1206,7 +1206,7 @@ dbNet* dbCreateNetUtil::createSpecialNet(dbNet* origNet, const char* name)
   return net;
 }
 
-dbNet* dbCreateNetUtil::createSpecialNetSingleWire(adsRect&     r,
+dbNet* dbCreateNetUtil::createSpecialNetSingleWire(Rect&     r,
                                                    dbTechLayer* layer,
                                                    dbNet*       origNet,
                                                    uint         /* unused: sboxId */)
@@ -1289,7 +1289,7 @@ dbNet* dbCreateNetUtil::copyNet(dbNet* net,
   return newNet;
 }
 
-dbNet* dbCreateNetUtil::createNetSingleWire(adsRect& r,
+dbNet* dbCreateNetUtil::createNetSingleWire(Rect& r,
                                             uint     level,
                                             uint     netId,
                                             uint     shapeId)
@@ -1361,19 +1361,19 @@ dbNet* dbCreateNetUtil::createNetSingleWire(const char* netName,
   }
 
   dbTechLayer* layer = _routingLayers[routingLayer];
-  adsRect      r(x1, y1, x2, y2);
+  Rect      r(x1, y1, x2, y2);
   uint         dx = r.dx();
   uint         dy = r.dy();
 
   // This is dangerous!
   if ((dx & 1) && (dy & 1)) {
-    r  = adsRect(x1, y1, x2, y2 + 1);
+    r  = Rect(x1, y1, x2, y2 + 1);
     dx = r.dx();
     dy = r.dy();
   }
 
   uint     width;
-  adsPoint p0, p1;
+  Point p0, p1;
   uint     minWidth      = layer->getWidth();
   bool     make_vertical = false;
 
@@ -1583,7 +1583,7 @@ dbBox* dbCreateNetUtil::createTechVia(int x1,
     return NULL;
   }
 
-  adsRect    r(x1, y1, x2, y2);
+  Rect    r(x1, y1, x2, y2);
   dbTechVia* via = getVia(lay1, lay2, r);
   dbBox*     b   = via->getBBox();
   // int xmin = b->xMin();
@@ -1613,7 +1613,7 @@ bool dbCreateNetUtil::createSingleVia(dbNet* net,
     return false;
   }
 
-  adsRect    r(x1, y1, x2, y2);
+  Rect    r(x1, y1, x2, y2);
   dbTechVia* via  = getVia(lay1, lay2, r);
   dbBox*     b    = via->getBBox();
   int        xmin = b->xMin();

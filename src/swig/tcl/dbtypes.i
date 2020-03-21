@@ -11,7 +11,7 @@
     Tcl_SetObjResult(interp, obj);
 }
 
-%typemap(out) odb::adsPoint, adsPoint {
+%typemap(out) odb::Point, Point {
     Tcl_Obj *list = Tcl_NewListObj(0, nullptr);
     Tcl_Obj *x = Tcl_NewIntObj($1.getX());
     Tcl_Obj *y = Tcl_NewIntObj($1.getY());
@@ -125,9 +125,9 @@
 %apply int &OUTPUT { int & overhang1, int & overhang2 };
 %apply int &OUTPUT { int & x, int & y };
 %apply int &OUTPUT { int & x_spacing, int & y_spacing };
-WRAP_OBJECT_RETURN_REF(odb::adsRect, r)
-WRAP_OBJECT_RETURN_REF(odb::adsRect, rect)
-WRAP_OBJECT_RETURN_REF(odb::adsRect, bbox)
+WRAP_OBJECT_RETURN_REF(odb::Rect, r)
+WRAP_OBJECT_RETURN_REF(odb::Rect, rect)
+WRAP_OBJECT_RETURN_REF(odb::Rect, bbox)
 
 WRAP_OBJECT_RETURN_REF(odb::dbViaParams, params_return)
 

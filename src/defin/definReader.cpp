@@ -318,7 +318,7 @@ int definReader::blockageCallback(defrCallbackType_e /* unused: type */,
 
     for (int i = 0; i < blockage->numPolygons(); ++i) {
       defiPoints            defPoints = blockage->getPolygon(i);
-      std::vector<adsPoint> points;
+      std::vector<Point> points;
       reader->translate(defPoints, points);
       blockageR->blockageRoutingPolygon(points);
     }
@@ -416,7 +416,7 @@ int definReader::dieAreaCallback(defrCallbackType_e /* unused: type */,
   const defiPoints points = box->getPoint();
 
   if (!reader->_update) {
-    std::vector<adsPoint> P;
+    std::vector<Point> P;
     reader->translate(points, P);
 
     if (P.size() < 2) {
@@ -426,9 +426,9 @@ int definReader::dieAreaCallback(defrCallbackType_e /* unused: type */,
     }
 
     if (P.size() == 2) {
-      adsPoint p0 = P[0];
-      adsPoint p1 = P[1];
-      adsRect  r(p0.getX(), p0.getY(), p1.getX(), p1.getY());
+      Point p0 = P[0];
+      Point p1 = P[1];
+      Rect  r(p0.getX(), p0.getY(), p1.getX(), p1.getY());
       reader->_block->setDieArea(r);
     } else {
       notice(0,
@@ -438,10 +438,10 @@ int definReader::dieAreaCallback(defrCallbackType_e /* unused: type */,
       int                             ymin = INT_MAX;
       int                             xmax = INT_MIN;
       int                             ymax = INT_MIN;
-      std::vector<adsPoint>::iterator itr;
+      std::vector<Point>::iterator itr;
 
       for (itr = P.begin(); itr != P.end(); ++itr) {
-        adsPoint& p = *itr;
+        Point& p = *itr;
         int       x = p.getX();
         int       y = p.getY();
 
@@ -458,7 +458,7 @@ int definReader::dieAreaCallback(defrCallbackType_e /* unused: type */,
           ymax = y;
       }
 
-      adsRect r(xmin, ymin, xmax, ymax);
+      Rect r(xmin, ymin, xmax, ymax);
       reader->_block->setDieArea(r);
     }
   }
@@ -507,7 +507,7 @@ int definReader::fillCallback(defrCallbackType_e /* unused: type */,
 
   for (int i = 0; i < fill->numPolygons(); ++i) {
     defiPoints            defPoints = fill->getPolygon(i);
-    std::vector<adsPoint> points;
+    std::vector<Point> points;
     reader->translate(defPoints, points);
 
     fillR->fillPolygon(points);

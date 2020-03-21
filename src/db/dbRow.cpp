@@ -228,12 +228,12 @@ int dbRow::getSpacing()
   return row->_spacing;
 }
 
-void dbRow::getBBox(adsRect& bbox)
+void dbRow::getBBox(Rect& bbox)
 {
   _dbRow* row = (_dbRow*) this;
 
   if (row->_site_cnt == 0) {
-    bbox = adsRect(0, 0, 0, 0);
+    bbox = Rect(0, 0, 0, 0);
     return;
   }
 
@@ -241,7 +241,7 @@ void dbRow::getBBox(adsRect& bbox)
   int         w    = site->getWidth();
   int         h    = site->getHeight();
   dbTransform transform(getOrient());
-  adsRect     r(0, 0, w, h);
+  Rect     r(0, 0, w, h);
   transform.apply(r);
   int dx = (int) r.dx();
   int dy = (int) r.dy();

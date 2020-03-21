@@ -35,7 +35,7 @@
 
 namespace odb {
 
-dbOStream& operator<<(dbOStream& stream, const adsRect& r)
+dbOStream& operator<<(dbOStream& stream, const Rect& r)
 {
   stream << r._xlo;
   stream << r._ylo;
@@ -44,7 +44,7 @@ dbOStream& operator<<(dbOStream& stream, const adsRect& r)
   return stream;
 }
 
-dbIStream& operator>>(dbIStream& stream, adsRect& r)
+dbIStream& operator>>(dbIStream& stream, Rect& r)
 {
   stream >> r._xlo;
   stream >> r._ylo;
@@ -53,14 +53,14 @@ dbIStream& operator>>(dbIStream& stream, adsRect& r)
   return stream;
 }
 
-dbOStream& operator<<(dbOStream& stream, const adsPoint& p)
+dbOStream& operator<<(dbOStream& stream, const Point& p)
 {
   stream << p._x;
   stream << p._y;
   return stream;
 }
 
-dbIStream& operator>>(dbIStream& stream, adsPoint& p)
+dbIStream& operator>>(dbIStream& stream, Point& p)
 {
   stream >> p._x;
   stream >> p._y;

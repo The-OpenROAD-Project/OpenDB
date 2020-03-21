@@ -238,12 +238,12 @@ bool lefin::addGeoms(dbObject* object, bool is_pin, lefiGeometries* geometry)
       case lefiGeomPathIterE: {
         lefiGeomPathIter*     pathItr = geometry->getPathIter(i);
         int                   j;
-        std::vector<adsPoint> points;
+        std::vector<Point> points;
 
         for (j = 0; j < pathItr->numPoints; j++) {
           int x = dbdist(pathItr->x[j]);
           int y = dbdist(pathItr->y[j]);
-          points.push_back(adsPoint(x, y));
+          points.push_back(Point(x, y));
         }
 
         int numX  = round(pathItr->xStart);
@@ -255,20 +255,20 @@ bool lefin::addGeoms(dbObject* object, bool is_pin, lefiGeometries* geometry)
         for (dx = 0, x_idx = 0; x_idx < numX; ++x_idx, dx += stepX) {
           for (dy = 0, y_idx = 0; y_idx < numY; ++y_idx, dy += stepY) {
             if (points.size() == 1) {
-              adsPoint p = points[0];
+              Point p = points[0];
               int      x = p.getX() + dx;
               int      y = p.getY() + dy;
               create_path_box(object, is_pin, layer, dw, x, y, x, y);
               continue;
             }
 
-            std::vector<adsPoint>::iterator itr    = points.begin();
-            adsPoint                        p      = *itr;
+            std::vector<Point>::iterator itr    = points.begin();
+            Point                        p      = *itr;
             int                             prev_x = p.getX() + dx;
             int                             prev_y = p.getY() + dy;
 
             for (++itr; itr != points.end(); ++itr) {
-              adsPoint c     = *itr;
+              Point c     = *itr;
               int      cur_x = c.getX() + dx;
               int      cur_y = c.getY() + dy;
               create_path_box(
@@ -409,12 +409,12 @@ void lefin::createPolygon(dbObject*        object,
                           double           offset_x,
                           double           offset_y)
 {
-  std::vector<adsPoint> points;
+  std::vector<Point> points;
 
   for (int j = 0; j < p->numPoints; ++j) {
     int x = dbdist(p->x[j] + offset_x);
     int y = dbdist(p->y[j] + offset_y);
-    points.push_back(adsPoint(x, y));
+    points.push_back(Point(x, y));
   }
 
   if (p->numPoints < 4)
@@ -429,13 +429,13 @@ void lefin::createPolygon(dbObject*        object,
   if (!polygon_is_clockwise(points))
     std::reverse(points.begin(), points.end());
 
-  std::vector<adsRect> rects;
+  std::vector<Rect> rects;
   decompose_polygon(points, rects);
 
-  std::vector<adsRect>::iterator itr;
+  std::vector<Rect>::iterator itr;
 
   for (itr = rects.begin(); itr != rects.end(); ++itr) {
-    adsRect& r = *itr;
+    Rect& r = *itr;
 
     if (is_pin)
       dbBox::create(
@@ -994,7 +994,7 @@ void lefin::macroEnd(const char* /* unused: macroName */)
       _master->getOrigin(x, y);
 
       if (x != 0 || y != 0) {
-        dbTransform t(adsPoint(x, y));
+        dbTransform t(Point(x, y));
         _master->transform(t);
       }
     }
@@ -1774,7 +1774,7 @@ void lefin::viaGenerateRule(lefiViaRule* viaRule)
       int     yMin = dbdist(viaRule->layer(idx)->yl());
       int     xMax = dbdist(viaRule->layer(idx)->xh());
       int     yMax = dbdist(viaRule->layer(idx)->yh());
-      adsRect r(xMin, yMin, xMax, yMax);
+      Rect r(xMin, yMin, xMax, yMax);
       layrule->setRect(r);
     }
 

@@ -662,7 +662,7 @@ class Ath__gridStack  // DELETE after porting on new DB
   int        _hiDivide[2];
   uint       _level[2];
   uint       _nextLevel[2];
-  adsRect    _bb;
+  Rect       _bb;
 
  public:
   Ath__gridStack(Ath__layer**         met,
@@ -717,7 +717,7 @@ class Ath__gridTile
  private:
   Ath__grid** _gTable;
   uint        _levelCnt;
-  adsRect     _bb;
+  Rect        _bb;
 
   bool                 _poolFlag;
   AthPool<Ath__track>* _trackPool;
@@ -763,7 +763,7 @@ class Ath__gridTable
   Ath__box             _bbox;
   Ath__box             _maxSearchBox;
   bool                 _setMaxArea;
-  adsRect              _rectBB;
+  Rect                 _rectBB;
   uint                 _rowCnt;
   uint                 _colCnt;
   uint                 _rowSize;
@@ -841,20 +841,20 @@ class Ath__gridTable
                  uint   width,
                  uint   pitch,
                  uint   minWidth);
-  Ath__gridTable(adsRect* bb,
-                 uint     layer,
-                 uint     dir,
-                 uint     width,
-                 uint     pitch,
-                 uint     minWidth);
-  Ath__gridTable(adsRect* bb,
-                 uint     rowCnt,
-                 uint     colCnt,
-                 uint*    width,
-                 uint*    pitch,
-                 uint*    spacing,
-                 int*     X1 = NULL,
-                 int*     Y1 = NULL);
+  Ath__gridTable(Rect* bb,
+                 uint  layer,
+                 uint  dir,
+                 uint  width,
+                 uint  pitch,
+                 uint  minWidth);
+  Ath__gridTable(Rect* bb,
+                 uint  rowCnt,
+                 uint  colCnt,
+                 uint* width,
+                 uint* pitch,
+                 uint* spacing,
+                 int*  X1 = NULL,
+                 int*  Y1 = NULL);
   ~Ath__gridTable();
   Ath__grid* getGrid(uint row, uint col);
   void       init1(uint memChunk, uint rowSize, uint colSize, uint dx, uint dy);
@@ -1039,5 +1039,3 @@ class Ath__gridTable
 
   uint getWireCnt();
 };
-
-

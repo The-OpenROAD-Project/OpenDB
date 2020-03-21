@@ -700,11 +700,11 @@ bool dbMaster::isSpecialPower()
   return master->_flags._special_power == 1;
 }
 
-void dbMaster::getPlacementBoundary(adsRect& r)
+void dbMaster::getPlacementBoundary(Rect& r)
 {
   _dbMaster* master = (_dbMaster*) this;
-  r                 = adsRect(0, 0, master->_width, master->_height);
-  dbTransform t(adsPoint(master->_x, master->_y));
+  r                 = Rect(0, 0, master->_width, master->_height);
+  dbTransform t(Point(master->_x, master->_y));
   t.apply(r);
 }
 

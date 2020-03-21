@@ -36,7 +36,7 @@
 
 namespace odb {
 
-definPolygon::definPolygon(const std::vector<adsPoint>& points)
+definPolygon::definPolygon(const std::vector<Point>& points)
     : _points(points)
 {
   if (_points.size() < 4)
@@ -52,7 +52,7 @@ definPolygon::definPolygon(const std::vector<adsPoint>& points)
     std::reverse(_points.begin(), _points.end());
 }
 
-void definPolygon::decompose(std::vector<adsRect>& rects)
+void definPolygon::decompose(std::vector<Rect>& rects)
 {
   if (_points.size() < 4)
     return;

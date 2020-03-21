@@ -266,7 +266,7 @@ bool dbFlatten::flatten(dbBlock*    parent,
     name += _hier_d;
     name += "ADS_BLOCK_REGION";
     dbRegion* block_region = dbRegion::create(parent, name.c_str());
-    adsRect   bndry;
+    Rect   bndry;
     child->getDieArea(bndry);
     _transform.apply(bndry);
     dbBox::create(
@@ -400,7 +400,7 @@ void dbFlatten::printShapes(FILE* fp, dbWire* wire, bool skip_rcSegs)
 
   for (shapes.begin(wire); shapes.next(s);) {
     uint    sid = shapes.getShapeId();
-    adsRect r;
+    Rect r;
     s.getBox(r);
     fprintf(fp,
             "J%d -- %d %d %d %d\n",
@@ -450,7 +450,7 @@ void dbFlatten::printShapes(FILE* fp, dbWire* wire, bool skip_rcSegs)
     if (s.isVia())
       continue;
 
-    adsRect r;
+    Rect r;
     s.getBox(r);
 
     fprintf(fp, "--  %d %d %d %d --", r.xMin(), r.yMin(), r.xMax(), r.yMax());
@@ -715,7 +715,7 @@ void dbFlatten::fixWire(dbVector<unsigned char>& opcodes,
   uint                  n         = opcodes.size();
   uint                  point_cnt = 0;
   int                   curX, curY;
-  std::vector<adsPoint> jct_points;
+  std::vector<Point> jct_points;
   jct_points.resize(opcodes.size());
 
   for (i = 0; i < n; ++i) {
@@ -730,7 +730,7 @@ void dbFlatten::fixWire(dbVector<unsigned char>& opcodes,
       }
 
       case WOP_JUNCTION: {
-        adsPoint p = jct_points[data[i]];
+        Point p = jct_points[data[i]];
         curX       = p.x();
         curY       = p.y();
         point_cnt  = 0;
@@ -741,13 +741,13 @@ void dbFlatten::fixWire(dbVector<unsigned char>& opcodes,
         curX = data[i];
 
         if (point_cnt != 0) {
-          adsPoint p(curX, curY);
+          Point p(curX, curY);
           jct_points[i] = p;
           _transform.apply(p);
           data[i] = p.x();
         } else {
           curY = data[++i];
-          adsPoint p(curX, curY);
+          Point p(curX, curY);
           jct_points[i - 1] = p;
           jct_points[i]     = p;
           _transform.apply(p);
@@ -762,7 +762,7 @@ void dbFlatten::fixWire(dbVector<unsigned char>& opcodes,
       case WOP_Y: {
         point_cnt++;
         curY = data[i];
-        adsPoint p(curX, curY);
+        Point p(curX, curY);
         jct_points[i] = p;
         _transform.apply(p);
         data[i] = p.y();
@@ -771,7 +771,7 @@ void dbFlatten::fixWire(dbVector<unsigned char>& opcodes,
 
       case WOP_COLINEAR: {
         point_cnt++;
-        jct_points[i] = adsPoint(curX, curY);
+        jct_points[i] = Point(curX, curY);
         break;
       }
 
@@ -893,7 +893,7 @@ void dbFlatten::copySWire(dbNet* dst, dbNet* src, dbSWire* src_swire)
     dbSBox* w = *itr;
 
     if (!w->isVia()) {
-      adsRect r;
+      Rect r;
       w->getBox(r);
       _transform.apply(r);
       dbSBox::create(dst_swire,
@@ -906,7 +906,7 @@ void dbFlatten::copySWire(dbNet* dst, dbNet* src, dbSWire* src_swire)
     } else {
       int x, y;
       w->getViaXY(x, y);
-      adsPoint p(x, y);
+      Point p(x, y);
       _transform.apply(p);
 
       if (w->getTechVia())
@@ -952,7 +952,7 @@ void dbFlatten::copyObstruction(dbBlock* dst_block, dbObstruction* src_)
   _dbObstruction* src = (_dbObstruction*) src_;
 
   dbBox*  box = src_->getBBox();
-  adsRect r;
+  Rect r;
   box->getBox(r);
   _transform.apply(r);
 
@@ -972,7 +972,7 @@ void dbFlatten::copyObstruction(dbBlock* dst_block, dbObstruction* src_)
 void dbFlatten::copyBlockage(dbBlock* dst_block, dbBlockage* src)
 {
   dbBox*  box = src->getBBox();
-  adsRect r;
+  Rect r;
   box->getBox(r);
   _transform.apply(r);
 
@@ -1019,7 +1019,7 @@ void dbFlatten::copyRegion(dbBlock*  parent_block,
 
   for (; bitr != boxes.end(); ++bitr) {
     dbBox*  box = *bitr;
-    adsRect r;
+    Rect r;
     box->getBox(r);
     _transform.apply(r);
     dbBox::create(dst, r.xMin(), r.yMin(), r.xMax(), r.yMax());

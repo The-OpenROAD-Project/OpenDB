@@ -148,7 +148,7 @@ dbDiff& operator<<(dbDiff& diff, const dbTransform& t)
 //
 void dbTransform::invert(dbTransform& result) const
 {
-  adsPoint            offset(-_offset.x(), -_offset.y());
+  Point            offset(-_offset.x(), -_offset.y());
   dbOrientType::Value orient;
 
   switch (_orient) {
@@ -200,7 +200,7 @@ void dbTransform::invert(dbTransform& result) const
   result._orient = orient;
 }
 
-void dbTransform::apply(adsPoint& p) const
+void dbTransform::apply(Point& p) const
 {
   switch (_orient) {
     case dbOrientType::R0:
@@ -241,10 +241,10 @@ void dbTransform::apply(adsPoint& p) const
   p.y() += _offset.y();
 }
 
-void dbTransform::apply(adsRect& r) const
+void dbTransform::apply(Rect& r) const
 {
-  adsPoint ll = r.ll();
-  adsPoint ur = r.ur();
+  Point ll = r.ll();
+  Point ur = r.ur();
   apply(ll);
   apply(ur);
   r.init(ll.x(), ll.y(), ur.x(), ur.y());

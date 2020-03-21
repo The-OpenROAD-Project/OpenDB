@@ -47,7 +47,7 @@ class definFill : public definBase
   // Fill interface methods
   virtual void fillBegin(const char* layer);
   virtual void fillRect(int x1, int y1, int x2, int y2);
-  virtual void fillPolygon(std::vector<adsPoint>& points);
+  virtual void fillPolygon(std::vector<Point>& points);
   virtual void fillEnd();
 
   definFill();

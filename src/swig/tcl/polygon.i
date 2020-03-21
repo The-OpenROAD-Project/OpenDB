@@ -64,17 +64,17 @@ std::vector<Polygon90> odb_getPolygons(const Polygon90Set* set)
   return s;
 }
 
-std::vector<adsPoint> odb_getPoints(const Polygon90* polygon)
+std::vector<Point> odb_getPoints(const Polygon90* polygon)
 {
-  std::vector<adsPoint> pts;
+  std::vector<Point> pts;
   for (auto& pt : *polygon) {
-    pts.emplace_back(adsPoint(pt.x(), pt.y()));
+    pts.emplace_back(Point(pt.x(), pt.y()));
   }
   return pts;
 }
 %}
 
-%template(Points) std::vector<odb::adsPoint>;
+%template(Points) std::vector<odb::Point>;
 %template(Polygon90Set) std::vector<Polygon90>;
 %template(Polygon90Sets) std::vector<Polygon90Set>;
 
@@ -83,7 +83,7 @@ std::vector<adsPoint> odb_getPoints(const Polygon90* polygon)
 Polygon90Set* odb_newSetFromRect(int xLo, int yLo, int xHi, int yHi);
 
 // Query methods - return vectors for easy swig'ing
-std::vector<odb::adsPoint> odb_getPoints(const Polygon90* polygon);
+std::vector<odb::Point> odb_getPoints(const Polygon90* polygon);
 std::vector<Polygon90> odb_getPolygons(const Polygon90Set* set);
 
 

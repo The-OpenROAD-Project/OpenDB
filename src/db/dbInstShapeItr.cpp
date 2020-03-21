@@ -48,7 +48,7 @@ void dbInstShapeItr::begin(dbInst* inst, IteratorType type)
   _inst = inst;
   _inst->getOrigin(x, y);
   _master    = _inst->getMaster();
-  _transform = dbTransform(inst->getOrient(), adsPoint(x, y));
+  _transform = dbTransform(inst->getOrient(), Point(x, y));
   _type      = type;
   _state     = 0;
 }
@@ -61,7 +61,7 @@ void dbInstShapeItr::begin(dbInst*            inst,
   _inst = inst;
   _inst->getOrigin(x, y);
   _master    = _inst->getMaster();
-  _transform = dbTransform(inst->getOrient(), adsPoint(x, y));
+  _transform = dbTransform(inst->getOrient(), Point(x, y));
   _transform.concat(t);
   _type  = type;
   _state = 0;
@@ -69,20 +69,20 @@ void dbInstShapeItr::begin(dbInst*            inst,
 
 void dbInstShapeItr::getViaBox(dbBox* box, dbShape& shape)
 {
-  adsRect b;
+  Rect b;
   box->getBox(b);
   int     xmin = b.xMin() + _via_x;
   int     ymin = b.yMin() + _via_y;
   int     xmax = b.xMax() + _via_x;
   int     ymax = b.yMax() + _via_y;
-  adsRect r(xmin, ymin, xmax, ymax);
+  Rect r(xmin, ymin, xmax, ymax);
   _transform.apply(r);
   shape.setViaBox(_via, box->getTechLayer(), r);
 }
 
 void dbInstShapeItr::getShape(dbBox* box, dbShape& shape)
 {
-  adsRect r;
+  Rect r;
   box->getBox(r);
   _transform.apply(r);
 

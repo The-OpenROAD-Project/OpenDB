@@ -71,7 +71,7 @@ class _dbBox : public dbObject
 
   // PERSISTANT-MEMBERS
   _dbBoxFlags  _flags;
-  adsRect      _rect;
+  Rect      _rect;
   uint         _owner;
   dbId<_dbBox> _next_box;
 

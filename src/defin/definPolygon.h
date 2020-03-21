@@ -41,12 +41,12 @@ namespace odb {
 
 class definPolygon
 {
-  std::vector<adsPoint> _points;
+  std::vector<Point> _points;
 
  public:
   definPolygon() {}
-  definPolygon(const std::vector<adsPoint>& points);
-  void decompose(std::vector<adsRect>& rect);
+  definPolygon(const std::vector<Point>& points);
+  void decompose(std::vector<Rect>& rect);
 };
 
 }  // namespace odb

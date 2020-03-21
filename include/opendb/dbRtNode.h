@@ -172,7 +172,7 @@ class dbRtNode
   }
 
   // Set the x/y location of this node
-  void setPoint(adsPoint& p)
+  void setPoint(Point& p)
   {
     _x = p.x();
     _y = p.y();
@@ -186,7 +186,7 @@ class dbRtNode
   }
 
   // Set the x/y location of this node
-  void getPoint(adsPoint& p) const { p = adsPoint(_x, _y); }
+  void getPoint(Point& p) const { p = Point(_x, _y); }
 
   // Get the x-coordinate of this point
   int x() const { return _x; }

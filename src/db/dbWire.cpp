@@ -625,12 +625,12 @@ void dbWire::shuffleWireSeg(dbNet** newNets, dbRSeg** new_rsegs)
     rwire->attach(leadNewNet);
 }
 
-bool dbWire::getBBox(adsRect& bbox)
+bool dbWire::getBBox(Rect& bbox)
 {
   bbox.reset(INT_MAX, INT_MAX, INT_MIN, INT_MIN);
   dbWireShapeItr itr;
   dbShape        s;
-  adsRect        r;
+  Rect        r;
   uint           cnt = 0;
 
   for (itr.begin(this); itr.next(s);) {
@@ -674,13 +674,13 @@ void dbWire::getShape(int shape_id, dbShape& shape)
       pnt._y = 0;
       getPrevPoint(
           tech, block, wire->_opcodes, wire->_data, shape_id, false, pnt);
-      adsRect b;
+      Rect b;
       box->getBox(b);
       int     xmin = b.xMin() + pnt._x;
       int     ymin = b.yMin() + pnt._y;
       int     xmax = b.xMax() + pnt._x;
       int     ymax = b.yMax() + pnt._y;
-      adsRect r(xmin, ymin, xmax, ymax);
+      Rect r(xmin, ymin, xmax, ymax);
       shape.setVia(via, r);
       return;
     }
@@ -701,13 +701,13 @@ void dbWire::getShape(int shape_id, dbShape& shape)
       pnt._y = 0;
       getPrevPoint(
           tech, block, wire->_opcodes, wire->_data, shape_id, false, pnt);
-      adsRect b;
+      Rect b;
       box->getBox(b);
       int     xmin = b.xMin() + pnt._x;
       int     ymin = b.yMin() + pnt._y;
       int     xmax = b.xMax() + pnt._x;
       int     ymax = b.yMax() + pnt._y;
-      adsRect r(xmin, ymin, xmax, ymax);
+      Rect r(xmin, ymin, xmax, ymax);
       shape.setVia(via, r);
       return;
     }
@@ -1446,13 +1446,13 @@ inline bool createTechVia(_dbWire* wire, int idx, dbShape& shape)
   pnt._x = 0;
   pnt._y = 0;
   getPrevPoint(tech, block, wire->_opcodes, wire->_data, idx, false, pnt);
-  adsRect b;
+  Rect b;
   box->getBox(b);
   int     xmin = b.xMin() + pnt._x;
   int     ymin = b.yMin() + pnt._y;
   int     xmax = b.xMax() + pnt._x;
   int     ymax = b.yMax() + pnt._y;
-  adsRect r(xmin, ymin, xmax, ymax);
+  Rect r(xmin, ymin, xmax, ymax);
   shape.setVia(via, r);
   return true;
 }
@@ -1473,13 +1473,13 @@ inline bool createVia(_dbWire* wire, int idx, dbShape& shape)
   pnt._x = 0;
   pnt._y = 0;
   getPrevPoint(tech, block, wire->_opcodes, wire->_data, idx, false, pnt);
-  adsRect b;
+  Rect b;
   box->getBox(b);
   int     xmin = b.xMin() + pnt._x;
   int     ymin = b.yMin() + pnt._y;
   int     xmax = b.xMax() + pnt._x;
   int     ymax = b.yMax() + pnt._y;
-  adsRect r(xmin, ymin, xmax, ymax);
+  Rect r(xmin, ymin, xmax, ymax);
   shape.setVia(via, r);
   return true;
 }
@@ -1754,14 +1754,14 @@ void dbWire::copy(dbWire* dst_,
 
 void dbWire::copy(dbWire*        dst,
                   dbWire*        src,
-                  const adsRect& bbox,
+                  const Rect& bbox,
                   bool           removeITermsBTerms,
                   bool           copyVias)
 {
   dbRtTree tree;
   tree.decode(src, !removeITermsBTerms);
 
-  adsRect                 r;
+  Rect                 r;
   dbRtTree::edge_iterator itr;
 
   for (itr = tree.begin_edges(); itr != tree.end_edges();) {
@@ -1846,7 +1846,7 @@ void dbWire::destroy(dbWire* wire_)
   _dbBlock* block = (_dbBlock*) wire->getOwner();
   _dbNet*   net   = (_dbNet*) wire_->getNet();
 
-  adsRect bbox;
+  Rect bbox;
 
   if (wire_->getBBox(bbox))
     block->remove_rect(bbox);

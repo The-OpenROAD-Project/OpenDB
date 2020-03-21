@@ -230,13 +230,13 @@ void definPin::pinRect(const char* layer_name, int x1, int y1, int x2, int y2)
     return;
   }
 
-  adsRect r(dbdist(x1), dbdist(y1), dbdist(x2), dbdist(y2));
-  _rects.push_back(Rect(_layer, r));
+  Rect r(dbdist(x1), dbdist(y1), dbdist(x2), dbdist(y2));
+  _rects.push_back(PinRect(_layer, r));
 }
 
 void definPin::pinPolygon(std::vector<defPoint>& points)
 {
-  std::vector<adsPoint> P;
+  std::vector<Point> P;
   translate(points, P);
   _polygons.push_back(Polygon(_layer, P));
 }
@@ -267,7 +267,7 @@ void definPin::pinEnd()
       _orig_y = 0;
     }
 
-    std::vector<Rect>::iterator itr;
+    std::vector<PinRect>::iterator itr;
 
     for (itr = _rects.begin(); itr != _rects.end(); ++itr)
       addRect(*itr);
@@ -290,12 +290,12 @@ void definPin::pinEnd()
   _cur_bterm = NULL;
 }
 
-void definPin::addRect(Rect& r)
+void definPin::addRect(PinRect& r)
 {
   dbBPin* pin = dbBPin::create(_cur_bterm);
   pin->setPlacementStatus(_status);
 
-  adsPoint     origin(0, 0);
+  Point     origin(0, 0);
   dbOrientType orient(_orient);
   dbTransform  transform(orient, origin);
   transform.apply(r._rect);
@@ -310,15 +310,15 @@ void definPin::addRect(Rect& r)
 
 void definPin::addPolygon(Polygon& p)
 {
-  std::vector<adsRect> R;
+  std::vector<Rect> R;
 
   p.decompose(R);
 
-  std::vector<adsRect>::iterator itr;
+  std::vector<Rect>::iterator itr;
 
   for (itr = R.begin(); itr != R.end(); ++itr) {
-    adsRect& r = *itr;
-    Rect     R(p._layer, r);
+    Rect& r = *itr;
+    PinRect R(p._layer, r);
     addRect(R);
   }
 }

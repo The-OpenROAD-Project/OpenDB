@@ -77,7 +77,7 @@ class _dbTechViaLayerRule : public dbObject
   int                      _spacing_x;
   int                      _spacing_y;
   double                   _resistance;
-  adsRect                  _rect;
+  Rect                  _rect;
   dbId<_dbTechLayer>       _layer;
 
   _dbTechViaLayerRule(_dbDatabase*, const _dbTechViaLayerRule& v);

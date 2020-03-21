@@ -203,7 +203,7 @@ class dbBlockSearch
 
   bool getWildCardName(const char* name, char* outName);
 
-  void getNetBbox(dbNet* net, adsRect& maxRect);
+  void getNetBbox(dbNet* net, Rect& maxRect);
   uint getNetConnectivity(dbNet* net,
                           bool   contextFlag,
                           uint   clipMargin,

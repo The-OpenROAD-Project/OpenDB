@@ -37,9 +37,9 @@ using namespace ads;
 
 int main()
 {
-  dbTransform t1(dbOrientType::R90, adsPoint(10, 10));
-  dbTransform t2(dbOrientType::MX, adsPoint(100, 100));
-  dbTransform t3(dbOrientType::R270, adsPoint(50, 50));
+  dbTransform t1(dbOrientType::R90, Point(10, 10));
+  dbTransform t2(dbOrientType::MX, Point(100, 100));
+  dbTransform t3(dbOrientType::R270, Point(50, 50));
   dbTransform x(t1);
   t2.concat(x);
   x             = t2;
@@ -53,7 +53,7 @@ int main()
          x.getOrient().getString());
 
   t.invert();
-  adsPoint p = x.getOffset();
+  Point p = x.getOffset();
   p.x() += 1;
   x.setOffset(p);
   x.concat(t);
@@ -75,8 +75,8 @@ int main()
          x.getOrient().getString());
 
   x = dbTransform();
-  adsPoint p0(50, 50);
-  adsPoint p1(50, 50);
+  Point p0(50, 50);
+  Point p1(50, 50);
   x.apply(p);
   printf("%d %d -> %d %d\n", p0.x(), p0.y(), p1.x(), p1.y());
 

@@ -137,19 +137,19 @@ void definBlockage::blockageRoutingRect(int x1, int y1, int x2, int y2)
     o->setEffectiveWidth(dbdist(_effective_width));
 }
 
-void definBlockage::blockageRoutingPolygon(const std::vector<adsPoint>& points)
+void definBlockage::blockageRoutingPolygon(const std::vector<Point>& points)
 {
   if (_layer == NULL)
     return;
 
   definPolygon         polygon(points);
-  std::vector<adsRect> R;
+  std::vector<Rect> R;
   polygon.decompose(R);
 
-  std::vector<adsRect>::iterator itr;
+  std::vector<Rect>::iterator itr;
 
   for (itr = R.begin(); itr != R.end(); ++itr) {
-    adsRect& r = *itr;
+    Rect& r = *itr;
 
     dbObstruction* o = dbObstruction::create(
         _block, _layer, r.xMin(), r.yMin(), r.xMax(), r.yMax(), _inst);

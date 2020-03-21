@@ -1153,7 +1153,7 @@ void dbNet::setSelect(bool value)
 #endif
 }
 
-bool dbNet::isEnclosed(adsRect* bbox)  // assuming no intersection
+bool dbNet::isEnclosed(Rect* bbox)  // assuming no intersection
 {
   dbWire*         wire = getWire();
   dbWirePathItr   pitr;

@@ -110,13 +110,13 @@ dbTechLayer* dbTarget::getTechLayer()
   return (dbTechLayer*) tech->_layer_tbl->getPtr(target->_layer);
 }
 
-adsPoint dbTarget::getPoint()
+Point dbTarget::getPoint()
 {
   _dbTarget* target = (_dbTarget*) this;
   return target->_point;
 }
 
-dbTarget* dbTarget::create(dbMTerm* mterm_, dbTechLayer* layer_, adsPoint point)
+dbTarget* dbTarget::create(dbMTerm* mterm_, dbTechLayer* layer_, Point point)
 {
   _dbMaster*    master = (_dbMaster*) mterm_->getOwner();
   _dbMTerm*     mterm  = (_dbMTerm*) mterm_;

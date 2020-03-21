@@ -37,13 +37,13 @@ namespace odb {
 
 class tmg_rc_sh {
  public:
-  adsRect _rect;
+  Rect _rect;
   dbTechLayer *_layer;
   dbTechVia *_tech_via;
   dbVia *_block_via;
   dbTechNonDefaultRule *_rule;
-  adsRect _via_lower_rect;
-  adsRect _via_upper_rect;
+  Rect _via_lower_rect;
+  Rect _via_upper_rect;
  public:
   int xMin() { return _rect.xMin(); }
   int xMax() { return _rect.xMax(); }
@@ -101,7 +101,7 @@ struct tmg_rcshort {
 
 class tmg_conn_search;
 class tmg_conn_graph;
-struct tmg_connect_shape { int k; adsRect rect; int rtlev; };
+struct tmg_connect_shape { int k; Rect rect; int rtlev; };
 
 class tmg_conn {
  public:
@@ -189,13 +189,13 @@ class tmg_conn {
   void addBTerm(dbBTerm *bterm);
   void connectShapes(int j,int k);
   void connectTerm(int j,bool soft);
-  void connectTermSoft(int j,int rt,adsRect &rect,int k);
+  void connectTermSoft(int j,int rt,Rect &rect,int k);
   void addShort(int i0,int i1);
   void adjustShapes();
   void relocateShorts();
   void setSring();
   void detachTilePins();
-  void getBTermSearchBox(dbBTerm *bterm, dbShape & pin, adsRect & rect);
+  void getBTermSearchBox(dbBTerm *bterm, dbShape & pin, Rect & rect);
 
   int  getStartNode();
   void dfsClear();

@@ -124,8 +124,8 @@ class dbDiff : public dbObject
   dbDiff& operator<<(double c);
   dbDiff& operator<<(long double c);
   dbDiff& operator<<(const char* c);
-  dbDiff& operator<<(const adsPoint& p);
-  dbDiff& operator<<(const adsRect& r);
+  dbDiff& operator<<(const Point& p);
+  dbDiff& operator<<(const Rect& r);
 
   void diff(const char* field, bool lhs, bool rhs);
   void diff(const char* field, char lhs, char rhs);
@@ -137,8 +137,8 @@ class dbDiff : public dbObject
   void diff(const char* field, float lhs, float rhs);
   void diff(const char* field, double lhs, double rhs);
   void diff(const char* field, long double lhs, long double rhs);
-  void diff(const char* field, adsPoint lhs, adsPoint rhs);
-  void diff(const char* field, adsRect lhs, adsRect rhs);
+  void diff(const char* field, Point lhs, Point rhs);
+  void diff(const char* field, Rect lhs, Rect rhs);
   void diff(const char* field, const char* lhs, const char* rhs);
   void diff(const char*         field,
             dbOrientType::Value lhs,
@@ -186,8 +186,8 @@ class dbDiff : public dbObject
   void out(char side, const char* field, float value);
   void out(char side, const char* field, double value);
   void out(char side, const char* field, long double value);
-  void out(char side, const char* field, adsPoint value);
-  void out(char side, const char* field, adsRect value);
+  void out(char side, const char* field, Point value);
+  void out(char side, const char* field, Rect value);
   void out(char side, const char* field, const char* value);
   void out(char side, const char* field, dbOrientType::Value value);
   void out(char side, const char* field, dbSigType::Value value);

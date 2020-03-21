@@ -383,13 +383,13 @@ bool dbTechViaLayerRule::hasRect()
   return rule->_flags._has_rect == 1;
 }
 
-void dbTechViaLayerRule::getRect(adsRect& r)
+void dbTechViaLayerRule::getRect(Rect& r)
 {
   _dbTechViaLayerRule* rule = (_dbTechViaLayerRule*) this;
   r                         = rule->_rect;
 }
 
-void dbTechViaLayerRule::setRect(const adsRect& r)
+void dbTechViaLayerRule::setRect(const Rect& r)
 {
   _dbTechViaLayerRule* rule = (_dbTechViaLayerRule*) this;
   rule->_flags._has_rect    = 1;

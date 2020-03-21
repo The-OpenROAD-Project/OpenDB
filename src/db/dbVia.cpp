@@ -450,7 +450,7 @@ dbVia* dbVia::create(dbBlock*     block,
   for (itr = boxes.begin(); itr != boxes.end(); ++itr) {
     _dbBox*      box = (_dbBox*) *itr;
     dbTechLayer* l   = (dbTechLayer*) box->getTechLayer();
-    adsRect      r   = box->_rect;
+    Rect      r   = box->_rect;
     t.apply(r);
     dbBox::create((dbVia*) via, l, r.xMin(), r.yMin(), r.xMax(), r.yMax());
   }
@@ -480,7 +480,7 @@ dbVia* dbVia::create(dbBlock*     block,
   for (itr = boxes.begin(); itr != boxes.end(); ++itr) {
     _dbBox*      box = (_dbBox*) *itr;
     dbTechLayer* l   = (dbTechLayer*) box->getTechLayer();
-    adsRect      r   = box->_rect;
+    Rect      r   = box->_rect;
     t.apply(r);
     dbBox::create((dbVia*) via, l, r.xMin(), r.yMin(), r.xMax(), r.yMax());
   }
@@ -583,7 +583,7 @@ void create_via_boxes(_dbVia* via, const dbViaParams& P)
   int                  y    = 0;
   int                  maxX = 0;
   int                  maxY = 0;
-  std::vector<adsRect> cutRects;
+  std::vector<Rect> cutRects;
 
   for (row = 0; row < rows; ++row) {
     int col;
@@ -592,7 +592,7 @@ void create_via_boxes(_dbVia* via, const dbViaParams& P)
     for (col = 0; col < cols; ++col) {
       maxX = x + P.getXCutSize();
       maxY = y + P.getYCutSize();
-      adsRect r(x, y, maxX, maxY);
+      Rect r(x, y, maxX, maxY);
       cutRects.push_back(r);
       x = maxX;
       x += P.getXCutSpacing();
@@ -606,10 +606,10 @@ void create_via_boxes(_dbVia* via, const dbViaParams& P)
 
   int                            dx = maxX / 2;
   int                            dy = maxY / 2;
-  std::vector<adsRect>::iterator itr;
+  std::vector<Rect>::iterator itr;
 
   for (itr = cutRects.begin(); itr != cutRects.end(); ++itr) {
-    adsRect& r = *itr;
+    Rect& r = *itr;
     r.moveDelta(-dx, -dy);
     r.moveDelta(P.getXOrigin(), P.getYOrigin());
     dbBox::create(

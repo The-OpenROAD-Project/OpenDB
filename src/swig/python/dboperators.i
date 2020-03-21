@@ -16,8 +16,8 @@ WRAP_OBJECT_OPERATOR(odb::dbSetIterator<dbCCSeg>)
 %rename(equal)  odb::T::operator=(const T &);
 
 %enddef
-WRAP_OBJECT_STREAM(adsPoint)
-WRAP_OBJECT_STREAM(adsRect)
+WRAP_OBJECT_STREAM(Point)
+WRAP_OBJECT_STREAM(Rect)
 WRAP_OBJECT_STREAM(dbTransform)
 WRAP_OBJECT_STREAM(_dbViaParams)
 WRAP_OBJECT_STREAM(dbRtNodeEdgeIterator)

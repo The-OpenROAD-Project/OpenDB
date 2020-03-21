@@ -141,7 +141,7 @@ void dbRtTree::addObjects(dbWireEncoder& encoder, dbRtNode* node)
     encoder.addBTermMapId(node->_bterm_map_id);
 }
 
-void dbRtVia::getBBox(adsRect& bbox)
+void dbRtVia::getBBox(Rect& bbox)
 {
   int    x   = _src->_x;
   int    y   = _src->_y;
@@ -152,7 +152,7 @@ void dbRtVia::getBBox(adsRect& bbox)
     return;
   }
 
-  adsRect b;
+  Rect b;
   box->getBox(b);
   int xmin = b.xMin() + x;
   int ymin = b.yMin() + y;
@@ -161,7 +161,7 @@ void dbRtVia::getBBox(adsRect& bbox)
   bbox.reset(xmin, ymin, xmax, ymax);
 }
 
-void dbRtTechVia::getBBox(adsRect& bbox)
+void dbRtTechVia::getBBox(Rect& bbox)
 {
   int    x   = _src->_x;
   int    y   = _src->_y;
@@ -172,7 +172,7 @@ void dbRtTechVia::getBBox(adsRect& bbox)
     return;
   }
 
-  adsRect b;
+  Rect b;
   box->getBox(b);
   int xmin = b.xMin() + x;
   int ymin = b.yMin() + y;
@@ -189,7 +189,7 @@ int dbRtSegment::getWidth() const
   return _src->_layer->getWidth();
 }
 
-void dbRtSegment::getBBox(adsRect& bbox)
+void dbRtSegment::getBBox(Rect& bbox)
 {
   int src_x = _src->_x;
   int src_y = _src->_y;
@@ -261,12 +261,12 @@ void dbRtSegment::getBBox(adsRect& bbox)
   bbox.reset(x1, y1, x2, y2);
 }
 
-void dbRtShort::getBBox(adsRect& bbox)
+void dbRtShort::getBBox(Rect& bbox)
 {
   bbox.init(_src->_x, _src->_y, _tgt->_x, _tgt->_y);
 }
 
-void dbRtVWire::getBBox(adsRect& bbox)
+void dbRtVWire::getBBox(Rect& bbox)
 {
   bbox.init(_src->_x, _src->_y, _tgt->_x, _tgt->_y);
 }

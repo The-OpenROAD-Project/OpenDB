@@ -414,7 +414,7 @@ void lefout::writeTechViaGenerateRule(dbTechViaGenerateRule* rule)
     }
 
     if (layrule->hasRect()) {
-      adsRect r;
+      Rect r;
       layrule->getRect(r);
       fprintf(_out,
               "      RECT  %g %g  %g %g  ;\n",
@@ -748,7 +748,7 @@ void lefout::writeMaster(dbMaster* master)
   }
 
   if ((x != 0) || (y != 0)) {
-    dbTransform t(adsPoint(-x, -y));
+    dbTransform t(Point(-x, -y));
     master->transform(t);
   }
 
@@ -774,7 +774,7 @@ void lefout::writeMaster(dbMaster* master)
   }
 
   if ((x != 0) || (y != 0)) {
-    dbTransform t(adsPoint(x, y));
+    dbTransform t(Point(x, y));
     master->transform(t);
   }
 

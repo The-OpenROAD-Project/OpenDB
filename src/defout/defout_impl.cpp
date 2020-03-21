@@ -174,7 +174,7 @@ bool defout_impl::writeBlock(dbBlock* block, const char* def_file)
 
   writePropertyDefinitions(block);
 
-  adsRect r;
+  Rect r;
   block->getDieArea(r);
 
   int x1 = defdist(r.xMin());

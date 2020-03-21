@@ -153,7 +153,7 @@ class dbRtEdge
 
  public:
   virtual ~dbRtEdge() {}
-  virtual void getBBox(adsRect& bbox) = 0;
+  virtual void getBBox(Rect& bbox) = 0;
 
   // Get the type of this node
   Type getType() const { return _type; }
@@ -224,7 +224,7 @@ class dbRtVia : public dbRtEdge
   }
 
  public:
-  virtual void getBBox(adsRect& bbox);
+  virtual void getBBox(Rect& bbox);
 
   // Get the via of this edge
   dbVia* getVia() const { return _via; }
@@ -247,7 +247,7 @@ class dbRtTechVia : public dbRtEdge
   }
 
  public:
-  virtual void getBBox(adsRect& bbox);
+  virtual void getBBox(Rect& bbox);
 
   // Get the via of this edge
   dbTechVia* getVia() const { return _via; }
@@ -270,7 +270,7 @@ class dbRtSegment : public dbRtEdge
   }
 
  public:
-  virtual void getBBox(adsRect& bbox);
+  virtual void getBBox(Rect& bbox);
 
   // Set the end-syle of the source node of this edge
   void setSourceEndStyle(dbRtEndStyle style) { _src_style = style; }
@@ -298,7 +298,7 @@ class dbRtShort : public dbRtEdge
   }
 
  public:
-  virtual void getBBox(adsRect& bbox);
+  virtual void getBBox(Rect& bbox);
 
   friend class dbRtTree;
 };
@@ -313,7 +313,7 @@ class dbRtVWire : public dbRtEdge
   }
 
  public:
-  virtual void getBBox(adsRect& bbox);
+  virtual void getBBox(Rect& bbox);
 
   friend class dbRtTree;
 };

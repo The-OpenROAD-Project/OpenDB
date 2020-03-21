@@ -359,7 +359,7 @@ void tmg_conn::loadSWire(dbNet* net)
   dbSet<dbSBox>::iterator  itb;
   dbSBox*                  sbox;
   dbShape                  shape;
-  adsRect                  rect;
+  Rect                  rect;
   int                      x1, y1, x2, y2;
   dbTechLayer *            layer1 = NULL;
   dbTechLayer *layer2 = NULL;
@@ -735,7 +735,7 @@ void tmg_conn::detachTilePins()
   tmg_rcterm* tx;
   dbBTerm*    bterm;
   dbShape     pin;
-  adsRect     rectb, recti;
+  Rect     rectb, recti;
   dbTechVia*  tv;
   _slicedTilePinCnt = 0;
   bool sliceDone;
@@ -756,7 +756,7 @@ void tmg_conn::detachTilePins()
       dbMTerm* mterm = tx->_iterm->getMTerm();
       int      px, py;
       tx->_iterm->getInst()->getOrigin(px, py);
-      adsPoint                origin = adsPoint(px, py);
+      Point                origin = Point(px, py);
       dbOrientType            orient = tx->_iterm->getInst()->getOrient();
       dbTransform             transform(orient, origin);
       dbSet<dbMPin>           mpins = mterm->getMPins();
@@ -817,7 +817,7 @@ void tmg_conn::detachTilePins()
   }
 }
 
-void tmg_conn::getBTermSearchBox(dbBTerm* bterm, dbShape& pin, adsRect& rect)
+void tmg_conn::getBTermSearchBox(dbBTerm* bterm, dbShape& pin, Rect& rect)
 {
   int ii;
   // if (bterm->isSetTilePin()) {
@@ -1002,7 +1002,7 @@ void tmg_conn::findConnections(bool verbose)
   detachTilePins();
 
   // connect pins
-  adsRect rect;
+  Rect rect;
   for (j = 0; j < _termN; j++) {
     _csV          = _csVV[j];
     _csN          = 0;
@@ -1011,7 +1011,7 @@ void tmg_conn::findConnections(bool verbose)
       dbMTerm* mterm = x->_iterm->getMTerm();
       int      px, py;
       x->_iterm->getInst()->getOrigin(px, py);
-      adsPoint                origin = adsPoint(px, py);
+      Point                origin = Point(px, py);
       dbOrientType            orient = x->_iterm->getInst()->getOrient();
       dbTransform             transform(orient, origin);
       dbSet<dbMPin>           mpins = mterm->getMPins();
@@ -1123,7 +1123,7 @@ void tmg_conn::findConnections(bool verbose)
           // TODO
         } else {
           rt = pin.getTechLayer()->getRoutingLevel();
-          adsRect rect;
+          Rect rect;
           getBTermSearchBox(x->_bterm, pin, rect);
           _search->searchStart(
               rt, rect.xMin(), rect.yMin(), rect.xMax(), rect.yMax(), 2);
@@ -1319,7 +1319,7 @@ void tmg_conn::connectTerm(int j, bool soft)
     int       k   = _csV[ii].k;
     tmg_rcpt* pfr = _ptV + _rcV[k]._ifr;
     tmg_rcpt* pto = _ptV + _rcV[k]._ito;
-    adsPoint  afr(pfr->_x, pfr->_y);
+    Point  afr(pfr->_x, pfr->_y);
     if (_csV[ii].rtlev == pfr->_layer->getRoutingLevel()
         && _csV[ii].rect.intersects(afr)) {
       if (!(pfr->_pinpt || pfr->_c2pinpt)) {
@@ -1334,7 +1334,7 @@ void tmg_conn::connectTerm(int j, bool soft)
       pfr->_c2pinpt = 1;
       pto->_c2pinpt = 1;
     }
-    adsPoint ato(pto->_x, pto->_y);
+    Point ato(pto->_x, pto->_y);
     if (_csV[ii].rtlev == pto->_layer->getRoutingLevel()
         && _csV[ii].rect.intersects(ato)) {
       if (!(pfr->_pinpt || pfr->_c2pinpt)) {
@@ -1546,7 +1546,7 @@ void tmg_conn::connectTerm(int j, bool soft)
   _first_for_clear = NULL;
 }
 
-void tmg_conn::connectTermSoft(int j, int rt, adsRect& rect, int k)
+void tmg_conn::connectTermSoft(int j, int rt, Rect& rect, int k)
 {
   tmg_rcterm* x   = _termV + j;
   tmg_rc_sh*  sb  = &(_rcV[k]._shape);

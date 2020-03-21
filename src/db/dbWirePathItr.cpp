@@ -284,13 +284,13 @@ nextOpCode:
     case dbWireDecoder::VIA: {
       dbVia*  via = _decoder.getVia();
       dbBox*  box = via->getBBox();
-      adsRect b;
+      Rect b;
       box->getBox(b);
       int     xmin = b.xMin() + _prev_x;
       int     ymin = b.yMin() + _prev_y;
       int     xmax = b.xMax() + _prev_x;
       int     ymax = b.yMax() + _prev_y;
-      adsRect r(xmin, ymin, xmax, ymax);
+      Rect r(xmin, ymin, xmax, ymax);
       s.junction_id = _decoder.getJunctionId();
       s.point.setX(_prev_x);
       s.point.setY(_prev_y);
@@ -312,13 +312,13 @@ nextOpCode:
     case dbWireDecoder::TECH_VIA: {
       dbTechVia* via = _decoder.getTechVia();
       dbBox*     box = via->getBBox();
-      adsRect    b;
+      Rect    b;
       box->getBox(b);
       int     xmin = b.xMin() + _prev_x;
       int     ymin = b.yMin() + _prev_y;
       int     xmax = b.xMax() + _prev_x;
       int     ymax = b.yMax() + _prev_y;
-      adsRect r(xmin, ymin, xmax, ymax);
+      Rect r(xmin, ymin, xmax, ymax);
       s.junction_id = _decoder.getJunctionId();
       s.point.setX(_prev_x);
       s.point.setY(_prev_y);

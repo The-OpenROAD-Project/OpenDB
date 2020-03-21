@@ -96,7 +96,7 @@ static void setInstBBox(_dbInst* inst)
 
   dbMaster* master = ((dbInst*) inst)->getMaster();
   master->getPlacementBoundary(box->_rect);
-  dbTransform transform(inst->_flags._orient, adsPoint(inst->_x, inst->_y));
+  dbTransform transform(inst->_flags._orient, Point(inst->_x, inst->_y));
   transform.apply(box->_rect);
   block->add_rect(box->_rect);
 }
@@ -471,7 +471,7 @@ void dbInst::getLocation(int& x, int& y)
 void dbInst::setLocation(int x, int y)
 {
   dbMaster* master = getMaster();
-  adsRect   bbox;
+  Rect   bbox;
   master->getPlacementBoundary(bbox);
   dbTransform t(getOrient());
   t.apply(bbox);
@@ -538,14 +538,14 @@ void dbInst::setPlacementStatus(dbPlacementStatus status)
 void dbInst::getTransform(dbTransform& t)
 {
   _dbInst* inst = (_dbInst*) this;
-  t = dbTransform(inst->_flags._orient, adsPoint(inst->_x, inst->_y));
+  t = dbTransform(inst->_flags._orient, Point(inst->_x, inst->_y));
   return;
 }
 
 void dbInst::setTransform(dbTransform& t)
 {
   setOrient(t.getOrient());
-  adsPoint offset = t.getOffset();
+  Point offset = t.getOffset();
   setOrigin(offset.x(), offset.y());
   return;
 }

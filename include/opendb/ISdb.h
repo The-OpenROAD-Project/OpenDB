@@ -93,7 +93,7 @@ class ISdb : public ZObject
       = 0;
   virtual void adjustOverlapMakerEnd() = 0;
   virtual void adjustMetalFill()       = 0;
-  virtual void setupForBoxes(adsRect maxRect, uint minHeight, uint minWidth)
+  virtual void setupForBoxes(Rect maxRect, uint minHeight, uint minWidth)
       = 0;
   virtual void            addBox(dbBox* bb, uint wtype, uint id)           = 0;
   virtual uint            setExtrusionMarker(uint startRow, uint startCol) = 0;

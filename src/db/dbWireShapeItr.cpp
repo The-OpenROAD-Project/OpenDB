@@ -274,13 +274,13 @@ nextOpCode:
       if (box == NULL)
         goto nextOpCode;
 
-      adsRect b;
+      Rect b;
       box->getBox(b);
       int     xmin = b.xMin() + _prev_x;
       int     ymin = b.yMin() + _prev_y;
       int     xmax = b.xMax() + _prev_x;
       int     ymax = b.yMax() + _prev_y;
-      adsRect r(xmin, ymin, xmax, ymax);
+      Rect r(xmin, ymin, xmax, ymax);
       shape.setVia(via, r);
       return true;
     }
@@ -304,13 +304,13 @@ nextOpCode:
       if (box == NULL)
         goto nextOpCode;
 
-      adsRect b;
+      Rect b;
       box->getBox(b);
       int     xmin = b.xMin() + _prev_x;
       int     ymin = b.yMin() + _prev_y;
       int     xmax = b.xMax() + _prev_x;
       int     ymax = b.yMax() + _prev_y;
-      adsRect r(xmin, ymin, xmax, ymax);
+      Rect r(xmin, ymin, xmax, ymax);
       shape.setVia(via, r);
       return true;
     }

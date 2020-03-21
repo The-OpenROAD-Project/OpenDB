@@ -152,7 +152,7 @@ class _dbBlock : public dbObject
   uint                        _corners_per_block;
   char*                       _corner_name_list;
   char*                       _name;
-  adsRect                     _die_area;
+  Rect                     _die_area;
   dbId<_dbChip>               _chip;
   dbId<_dbBox>                _bbox;
   dbId<_dbBlock>              _parent;
@@ -240,8 +240,8 @@ class _dbBlock : public dbObject
   _dbBlock(_dbDatabase* db);
   _dbBlock(_dbDatabase* db, const _dbBlock& block);
   ~_dbBlock();
-  void add_rect(const adsRect& rect);
-  void remove_rect(const adsRect& rect);
+  void add_rect(const Rect& rect);
+  void remove_rect(const Rect& rect);
   void invalidate_bbox() { _flags._valid_bbox = 0; }
   void initialize(_dbChip*    chip,
                   _dbBlock*   parent,

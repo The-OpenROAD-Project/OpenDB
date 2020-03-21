@@ -461,7 +461,7 @@ dbVia* dbBox::getBlockVia()
   return (dbVia*) box->getBlockVia();
 }
 
-void dbBox::getBox(adsRect& rect)
+void dbBox::getBox(Rect& rect)
 {
   _dbBox* box = (_dbBox*) this;
   rect        = box->_rect;
@@ -492,7 +492,7 @@ void dbBox::getViaBoxes(std::vector<dbShape>& shapes)
     int     ymin = b->yMin() + y;
     int     xmax = b->xMax() + x;
     int     ymax = b->yMax() + y;
-    adsRect r(xmin, ymin, xmax, ymax);
+    Rect r(xmin, ymin, xmax, ymax);
     dbShape shape(b->getTechLayer(), r);
     shapes.push_back(shape);
   }

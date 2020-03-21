@@ -184,13 +184,13 @@ void dbShape::getViaBoxes(dbShape& via, std::vector<dbShape>& shapes)
 
     for (itr = boxes.begin(); itr != boxes.end(); ++itr) {
       dbBox*  box = *itr;
-      adsRect b;
+      Rect b;
       box->getBox(b);
       int     xmin = b.xMin() + x;
       int     ymin = b.yMin() + y;
       int     xmax = b.xMax() + x;
       int     ymax = b.yMax() + y;
-      adsRect r(xmin, ymin, xmax, ymax);
+      Rect r(xmin, ymin, xmax, ymax);
       dbShape shape(v, box->getTechLayer(), r);
       shapes.push_back(shape);
     }
@@ -207,13 +207,13 @@ void dbShape::getViaBoxes(dbShape& via, std::vector<dbShape>& shapes)
 
     for (itr = boxes.begin(); itr != boxes.end(); ++itr) {
       dbBox*  box = *itr;
-      adsRect b;
+      Rect b;
       box->getBox(b);
       int     xmin = b.xMin() + x;
       int     ymin = b.yMin() + y;
       int     xmax = b.xMax() + x;
       int     ymax = b.yMax() + y;
-      adsRect r(xmin, ymin, xmax, ymax);
+      Rect r(xmin, ymin, xmax, ymax);
       dbShape shape(v, box->getTechLayer(), r);
       shapes.push_back(shape);
     }

@@ -274,7 +274,7 @@ dbDiff& dbDiff::operator<<(const char* s)
   return *this;
 }
 
-dbDiff& dbDiff::operator<<(const adsPoint& p)
+dbDiff& dbDiff::operator<<(const Point& p)
 {
   if (_f)
     fprintf(_f, "( %d %d )", p.getX(), p.getY());
@@ -283,7 +283,7 @@ dbDiff& dbDiff::operator<<(const adsPoint& p)
   return *this;
 }
 
-dbDiff& dbDiff::operator<<(const adsRect& r)
+dbDiff& dbDiff::operator<<(const Rect& r)
 {
   if (_f)
     fprintf(_f,
@@ -417,7 +417,7 @@ void dbDiff::diff(const char* field, long double lhs, long double rhs)
   }
 }
 
-void dbDiff::diff(const char* field, adsPoint lhs, adsPoint rhs)
+void dbDiff::diff(const char* field, Point lhs, Point rhs)
 {
   if (lhs != rhs) {
     report("< %s: ", field);
@@ -429,7 +429,7 @@ void dbDiff::diff(const char* field, adsPoint lhs, adsPoint rhs)
   }
 }
 
-void dbDiff::diff(const char* field, adsRect lhs, adsRect rhs)
+void dbDiff::diff(const char* field, Rect lhs, Rect rhs)
 {
   if (lhs != rhs) {
     report("< %s: ", field);
@@ -765,14 +765,14 @@ void dbDiff::out(char side, const char* field, long double value)
   (*this) << "\n";
 }
 
-void dbDiff::out(char side, const char* field, adsPoint value)
+void dbDiff::out(char side, const char* field, Point value)
 {
   report("%c %s: ", side, field);
   (*this) << (value);
   (*this) << "\n";
 }
 
-void dbDiff::out(char side, const char* field, adsRect value)
+void dbDiff::out(char side, const char* field, Rect value)
 {
   report("%c %s: ", side, field);
   (*this) << (value);

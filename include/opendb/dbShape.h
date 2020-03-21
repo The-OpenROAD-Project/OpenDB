@@ -78,34 +78,34 @@ class dbShape
 
  private:
   Type         _type;
-  adsRect      _rect;
+  Rect         _rect;
   dbTechLayer* _layer;
   dbObject*    _via;
 
  public:
   dbShape() : _type(SEGMENT), _layer(NULL), _via(NULL) {}
 
-  dbShape(dbVia* via, const adsRect& r)
+  dbShape(dbVia* via, const Rect& r)
       : _type(VIA), _rect(r), _layer(NULL), _via((dbObject*) via)
   {
   }
 
-  dbShape(dbTechVia* via, const adsRect& r)
+  dbShape(dbTechVia* via, const Rect& r)
       : _type(TECH_VIA), _rect(r), _layer(NULL), _via((dbObject*) via)
   {
   }
 
-  dbShape(dbTechLayer* layer, const adsRect& r)
+  dbShape(dbTechLayer* layer, const Rect& r)
       : _type(SEGMENT), _rect(r), _layer(layer), _via(NULL)
   {
   }
 
-  dbShape(dbTechVia* via, dbTechLayer* layer, const adsRect& r)
+  dbShape(dbTechVia* via, dbTechLayer* layer, const Rect& r)
       : _type(TECH_VIA_BOX), _rect(r), _layer(layer), _via((dbObject*) via)
   {
   }
 
-  dbShape(dbVia* via, dbTechLayer* layer, const adsRect& r)
+  dbShape(dbVia* via, dbTechLayer* layer, const Rect& r)
       : _type(VIA_BOX), _rect(r), _layer(layer), _via((dbObject*) via)
   {
   }
@@ -121,7 +121,7 @@ class dbShape
                   int          dw,
                   dbTechLayer* layer);
 
-  void setVia(dbVia* via, const adsRect& r)
+  void setVia(dbVia* via, const Rect& r)
   {
     _type  = VIA;
     _rect  = r;
@@ -129,7 +129,7 @@ class dbShape
     _via   = (dbObject*) via;
   }
 
-  void setVia(dbTechVia* via, const adsRect& r)
+  void setVia(dbTechVia* via, const Rect& r)
   {
     _type  = TECH_VIA;
     _rect  = r;
@@ -137,7 +137,7 @@ class dbShape
     _via   = (dbObject*) via;
   }
 
-  void setSegment(dbTechLayer* layer, const adsRect& r)
+  void setSegment(dbTechLayer* layer, const Rect& r)
   {
     _type  = SEGMENT;
     _rect  = r;
@@ -145,7 +145,7 @@ class dbShape
     _via   = NULL;
   }
 
-  void setViaBox(dbTechVia* via, dbTechLayer* layer, const adsRect& r)
+  void setViaBox(dbTechVia* via, dbTechLayer* layer, const Rect& r)
   {
     _type  = TECH_VIA_BOX;
     _rect  = r;
@@ -153,7 +153,7 @@ class dbShape
     _via   = (dbObject*) via;
   }
 
-  void setViaBox(dbVia* via, dbTechLayer* layer, const adsRect& r)
+  void setViaBox(dbVia* via, dbTechLayer* layer, const Rect& r)
   {
     _type  = VIA_BOX;
     _rect  = r;
@@ -232,7 +232,7 @@ class dbShape
   ///
   /// Get the box bounding points.
   ///
-  void getBox(adsRect& rect) const;
+  void getBox(Rect& rect) const;
 
   ///
   /// Get the width (xMax-xMin) of the box.
@@ -298,7 +298,7 @@ class dbWireShapeItr
 struct dbWirePath
 {
   int          junction_id;  // junction id of this point
-  adsPoint     point;        // starting point of path
+  Point     point;        // starting point of path
   dbTechLayer* layer;        // starting layer of path
   dbBTerm*     bterm;        // dbBTerm connected at this point, otherwise NULL
   dbITerm*     iterm;        // dbITerm connected at this point, otherwise NULL
@@ -313,7 +313,7 @@ struct dbWirePath
 struct dbWirePathShape
 {
   int          junction_id;  // junction id of this point
-  adsPoint     point;        // starting point of path
+  Point     point;        // starting point of path
   dbTechLayer* layer;        // layer of shape, or exit layer of via
   dbBTerm*     bterm;        // dbBTerm connected at this point, otherwise NULL
   dbITerm*     iterm;        // dbITerm connected at this point, otherwise NULL
@@ -494,7 +494,7 @@ class dbHierInstShapeItr
   bool drawNet(unsigned filter, dbNet* net, bool& draw_via, bool& draw_segment);
   void getShape(dbBox* box, dbShape& shape);
   void getViaBox(dbBox* box, dbShape& shape);
-  void push_transform(adsPoint origin, dbTransform& transform);
+  void push_transform(Point origin, dbTransform& transform);
   void pop_transform();
   bool iterate_inst(dbInst* inst, unsigned filter, int level);
   bool iterate_swires(unsigned filter,
@@ -575,7 +575,7 @@ inline dbTechLayer* dbShape::getTechLayer() const
   return (dbTechLayer*) _layer;
 }
 
-inline void dbShape::getBox(adsRect& rect) const
+inline void dbShape::getBox(Rect& rect) const
 {
   rect = _rect;
 }

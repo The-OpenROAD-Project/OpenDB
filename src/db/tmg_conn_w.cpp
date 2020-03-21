@@ -165,7 +165,7 @@ void tmg_conn::checkConnOrdered(bool verbose)
 static bool checkITermConnect(dbITerm* iterm, dbShape& shape)
 {
   // check that some iterm shape intersects/touches shape
-  adsRect wrect;
+  Rect wrect;
   shape.getBox(wrect);
   dbTechLayer* wlyr     = shape.getTechLayer();
   dbTechLayer* wlyr_top = NULL;
@@ -181,7 +181,7 @@ static bool checkITermConnect(dbITerm* iterm, dbShape& shape)
   dbMTerm* mterm = iterm->getMTerm();
   int      px, py;
   iterm->getInst()->getOrigin(px, py);
-  adsPoint     origin = adsPoint(px, py);
+  Point     origin = Point(px, py);
   dbOrientType orient = iterm->getInst()->getOrient();
   dbTransform  transform(orient, origin);
 
@@ -193,7 +193,7 @@ static bool checkITermConnect(dbITerm* iterm, dbShape& shape)
     dbSet<dbBox>::iterator box_itr;
     for (box_itr = boxes.begin(); box_itr != boxes.end(); box_itr++) {
       dbBox*  box = *box_itr;
-      adsRect rect;
+      Rect rect;
       if (box->isVia()) {
         dbTechVia* tv = box->getTechVia();
         if (tv->getTopLayer() == wlyr
@@ -222,7 +222,7 @@ static bool checkITermConnect(dbITerm* iterm, dbShape& shape)
 static bool checkBTermConnect(dbBTerm* bterm, dbShape& shape)
 {
   // check that some iterm shape intersects/touches shape
-  adsRect wrect;
+  Rect wrect;
   shape.getBox(wrect);
   dbTechLayer* wlyr  = shape.getTechLayer();
   dbTechLayer* wlyrT = NULL;
@@ -239,7 +239,7 @@ static bool checkBTermConnect(dbBTerm* bterm, dbShape& shape)
     // TODO
   } else {
     if (pin.getTechLayer() == wlyr || pin.getTechLayer() == wlyrT) {
-      adsRect rect;
+      Rect rect;
       pin.getBox(rect);
       if (rect.intersects(wrect)) {
         return true;

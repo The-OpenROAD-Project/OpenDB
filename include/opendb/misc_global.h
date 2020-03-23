@@ -32,6 +32,7 @@
 
 #pragma once
 
+#include <stdio.h>
 #include <string.h>
 
 void Ath__allocFailure(char* msg);

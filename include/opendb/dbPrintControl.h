@@ -32,6 +32,7 @@
 
 #pragma once
 
+#include "atypes.h"
 #include "array1.h"
 
 namespace odb {

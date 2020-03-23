@@ -80,7 +80,6 @@ class _dbObject : public dbObject
   friend class dbTable;
   template <class T>
   friend class dbArrayTable;
-  friend class _dbObject;
 };
 
 ///////////////////////////////////////////////////////////////

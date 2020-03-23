@@ -383,11 +383,20 @@ dbMasterType::dbMasterType(const char* value)
   else if (strcasecmp(value, "COVER") == 0)
     _value = COVER;
 
+  else if (strcasecmp(value, "COVER BUMP") == 0)
+    _value = COVER_BUMP;
+
   else if (strcasecmp(value, "RING") == 0)
     _value = RING;
 
   else if (strcasecmp(value, "BLOCK") == 0)
     _value = BLOCK;
+
+  else if (strcasecmp(value, "BLOCK BLACKBOX") == 0)
+    _value = BLOCK_BLACKBOX;
+
+  else if (strcasecmp(value, "BLOCK SOFT") == 0)
+    _value = BLOCK_SOFT;
 
   else if (strcasecmp(value, "PAD") == 0)
     _value = PAD;
@@ -407,6 +416,9 @@ dbMasterType::dbMasterType(const char* value)
   else if (strcasecmp(value, "PAD SPACER") == 0)
     _value = PAD_SPACER;
 
+  else if (strcasecmp(value, "PAD AREAIO") == 0)
+    _value = PAD_AREAIO;
+
   else if (strcasecmp(value, "CORE") == 0)
     _value = CORE;
 
@@ -421,6 +433,12 @@ dbMasterType::dbMasterType(const char* value)
 
   else if (strcasecmp(value, "CORE SPACER") == 0)
     _value = CORE_SPACER;
+
+  else if (strcasecmp(value, "CORE ANTENNACELL") == 0)
+    _value = CORE_ANTENNACELL;
+
+  else if (strcasecmp(value, "CORE WELLTAP") == 0)
+    _value = CORE_WELLTAP;
 
   else if (strcasecmp(value, "ENDCAP") == 0)
     _value = ENDCAP;
@@ -472,12 +490,24 @@ const char* dbMasterType::getString() const
       value = "COVER";
       break;
 
+    case COVER_BUMP:
+      value = "COVER BUMP";
+      break;
+
     case RING:
       value = "RING";
       break;
 
     case BLOCK:
       value = "BLOCK";
+      break;
+
+    case BLOCK_BLACKBOX:
+      value = "BLOCK BLACKBOX";
+      break;
+
+    case BLOCK_SOFT:
+      value = "BLOCK SOFT";
       break;
 
     case PAD:
@@ -504,6 +534,10 @@ const char* dbMasterType::getString() const
       value = "PAD SPACER";
       break;
 
+    case PAD_AREAIO:
+      value = "PAD AREAIO";
+      break;
+
     case CORE:
       value = "CORE";
       break;
@@ -522,6 +556,14 @@ const char* dbMasterType::getString() const
 
     case CORE_SPACER:
       value = "CORE SPACER";
+      break;
+
+    case CORE_ANTENNACELL:
+      value = "CORE ANTENNACELL";
+      break;
+
+    case CORE_WELLTAP:
+      value = "CORE WELLTAP";
       break;
 
     case ENDCAP:

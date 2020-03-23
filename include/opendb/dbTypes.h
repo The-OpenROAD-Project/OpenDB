@@ -291,19 +291,25 @@ class dbMasterType
   {
     NONE,              /** */
     COVER,             /** */
+    COVER_BUMP,        /** */
     RING,              /** */
     BLOCK,             /** */
+    BLOCK_BLACKBOX,    /** */
+    BLOCK_SOFT,        /** */
     PAD,               /** */
     PAD_INPUT,         /** */
     PAD_OUTPUT,        /** */
     PAD_INOUT,         /** */
     PAD_POWER,         /** */
     PAD_SPACER,        /** */
+    PAD_AREAIO,        /** */
     CORE,              /** */
     CORE_FEEDTHRU,     /** */
     CORE_TIEHIGH,      /** */
     CORE_TIELOW,       /** */
     CORE_SPACER,       /** */
+    CORE_ANTENNACELL,  /** */
+    CORE_WELLTAP,      /** */
     ENDCAP,            /** */
     ENDCAP_PRE,        /** */
     ENDCAP_POST,       /** */
@@ -317,11 +323,14 @@ class dbMasterType
   /// Create a dbMasterType instance with an explicit placement status..
   /// The explicit status must be a string of one of the
   ///  following values: "none", "cover", "ring", "block",
+  ///  "block blackbox", "block soft",
   ///  "pad", "pad input", "pad output", "pad inout",
-  ///  "pad power", "pad spacer", "core", "core feedthru", "core tielow",
-  ///  "core tiehigh", "endcap", "endcap pre", "endcap post",
+  ///  "pad power", "pad spacer", "pad areaio",
+  ///  "core", "core feedthru", "core tielow",
+  ///  "core tiehigh", "core antennacell", "core welltap",
+  ///  "endcap", "endcap pre", "endcap post",
   ///  "endcap topright", "endcap topleft",
-  ///  "endcap bottomright", "endca _bottomleft"
+  ///  "endcap bottomright", "endcap bottomleft"
   ///
   dbMasterType(const char* value);
 
@@ -1132,5 +1141,3 @@ class Ads_NoCopy
 };
 
 }  // namespace odb
-
-

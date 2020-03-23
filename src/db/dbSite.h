@@ -32,11 +32,11 @@
 
 #pragma once
 
-#include "odb.h"
+#include "dbCore.h"
 #include "dbHashTable.h"
 #include "dbId.h"
-#include "dbObject.h"
 #include "dbTypes.h"
+#include "odb.h"
 
 namespace odb {
 
@@ -55,7 +55,7 @@ struct dbSiteFlags
   uint               _spare_bits : 25;
 };
 
-class _dbSite : public dbObject
+class _dbSite : public _dbObject
 {
  public:
   // PERSISTANT-MEMBERS
@@ -98,5 +98,3 @@ inline dbIStream& operator>>(dbIStream& stream, _dbSite& site)
 }
 
 }  // namespace odb
-
-

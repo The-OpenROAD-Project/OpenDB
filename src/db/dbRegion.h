@@ -32,11 +32,11 @@
 
 #pragma once
 
-#include "odb.h"
+#include "dbCore.h"
 #include "dbId.h"
-#include "dbObject.h"
 #include "dbTypes.h"
 #include "geom.h"
+#include "odb.h"
 
 namespace odb {
 
@@ -54,7 +54,7 @@ struct _dbRegionFlags
   uint                _spare_bits : 27;
 };
 
-class _dbRegion : public dbObject
+class _dbRegion : public _dbObject
 {
  public:
   // PERSISTANT-MEMBERS
@@ -82,5 +82,3 @@ dbOStream& operator<<(dbOStream& stream, const _dbRegion& r);
 dbIStream& operator>>(dbIStream& stream, _dbRegion& r);
 
 }  // namespace odb
-
-

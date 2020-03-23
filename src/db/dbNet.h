@@ -32,10 +32,10 @@
 
 #pragma once
 
-#include "odb.h"
+#include "dbCore.h"
 #include "dbId.h"
-#include "dbObject.h"
 #include "dbTypes.h"
+#include "odb.h"
 
 namespace odb {
 
@@ -79,7 +79,7 @@ struct _dbNetFlags
   uint                _block_rule : 1;
 };
 
-class _dbNet : public dbObject
+class _dbNet : public _dbObject
 {
  public:
   enum Field  // dbJournal field name
@@ -138,5 +138,3 @@ dbOStream& operator<<(dbOStream& stream, const _dbNet& net);
 dbIStream& operator>>(dbIStream& stream, _dbNet& net);
 
 }  // namespace odb
-
-

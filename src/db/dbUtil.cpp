@@ -31,6 +31,7 @@
 // POSSIBILITY OF SUCH DAMAGE.
 
 #include "dbUtil.h"
+
 #include "db.h"
 #include "dbShape.h"
 #include "dbWireCodec.h"
@@ -105,7 +106,8 @@ dbInst* dbCreateNetUtil::createInst(dbInst* inst0)
   return inst;
 }
 
-dbBlock* dbCreateNetUtil::createBlock(dbBlock* blk, bool /* unused: copyViaTable */)
+dbBlock* dbCreateNetUtil::createBlock(dbBlock* blk,
+                                      bool /* unused: copyViaTable */)
 {
   char blk_name[32];
   sprintf(blk_name, "%s__%d", "eco", blk->getId());
@@ -351,13 +353,13 @@ uint dbCreateNetUtil::printEcoInst(dbInst* ecoInst, dbBlock* srcBlock, FILE* fp)
     }
     success = 1;
   }
-  dbBox*  origBox = origInst->getBBox();
-  dbBox*  b0      = origInst->getBBox();
-  Rect r0;
+  dbBox* origBox = origInst->getBBox();
+  dbBox* b0      = origInst->getBBox();
+  Rect   r0;
   b0->getBox(r0);
 
-  dbBox*  b1 = ecoInst->getBBox();
-  Rect r1;
+  dbBox* b1 = ecoInst->getBBox();
+  Rect   r1;
   b1->getBox(r1);
 
   // worst case : a box was moved to its original space
@@ -365,7 +367,7 @@ uint dbCreateNetUtil::printEcoInst(dbInst* ecoInst, dbBlock* srcBlock, FILE* fp)
   int x0, y0;
   ecoInst->getOrigin(x0, y0);
   std::string orient = ecoInst->getOrient().getString();
-  int      x1, y1;
+  int         x1, y1;
   origInst->getOrigin(x1, y1);
   if (_useLocation)
     origInst->getLocation(x1, y1);
@@ -583,7 +585,7 @@ uint dbCreateNetUtil::printDeletedNets(dbBlock* ecoBlock,
 }
 uint dbCreateNetUtil::printDisconnectedTerms(dbBlock* ecoBlock,
                                              dbBlock* /* unused: srcBlock */,
-                                             FILE*    fp)
+                                             FILE* fp)
 {
   uint                   cnt  = 0;
   dbSet<dbNet>           nets = ecoBlock->getNets();
@@ -645,7 +647,7 @@ uint dbCreateNetUtil::printNewNets(dbBlock* ecoBlock,
 uint dbCreateNetUtil::printModifiedNets(dbBlock* ecoBlock,
                                         bool     connectTerm,
                                         dbBlock* /* unused: srcBlock */,
-                                        FILE*    fp)
+                                        FILE* fp)
 {
   const char* connectIterm    = "ConnectITerm";
   const char* disconnectIterm = "DisconnectITerm";
@@ -695,7 +697,8 @@ dbNet* dbCreateNetUtil::createNet(dbNet* nn, bool create, bool destroy)
 
   return net;
 }
-dbITerm* dbCreateNetUtil::updateITerm(dbITerm* iterm, bool /* unused: disconnect */)
+dbITerm* dbCreateNetUtil::updateITerm(dbITerm* iterm,
+                                      bool /* unused: disconnect */)
 {
   //	if ( !disconnect)
   //		return iterm;
@@ -791,10 +794,10 @@ void dbCreateNetUtil::writeEco(dbBlock*    ecoBlock,
 
   fclose(fp);
 }
-void dbCreateNetUtil::writeDetailedEco(dbBlock*    ecoBlock,
-                                       dbBlock*    /* unused: srcBlock */,
+void dbCreateNetUtil::writeDetailedEco(dbBlock* ecoBlock,
+                                       dbBlock* /* unused: srcBlock */,
                                        const char* fileName,
-                                       bool        /* unused: debug */)
+                                       bool /* unused: debug */)
 {
   char buff_name[1024];
   _milosFormat = true;
@@ -1057,7 +1060,7 @@ dbNet* dbCreateNetUtil::createNetSingleWire(const char*    netName,
   }
 
   Rect  r(x1, y1, x2, y2);
-  int      width;
+  int   width;
   Point p0, p1;
 
   if (dir == dbTechLayerDir::VERTICAL) {
@@ -1154,9 +1157,9 @@ dbNet* dbCreateNetUtil::createNetSingleWire(const char*    netName,
   return net;
 }
 dbSBox* dbCreateNetUtil::createSpecialWire(dbNet*       mainNet,
-                                           Rect&     r,
+                                           Rect&        r,
                                            dbTechLayer* layer,
-                                           uint         /* unused: sboxId */)
+                                           uint /* unused: sboxId */)
 {
   dbSWire* swire = NULL;
   if (mainNet == NULL)
@@ -1206,10 +1209,10 @@ dbNet* dbCreateNetUtil::createSpecialNet(dbNet* origNet, const char* name)
   return net;
 }
 
-dbNet* dbCreateNetUtil::createSpecialNetSingleWire(Rect&     r,
+dbNet* dbCreateNetUtil::createSpecialNetSingleWire(Rect&        r,
                                                    dbTechLayer* layer,
                                                    dbNet*       origNet,
-                                                   uint         /* unused: sboxId */)
+                                                   uint /* unused: sboxId */)
 {
   char netName[128];
   sprintf(netName, "S%d", origNet->getId());
@@ -1290,9 +1293,9 @@ dbNet* dbCreateNetUtil::copyNet(dbNet* net,
 }
 
 dbNet* dbCreateNetUtil::createNetSingleWire(Rect& r,
-                                            uint     level,
-                                            uint     netId,
-                                            uint     shapeId)
+                                            uint  level,
+                                            uint  netId,
+                                            uint  shapeId)
 {
   // bool skipBterms= false;
   char netName[128];
@@ -1361,7 +1364,7 @@ dbNet* dbCreateNetUtil::createNetSingleWire(const char* netName,
   }
 
   dbTechLayer* layer = _routingLayers[routingLayer];
-  Rect      r(x1, y1, x2, y2);
+  Rect         r(x1, y1, x2, y2);
   uint         dx = r.dx();
   uint         dy = r.dy();
 
@@ -1372,10 +1375,10 @@ dbNet* dbCreateNetUtil::createNetSingleWire(const char* netName,
     dy = r.dy();
   }
 
-  uint     width;
+  uint  width;
   Point p0, p1;
-  uint     minWidth      = layer->getWidth();
-  bool     make_vertical = false;
+  uint  minWidth      = layer->getWidth();
+  bool  make_vertical = false;
 
   if (((dx & 1) == 0) && ((dy & 1) == 1))  // dx == even & dy == odd
   {
@@ -1481,7 +1484,7 @@ std::pair<dbBTerm*, dbBTerm*> dbCreateNetUtil::createTerms4SingleNet(
     dbTechLayer* inly)
 {
   std::pair<dbBTerm*, dbBTerm*> retpr;
-  retpr.first = NULL;
+  retpr.first  = NULL;
   retpr.second = NULL;
 
   std::string term_str(net->getName());
@@ -1583,7 +1586,7 @@ dbBox* dbCreateNetUtil::createTechVia(int x1,
     return NULL;
   }
 
-  Rect    r(x1, y1, x2, y2);
+  Rect       r(x1, y1, x2, y2);
   dbTechVia* via = getVia(lay1, lay2, r);
   dbBox*     b   = via->getBBox();
   // int xmin = b->xMin();
@@ -1613,7 +1616,7 @@ bool dbCreateNetUtil::createSingleVia(dbNet* net,
     return false;
   }
 
-  Rect    r(x1, y1, x2, y2);
+  Rect       r(x1, y1, x2, y2);
   dbTechVia* via  = getVia(lay1, lay2, r);
   dbBox*     b    = via->getBBox();
   int        xmin = b->xMin();

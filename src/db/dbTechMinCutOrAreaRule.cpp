@@ -30,13 +30,14 @@
 // ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 // POSSIBILITY OF SUCH DAMAGE.
 
+#include "dbTechMinCutOrAreaRule.h"
+
 #include "db.h"
 #include "dbDatabase.h"
 #include "dbTable.h"
 #include "dbTable.hpp"
 #include "dbTech.h"
 #include "dbTechLayer.h"
-#include "dbTechMinCutOrAreaRule.h"
 #include "lefout.h"
 
 namespace odb {
@@ -268,7 +269,7 @@ bool dbTechMinCutRule::getCutDistance(uint& cut_distance) const
 void dbTechMinCutRule::setCutDistance(uint cut_distance)
 {
   _dbTechMinCutRule* _lsm = (_dbTechMinCutRule*) this;
-  _lsm->_cut_distance = cut_distance;
+  _lsm->_cut_distance     = cut_distance;
 }
 
 //
@@ -299,8 +300,7 @@ void dbTechMinCutRule::writeLef(lefout& writer) const
 
   uint cut_distance;
   if (getCutDistance(cut_distance)) {
-    fprintf(writer.out(), "WITHIN %g ",
-            writer.lefdist(cut_distance));    
+    fprintf(writer.out(), "WITHIN %g ", writer.lefdist(cut_distance));
   }
 
   if (isAboveOnly())

@@ -32,8 +32,8 @@
 
 #pragma once
 
-#include "odb.h"
 #include "dbPagedVector.h"
+#include "odb.h"
 
 namespace odb {
 

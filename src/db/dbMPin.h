@@ -32,9 +32,9 @@
 
 #pragma once
 
-#include "odb.h"
+#include "dbCore.h"
 #include "dbId.h"
-#include "dbObject.h"
+#include "odb.h"
 
 namespace odb {
 
@@ -45,7 +45,7 @@ class dbIStream;
 class dbOStream;
 class dbDiff;
 
-class _dbMPin : public dbObject
+class _dbMPin : public _dbObject
 {
  public:
   // PERSISTANT-MEMBERS
@@ -67,5 +67,3 @@ dbOStream& operator<<(dbOStream& stream, const _dbMPin& mpin);
 dbIStream& operator>>(dbIStream& stream, _dbMPin& mpin);
 
 }  // namespace odb
-
-

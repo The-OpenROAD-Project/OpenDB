@@ -605,8 +605,8 @@ _dbBlock::~_dbBlock()
 
 void dbBlock::clear()
 {
-  _dbDatabase* db     = getDatabase();
   _dbBlock*    block  = (_dbBlock*) this;
+  _dbDatabase* db     = block->getDatabase();
   _dbBlock*    parent = (_dbBlock*) getParent();
   _dbChip*     chip   = (_dbChip*) getChip();
 
@@ -1342,7 +1342,7 @@ void dbBlock::ComputeBBox()
     for (pitr = bpins.begin(); pitr != bpins.end(); ++pitr) {
       dbBPin* bp  = *pitr;
       dbBox*  box = bp->getBox();
-      Rect r;
+      Rect    r;
       box->getBox(r);
       bbox->_rect.merge(r);
     }
@@ -1370,7 +1370,7 @@ void dbBlock::ComputeBBox()
 
   for (witr = wires.begin(); witr != wires.end(); ++witr) {
     dbWire* wire = *witr;
-    Rect r;
+    Rect    r;
     if (wire->getBBox(r)) {
       bbox->_rect.merge(r);
     }
@@ -1381,14 +1381,14 @@ void dbBlock::ComputeBBox()
 
 dbDatabase* dbBlock::getDataBase()
 {
-  dbDatabase* db = (dbDatabase*) getDatabase();
+  dbDatabase* db = (dbDatabase*) getImpl()->getDatabase();
   return db;
 }
 
 dbChip* dbBlock::getChip()
 {
   _dbBlock*    block = (_dbBlock*) this;
-  _dbDatabase* db    = getDatabase();
+  _dbDatabase* db    = block->getDatabase();
   _dbChip*     chip  = db->_chip_tbl->getPtr(block->_chip);
   return (dbChip*) chip;
 }
@@ -1396,7 +1396,7 @@ dbChip* dbBlock::getChip()
 dbBlock* dbBlock::getParent()
 {
   _dbBlock*    block  = (_dbBlock*) this;
-  _dbDatabase* db     = getDatabase();
+  _dbDatabase* db     = block->getDatabase();
   _dbChip*     chip   = db->_chip_tbl->getPtr(block->_chip);
   _dbBlock*    parent = chip->_block_tbl->getPtr(block->_parent);
   return (dbBlock*) parent;
@@ -1418,7 +1418,7 @@ dbInst* dbBlock::getParentInst()
 dbSet<dbBlock> dbBlock::getChildren()
 {
   _dbBlock*    block = (_dbBlock*) this;
-  _dbDatabase* db    = getDatabase();
+  _dbDatabase* db    = getImpl()->getDatabase();
   _dbChip*     chip  = db->_chip_tbl->getPtr(block->_chip);
   return dbSet<dbBlock>(block, chip->_block_itr);
 }
@@ -2268,7 +2268,7 @@ dbBlock* dbBlock::create(dbBlock*    parent_,
     return NULL;
 
   _dbBlock* parent = (_dbBlock*) parent_;
-  _dbChip*  chip   = (_dbChip*) parent_->getOwner();
+  _dbChip*  chip   = (_dbChip*) parent->getOwner();
   _dbBlock* child  = chip->_block_tbl->create();
   child->initialize(chip, parent, name_, hier_delimeter);
   _dbTech* tech          = (_dbTech*) parent->getDb()->getTech();
@@ -2285,7 +2285,7 @@ dbBlock* dbBlock::duplicate(dbBlock* child_, const char* name_)
     return NULL;
 
   _dbBlock* parent = (_dbBlock*) child_->getParent();
-  _dbChip*  chip   = (_dbChip*) child_->getOwner();
+  _dbChip*  chip   = (_dbChip*) child->getOwner();
 
   // make a copy
   _dbBlock* dup = chip->_block_tbl->duplicate(child);
@@ -2311,14 +2311,14 @@ dbBlock* dbBlock::getBlock(dbChip* chip_, uint dbid_)
 
 dbBlock* dbBlock::getBlock(dbBlock* block_, uint dbid_)
 {
-  _dbChip* chip = (_dbChip*) block_->getOwner();
+  _dbChip* chip = (_dbChip*) block_->getImpl()->getOwner();
   return (dbBlock*) chip->_block_tbl->getPtr(dbid_);
 }
 
 void dbBlock::destroy(dbBlock* block_)
 {
   _dbBlock* block = (_dbBlock*) block_;
-  _dbChip*  chip  = (_dbChip*) block_->getOwner();
+  _dbChip*  chip  = (_dbChip*) block->getOwner();
 
   // delete the children of this block
   dbVector<dbId<_dbBlock> >::iterator citr;

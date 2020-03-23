@@ -31,6 +31,7 @@
 // POSSIBILITY OF SUCH DAMAGE.
 
 #include "dbSite.h"
+
 #include "db.h"
 #include "dbDatabase.h"
 #include "dbLib.h"
@@ -231,7 +232,7 @@ void dbSite::setClass(dbSiteClass type)
 
 dbLib* dbSite::getLib()
 {
-  return (dbLib*) getOwner();
+  return (dbLib*) getImpl()->getOwner();
 }
 
 dbSite* dbSite::create(dbLib* lib_, const char* name_)

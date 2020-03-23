@@ -31,8 +31,10 @@
 // POSSIBILITY OF SUCH DAMAGE.
 
 #include "dbTypes.h"
+
 #include <ctype.h>
 #include <string.h>
+
 #include "dbId.h"
 
 namespace odb {
@@ -699,7 +701,8 @@ dbTechLayerMinStepType::dbTechLayerMinStepType()
   _value = OUTSIDE_CORNER;
 }
 
-dbTechLayerMinStepType::dbTechLayerMinStepType(const dbTechLayerMinStepType& value)
+dbTechLayerMinStepType::dbTechLayerMinStepType(
+    const dbTechLayerMinStepType& value)
 {
   _value = value._value;
 }

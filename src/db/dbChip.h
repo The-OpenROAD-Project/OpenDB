@@ -32,8 +32,8 @@
 
 #pragma once
 
-#include "odb.h"
 #include "dbCore.h"
+#include "odb.h"
 
 namespace odb {
 
@@ -50,7 +50,7 @@ class dbIStream;
 class dbOStream;
 class dbDiff;
 
-class _dbChip : public dbObject
+class _dbChip : public _dbObject
 {
  public:
   // PERSISTANT-MEMBERS
@@ -78,5 +78,3 @@ dbOStream& operator<<(dbOStream& stream, const _dbChip& chip);
 dbIStream& operator>>(dbIStream& stream, _dbChip& chip);
 
 }  // namespace odb
-
-

@@ -31,6 +31,7 @@
 // POSSIBILITY OF SUCH DAMAGE.
 
 #include "dbSBoxItr.h"
+
 #include "dbBlock.h"
 #include "dbSBox.h"
 #include "dbSWire.h"
@@ -50,7 +51,7 @@ bool dbSBoxItr::orderReversed()
 
 void dbSBoxItr::reverse(dbObject* parent)
 {
-  switch (parent->getType()) {
+  switch (parent->getImpl()->getType()) {
     case dbSWireObj: {
       _dbSWire* wire = (_dbSWire*) parent;
       uint      id   = wire->_wires;
@@ -92,7 +93,7 @@ uint dbSBoxItr::size(dbObject* parent)
 
 uint dbSBoxItr::begin(dbObject* parent)
 {
-  switch (parent->getType()) {
+  switch (parent->getImpl()->getType()) {
     case dbSWireObj: {
       _dbSWire* wire = (_dbSWire*) parent;
       return wire->_wires;

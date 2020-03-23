@@ -33,9 +33,9 @@
 #pragma once
 
 #include "ZException.h"
-#include "odb.h"
 #include "dbDiff.h"
 #include "dbStream.h"
+#include "odb.h"
 
 namespace odb {
 
@@ -294,5 +294,3 @@ inline dbIStream& operator>>(dbIStream& stream, dbAttrTable<T>& t)
 }
 
 }  // namespace odb
-
-

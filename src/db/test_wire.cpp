@@ -31,6 +31,7 @@
 // POSSIBILITY OF SUCH DAMAGE.
 
 #include <stdio.h>
+
 #include "db.h"
 #include "dbRtTree.h"
 #include "dbShape.h"

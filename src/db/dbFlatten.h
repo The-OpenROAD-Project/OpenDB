@@ -32,13 +32,13 @@
 
 #pragma once
 
-#include "odb.h"
+#include <map>
+
 #include "dbFlatten.h"
 #include "dbTransform.h"
 #include "dbTypes.h"
 #include "dbVector.h"
-
-#include <map>
+#include "odb.h"
 
 namespace odb {
 
@@ -139,5 +139,3 @@ class dbFlatten
 };
 
 }  // namespace odb
-
-

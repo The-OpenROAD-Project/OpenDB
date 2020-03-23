@@ -31,7 +31,9 @@
 // POSSIBILITY OF SUCH DAMAGE.
 
 #include "dbBlockItr.h"
+
 #include <algorithm>
+
 #include "dbBlock.h"
 #include "dbTable.h"
 

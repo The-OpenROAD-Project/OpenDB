@@ -943,20 +943,20 @@ void tmg_conn::adjustShapes()
     sN            = 0;
     int nvia      = 0;
     int first_seg = 1;
-    int ok_hor = 1;
-    int ok_ver = 1;
-    int xlo = 0;
-    int xhi = 0;
-    int ylo = 0;
-    int yhi = 0;
-    int w   = 0;
+    int ok_hor    = 1;
+    int ok_ver    = 1;
+    int xlo       = 0;
+    int xhi       = 0;
+    int ylo       = 0;
+    int yhi       = 0;
+    int w         = 0;
     for (k = 0; k < pN; k++)
       for (e = pgV[pS[k]].edges; e; e = e->next)
         if (!e->s) {
           spV[sN] = _ptV + pS[k];
           rV[sN]  = _rcV + e->k;
-          s = &(_rcV[e->k]._shape);
-          sV[sN] = s;
+          s       = &(_rcV[e->k]._shape);
+          sV[sN]  = s;
           sN++;
           if (s->isVia())
             nvia++;

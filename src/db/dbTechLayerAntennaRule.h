@@ -32,9 +32,10 @@
 
 #pragma once
 
-#include "odb.h"
+#include "dbCore.h"
 #include "dbTechLayer.h"
 #include "dbTypes.h"
+#include "odb.h"
 
 namespace odb {
 
@@ -146,7 +147,7 @@ dbIStream& operator>>(dbIStream& stream, _ARuleRatio& arrt);
 ///  (perimeter), as well as ratios for the area and sidearea for both
 ///  a partial (single layer based) and cumulative (all layer) models.
 
-class _dbTechLayerAntennaRule : public dbObject
+class _dbTechLayerAntennaRule : public _dbObject
 {
  public:
   dbId<_dbTechLayer> _layer;
@@ -228,7 +229,7 @@ class _dbTechAntennaAreaElement
 //
 // An antenna pin model stores the model specific antenna info for a pin.
 //
-class _dbTechAntennaPinModel : public dbObject
+class _dbTechAntennaPinModel : public _dbObject
 {
  public:
   dbId<_dbMTerm>                       _mterm;

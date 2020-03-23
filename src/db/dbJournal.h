@@ -32,8 +32,8 @@
 
 #pragma once
 
-#include "odb.h"
 #include "dbJournalLog.h"
+#include "odb.h"
 
 namespace odb {
 
@@ -180,5 +180,3 @@ dbIStream& operator>>(dbIStream& stream, dbJournal& jrnl);
 dbOStream& operator<<(dbOStream& stream, const dbJournal& jrnl);
 
 }  // namespace odb
-
-

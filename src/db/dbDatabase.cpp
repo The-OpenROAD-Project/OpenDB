@@ -30,9 +30,12 @@
 // ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 // POSSIBILITY OF SUCH DAMAGE.
 
+#include "dbDatabase.h"
+
 #include <algorithm>
 #include <map>
 #include <string>
+
 #include "db.h"
 #include "dbArrayTable.h"
 #include "dbBTerm.h"
@@ -41,7 +44,6 @@
 #include "dbCCSeg.h"
 #include "dbCapNode.h"
 #include "dbChip.h"
-#include "dbDatabase.h"
 #include "dbExtControl.h"
 #include "dbITerm.h"
 #include "dbJournal.h"
@@ -736,7 +738,7 @@ dbDatabase* dbDatabase::getDatabase(uint dbid)
 
 dbDatabase* dbObject::getDb() const
 {
-  return (dbDatabase*) getDatabase();
+  return (dbDatabase*) getImpl()->getDatabase();
 }
 
 bool dbDatabase::diff(dbDatabase* db0_,

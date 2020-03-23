@@ -32,10 +32,10 @@
 
 #pragma once
 
-#include "odb.h"
+#include "dbCore.h"
 #include "dbDatabase.h"
 #include "dbId.h"
-#include "dbObject.h"
+#include "odb.h"
 
 namespace odb {
 
@@ -60,7 +60,7 @@ struct dbITermFlags
   uint _connected : 1;  // terminal is physically connected
 };
 
-class _dbITerm : public dbObject
+class _dbITerm : public _dbObject
 {
  public:
   enum Field  // dbJournal field name
@@ -140,5 +140,3 @@ inline dbIStream& operator>>(dbIStream& stream, _dbITerm& iterm)
 }
 
 }  // namespace odb
-
-

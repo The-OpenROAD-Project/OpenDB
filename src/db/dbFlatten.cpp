@@ -30,9 +30,10 @@
 // ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 // POSSIBILITY OF SUCH DAMAGE.
 
+#include "dbFlatten.h"
+
 #include "db.h"
 #include "dbCapNode.h"
-#include "dbFlatten.h"
 #include "dbInst.h"
 #include "dbNet.h"
 #include "dbObstruction.h"
@@ -266,7 +267,7 @@ bool dbFlatten::flatten(dbBlock*    parent,
     name += _hier_d;
     name += "ADS_BLOCK_REGION";
     dbRegion* block_region = dbRegion::create(parent, name.c_str());
-    Rect   bndry;
+    Rect      bndry;
     child->getDieArea(bndry);
     _transform.apply(bndry);
     dbBox::create(
@@ -399,7 +400,7 @@ void dbFlatten::printShapes(FILE* fp, dbWire* wire, bool skip_rcSegs)
   dbShape        s;
 
   for (shapes.begin(wire); shapes.next(s);) {
-    uint    sid = shapes.getShapeId();
+    uint sid = shapes.getShapeId();
     Rect r;
     s.getBox(r);
     fprintf(fp,
@@ -711,10 +712,10 @@ void dbFlatten::fixWire(dbVector<unsigned char>& opcodes,
                         int                      level,
                         dbProperty*              bterm_map)
 {
-  uint                  i;
-  uint                  n         = opcodes.size();
-  uint                  point_cnt = 0;
-  int                   curX, curY;
+  uint               i;
+  uint               n         = opcodes.size();
+  uint               point_cnt = 0;
+  int                curX, curY;
   std::vector<Point> jct_points;
   jct_points.resize(opcodes.size());
 
@@ -730,10 +731,10 @@ void dbFlatten::fixWire(dbVector<unsigned char>& opcodes,
       }
 
       case WOP_JUNCTION: {
-        Point p = jct_points[data[i]];
-        curX       = p.x();
-        curY       = p.y();
-        point_cnt  = 0;
+        Point p   = jct_points[data[i]];
+        curX      = p.x();
+        curY      = p.y();
+        point_cnt = 0;
         break;
       }
 
@@ -779,7 +780,7 @@ void dbFlatten::fixWire(dbVector<unsigned char>& opcodes,
         uint   vid     = data[i];
         dbVia* src_via = dbVia::getVia(src, vid);
         dbVia* dst_via = _via_map[src_via];
-        data[i]        = dst_via->getOID();
+        data[i]        = dst_via->getImpl()->getOID();
         break;
       }
 
@@ -807,7 +808,7 @@ void dbFlatten::fixWire(dbVector<unsigned char>& opcodes,
         assert(dst_inst);
         dbMTerm* mterm     = src_iterm->getMTerm();
         dbITerm* dst_iterm = dst_inst->getITerm(mterm);
-        data[i]            = dst_iterm->getOID();
+        data[i]            = dst_iterm->getImpl()->getOID();
         break;
       }
 
@@ -838,7 +839,7 @@ void dbFlatten::fixWire(dbVector<unsigned char>& opcodes,
         if (opcode & WOP_BLOCK_RULE) {
           dbTechLayerRule* rule
               = dbTechLayerRule::getTechLayerRule(src, data[i]);
-          data[i] = _layer_rule_map[rule]->getOID();
+          data[i] = _layer_rule_map[rule]->getImpl()->getOID();
         }
       }
     }
@@ -920,7 +921,8 @@ void dbFlatten::copySWire(dbNet* dst, dbNet* src, dbSWire* src_swire)
   }
 }
 
-bool dbFlatten::canCopyWire(dbWire* /* unused: wire_ */, dbSigType::Value sig_type)
+bool dbFlatten::canCopyWire(dbWire* /* unused: wire_ */,
+                            dbSigType::Value sig_type)
 {
   //_dbWire * wire = (_dbWire *) wire_;
 
@@ -951,8 +953,8 @@ void dbFlatten::copyObstruction(dbBlock* dst_block, dbObstruction* src_)
 {
   _dbObstruction* src = (_dbObstruction*) src_;
 
-  dbBox*  box = src_->getBBox();
-  Rect r;
+  dbBox* box = src_->getBBox();
+  Rect   r;
   box->getBox(r);
   _transform.apply(r);
 
@@ -971,8 +973,8 @@ void dbFlatten::copyObstruction(dbBlock* dst_block, dbObstruction* src_)
 
 void dbFlatten::copyBlockage(dbBlock* dst_block, dbBlockage* src)
 {
-  dbBox*  box = src->getBBox();
-  Rect r;
+  dbBox* box = src->getBBox();
+  Rect   r;
   box->getBox(r);
   _transform.apply(r);
 
@@ -1018,8 +1020,8 @@ void dbFlatten::copyRegion(dbBlock*  parent_block,
   dbSet<dbBox>::iterator bitr  = boxes.begin();
 
   for (; bitr != boxes.end(); ++bitr) {
-    dbBox*  box = *bitr;
-    Rect r;
+    dbBox* box = *bitr;
+    Rect   r;
     box->getBox(r);
     _transform.apply(r);
     dbBox::create(dst, r.xMin(), r.yMin(), r.xMax(), r.yMax());

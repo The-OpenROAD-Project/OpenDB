@@ -33,11 +33,12 @@
 #pragma once
 
 #include <cstdint>
-#include "odb.h"
+
+#include "dbCore.h"
 #include "dbDatabase.h"
 #include "dbId.h"
-#include "dbObject.h"
 #include "dbTypes.h"
+#include "odb.h"
 
 namespace odb {
 
@@ -66,7 +67,7 @@ struct _dbBTermFlags
 //
 // block terminal
 //
-class _dbBTerm : public dbObject
+class _dbBTerm : public _dbObject
 {
  public:
   // PERSISTANT-MEMBERS
@@ -101,5 +102,3 @@ dbOStream& operator<<(dbOStream& stream, const _dbBTerm& bterm);
 dbIStream& operator>>(dbIStream& stream, _dbBTerm& bterm);
 
 }  // namespace odb
-
-

@@ -31,7 +31,9 @@
 // POSSIBILITY OF SUCH DAMAGE.
 
 #include "dbGCellGrid.h"
+
 #include <algorithm>
+
 #include "db.h"
 #include "dbBlock.h"
 #include "dbDatabase.h"
@@ -169,7 +171,7 @@ void dbGCellGrid::getGridY(std::vector<int>& y_grid)
 
 dbBlock* dbGCellGrid::getBlock()
 {
-  return (dbBlock*) getOwner();
+  return (dbBlock*) getImpl()->getOwner();
 }
 
 void dbGCellGrid::addGridPatternX(int origin_x, int line_count, int step)

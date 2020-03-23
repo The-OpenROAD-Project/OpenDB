@@ -79,4 +79,3 @@ dbOStream& operator<<(dbOStream& stream, const _dbNameCache& net);
 dbIStream& operator>>(dbIStream& stream, _dbNameCache& net);
 
 }  // namespace odb
-

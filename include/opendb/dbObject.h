@@ -50,6 +50,7 @@ class dbIStream;
 class dbObjectPage;
 class dbObjectTable;
 class dbDiff;
+class _dbObject;
 
 ///
 /// Steps to add new objects -
@@ -121,37 +122,25 @@ class dbDatabase;
 
 class dbObject
 {
- private:
-  uint _oid;
+ public:
+  dbObjectType     getObjectType() const;
+  dbDatabase*      getDb() const;
+  uint             getId() const;
+  static const int max_name_length = 256;
+  void             getDbName(char name[max_name_length]) const;
+  const char*      getObjName() const;
+
+  static dbObject*   resolveDbName(dbDatabase* db, const char* name);
+  static const char* getObjName(dbObjectType type);
+
+  // These are not intended for client use as the returned class is
+  // not exported.  They are for internal db convenience.
+  _dbObject*       getImpl();
+  const _dbObject* getImpl() const;
 
  protected:
   dbObject() {}
   ~dbObject() {}
-
- public:
-  // These functions are all inlines, so the cannot be called public
-  _dbDatabase*   getDatabase() const;
-  dbObjectTable* getTable() const;
-  dbObjectPage*  getObjectPage() const;
-  dbObject*      getOwner() const;
-  dbObjectType   getType() const;
-  uint           getOID() const;
-
- public:
-  dbObjectType       getObjectType() const;
-  dbDatabase*        getDb() const;
-  uint               getId() const;
-  static const int   max_name_length = 256;
-  void               getDbName(char name[max_name_length]) const;
-  const char*        getObjName() const;
-  static dbObject*   resolveDbName(dbDatabase* db, const char* name);
-  static const char* getObjName(dbObjectType type);
-  template <class T>
-  friend class dbTable;
-  template <class T>
-  friend class dbArrayTable;
 };
 
 }  // namespace odb
-
-

@@ -31,6 +31,7 @@
 // POSSIBILITY OF SUCH DAMAGE.
 
 #include "dbInstHdr.h"
+
 #include "db.h"
 #include "dbBlock.h"
 #include "dbDatabase.h"
@@ -221,7 +222,7 @@ dbInstHdr* dbInstHdr::create(dbBlock* block_, dbMaster* master_)
 
   for (itr = mterms.begin(); itr != mterms.end(); ++itr) {
     dbMTerm* mterm         = *itr;
-    inst_hdr->_mterms[i++] = mterm->getOID();
+    inst_hdr->_mterms[i++] = mterm->getImpl()->getOID();
   }
 
   return (dbInstHdr*) inst_hdr;

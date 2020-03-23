@@ -32,12 +32,12 @@
 
 #pragma once
 
-#include "odb.h"
+#include "dbCore.h"
 #include "dbId.h"
-#include "dbObject.h"
 #include "dbTypes.h"
 #include "dbVector.h"
 #include "geom.h"
+#include "odb.h"
 
 namespace odb {
 
@@ -53,7 +53,7 @@ struct _dbTechViaRuleFlags
   uint _spare_bits : 32;
 };
 
-class _dbTechViaRule : public dbObject
+class _dbTechViaRule : public _dbObject
 {
  public:
   // PERSISTANT-MEMBERS
@@ -83,5 +83,3 @@ dbOStream& operator<<(dbOStream& stream, const _dbTechViaRule& v);
 dbIStream& operator>>(dbIStream& stream, _dbTechViaRule& v);
 
 }  // namespace odb
-
-

@@ -30,6 +30,8 @@
 // ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 // POSSIBILITY OF SUCH DAMAGE.
 
+#include "dbTechLayerRule.h"
+
 #include "db.h"
 #include "dbBlock.h"
 #include "dbDatabase.h"
@@ -37,7 +39,6 @@
 #include "dbTable.hpp"
 #include "dbTech.h"
 #include "dbTechLayer.h"
-#include "dbTechLayerRule.h"
 #include "dbTechNonDefaultRule.h"
 
 namespace odb {

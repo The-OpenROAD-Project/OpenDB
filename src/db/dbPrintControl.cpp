@@ -30,12 +30,13 @@
 // ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 // POSSIBILITY OF SUCH DAMAGE.
 
+#include "dbPrintControl.h"
+
 #include "db.h"
 #include "dbBlock.h"
 #include "dbDatabase.h"
 #include "dbInst.h"
 #include "dbNet.h"
-#include "dbPrintControl.h"
 
 namespace odb {
 
@@ -114,7 +115,7 @@ uint dbBlock::getPrintCnt(dbPrintControl::Type ptype, dbNet* net)
 
 uint dbNet::getPrintCnt(dbPrintControl::Type type)
 {
-  dbBlock* block = (dbBlock*) getOwner();
+  dbBlock* block = (dbBlock*) getImpl()->getOwner();
   uint     pcnt  = block->getPrintCnt(type, this);
   return pcnt;
 }

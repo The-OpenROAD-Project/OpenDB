@@ -31,6 +31,7 @@
 // POSSIBILITY OF SUCH DAMAGE.
 
 #include "dbBlockage.h"
+
 #include "db.h"
 #include "dbBlock.h"
 #include "dbBox.h"
@@ -201,7 +202,7 @@ bool dbBlockage::isPushedDown()
 
 dbBlock* dbBlockage::getBlock()
 {
-  return (dbBlock*) getOwner();
+  return (dbBlock*) getImpl()->getOwner();
 }
 
 dbBlockage* dbBlockage::create(dbBlock* block_,

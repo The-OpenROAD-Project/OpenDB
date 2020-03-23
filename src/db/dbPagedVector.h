@@ -33,10 +33,10 @@
 #pragma once
 
 #include "ZException.h"
-#include "odb.h"
 #include "dbDiff.h"
 #include "dbStream.h"
 #include "logger.h"
+#include "odb.h"
 namespace odb {
 
 template <class T, const uint P, const uint S>
@@ -383,5 +383,3 @@ inline dbIStream& operator>>(dbIStream& stream, dbPagedVector<T, P, S>& v)
 }
 
 }  // namespace odb
-
-

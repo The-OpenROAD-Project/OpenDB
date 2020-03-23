@@ -31,6 +31,7 @@
 // POSSIBILITY OF SUCH DAMAGE.
 
 #include "dbBoxItr.h"
+
 #include "dbBTerm.h"
 #include "dbBlock.h"
 #include "dbBox.h"
@@ -56,7 +57,7 @@ bool dbBoxItr::orderReversed()
 
 void dbBoxItr::reverse(dbObject* parent)
 {
-  switch (parent->getType()) {
+  switch (parent->getImpl()->getType()) {
     case dbRegionObj: {
       _dbRegion* region = (_dbRegion*) parent;
       uint       id     = region->_boxes;
@@ -169,7 +170,7 @@ uint dbBoxItr::size(dbObject* parent)
 
 uint dbBoxItr::begin(dbObject* parent)
 {
-  switch (parent->getType()) {
+  switch (parent->getImpl()->getType()) {
     case dbRegionObj: {
       _dbRegion* region = (_dbRegion*) parent;
       return region->_boxes;
@@ -202,7 +203,7 @@ uint dbBoxItr::begin(dbObject* parent)
   return 0;
 }
 
-  uint dbBoxItr::end(dbObject* /* unused: parent */)
+uint dbBoxItr::end(dbObject* /* unused: parent */)
 {
   return 0;
 }

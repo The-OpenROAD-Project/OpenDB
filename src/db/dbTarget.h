@@ -32,10 +32,10 @@
 
 #pragma once
 
-#include "odb.h"
+#include "dbCore.h"
 #include "dbId.h"
-#include "dbObject.h"
 #include "geom.h"
+#include "odb.h"
 
 namespace odb {
 
@@ -52,12 +52,12 @@ struct _dbTargetFlags
   uint _spare_bits : 32;
 };
 
-class _dbTarget : public dbObject
+class _dbTarget : public _dbObject
 {
  public:
   // PERSISTANT-MEMBERS
   _dbTargetFlags     _flags;
-  Point           _point;
+  Point              _point;
   dbId<_dbMTerm>     _mterm;
   dbId<_dbTechLayer> _layer;
   dbId<_dbTarget>    _next;
@@ -113,5 +113,3 @@ inline dbIStream& operator>>(dbIStream& stream, _dbTarget& target)
 }
 
 }  // namespace odb
-
-

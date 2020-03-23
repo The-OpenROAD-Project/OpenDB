@@ -31,6 +31,7 @@
 // POSSIBILITY OF SUCH DAMAGE.
 
 #include "dbVia.h"
+
 #include "db.h"
 #include "dbBlock.h"
 #include "dbBox.h"
@@ -234,7 +235,7 @@ dbIStream& operator>>(dbIStream& stream, _dbVia& v)
 
 std::string dbVia::getName()
 {
-  _dbVia*  via = (_dbVia*) this;
+  _dbVia* via = (_dbVia*) this;
   return via->_name;
 }
 
@@ -246,7 +247,7 @@ const char* dbVia::getConstName()
 
 std::string dbVia::getPattern()
 {
-  _dbVia*  via = (_dbVia*) this;
+  _dbVia* via = (_dbVia*) this;
 
   if (via->_pattern == 0) {
     return "";
@@ -269,7 +270,7 @@ void dbVia::setPattern(const char* name)
 
 dbBlock* dbVia::getBlock()
 {
-  return (dbBlock*) getOwner();
+  return (dbBlock*) getImpl()->getOwner();
 }
 
 dbBox* dbVia::getBBox()
@@ -279,7 +280,7 @@ dbBox* dbVia::getBBox()
   if (via->_bbox == 0)
     return NULL;
 
-  _dbBlock* block = (_dbBlock*) getOwner();
+  _dbBlock* block = (_dbBlock*) via->getOwner();
   return (dbBox*) block->_box_tbl->getPtr(via->_bbox);
 }
 
@@ -303,7 +304,7 @@ dbTechVia* dbVia::getTechVia()
   if ((via->_flags._is_rotated == 0) || (via->_flags._is_tech_via == 0))
     return NULL;
 
-  _dbDatabase* db   = getDatabase();
+  _dbDatabase* db   = via->getDatabase();
   _dbTech*     tech = db->_tech_tbl->getPtr(db->_tech);
   _dbTechVia*  v    = tech->_via_tbl->getPtr(via->_rotated_via_id);
   return (dbTechVia*) v;
@@ -316,7 +317,7 @@ dbVia* dbVia::getBlockVia()
   if ((via->_flags._is_rotated == 0) || (via->_flags._is_tech_via == 1))
     return NULL;
 
-  _dbBlock* block = (_dbBlock*) getOwner();
+  _dbBlock* block = (_dbBlock*) via->getOwner();
   _dbVia*   v     = block->_via_tbl->getPtr(via->_rotated_via_id);
   return (dbVia*) v;
 }
@@ -324,7 +325,7 @@ dbVia* dbVia::getBlockVia()
 dbSet<dbBox> dbVia::getBoxes()
 {
   _dbVia*   via   = (_dbVia*) this;
-  _dbBlock* block = (_dbBlock*) getOwner();
+  _dbBlock* block = (_dbBlock*) via->getOwner();
   return dbSet<dbBox>(via, block->_box_itr);
 }
 
@@ -335,7 +336,7 @@ dbTechLayer* dbVia::getTopLayer()
   if (via->_top == 0)
     return NULL;
 
-  _dbDatabase* db   = getDatabase();
+  _dbDatabase* db   = via->getDatabase();
   _dbTech*     tech = db->_tech_tbl->getPtr(db->_tech);
   return (dbTechLayer*) tech->_layer_tbl->getPtr(via->_top);
 }
@@ -347,7 +348,7 @@ dbTechLayer* dbVia::getBottomLayer()
   if (via->_bottom == 0)
     return NULL;
 
-  _dbDatabase* db   = getDatabase();
+  _dbDatabase* db   = via->getDatabase();
   _dbTech*     tech = db->_tech_tbl->getPtr(db->_tech);
   return (dbTechLayer*) tech->_layer_tbl->getPtr(via->_bottom);
 }
@@ -361,7 +362,7 @@ bool dbVia::hasParams()
 void dbVia::setViaGenerateRule(dbTechViaGenerateRule* rule)
 {
   _dbVia* via         = (_dbVia*) this;
-  via->_generate_rule = rule->getOID();
+  via->_generate_rule = rule->getImpl()->getOID();
 }
 
 dbTechViaGenerateRule* dbVia::getViaGenerateRule()
@@ -371,7 +372,7 @@ dbTechViaGenerateRule* dbVia::getViaGenerateRule()
   if (via->_generate_rule == 0)
     return NULL;
 
-  _dbDatabase*            db   = getDatabase();
+  _dbDatabase*            db   = via->getDatabase();
   _dbTech*                tech = db->_tech_tbl->getPtr(db->_tech);
   _dbTechViaGenerateRule* rule
       = tech->_via_generate_rule_tbl->getPtr(via->_generate_rule);
@@ -381,7 +382,7 @@ dbTechViaGenerateRule* dbVia::getViaGenerateRule()
 void dbVia::setViaParams(const dbViaParams& params)
 {
   _dbVia*   via           = (_dbVia*) this;
-  _dbBlock* block         = (_dbBlock*) getOwner();
+  _dbBlock* block         = (_dbBlock*) via->getOwner();
   via->_flags._has_params = 1;
 
   // Clear previous boxes
@@ -411,7 +412,7 @@ void dbVia::getViaParams(dbViaParams& params)
     params = dbViaParams();
   else {
     params            = via->_via_params;
-    _dbDatabase* db   = getDatabase();
+    _dbDatabase* db   = via->getDatabase();
     _dbTech*     tech = db->_tech_tbl->getPtr(db->_tech);
     params._tech      = (dbTech*) tech;
   }
@@ -450,7 +451,7 @@ dbVia* dbVia::create(dbBlock*     block,
   for (itr = boxes.begin(); itr != boxes.end(); ++itr) {
     _dbBox*      box = (_dbBox*) *itr;
     dbTechLayer* l   = (dbTechLayer*) box->getTechLayer();
-    Rect      r   = box->_rect;
+    Rect         r   = box->_rect;
     t.apply(r);
     dbBox::create((dbVia*) via, l, r.xMin(), r.yMin(), r.xMax(), r.yMax());
   }
@@ -480,7 +481,7 @@ dbVia* dbVia::create(dbBlock*     block,
   for (itr = boxes.begin(); itr != boxes.end(); ++itr) {
     _dbBox*      box = (_dbBox*) *itr;
     dbTechLayer* l   = (dbTechLayer*) box->getTechLayer();
-    Rect      r   = box->_rect;
+    Rect         r   = box->_rect;
     t.apply(r);
     dbBox::create((dbVia*) via, l, r.xMin(), r.yMin(), r.xMax(), r.yMax());
   }
@@ -577,12 +578,12 @@ dbVia* dbVia::getVia(dbBlock* block_, uint dbid_)
 
 void create_via_boxes(_dbVia* via, const dbViaParams& P)
 {
-  int                  rows = P.getNumCutRows();
-  int                  cols = P.getNumCutCols();
-  int                  row;
-  int                  y    = 0;
-  int                  maxX = 0;
-  int                  maxY = 0;
+  int               rows = P.getNumCutRows();
+  int               cols = P.getNumCutCols();
+  int               row;
+  int               y    = 0;
+  int               maxX = 0;
+  int               maxY = 0;
   std::vector<Rect> cutRects;
 
   for (row = 0; row < rows; ++row) {
@@ -604,8 +605,8 @@ void create_via_boxes(_dbVia* via, const dbViaParams& P)
 
   dbTechLayer* cut_layer = P.getCutLayer();
 
-  int                            dx = maxX / 2;
-  int                            dy = maxY / 2;
+  int                         dx = maxX / 2;
+  int                         dy = maxY / 2;
   std::vector<Rect>::iterator itr;
 
   for (itr = cutRects.begin(); itr != cutRects.end(); ++itr) {

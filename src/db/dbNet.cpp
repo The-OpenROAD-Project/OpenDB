@@ -30,6 +30,8 @@
 // ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 // POSSIBILITY OF SUCH DAMAGE.
 
+#include "dbNet.h"
+
 #include <algorithm>
 
 #include "db.h"
@@ -49,7 +51,6 @@
 #include "dbInst.h"
 #include "dbJournal.h"
 #include "dbMTerm.h"
-#include "dbNet.h"
 #include "dbRSeg.h"
 #include "dbRSegItr.h"
 #include "dbSWire.h"
@@ -632,7 +633,7 @@ void dbNet::printNetName(FILE* fp, bool idFlag, bool newLine)
 bool dbNet::rename(const char* name)
 {
   _dbNet*   net   = (_dbNet*) this;
-  _dbBlock* block = (_dbBlock*) getOwner();
+  _dbBlock* block = (_dbBlock*) net->getOwner();
 
   if (block->_net_hash.hasMember(name))
     return false;
@@ -1033,7 +1034,7 @@ void dbNet::adjustNetGndCap(uint corner, float factor)
 {
   if (factor == 1.0)
     return;
-  bool foreign = ((dbBlock*) getOwner())->getExtControl()->_foreign;
+  bool foreign = ((dbBlock*) getImpl()->getOwner())->getExtControl()->_foreign;
   if (foreign) {
     dbSet<dbCapNode>           nodeSet = getCapNodes();
     dbSet<dbCapNode>::iterator rc_itr;
@@ -1056,7 +1057,7 @@ void dbNet::adjustNetGndCap(float factor)
 {
   if (factor == 1.0)
     return;
-  bool foreign = ((dbBlock*) getOwner())->getExtControl()->_foreign;
+  bool foreign = ((dbBlock*) getImpl()->getOwner())->getExtControl()->_foreign;
   if (foreign) {
     dbSet<dbCapNode>           nodeSet = getCapNodes();
     dbSet<dbCapNode>::iterator rc_itr;
@@ -1465,13 +1466,13 @@ bool dbNet::isReduced()
 
 dbBlock* dbNet::getBlock()
 {
-  return (dbBlock*) getOwner();
+  return (dbBlock*) getImpl()->getOwner();
 }
 
 dbSet<dbITerm> dbNet::getITerms()
 {
   _dbNet*   net   = (_dbNet*) this;
-  _dbBlock* block = (_dbBlock*) getOwner();
+  _dbBlock* block = (_dbBlock*) net->getOwner();
   return dbSet<dbITerm>(net, block->_net_iterm_itr);
 }
 
@@ -1487,7 +1488,7 @@ dbITerm* dbNet::get1stITerm()
 dbSet<dbBTerm> dbNet::getBTerms()
 {
   _dbNet*   net   = (_dbNet*) this;
-  _dbBlock* block = (_dbBlock*) getOwner();
+  _dbBlock* block = (_dbBlock*) net->getOwner();
   return dbSet<dbBTerm>(net, block->_net_bterm_itr);
 }
 
@@ -1502,7 +1503,8 @@ dbBTerm* dbNet::get1stBTerm()
 dbITerm* dbNet::getFirstOutput()
 {
   if (getDrivingITerm() > 0)
-    return dbITerm::getITerm((dbBlock*) getOwner(), getDrivingITerm());
+    return dbITerm::getITerm((dbBlock*) getImpl()->getOwner(),
+                             getDrivingITerm());
 
   dbSet<dbITerm>           iterms = getITerms();
   dbSet<dbITerm>::iterator iitr;
@@ -1552,14 +1554,14 @@ dbITerm* dbNet::get1stSignalInput(bool io)
 dbSet<dbSWire> dbNet::getSWires()
 {
   _dbNet*   net   = (_dbNet*) this;
-  _dbBlock* block = (_dbBlock*) getOwner();
+  _dbBlock* block = (_dbBlock*) net->getOwner();
   return dbSet<dbSWire>(net, block->_swire_itr);
 }
 dbSWire*  // Dimitris 9/11/07
 dbNet::getFirstSWire()
 {
   _dbNet*   net   = (_dbNet*) this;
-  _dbBlock* block = (_dbBlock*) getOwner();
+  _dbBlock* block = (_dbBlock*) net->getOwner();
 
   if (net->_swires == 0)
     return NULL;
@@ -1570,7 +1572,7 @@ dbNet::getFirstSWire()
 dbWire* dbNet::getWire()
 {
   _dbNet*   net   = (_dbNet*) this;
-  _dbBlock* block = (_dbBlock*) getOwner();
+  _dbBlock* block = (_dbBlock*) net->getOwner();
 
   if (net->_wire == 0)
     return NULL;
@@ -1581,7 +1583,7 @@ dbWire* dbNet::getWire()
 dbWire* dbNet::getGlobalWire()
 {
   _dbNet*   net   = (_dbNet*) this;
-  _dbBlock* block = (_dbBlock*) getOwner();
+  _dbBlock* block = (_dbBlock*) net->getOwner();
 
   if (net->_global_wire == 0)
     return NULL;
@@ -1770,7 +1772,7 @@ void dbNet::printRSeg(char* type)
 dbSet<dbRSeg> dbNet::getRSegs()
 {
   _dbNet*   net   = (_dbNet*) this;
-  _dbBlock* block = (_dbBlock*) getOwner();
+  _dbBlock* block = (_dbBlock*) net->getOwner();
   return dbSet<dbRSeg>(net, block->_r_seg_itr);
 }
 
@@ -1778,7 +1780,7 @@ void dbNet::reverseRSegs()
 {
   dbSet<dbRSeg> rSet = getRSegs();
   rSet.reverse();
-  _dbBlock* block = (_dbBlock*) getOwner();
+  _dbBlock* block = (_dbBlock*) getImpl()->getOwner();
   if (block->_journal) {
     debug("DB_ECO", "A", "ECO: dbNet %d, reverse rsegs sequence\n", getId());
     block->_journal->beginAction(dbJournal::UPDATE_FIELD);
@@ -1832,7 +1834,7 @@ void dbNet::createZeroRc(bool foreign)
 void dbNet::set1stRSegId(uint rid)
 {
   _dbNet*   net   = (_dbNet*) this;
-  _dbBlock* block = (_dbBlock*) getOwner();
+  _dbBlock* block = (_dbBlock*) net->getOwner();
   uint      pid   = net->_r_segs;
   net->_r_segs    = rid;
   if (block->_journal) {
@@ -1858,7 +1860,7 @@ dbRSeg* dbNet::getZeroRSeg()
   _dbNet* net = (_dbNet*) this;
   if (net->_r_segs == 0)
     return NULL;
-  dbRSeg* zrc = dbRSeg::getRSeg((dbBlock*) getOwner(), net->_r_segs);
+  dbRSeg* zrc = dbRSeg::getRSeg((dbBlock*) net->getOwner(), net->_r_segs);
   return zrc;
 }
 
@@ -1945,7 +1947,7 @@ void dbNet::donateRC(dbITerm*               donorterm,
   fstdcapnd  = NULL;
   bridgeRseg = NULL;
 
-  dbBlock* block  = (dbBlock*) getOwner();
+  dbBlock* block  = (dbBlock*) getImpl()->getOwner();
   dbBlock* pblock = block;  // needed in case of independent spef corner
   dbNet*   rcvnet = rcvterm->getNet();
 
@@ -2013,9 +2015,9 @@ void dbNet::donateRC(dbITerm*               donorterm,
   uint rcvnid = rcvnet->getId();
 
   // donor capnodes
-  dbCapNode*       other   = NULL;
-  dbCapNode*       capnd   = NULL;
-  uint             cCnt    = ((dbBlock*) getOwner())->getCornersPerBlock();
+  dbCapNode* other = NULL;
+  dbCapNode* capnd = NULL;
+  uint       cCnt  = ((dbBlock*) getImpl()->getOwner())->getCornersPerBlock();
   dbSet<dbCapNode> nodeSet = getCapNodes();
   uint             cid;
   for (capn_itr = nodeSet.begin(); capn_itr != nodeSet.end(); ++capn_itr) {
@@ -2125,7 +2127,7 @@ void dbNet::unDonateRC(dbRSeg*                rtrseg,
     if (capnd->isInternal())
       capnd->setNode(capnd->getNode() - ricapndCnt);
   }
-  uint       cCnt = ((dbBlock*) getOwner())->getCornersPerBlock();
+  uint       cCnt = ((dbBlock*) getImpl()->getOwner())->getCornersPerBlock();
   dbCCSeg*   ccseg;
   dbCapNode* srcn;
   dbCapNode* tgtn;
@@ -2157,7 +2159,7 @@ void dbNet::printWnP(char* type)
 dbSet<dbCapNode> dbNet::getCapNodes()
 {
   _dbNet*   net   = (_dbNet*) this;
-  _dbBlock* block = (_dbBlock*) getOwner();
+  _dbBlock* block = (_dbBlock*) net->getOwner();
   return dbSet<dbCapNode>(net, block->_cap_node_itr);
 }
 
@@ -2165,7 +2167,7 @@ void dbNet::setTermExtIds(int capId)  // 1: capNodeId, 0: reset
 {
   dbSet<dbCapNode>           nodeSet = getCapNodes();
   dbSet<dbCapNode>::iterator rc_itr;
-  _dbBlock*                  block = (_dbBlock*) getOwner();
+  _dbBlock*                  block = (_dbBlock*) getImpl()->getOwner();
 
   if (block->_journal) {
     if (capId)
@@ -2201,7 +2203,7 @@ void dbNet::setTermExtIds(int capId)  // 1: capNodeId, 0: reset
 void dbNet::set1stCapNodeId(uint cid)
 {
   _dbNet*   net   = (_dbNet*) this;
-  _dbBlock* block = (_dbBlock*) getOwner();
+  _dbBlock* block = (_dbBlock*) net->getOwner();
   uint      pid   = net->_cap_nodes;
   net->_cap_nodes = cid;
   if (block->_journal) {
@@ -2240,7 +2242,7 @@ void dbNet::getSrcCCSegs(std::vector<dbCCSeg*>& S)
 
   for (itr = nodes.begin(); itr != nodes.end(); ++itr) {
     dbCapNode*               node   = *itr;
-    uint                     cap_id = node->getOID();
+    uint                     cap_id = node->getImpl()->getOID();
     dbSet<dbCCSeg>           segs   = node->getCCSegs();
     dbSet<dbCCSeg>::iterator sitr;
 
@@ -2259,7 +2261,7 @@ void dbNet::getTgtCCSegs(std::vector<dbCCSeg*>& S)
 
   for (itr = nodes.begin(); itr != nodes.end(); ++itr) {
     dbCapNode*               node   = *itr;
-    uint                     cap_id = node->getOID();
+    uint                     cap_id = node->getImpl()->getOID();
     dbSet<dbCCSeg>           segs   = node->getCCSegs();
     dbSet<dbCCSeg>::iterator sitr;
 
@@ -2282,7 +2284,7 @@ dbNet::unlinkCapNodes()
 
 void dbNet::destroyCapNodes(bool cleanExtid)
 {
-  dbBlock*                   block     = (dbBlock*) getOwner();
+  dbBlock*                   block     = (dbBlock*) getImpl()->getOwner();
   dbSet<dbCapNode>           cap_nodes = getCapNodes();
   dbSet<dbCapNode>::iterator itr;
 
@@ -2389,7 +2391,7 @@ void dbNet::getGndTotalCap(double* gndcap, double* totalcap, double mcf)
     warning(0, "Net %d, %s has no extraction data\n", getId(), getConstName());
     return;
   }
-  bool foreign = ((dbBlock*) getOwner())->getExtControl()->_foreign;
+  bool foreign = ((dbBlock*) getImpl()->getOwner())->getExtControl()->_foreign;
   bool first   = true;
   if (foreign) {
     dbSet<dbCapNode>           nodeSet = getCapNodes();
@@ -2419,7 +2421,7 @@ void dbNet::getGndTotalCap(double* gndcap, double* totalcap, double mcf)
 
 void dbNet::preExttreeMergeRC(double max_cap, uint corner)
 {
-  dbBlock*             block = (dbBlock*) (getOwner());
+  dbBlock*             block = (dbBlock*) (getImpl()->getOwner());
   double               totalcap[ADS_MAX_CORNER];
   dbCapNode*           tgtNode;
   std::vector<dbRSeg*> mrsegs;
@@ -2463,7 +2465,7 @@ void dbNet::preExttreeMergeRC(double max_cap, uint corner)
 
 void dbNet::destroyParasitics()
 {
-  dbBlock*            block = (dbBlock*) getOwner();
+  dbBlock*            block = (dbBlock*) getImpl()->getOwner();
   std::vector<dbNet*> nets;
   nets.push_back(this);
   block->destroyParasitics(nets);
@@ -2491,9 +2493,9 @@ double dbNet::getTotalCouplingCap(uint corner)
 
 double dbNet::getTotalCapacitance(uint corner, bool cc)
 {
-  double cap     = 0.0;
-  double cap1    = 0.0;
-  bool   foreign = ((dbBlock*) getOwner())->getExtControl()->_foreign;
+  double cap   = 0.0;
+  double cap1  = 0.0;
+  bool foreign = ((dbBlock*) getImpl()->getOwner())->getExtControl()->_foreign;
 
   if (foreign) {
     dbSet<dbCapNode>           nodeSet = getCapNodes();
@@ -2537,7 +2539,7 @@ double dbNet::getTotalResistance(uint corner)
 void dbNet::setNonDefaultRule(dbTechNonDefaultRule* rule)
 {
   _dbNet*   net             = (_dbNet*) this;
-  _dbBlock* block           = (_dbBlock*) getOwner();
+  _dbBlock* block           = (_dbBlock*) net->getOwner();
   uint      prev_rule       = net->_non_default_rule;
   bool      prev_block_rule = net->_flags._block_rule;
 
@@ -2545,7 +2547,7 @@ void dbNet::setNonDefaultRule(dbTechNonDefaultRule* rule)
     net->_non_default_rule  = 0U;
     net->_flags._block_rule = 0;
   } else {
-    net->_non_default_rule  = rule->getOID();
+    net->_non_default_rule  = rule->getImpl()->getOID();
     net->_flags._block_rule = rule->isBlockRule();
   }
 
@@ -2554,7 +2556,7 @@ void dbNet::setNonDefaultRule(dbTechNonDefaultRule* rule)
           "A",
           "ECO: net %d, setNonDefaultRule: %d\n",
           getId(),
-          (rule) ? rule->getOID() : 0);
+          (rule) ? rule->getImpl()->getOID() : 0);
     // block->_journal->updateField(this, _dbNet::NON_DEFAULT_RULE, prev_rule,
     // net->_non_default_rule );
     block->_journal->beginAction(dbJournal::UPDATE_FIELD);
@@ -2576,10 +2578,10 @@ dbTechNonDefaultRule* dbNet::getNonDefaultRule()
   if (net->_non_default_rule == 0)
     return NULL;
 
-  dbDatabase* db = (dbDatabase*) getDatabase();
+  dbDatabase* db = (dbDatabase*) net->getDatabase();
 
   if (net->_flags._block_rule) {
-    _dbBlock* block = (_dbBlock*) getOwner();
+    _dbBlock* block = (_dbBlock*) net->getOwner();
     return (dbTechNonDefaultRule*) block->_non_default_rule_tbl->getPtr(
         net->_non_default_rule);
   }

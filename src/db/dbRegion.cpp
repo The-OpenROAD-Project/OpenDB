@@ -31,6 +31,7 @@
 // POSSIBILITY OF SUCH DAMAGE.
 
 #include "dbRegion.h"
+
 #include "db.h"
 #include "dbBlock.h"
 #include "dbBox.h"
@@ -240,14 +241,14 @@ void dbRegion::setRegionType(dbRegionType type)
 dbSet<dbInst> dbRegion::getRegionInsts()
 {
   _dbRegion* region = (_dbRegion*) this;
-  _dbBlock*  block  = (_dbBlock*) getOwner();
+  _dbBlock*  block  = (_dbBlock*) region->getOwner();
   return dbSet<dbInst>(region, block->_region_inst_itr);
 }
 
 dbSet<dbBox> dbRegion::getBoundaries()
 {
   _dbRegion* region = (_dbRegion*) this;
-  _dbBlock*  block  = (_dbBlock*) getOwner();
+  _dbBlock*  block  = (_dbBlock*) region->getOwner();
   return dbSet<dbBox>(region, block->_box_itr);
 }
 
@@ -255,7 +256,7 @@ void dbRegion::addInst(dbInst* inst_)
 {
   _dbRegion* region = (_dbRegion*) this;
   _dbInst*   inst   = (_dbInst*) inst_;
-  _dbBlock*  block  = (_dbBlock*) getOwner();
+  _dbBlock*  block  = (_dbBlock*) region->getOwner();
 
   if (inst->_region != 0) {
     dbRegion* r = dbRegion::getRegion((dbBlock*) block, inst->_region);
@@ -281,7 +282,7 @@ void dbRegion::removeInst(dbInst* inst_)
 {
   _dbRegion* region = (_dbRegion*) this;
   _dbInst*   inst   = (_dbInst*) inst_;
-  _dbBlock*  block  = (_dbBlock*) getOwner();
+  _dbBlock*  block  = (_dbBlock*) region->getOwner();
 
   uint id = inst->getOID();
 
@@ -310,7 +311,7 @@ void dbRegion::removeInst(dbInst* inst_)
 dbRegion* dbRegion::getParent()
 {
   _dbRegion* region = (_dbRegion*) this;
-  _dbBlock*  block  = (_dbBlock*) getOwner();
+  _dbBlock*  block  = (_dbBlock*) region->getOwner();
 
   if (region->_parent == 0)
     return NULL;
@@ -322,7 +323,7 @@ dbRegion* dbRegion::getParent()
 dbSet<dbRegion> dbRegion::getChildren()
 {
   _dbRegion* region = (_dbRegion*) this;
-  _dbBlock*  block  = (_dbBlock*) getOwner();
+  _dbBlock*  block  = (_dbBlock*) region->getOwner();
 
   dbSet<dbRegion> children(region, block->_region_itr);
   return children;
@@ -344,7 +345,7 @@ void dbRegion::addChild(dbRegion* child_)
 
 dbBlock* dbRegion::getBlock()
 {
-  return (dbBlock*) getOwner();
+  return (dbBlock*) getImpl()->getOwner();
 }
 
 dbRegion* dbRegion::create(dbBlock* block_, const char* name)

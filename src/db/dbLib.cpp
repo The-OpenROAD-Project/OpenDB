@@ -31,6 +31,7 @@
 // POSSIBILITY OF SUCH DAMAGE.
 
 #include "dbLib.h"
+
 #include "db.h"
 #include "dbDatabase.h"
 #include "dbHashTable.hpp"
@@ -289,7 +290,7 @@ dbObjectTable* _dbLib::getObjectTable(dbObjectType type)
 
 std::string dbLib::getName()
 {
-  _dbLib*  lib = (_dbLib*) this;
+  _dbLib* lib = (_dbLib*) this;
   return lib->_name;
 }
 
@@ -301,7 +302,7 @@ const char* dbLib::getConstName()
 
 dbTech* dbLib::getTech()
 {
-  _dbDatabase* db = getDatabase();
+  _dbDatabase* db = getImpl()->getDatabase();
   return (dbTech*) db->_tech_tbl->getPtr(db->_tech);
 }
 
@@ -391,7 +392,7 @@ dbLib* dbLib::getLib(dbDatabase* db_, uint dbid_)
 void dbLib::destroy(dbLib* lib_)
 {
   _dbLib*      lib = (_dbLib*) lib_;
-  _dbDatabase* db  = lib_->getDatabase();
+  _dbDatabase* db  = lib->getDatabase();
   dbProperty::destroyProperties(lib);
   db->_lib_tbl->destroy(lib);
 }

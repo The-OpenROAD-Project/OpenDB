@@ -32,12 +32,12 @@
 
 #pragma once
 
-#include "odb.h"
 #include "dbBox.h"
 #include "dbId.h"
 #include "dbObject.h"
 #include "dbTypes.h"
 #include "geom.h"
+#include "odb.h"
 
 namespace odb {
 
@@ -104,5 +104,3 @@ inline dbIStream& operator>>(dbIStream& stream, _dbSBox& box)
 }
 
 }  // namespace odb
-
-

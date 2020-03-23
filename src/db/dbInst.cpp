@@ -31,7 +31,9 @@
 // POSSIBILITY OF SUCH DAMAGE.
 
 #include "dbInst.h"
+
 #include <algorithm>
+
 #include "db.h"
 #include "dbArrayTable.h"
 #include "dbArrayTable.hpp"
@@ -400,7 +402,7 @@ bool dbInst::isNamed(const char* name)
 bool dbInst::rename(const char* name)
 {
   _dbInst*  inst  = (_dbInst*) this;
-  _dbBlock* block = (_dbBlock*) getOwner();
+  _dbBlock* block = (_dbBlock*) inst->getOwner();
 
   if (block->_inst_hash.hasMember(name))
     return false;
@@ -424,7 +426,7 @@ void dbInst::getOrigin(int& x, int& y)
 void dbInst::setOrigin(int x, int y)
 {
   _dbInst*  inst   = (_dbInst*) this;
-  _dbBlock* block  = (_dbBlock*) getOwner();
+  _dbBlock* block  = (_dbBlock*) inst->getOwner();
   int       prev_x = inst->_x;
   int       prev_y = inst->_y;
 
@@ -462,7 +464,7 @@ void dbInst::setLocationOrient(dbOrientType orient)
 void dbInst::getLocation(int& x, int& y)
 {
   _dbInst*  inst  = (_dbInst*) this;
-  _dbBlock* block = (_dbBlock*) getOwner();
+  _dbBlock* block = (_dbBlock*) inst->getOwner();
   _dbBox*   bbox  = block->_box_tbl->getPtr(inst->_bbox);
   x               = bbox->_rect.xMin();
   y               = bbox->_rect.yMin();
@@ -471,7 +473,7 @@ void dbInst::getLocation(int& x, int& y)
 void dbInst::setLocation(int x, int y)
 {
   dbMaster* master = getMaster();
-  Rect   bbox;
+  Rect      bbox;
   master->getPlacementBoundary(bbox);
   dbTransform t(getOrient());
   t.apply(bbox);
@@ -481,7 +483,7 @@ void dbInst::setLocation(int x, int y)
 dbBox* dbInst::getBBox()
 {
   _dbInst*  inst  = (_dbInst*) this;
-  _dbBlock* block = (_dbBlock*) getOwner();
+  _dbBlock* block = (_dbBlock*) inst->getOwner();
   return (dbBox*) block->_box_tbl->getPtr(inst->_bbox);
 }
 
@@ -494,7 +496,7 @@ dbOrientType dbInst::getOrient()
 void dbInst::setOrient(dbOrientType orient)
 {
   _dbInst*  inst  = (_dbInst*) this;
-  _dbBlock* block = (_dbBlock*) getOwner();
+  _dbBlock* block = (_dbBlock*) inst->getOwner();
 #ifdef FULL_ECO
   uint prev_flags = FLAGS(inst);
 #endif
@@ -538,7 +540,7 @@ void dbInst::setPlacementStatus(dbPlacementStatus status)
 void dbInst::getTransform(dbTransform& t)
 {
   _dbInst* inst = (_dbInst*) this;
-  t = dbTransform(inst->_flags._orient, Point(inst->_x, inst->_y));
+  t             = dbTransform(inst->_flags._orient, Point(inst->_x, inst->_y));
   return;
 }
 
@@ -781,15 +783,15 @@ bool dbInst::isDoNotSize()
 
 dbBlock* dbInst::getBlock()
 {
-  return (dbBlock*) getOwner();
+  return (dbBlock*) getImpl()->getOwner();
 }
 
 dbMaster* dbInst::getMaster()
 {
   _dbInst*     inst     = (_dbInst*) this;
-  _dbBlock*    block    = (_dbBlock*) getOwner();
+  _dbBlock*    block    = (_dbBlock*) inst->getOwner();
   _dbInstHdr*  inst_hdr = block->_inst_hdr_tbl->getPtr(inst->_inst_hdr);
-  _dbDatabase* db       = getDatabase();
+  _dbDatabase* db       = inst->getDatabase();
   _dbLib*      lib      = db->_lib_tbl->getPtr(inst_hdr->_lib);
   return (dbMaster*) lib->_master_tbl->getPtr(inst_hdr->_master);
 }
@@ -815,14 +817,14 @@ dbITerm* dbInst::getOutputTerm()
 dbSet<dbITerm> dbInst::getITerms()
 {
   _dbInst*  inst  = (_dbInst*) this;
-  _dbBlock* block = (_dbBlock*) getOwner();
+  _dbBlock* block = (_dbBlock*) inst->getOwner();
   return dbSet<dbITerm>(inst, block->_inst_iterm_itr);
 }
 
 dbITerm* dbInst::findITerm(const char* name)
 {
   _dbInst*  inst   = (_dbInst*) this;
-  _dbBlock* block  = (_dbBlock*) getOwner();
+  _dbBlock* block  = (_dbBlock*) inst->getOwner();
   dbMaster* master = getMaster();
   _dbMTerm* mterm  = (_dbMTerm*) master->findMTerm((dbBlock*) block, name);
 
@@ -839,7 +841,7 @@ dbRegion* dbInst::getRegion()
   if (inst->_region == 0)
     return NULL;
 
-  _dbBlock*  block = (_dbBlock*) getOwner();
+  _dbBlock*  block = (_dbBlock*) inst->getOwner();
   _dbRegion* r     = block->_region_tbl->getPtr(inst->_region);
   return (dbRegion*) r;
 }
@@ -851,7 +853,7 @@ dbBox* dbInst::getHalo()
   if (inst->_halo == 0)
     return NULL;
 
-  _dbBlock* block = (_dbBlock*) getOwner();
+  _dbBlock* block = (_dbBlock*) inst->getOwner();
   _dbBox*   b     = block->_box_tbl->getPtr(inst->_halo);
   return (dbBox*) b;
 }
@@ -959,7 +961,7 @@ void dbInst::unbindBlock()
   _dbInst* inst = (_dbInst*) this;
 
   if (inst->_hierarchy) {
-    _dbBlock* block = (_dbBlock*) getOwner();
+    _dbBlock* block = (_dbBlock*) inst->getOwner();
     _dbHier*  hier  = block->_hier_tbl->getPtr(inst->_hierarchy);
     _dbHier::destroy(hier);
   }
@@ -972,7 +974,7 @@ dbBlock* dbInst::getChild()
   if (inst->_hierarchy == 0)
     return NULL;
 
-  _dbBlock* block = (_dbBlock*) getOwner();
+  _dbBlock* block = (_dbBlock*) inst->getOwner();
   _dbChip*  chip  = (_dbChip*) block->getOwner();
   _dbHier*  hier  = block->_hier_tbl->getPtr(inst->_hierarchy);
   _dbBlock* child = chip->_block_tbl->getPtr(hier->_child_block);
@@ -987,7 +989,7 @@ bool dbInst::isHierarchical()
 
 dbInst* dbInst::getParent()
 {
-  dbBlock* block = (dbBlock*) getOwner();
+  dbBlock* block = (dbBlock*) getImpl()->getOwner();
   return block->getParentInst();
 }
 
@@ -1028,16 +1030,16 @@ void dbInst::setSourceType(dbSourceType type)
 
 dbITerm* dbInst::getITerm(dbMTerm* mterm_)
 {
-  _dbBlock* block = (_dbBlock*) getOwner();
   _dbInst*  inst  = (_dbInst*) this;
+  _dbBlock* block = (_dbBlock*) inst->getOwner();
   _dbMTerm* mterm = (_dbMTerm*) mterm_;
   _dbITerm* iterm = block->_iterm_tbl->getPtr(inst->_iterms[mterm->_order_id]);
   return (dbITerm*) iterm;
 }
 dbITerm* dbInst::getITerm(uint mterm_order_id)
 {
-  _dbBlock* block = (_dbBlock*) getOwner();
   _dbInst*  inst  = (_dbInst*) this;
+  _dbBlock* block = (_dbBlock*) inst->getOwner();
   _dbITerm* iterm = block->_iterm_tbl->getPtr(inst->_iterms[mterm_order_id]);
   return (dbITerm*) iterm;
 }
@@ -1055,7 +1057,7 @@ bool dbInst::swapMaster(dbMaster* new_master_)
   }
   */
   _dbInst*  inst        = (_dbInst*) this;
-  _dbBlock* block       = (_dbBlock*) getOwner();
+  _dbBlock* block       = (_dbBlock*) inst->getOwner();
   dbMaster* old_master_ = getMaster();
 
   if (inst->_hierarchy) {

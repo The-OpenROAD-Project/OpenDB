@@ -32,11 +32,11 @@
 
 #pragma once
 
-#include "odb.h"
+#include "dbCore.h"
 #include "dbId.h"
-#include "dbObject.h"
 #include "dbTypes.h"
 #include "geom.h"
+#include "odb.h"
 
 namespace odb {
 
@@ -59,7 +59,7 @@ struct _dbBoxFlags
   uint              _via_id : 16;
 };
 
-class _dbBox : public dbObject
+class _dbBox : public _dbObject
 {
  public:
   enum Type
@@ -71,7 +71,7 @@ class _dbBox : public dbObject
 
   // PERSISTANT-MEMBERS
   _dbBoxFlags  _flags;
-  Rect      _rect;
+  Rect         _rect;
   uint         _owner;
   dbId<_dbBox> _next_box;
 
@@ -144,5 +144,3 @@ inline dbIStream& operator>>(dbIStream& stream, _dbBox& box)
 }
 
 }  // namespace odb
-
-

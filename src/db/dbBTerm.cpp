@@ -31,6 +31,7 @@
 // POSSIBILITY OF SUCH DAMAGE.
 
 #include "dbBTerm.h"
+
 #include "db.h"
 #include "dbArrayTable.h"
 #include "dbBPinItr.h"
@@ -276,7 +277,7 @@ const char* dbBTerm::getConstName()
 bool dbBTerm::rename(const char* name)
 {
   _dbBTerm* bterm = (_dbBTerm*) this;
-  _dbBlock* block = (_dbBlock*) getOwner();
+  _dbBlock* block = (_dbBlock*) getBlock();
 
   if (block->_bterm_hash.hasMember(name))
     return false;
@@ -359,7 +360,7 @@ dbNet* dbBTerm::getNet()
 {
   _dbBTerm* bterm = (_dbBTerm*) this;
   if (bterm->_net) {
-    _dbBlock* block = (_dbBlock*) getOwner();
+    _dbBlock* block = (_dbBlock*) getBlock();
     _dbNet*   net   = block->_net_tbl->getPtr(bterm->_net);
     return (dbNet*) net;
   } else
@@ -388,7 +389,7 @@ void dbBTerm::disconnect()
 dbSet<dbBPin> dbBTerm::getBPins()
 {
   //_dbBTerm * bterm = (_dbBTerm *) this;
-  _dbBlock*     block = (_dbBlock*) getOwner();
+  _dbBlock*     block = (_dbBlock*) getBlock();
   dbSet<dbBPin> bpins(this, block->_bpin_itr);
   return bpins;
 }
@@ -396,7 +397,7 @@ dbSet<dbBPin> dbBTerm::getBPins()
 dbITerm* dbBTerm::getITerm()
 {
   _dbBTerm* bterm = (_dbBTerm*) this;
-  _dbBlock* block = (_dbBlock*) getOwner();
+  _dbBlock* block = (_dbBlock*) getBlock();
 
   if (bterm->_parent_block == 0)
     return NULL;
@@ -408,7 +409,7 @@ dbITerm* dbBTerm::getITerm()
 
 dbBlock* dbBTerm::getBlock()
 {
-  return (dbBlock*) getOwner();
+  return (dbBlock*) getImpl()->getOwner();
 }
 
 bool dbBTerm::getFirstPin(dbShape& shape)
@@ -477,7 +478,7 @@ bool dbBTerm::getFirstPinLocation(int& x, int& y)
 dbBTerm* dbBTerm::getGroundPin()
 {
   _dbBTerm* bterm = (_dbBTerm*) this;
-  _dbBlock* block = (_dbBlock*) getOwner();
+  _dbBlock* block = (_dbBlock*) getBlock();
 
   if (bterm->_ground_pin == 0)
     return NULL;
@@ -489,13 +490,13 @@ dbBTerm* dbBTerm::getGroundPin()
 void dbBTerm::setGroundPin(dbBTerm* pin)
 {
   _dbBTerm* bterm    = (_dbBTerm*) this;
-  bterm->_ground_pin = pin->getOID();
+  bterm->_ground_pin = pin->getImpl()->getOID();
 }
 
 dbBTerm* dbBTerm::getSupplyPin()
 {
   _dbBTerm* bterm = (_dbBTerm*) this;
-  _dbBlock* block = (_dbBlock*) getOwner();
+  _dbBlock* block = (_dbBlock*) getBlock();
 
   if (bterm->_supply_pin == 0)
     return NULL;
@@ -507,7 +508,7 @@ dbBTerm* dbBTerm::getSupplyPin()
 void dbBTerm::setSupplyPin(dbBTerm* pin)
 {
   _dbBTerm* bterm    = (_dbBTerm*) this;
-  bterm->_supply_pin = pin->getOID();
+  bterm->_supply_pin = pin->getImpl()->getOID();
 }
 
 dbBTerm* dbBTerm::create(dbNet* net_, const char* name)

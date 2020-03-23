@@ -32,11 +32,11 @@
 
 #pragma once
 
-#include "odb.h"
+#include <vector>
+
 #include "dbDiff.h"
 #include "dbStream.h"
-
-#include <vector>
+#include "odb.h"
 
 namespace odb {
 
@@ -250,5 +250,3 @@ inline void dbVector<T*>::out(dbDiff& diff, char side, const char* field) const
 #endif
 
 }  // namespace odb
-
-

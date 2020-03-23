@@ -31,6 +31,7 @@
 // POSSIBILITY OF SUCH DAMAGE.
 
 #include "dbITermItr.h"
+
 #include "dbBlock.h"
 #include "dbITerm.h"
 #include "dbInst.h"

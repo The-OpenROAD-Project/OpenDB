@@ -31,6 +31,7 @@
 // POSSIBILITY OF SUCH DAMAGE.
 
 #include "dbStream.h"
+
 #include "db.h"
 
 namespace odb {

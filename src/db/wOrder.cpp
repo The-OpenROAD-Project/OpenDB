@@ -30,6 +30,8 @@
 // ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 // POSSIBILITY OF SUCH DAMAGE.
 
+#include "wOrder.h"
+
 #include <stdio.h>
 #include <stdlib.h>
 
@@ -39,7 +41,6 @@
 #include "dbWireCodec.h"
 #include "logger.h"
 #include "tmg_conn.h"
-#include "wOrder.h"
 
 namespace odb {
 

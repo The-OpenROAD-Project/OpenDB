@@ -30,6 +30,8 @@
 // ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 // POSSIBILITY OF SUCH DAMAGE.
 
+#include "dbITerm.h"
+
 #include "db.h"
 #include "dbArrayTable.h"
 #include "dbBTerm.h"
@@ -39,7 +41,6 @@
 #include "dbDatabase.h"
 #include "dbDiff.hpp"
 #include "dbHier.h"
-#include "dbITerm.h"
 #include "dbInst.h"
 #include "dbInstHdr.h"
 #include "dbJournal.h"
@@ -224,7 +225,7 @@ _dbInst* _dbITerm::getInst() const
 dbInst* dbITerm::getInst()
 {
   _dbITerm* iterm = (_dbITerm*) this;
-  _dbBlock* block = (_dbBlock*) getOwner();
+  _dbBlock* block = (_dbBlock*) iterm->getOwner();
   _dbInst*  inst  = block->_inst_tbl->getPtr(iterm->_inst);
   return (dbInst*) inst;
 }
@@ -232,7 +233,7 @@ dbInst* dbITerm::getInst()
 dbNet* dbITerm::getNet()
 {
   _dbITerm* iterm = (_dbITerm*) this;
-  _dbBlock* block = (_dbBlock*) getOwner();
+  _dbBlock* block = (_dbBlock*) iterm->getOwner();
 
   if (iterm->_net == 0)
     return NULL;
@@ -244,10 +245,10 @@ dbNet* dbITerm::getNet()
 dbMTerm* dbITerm::getMTerm()
 {
   _dbITerm*      iterm    = (_dbITerm*) this;
-  _dbBlock*      block    = (_dbBlock*) getOwner();
+  _dbBlock*      block    = (_dbBlock*) iterm->getOwner();
   _dbInst*       inst     = block->_inst_tbl->getPtr(iterm->_inst);
   _dbInstHdr*    inst_hdr = block->_inst_hdr_tbl->getPtr(inst->_inst_hdr);
-  _dbDatabase*   db       = getDatabase();
+  _dbDatabase*   db       = iterm->getDatabase();
   _dbLib*        lib      = db->_lib_tbl->getPtr(inst_hdr->_lib);
   _dbMaster*     master   = lib->_master_tbl->getPtr(inst_hdr->_master);
   dbId<_dbMTerm> mterm    = inst_hdr->_mterms[iterm->_flags._mterm_idx];
@@ -257,7 +258,7 @@ dbMTerm* dbITerm::getMTerm()
 dbBTerm* dbITerm::getBTerm()
 {
   _dbITerm* iterm = (_dbITerm*) this;
-  _dbBlock* block = (_dbBlock*) getOwner();
+  _dbBlock* block = (_dbBlock*) iterm->getOwner();
   _dbInst*  inst  = block->_inst_tbl->getPtr(iterm->_inst);
 
   if (inst->_hierarchy == 0)
@@ -273,7 +274,7 @@ dbBTerm* dbITerm::getBTerm()
 
 dbBlock* dbITerm::getBlock()
 {
-  return (dbBlock*) getOwner();
+  return (dbBlock*) getImpl()->getOwner();
 }
 void dbITerm::setClocked(bool v)
 {
@@ -591,7 +592,7 @@ bool dbITerm::getAvgXY(int* x, int* y)
   int      py;
   dbInst*  inst = getInst();
   inst->getOrigin(px, py);
-  Point     origin = Point(px, py);
+  Point        origin = Point(px, py);
   dbOrientType orient = inst->getOrient();
   dbTransform  transform(orient, origin);
 
@@ -602,8 +603,8 @@ bool dbITerm::getAvgXY(int* x, int* y)
     dbSet<dbBox>           boxes = mpin->getGeometry();
     dbSet<dbBox>::iterator box_itr;
     for (box_itr = boxes.begin(); box_itr != boxes.end(); box_itr++) {
-      dbBox*  box = *box_itr;
-      Rect rect;
+      dbBox* box = *box_itr;
+      Rect   rect;
       box->getBox(rect);
       transform.apply(rect);
       xx += rect.xMin() + rect.xMax();

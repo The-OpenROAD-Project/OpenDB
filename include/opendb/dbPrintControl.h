@@ -38,6 +38,7 @@ namespace odb {
 
 class dbNet;
 class dbInst;
+class dbBlock;
 
 class dbPrintControl
 {

@@ -31,6 +31,7 @@
 // POSSIBILITY OF SUCH DAMAGE.
 
 #include <string.h>
+
 #include "db.h"
 #include "dbCore.h"
 #include "dbDatabase.h"
@@ -41,7 +42,7 @@ namespace odb {
 
 uint dbObject::getId() const
 {
-  return getOID();
+  return getImpl()->getOID();
 }
 
 void dbObject::getDbName(char name[max_name_length]) const
@@ -53,7 +54,7 @@ void dbObject::getDbName(char name[max_name_length]) const
   const dbObject** sptr = end;
 
   for (child = this; child; child = parent) {
-    parent    = child->getOwner();
+    parent    = child->getImpl()->getOwner();
     *(--sptr) = child;
   }
 
@@ -64,7 +65,9 @@ void dbObject::getDbName(char name[max_name_length]) const
     const dbObject* obj = *sptr;
     uint            id;
 
-    switch (obj->getType()) {
+    const _dbObject* impl = getImpl();
+
+    switch (impl->getType()) {
       case dbDatabaseObj: {
         *cptr++         = 'D';
         _dbDatabase* db = (_dbDatabase*) obj;
@@ -75,12 +78,12 @@ void dbObject::getDbName(char name[max_name_length]) const
       // Design Objects
       case dbChipObj:
         *cptr++ = 'C';
-        id      = obj->getOID();
+        id      = impl->getOID();
         break;
 
       case dbBlockObj:
         *cptr++ = 'B';
-        id      = obj->getOID();
+        id      = impl->getOID();
         break;
 
       case dbInstHdrObj:
@@ -89,97 +92,97 @@ void dbObject::getDbName(char name[max_name_length]) const
 
       case dbInstObj:
         *cptr++ = 'I';
-        id      = obj->getOID();
+        id      = impl->getOID();
         break;
 
       case dbNetObj:
         *cptr++ = 'N';
-        id      = obj->getOID();
+        id      = impl->getOID();
         break;
 
       case dbBTermObj:
         *cptr++ = 'T';
-        id      = obj->getOID();
+        id      = impl->getOID();
         break;
 
       case dbITermObj:
         *cptr++ = 'Y';
-        id      = obj->getOID();
+        id      = impl->getOID();
         break;
 
       case dbBoxObj:
         *cptr++ = 'X';
-        id      = obj->getOID();
+        id      = impl->getOID();
         break;
 
       case dbViaObj:
         *cptr++ = 'V';
-        id      = obj->getOID();
+        id      = impl->getOID();
         break;
 
       case dbGCellGridObj:
         *cptr++ = 'G';
-        id      = obj->getOID();
+        id      = impl->getOID();
         break;
 
       case dbTrackGridObj:
         *cptr++ = 'K';
-        id      = obj->getOID();
+        id      = impl->getOID();
         break;
 
       case dbObstructionObj:
         *cptr++ = 'O';
-        id      = obj->getOID();
+        id      = impl->getOID();
         break;
 
       case dbBlockageObj:
         *cptr++ = 'E';
-        id      = obj->getOID();
+        id      = impl->getOID();
         break;
 
       case dbWireObj:
         *cptr++ = 'W';
-        id      = obj->getOID();
+        id      = impl->getOID();
         break;
 
       case dbSWireObj:
         *cptr++ = 'S';
-        id      = obj->getOID();
+        id      = impl->getOID();
         break;
 
       case dbSBoxObj:
         *cptr++ = 'Q';
-        id      = obj->getOID();
+        id      = impl->getOID();
         break;
 
       case dbCapNodeObj:  // DKF
         *cptr++ = 'n';
-        id      = obj->getOID();
+        id      = impl->getOID();
         break;
 
       case dbRSegObj:  // DKF
         *cptr++ = 's';
-        id      = obj->getOID();
+        id      = impl->getOID();
         break;
 
       case dbCCSegObj:
         *cptr++ = 'c';
-        id      = obj->getOID();
+        id      = impl->getOID();
         break;
 
       case dbRowObj:
         *cptr++ = 'x';
-        id      = obj->getOID();
+        id      = impl->getOID();
         break;
 
       case dbMetricsObj:
         *cptr++ = 'm';
-        id      = obj->getOID();
+        id      = impl->getOID();
         break;
 
       case dbRegionObj:
         *cptr++ = 'a';
-        id      = obj->getOID();
+        id      = impl->getOID();
         break;
 
       case dbHierObj:
@@ -188,119 +191,119 @@ void dbObject::getDbName(char name[max_name_length]) const
 
       case dbBPinObj:
         *cptr++ = 'p';
-        id      = obj->getOID();
+        id      = impl->getOID();
         break;
 
       // Lib Objects
       case dbLibObj:
         *cptr++ = 'L';
-        id      = obj->getOID();
+        id      = impl->getOID();
         break;
 
       case dbSiteObj:
         *cptr++ = 'U';
-        id      = obj->getOID();
+        id      = impl->getOID();
         break;
 
       case dbMasterObj:
         *cptr++ = 'M';
-        id      = obj->getOID();
+        id      = impl->getOID();
         break;
 
       case dbMPinObj:
         *cptr++ = 'P';
-        id      = obj->getOID();
+        id      = impl->getOID();
         break;
 
       case dbMTermObj:
         *cptr++ = 'T';
-        id      = obj->getOID();
+        id      = impl->getOID();
         break;
 
       case dbTargetObj:
         *cptr++ = 't';
-        id      = obj->getOID();
+        id      = impl->getOID();
         break;
 
       case dbTechAntennaPinModelObj:
         *cptr++ = 'Z';
-        id      = obj->getOID();
+        id      = impl->getOID();
         break;
 
       // Tech Objects
       case dbTechObj:
         *cptr++ = 'H';
-        id      = obj->getOID();
+        id      = impl->getOID();
         break;
 
       case dbTechLayerObj:
         *cptr++ = 'A';
-        id      = obj->getOID();
+        id      = impl->getOID();
         break;
 
       case dbTechViaObj:
         *cptr++ = 'V';
-        id      = obj->getOID();
+        id      = impl->getOID();
         break;
 
       case dbTechNonDefaultRuleObj:
         *cptr++ = 'd';
-        id      = obj->getOID();
+        id      = impl->getOID();
         break;
 
       case dbTechLayerRuleObj:
         *cptr++ = 'l';
-        id      = obj->getOID();
+        id      = impl->getOID();
         break;
 
       case dbTechSameNetRuleObj:
         *cptr++ = 'q';
-        id      = obj->getOID();
+        id      = impl->getOID();
         break;
 
       case dbTechLayerSpacingRuleObj:
         *cptr++ = 'r';
-        id      = obj->getOID();
+        id      = impl->getOID();
         break;
 
       case dbTechMinCutRuleObj:
         *cptr++ = 'e';
-        id      = obj->getOID();
+        id      = impl->getOID();
         break;
 
       case dbTechMinEncRuleObj:
         *cptr++ = 'f';
-        id      = obj->getOID();
+        id      = impl->getOID();
         break;
 
       case dbTechV55InfluenceEntryObj:
         *cptr++ = 'g';
-        id      = obj->getOID();
+        id      = impl->getOID();
         break;
 
       case dbTechLayerAntennaRuleObj:
         *cptr++ = 'R';
-        id      = obj->getOID();
+        id      = impl->getOID();
         break;
 
       case dbTechViaRuleObj:
         *cptr++ = 'y';
-        id      = obj->getOID();
+        id      = impl->getOID();
         break;
 
       case dbTechViaGenerateRuleObj:
         *cptr++ = 'z';
-        id      = obj->getOID();
+        id      = impl->getOID();
         break;
 
       case dbTechViaLayerRuleObj:
         *cptr++ = 'u';
-        id      = obj->getOID();
+        id      = impl->getOID();
         break;
 
       case dbPropertyObj:
         *cptr++ = 'o';
-        id      = obj->getOID();
+        id      = impl->getOID();
         break;
 
       case dbNameObj:
@@ -343,7 +346,7 @@ dbObject* dbObject::resolveDbName(dbDatabase* db_, const char* name)
       case 'B':  // block
         oid = getOid(name);
 
-        if (obj->getType() == dbBlockObj)
+        if (obj->getImpl()->getType() == dbBlockObj)
           obj = dbBlock::getBlock((dbBlock*) obj, oid);
         else
           obj = dbBlock::getBlock((dbChip*) obj, oid);
@@ -429,7 +432,7 @@ dbObject* dbObject::resolveDbName(dbDatabase* db_, const char* name)
       case 'T':  // bterm, mterm
         oid = getOid(name);
 
-        if (obj->getType() == dbBlockObj)
+        if (obj->getImpl()->getType() == dbBlockObj)
           obj = dbBTerm::getBTerm((dbBlock*) obj, oid);
         else
           obj = dbMTerm::getMTerm((dbMaster*) obj, oid);
@@ -444,7 +447,7 @@ dbObject* dbObject::resolveDbName(dbDatabase* db_, const char* name)
       case 'V':  // block-via, or tech-via
         oid = getOid(name);
 
-        if (obj->getType() == dbBlockObj)
+        if (obj->getImpl()->getType() == dbBlockObj)
           obj = dbVia::getVia((dbBlock*) obj, oid);
         else
           obj = dbTechVia::getTechVia((dbTech*) obj, oid);
@@ -458,7 +461,7 @@ dbObject* dbObject::resolveDbName(dbDatabase* db_, const char* name)
       case 'X':  // box
       {
         oid               = getOid(name);
-        dbObjectType type = obj->getType();
+        dbObjectType type = obj->getImpl()->getType();
 
         if (type == dbBlockObj)
           obj = dbBox::getBox((dbBlock*) obj, oid);
@@ -591,7 +594,7 @@ dbObject* dbObject::resolveDbName(dbDatabase* db_, const char* name)
 
 dbObjectType dbObject::getObjectType() const
 {
-  return getType();
+  return getImpl()->getType();
 }
 
 //
@@ -655,7 +658,7 @@ static const char* name_tbl[] = {"dbDatabase",
 
 const char* dbObject::getObjName() const
 {
-  return name_tbl[getType()];
+  return name_tbl[getImpl()->getType()];
 }
 
 const char* dbObject::getObjName(dbObjectType type)

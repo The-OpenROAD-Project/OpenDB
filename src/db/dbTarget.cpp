@@ -31,6 +31,7 @@
 // POSSIBILITY OF SUCH DAMAGE.
 
 #include "dbTarget.h"
+
 #include "db.h"
 #include "dbDatabase.h"
 #include "dbLib.h"
@@ -92,20 +93,20 @@ void _dbTarget::out(dbDiff& diff, char side, const char* field) const
 
 dbMaster* dbTarget::getMaster()
 {
-  return (dbMaster*) getOwner();
+  return (dbMaster*) getImpl()->getOwner();
 }
 
 dbMTerm* dbTarget::getMTerm()
 {
   _dbTarget* target = (_dbTarget*) this;
-  _dbMaster* master = (_dbMaster*) getOwner();
+  _dbMaster* master = (_dbMaster*) target->getOwner();
   return (dbMTerm*) master->_mterm_tbl->getPtr(target->_mterm);
 }
 
 dbTechLayer* dbTarget::getTechLayer()
 {
   _dbTarget*  target = (_dbTarget*) this;
-  dbDatabase* db     = (dbDatabase*) getDatabase();
+  dbDatabase* db     = (dbDatabase*) target->getDatabase();
   _dbTech*    tech   = (_dbTech*) db->getTech();
   return (dbTechLayer*) tech->_layer_tbl->getPtr(target->_layer);
 }
@@ -118,8 +119,8 @@ Point dbTarget::getPoint()
 
 dbTarget* dbTarget::create(dbMTerm* mterm_, dbTechLayer* layer_, Point point)
 {
-  _dbMaster*    master = (_dbMaster*) mterm_->getOwner();
   _dbMTerm*     mterm  = (_dbMTerm*) mterm_;
+  _dbMaster*    master = (_dbMaster*) mterm->getOwner();
   _dbTechLayer* layer  = (_dbTechLayer*) layer_;
 
   _dbTarget* target = master->_target_tbl->create();

@@ -30,11 +30,12 @@
 // ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 // POSSIBILITY OF SUCH DAMAGE.
 
+#include "dbSearch.h"
+
 #include "db.h"
 #include "dbBlock.h"
 #include "dbDatabase.h"
 #include "dbNet.h"
-#include "dbSearch.h"
 #include "dbTable.h"
 #include "dbTable.hpp"
 #include "dbTypes.h"
@@ -2198,7 +2199,9 @@ void dbBlockSearch::getNetBbox(dbNet* net, Rect& maxRect)
     maxRect.merge(r);
   }
 }
-uint dbBlockSearch::getNetFromDb(dbNet* net, bool /* unused: ignoreZuiFlags */, bool ignoreBB)
+uint dbBlockSearch::getNetFromDb(dbNet* net,
+                                 bool /* unused: ignoreZuiFlags */,
+                                 bool ignoreBB)
 {
   uint cnt = 0;
 
@@ -2289,9 +2292,9 @@ uint dbBlockSearch::getNetWires(dbNet* net,
 uint dbBlockSearch::getNetConnectivity(dbNet* net,
                                        bool   contextFlag,
                                        uint   clipMargin,
-                                       bool   /* unused: ignoreLayerFlags */,
-                                       bool   ignoreZuiFlags,
-                                       bool   ignoreBB)
+                                       bool /* unused: ignoreLayerFlags */,
+                                       bool ignoreZuiFlags,
+                                       bool ignoreBB)
 {
   if (net == NULL)
     return 0;
@@ -2342,7 +2345,9 @@ uint dbBlockSearch::getConnectivityWires(dbInst* inst, bool ignoreZuiFlags)
   return cnt;
 }
 
-void dbBlockSearch::addNetSBoxes(dbNet* net, uint /* unused: wtype */, bool skipVias)
+void dbBlockSearch::addNetSBoxes(dbNet* net,
+                                 uint /* unused: wtype */,
+                                 bool skipVias)
 {
   dbSet<dbSWire>           swires = net->getSWires();
   dbSet<dbSWire>::iterator itr;

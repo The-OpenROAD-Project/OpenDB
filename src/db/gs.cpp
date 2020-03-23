@@ -267,8 +267,8 @@ int gs::setSize(int  pl,
   // fprintf(stderr,"Slice number: %d\n",pl);
   // fprintf(stderr,"xres/yres: %d, %d\n",plc->xres,plc->yres);
   // fprintf(stderr,"x0,x1 y0,y1: %d,%d
-  // %d,%d\n",plc->x0,plc->x1,plc->y0,plc->y1); fprintf(stderr,"Height/Width: %d,
-  // %d\n",plc->height,plc->width);
+  // %d,%d\n",plc->x0,plc->x1,plc->y0,plc->y1); fprintf(stderr,"Height/Width:
+  // %d, %d\n",plc->height,plc->width);
 
   plc->pixwrem = plc->width % PIXMAPGRID;
 
@@ -1120,10 +1120,10 @@ int gs::write_ppm_file(FILE* fp,
 
 int gs::write_ppm_string(char** s,
                          int    encoding,
-                         int    /* unused: width */,
-                         int    /* unused: height */,
-                         int*   /* unused: ll */,
-                         int*   /* unused: ur */)
+                         int /* unused: width */,
+                         int /* unused: height */,
+                         int* /* unused: ll */,
+                         int* /* unused: ur */)
 {
   if (!(_init & ALLOCATED)) {
     return -1;

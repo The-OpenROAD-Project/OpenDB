@@ -31,6 +31,7 @@
 // POSSIBILITY OF SUCH DAMAGE.
 
 #include "dbObstruction.h"
+
 #include "db.h"
 #include "dbBlock.h"
 #include "dbBox.h"
@@ -273,7 +274,7 @@ bool _dbObstruction::operator<(const _dbObstruction& rhs) const
 dbBox* dbObstruction::getBBox()
 {
   _dbObstruction* obs   = (_dbObstruction*) this;
-  _dbBlock*       block = (_dbBlock*) getOwner();
+  _dbBlock*       block = (_dbBlock*) obs->getOwner();
   return (dbBox*) block->_box_tbl->getPtr(obs->_bbox);
 }
 
@@ -284,7 +285,7 @@ dbInst* dbObstruction::getInstance()
   if (obs->_inst == 0)
     return NULL;
 
-  _dbBlock* block = (_dbBlock*) getOwner();
+  _dbBlock* block = (_dbBlock*) obs->getOwner();
   return (dbInst*) block->_inst_tbl->getPtr(obs->_inst);
 }
 
@@ -364,7 +365,7 @@ int dbObstruction::getMinSpacing()
 
 dbBlock* dbObstruction::getBlock()
 {
-  return (dbBlock*) getOwner();
+  return (dbBlock*) getImpl()->getOwner();
 }
 
 dbObstruction* dbObstruction::create(dbBlock*     block_,

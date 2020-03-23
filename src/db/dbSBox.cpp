@@ -31,6 +31,7 @@
 // POSSIBILITY OF SUCH DAMAGE.
 
 #include "dbSBox.h"
+
 #include "db.h"
 #include "dbBlock.h"
 #include "dbBox.h"
@@ -213,7 +214,7 @@ dbSBox* dbSBox::create(dbSWire*        wire_,
       break;
   }
 
-  box->_flags._layer_id   = layer_->getOID();
+  box->_flags._layer_id   = layer_->getImpl()->getOID();
   box->_flags._owner_type = dbBoxOwner::SWIRE;
   box->_owner             = wire->getOID();
   box->_rect.init(x1, y1, x2, y2);
@@ -275,7 +276,7 @@ dbSBox* dbSBox::create(dbSWire*        wire_,
   if (via->_bbox == 0)
     return NULL;
 
-  _dbTech* tech           = (_dbTech*) via_->getOwner();
+  _dbTech* tech           = (_dbTech*) via->getOwner();
   _dbBox*  vbbox          = tech->_box_tbl->getPtr(via->_bbox);
   int      xmin           = vbbox->_rect.xMin() + x;
   int      ymin           = vbbox->_rect.yMin() + y;

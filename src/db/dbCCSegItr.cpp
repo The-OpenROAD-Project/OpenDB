@@ -31,7 +31,9 @@
 // POSSIBILITY OF SUCH DAMAGE.
 
 #include "dbCCSegItr.h"
+
 #include <stdarg.h>
+
 #include "dbBlock.h"
 #include "dbCCSeg.h"
 #include "dbCapNode.h"

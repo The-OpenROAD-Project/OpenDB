@@ -32,9 +32,9 @@
 
 #pragma once
 
-#include "odb.h"
+#include "dbCore.h"
 #include "dbId.h"
-#include "dbObject.h"
+#include "odb.h"
 
 namespace odb {
 
@@ -55,7 +55,7 @@ struct _dbObstructionFlags
   uint _spare_bits : 27;
 };
 
-class _dbObstruction : public dbObject
+class _dbObstruction : public _dbObject
 {
  public:
   _dbObstructionFlags _flags;
@@ -81,5 +81,3 @@ dbOStream& operator<<(dbOStream& stream, const _dbObstruction& obs);
 dbIStream& operator>>(dbIStream& stream, _dbObstruction& obs);
 
 }  // namespace odb
-
-

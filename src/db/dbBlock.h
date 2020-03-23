@@ -32,7 +32,8 @@
 
 #pragma once
 
-#include "odb.h"
+#include <list>
+
 #include "dbCore.h"
 #include "dbHashTable.h"
 #include "dbIntHashTable.h"
@@ -42,8 +43,7 @@
 #include "dbTypes.h"
 #include "dbVector.h"
 #include "geom.h"
-
-#include <list>
+#include "odb.h"
 
 /*DELETE
 #include "ISdb.h"
@@ -131,7 +131,7 @@ struct _dbBlockFlags
   uint _spare_bits_27 : 27;
 };
 
-class _dbBlock : public dbObject
+class _dbBlock : public _dbObject
 {
  public:
   enum Field  // dbJournal field names
@@ -152,7 +152,7 @@ class _dbBlock : public dbObject
   uint                        _corners_per_block;
   char*                       _corner_name_list;
   char*                       _name;
-  Rect                     _die_area;
+  Rect                        _die_area;
   dbId<_dbChip>               _chip;
   dbId<_dbBox>                _bbox;
   dbId<_dbBlock>              _parent;
@@ -260,5 +260,3 @@ dbOStream& operator<<(dbOStream& stream, const _dbBlock& block);
 dbIStream& operator>>(dbIStream& stream, _dbBlock& block);
 
 }  // namespace odb
-
-

@@ -30,6 +30,8 @@
 // ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 // POSSIBILITY OF SUCH DAMAGE.
 
+#include "dbWire.h"
+
 #include <algorithm>
 
 #include "db.h"
@@ -42,7 +44,6 @@
 #include "dbTable.hpp"
 #include "dbTechLayerRule.h"
 #include "dbVia.h"
-#include "dbWire.h"
 #include "dbWireOpcode.h"
 
 namespace odb {
@@ -251,7 +252,7 @@ void out(dbDiff& diff, char side, dbShape* s)
 
 dbBlock* dbWire::getBlock()
 {
-  return (dbBlock*) getOwner();
+  return (dbBlock*) getImpl()->getOwner();
 }
 
 dbNet* dbWire::getNet()
@@ -261,7 +262,7 @@ dbNet* dbWire::getNet()
   if (wire->_net == 0)
     return NULL;
 
-  _dbBlock* block = (_dbBlock*) getOwner();
+  _dbBlock* block = (_dbBlock*) wire->getOwner();
   return (dbNet*) block->_net_tbl->getPtr(wire->_net);
 }
 
@@ -581,7 +582,7 @@ void dbWire::shuffleWireSeg(dbNet** newNets, dbRSeg** new_rsegs)
       if (twire == NULL)
         twire = dbWire::create(newNets[jj]);
       fwire = twire == this ? rwire : twire;
-      fwire->addOneSeg(WOP_PATH | wwtype, llayer->getOID());
+      fwire->addOneSeg(WOP_PATH | wwtype, llayer->getImpl()->getOID());
       bool extension = false;
       if ((wire->_opcodes[jj + 1] & WOP_OPCODE_MASK) == WOP_OPERAND)
         extension = true;
@@ -630,7 +631,7 @@ bool dbWire::getBBox(Rect& bbox)
   bbox.reset(INT_MAX, INT_MAX, INT_MIN, INT_MIN);
   dbWireShapeItr itr;
   dbShape        s;
-  Rect        r;
+  Rect           r;
   uint           cnt = 0;
 
   for (itr.begin(this); itr.next(s);) {
@@ -659,7 +660,7 @@ void dbWire::getShape(int shape_id, dbShape& shape)
     }
 
     case WOP_VIA: {
-      dbBlock* block   = (dbBlock*) getOwner();
+      dbBlock* block   = (dbBlock*) wire->getOwner();
       dbTech*  tech    = getDb()->getTech();
       int      operand = wire->_data[shape_id];
       dbVia*   via     = dbVia::getVia(block, operand);
@@ -676,17 +677,17 @@ void dbWire::getShape(int shape_id, dbShape& shape)
           tech, block, wire->_opcodes, wire->_data, shape_id, false, pnt);
       Rect b;
       box->getBox(b);
-      int     xmin = b.xMin() + pnt._x;
-      int     ymin = b.yMin() + pnt._y;
-      int     xmax = b.xMax() + pnt._x;
-      int     ymax = b.yMax() + pnt._y;
+      int  xmin = b.xMin() + pnt._x;
+      int  ymin = b.yMin() + pnt._y;
+      int  xmax = b.xMax() + pnt._x;
+      int  ymax = b.yMax() + pnt._y;
       Rect r(xmin, ymin, xmax, ymax);
       shape.setVia(via, r);
       return;
     }
 
     case WOP_TECH_VIA: {
-      dbBlock*   block   = (dbBlock*) getOwner();
+      dbBlock*   block   = (dbBlock*) wire->getOwner();
       dbTech*    tech    = getDb()->getTech();
       int        operand = wire->_data[shape_id];
       dbTechVia* via     = dbTechVia::getTechVia(tech, operand);
@@ -703,10 +704,10 @@ void dbWire::getShape(int shape_id, dbShape& shape)
           tech, block, wire->_opcodes, wire->_data, shape_id, false, pnt);
       Rect b;
       box->getBox(b);
-      int     xmin = b.xMin() + pnt._x;
-      int     ymin = b.yMin() + pnt._y;
-      int     xmax = b.xMax() + pnt._x;
-      int     ymax = b.yMax() + pnt._y;
+      int  xmin = b.xMin() + pnt._x;
+      int  ymin = b.yMin() + pnt._y;
+      int  xmax = b.xMax() + pnt._x;
+      int  ymax = b.yMax() + pnt._y;
       Rect r(xmin, ymin, xmax, ymax);
       shape.setVia(via, r);
       return;
@@ -721,7 +722,7 @@ void dbWire::getCoord(int jid, int& x, int& y)
 {
   _dbWire* wire = (_dbWire*) this;
   ZASSERT((0 <= jid) && (jid < (int) wire->length()));
-  dbBlock* block = (dbBlock*) getOwner();
+  dbBlock* block = (dbBlock*) wire->getOwner();
   dbTech*  tech  = getDb()->getTech();
   // dimitri_fix LOOK_AGAIN WirePoint pnt;
   WirePoint pnt;
@@ -1070,7 +1071,7 @@ decode_loop : {
         found_width = true;
 
         if (opcode & WOP_BLOCK_RULE) {
-          dbBlock*         block = (dbBlock*) getOwner();
+          dbBlock*         block = (dbBlock*) wire->getOwner();
           dbTechLayerRule* rule
               = dbTechLayerRule::getTechLayerRule(block, wire->_data[idx]);
           width = rule->getWidth();
@@ -1098,7 +1099,7 @@ decode_loop : {
 
     case WOP_VIA:
       if (layer == NULL) {
-        dbBlock* block = (dbBlock*) getOwner();
+        dbBlock* block = (dbBlock*) wire->getOwner();
         dbVia*   via   = dbVia::getVia(block, wire->_data[idx]);
 
         if (opcode & WOP_VIA_EXIT_TOP)
@@ -1180,7 +1181,7 @@ state_machine_update : {
       case WOP_RULE: {
         found_width = true;
         if (opcode & WOP_BLOCK_RULE) {
-          dbBlock*         block = (dbBlock*) getOwner();
+          dbBlock*         block = (dbBlock*) wire->getOwner();
           dbTechLayerRule* rule
               = dbTechLayerRule::getTechLayerRule(block, wire->_data[idx]);
           width = rule->getWidth();
@@ -1196,7 +1197,7 @@ state_machine_update : {
 
       case WOP_VIA: {
         if (layer == NULL) {
-          dbBlock* block = (dbBlock*) getOwner();
+          dbBlock* block = (dbBlock*) wire->getOwner();
           dbVia*   via   = dbVia::getVia(block, wire->_data[idx]);
 
           if (opcode & WOP_VIA_EXIT_TOP)
@@ -1288,7 +1289,7 @@ decode_loop : {
         found_width = true;
 
         if (opcode & WOP_BLOCK_RULE) {
-          dbBlock*         block = (dbBlock*) getOwner();
+          dbBlock*         block = (dbBlock*) wire->getOwner();
           dbTechLayerRule* rule
               = dbTechLayerRule::getTechLayerRule(block, wire->_data[idx]);
           width = rule->getWidth();
@@ -1360,7 +1361,7 @@ state_machine_update : {
       case WOP_RULE: {
         found_width = true;
         if (opcode & WOP_BLOCK_RULE) {
-          dbBlock*         block = (dbBlock*) getOwner();
+          dbBlock*         block = (dbBlock*) wire->getOwner();
           dbTechLayerRule* rule
               = dbTechLayerRule::getTechLayerRule(block, wire->_data[idx]);
           width = rule->getWidth();
@@ -1448,10 +1449,10 @@ inline bool createTechVia(_dbWire* wire, int idx, dbShape& shape)
   getPrevPoint(tech, block, wire->_opcodes, wire->_data, idx, false, pnt);
   Rect b;
   box->getBox(b);
-  int     xmin = b.xMin() + pnt._x;
-  int     ymin = b.yMin() + pnt._y;
-  int     xmax = b.xMax() + pnt._x;
-  int     ymax = b.yMax() + pnt._y;
+  int  xmin = b.xMin() + pnt._x;
+  int  ymin = b.yMin() + pnt._y;
+  int  xmax = b.xMax() + pnt._x;
+  int  ymax = b.yMax() + pnt._y;
   Rect r(xmin, ymin, xmax, ymax);
   shape.setVia(via, r);
   return true;
@@ -1475,10 +1476,10 @@ inline bool createVia(_dbWire* wire, int idx, dbShape& shape)
   getPrevPoint(tech, block, wire->_opcodes, wire->_data, idx, false, pnt);
   Rect b;
   box->getBox(b);
-  int     xmin = b.xMin() + pnt._x;
-  int     ymin = b.yMin() + pnt._y;
-  int     xmax = b.xMax() + pnt._x;
-  int     ymax = b.yMax() + pnt._y;
+  int  xmin = b.xMin() + pnt._x;
+  int  ymin = b.yMin() + pnt._y;
+  int  xmax = b.xMax() + pnt._x;
+  int  ymax = b.yMax() + pnt._y;
   Rect r(xmin, ymin, xmax, ymax);
   shape.setVia(via, r);
   return true;
@@ -1631,7 +1632,7 @@ void dbWire::append(dbWire* src_, bool singleSegmentWire)
         if (dst_via == NULL)
           dst_via = dbVia::copy((dbBlock*) dst_block, (dbVia*) src_via);
 
-        dst->_data[i] = dst_via->getOID();
+        dst->_data[i] = dst_via->getImpl()->getOID();
       }
     }
   }
@@ -1681,7 +1682,7 @@ void dbWire::detach()
 
 void dbWire::ecoUpdate()
 {
-  _dbBlock*                                block = (_dbBlock*) getOwner();
+  _dbBlock* block = (_dbBlock*) getImpl()->getOwner();
   std::list<dbBlockCallBackObj*>::iterator cbitr;
   for (cbitr = block->_callbacks.begin(); cbitr != block->_callbacks.end();
        ++cbitr)
@@ -1745,23 +1746,23 @@ void dbWire::copy(dbWire* dst_,
           if (dst_via == NULL)
             dst_via = dbVia::copy((dbBlock*) dst_block, (dbVia*) src_via);
 
-          dst->_data[i] = dst_via->getOID();
+          dst->_data[i] = dst_via->getImpl()->getOID();
         }
       }
     }
   }
 }
 
-void dbWire::copy(dbWire*        dst,
-                  dbWire*        src,
+void dbWire::copy(dbWire*     dst,
+                  dbWire*     src,
                   const Rect& bbox,
-                  bool           removeITermsBTerms,
-                  bool           copyVias)
+                  bool        removeITermsBTerms,
+                  bool        copyVias)
 {
   dbRtTree tree;
   tree.decode(src, !removeITermsBTerms);
 
-  Rect                 r;
+  Rect                    r;
   dbRtTree::edge_iterator itr;
 
   for (itr = tree.begin_edges(); itr != tree.end_edges();) {
@@ -1775,8 +1776,8 @@ void dbWire::copy(dbWire*        dst,
   }
 
   if (copyVias) {
-    dbBlock* src_block = (dbBlock*) src->getOwner();
-    dbBlock* dst_block = (dbBlock*) dst->getOwner();
+    dbBlock* src_block = (dbBlock*) src->getImpl()->getOwner();
+    dbBlock* dst_block = (dbBlock*) dst->getImpl()->getOwner();
 
     if (src_block != dst_block) {
       for (itr = tree.begin_edges(); itr != tree.end_edges();) {

@@ -31,6 +31,7 @@
 // POSSIBILITY OF SUCH DAMAGE.
 
 #include "dbPropertyItr.h"
+
 #include "dbProperty.h"
 #include "dbTable.h"
 
@@ -54,8 +55,9 @@ bool dbPropertyItr::orderReversed()
 
 void dbPropertyItr::reverse(dbObject* parent)
 {
-  dbObjectTable* table = parent->getTable();
-  uint           id    = table->getPropList(parent->getOID());
+  _dbObject*     parent_impl = parent->getImpl();
+  dbObjectTable* table       = parent_impl->getTable();
+  uint           id          = table->getPropList(parent_impl->getOID());
 
   if (id) {
     uint list = 0;
@@ -68,7 +70,7 @@ void dbPropertyItr::reverse(dbObject* parent)
       id             = n;
     }
 
-    table->setPropList(parent->getOID(), list);
+    table->setPropList(parent_impl->getOID(), list);
   }
 }
 
@@ -91,8 +93,8 @@ uint dbPropertyItr::size(dbObject* parent)
 
 uint dbPropertyItr::begin(dbObject* parent)
 {
-  dbObjectTable* table = parent->getTable();
-  uint           id    = table->getPropList(parent->getOID());
+  dbObjectTable* table = parent->getImpl()->getTable();
+  uint           id    = table->getPropList(parent->getImpl()->getOID());
   return id;
 }
 

@@ -31,6 +31,7 @@
 // POSSIBILITY OF SUCH DAMAGE.
 
 #include "dbExtControl.h"
+
 #include "db.h"
 #include "dbDatabase.h"
 

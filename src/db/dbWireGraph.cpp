@@ -31,6 +31,7 @@
 // POSSIBILITY OF SUCH DAMAGE.
 
 #include "dbWireGraph.h"
+
 #include "dbWire.h"
 #include "dbWireCodec.h"
 

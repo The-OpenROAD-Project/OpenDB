@@ -30,6 +30,8 @@
 // ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 // POSSIBILITY OF SUCH DAMAGE.
 
+#include "tmg_conn.h"
+
 #include <stdio.h>
 #include <stdlib.h>
 
@@ -37,7 +39,6 @@
 #include "dbShape.h"
 #include "dbWireCodec.h"
 #include "logger.h"
-#include "tmg_conn.h"
 
 namespace odb {
 
@@ -237,7 +238,7 @@ tmg_rc* tmg_conn::addRcPatch(int ifr, int ito)
       xhi = _ptV[ifr]._x;
     }
   }
-  int hw = x->_width / 2;
+  int hw          = x->_width / 2;
   x->_default_ext = hw;
   x->_shape._rect.reset(xlo - hw, ylo - hw, xhi + hw, yhi + hw);
   return x;
@@ -359,10 +360,10 @@ void tmg_conn::loadSWire(dbNet* net)
   dbSet<dbSBox>::iterator  itb;
   dbSBox*                  sbox;
   dbShape                  shape;
-  Rect                  rect;
+  Rect                     rect;
   int                      x1, y1, x2, y2;
-  dbTechLayer *            layer1 = NULL;
-  dbTechLayer *layer2 = NULL;
+  dbTechLayer*             layer1 = NULL;
+  dbTechLayer*             layer2 = NULL;
   dbTechVia*               tech_via;
   dbVia*                   via;
   tmg_rcpt*                pt;
@@ -373,10 +374,10 @@ void tmg_conn::loadSWire(dbNet* net)
       sbox = *itb;
       sbox->getBox(rect);
       if (sbox->isVia()) {
-        x1 = (rect.xMin() + rect.xMax()) / 2;
-        x2 = x1;
-        y1 =  (rect.yMin() + rect.yMax()) / 2;
-        y2  = y1;
+        x1       = (rect.xMin() + rect.xMax()) / 2;
+        x2       = x1;
+        y1       = (rect.yMin() + rect.yMax()) / 2;
+        y2       = y1;
         tech_via = sbox->getTechVia();
         via      = sbox->getBlockVia();
         if (tech_via) {
@@ -392,13 +393,13 @@ void tmg_conn::loadSWire(dbNet* net)
         if (rect.xMax() - rect.xMin() > rect.yMax() - rect.yMin()) {
           y1 = (rect.yMin() + rect.yMax()) / 2;
           y2 = y1;
-          x1      = rect.xMin() + (rect.yMax() - y1);
-          x2      = rect.xMax() - (rect.yMax() - y1);
+          x1 = rect.xMin() + (rect.yMax() - y1);
+          x2 = rect.xMax() - (rect.yMax() - y1);
         } else {
           x1 = (rect.xMin() + rect.xMax()) / 2;
           x2 = x1;
-          y1      = rect.yMin() + (rect.xMax() - x1);
-          y2      = rect.yMax() - (rect.xMax() - x1);
+          y1 = rect.yMin() + (rect.xMax() - x1);
+          y2 = rect.yMax() - (rect.xMax() - x1);
         }
         layer1 = sbox->getTechLayer();
         layer2 = layer1;
@@ -735,7 +736,7 @@ void tmg_conn::detachTilePins()
   tmg_rcterm* tx;
   dbBTerm*    bterm;
   dbShape     pin;
-  Rect     rectb, recti;
+  Rect        rectb, recti;
   dbTechVia*  tv;
   _slicedTilePinCnt = 0;
   bool sliceDone;
@@ -756,7 +757,7 @@ void tmg_conn::detachTilePins()
       dbMTerm* mterm = tx->_iterm->getMTerm();
       int      px, py;
       tx->_iterm->getInst()->getOrigin(px, py);
-      Point                origin = Point(px, py);
+      Point                   origin = Point(px, py);
       dbOrientType            orient = tx->_iterm->getInst()->getOrient();
       dbTransform             transform(orient, origin);
       dbSet<dbMPin>           mpins = mterm->getMPins();
@@ -1011,7 +1012,7 @@ void tmg_conn::findConnections(bool verbose)
       dbMTerm* mterm = x->_iterm->getMTerm();
       int      px, py;
       x->_iterm->getInst()->getOrigin(px, py);
-      Point                origin = Point(px, py);
+      Point                   origin = Point(px, py);
       dbOrientType            orient = x->_iterm->getInst()->getOrient();
       dbTransform             transform(orient, origin);
       dbSet<dbMPin>           mpins = mterm->getMPins();
@@ -1151,11 +1152,11 @@ void tmg_conn::findConnections(bool verbose)
   }
 
   for (j = 0; j < _ptN; j++) {
-    tmg_rcpt* pc = _ptV + j;
-    pc->_pinpt = 0;
-    pc->_c2pinpt = 0;
+    tmg_rcpt* pc        = _ptV + j;
+    pc->_pinpt          = 0;
+    pc->_c2pinpt        = 0;
     pc->_next_for_clear = NULL;
-    pc->_sring = NULL;
+    pc->_sring          = NULL;
   }
   setSring();
 
@@ -1310,7 +1311,7 @@ void tmg_conn::connectTerm(int j, bool soft)
   int         ii;
   tmg_rcpt*   pc;
   for (pc = _first_for_clear; pc; pc = pc->_next_for_clear) {
-    pc->_pinpt = 0;
+    pc->_pinpt   = 0;
     pc->_c2pinpt = 0;
   }
   _first_for_clear = NULL;
@@ -1319,7 +1320,7 @@ void tmg_conn::connectTerm(int j, bool soft)
     int       k   = _csV[ii].k;
     tmg_rcpt* pfr = _ptV + _rcV[k]._ifr;
     tmg_rcpt* pto = _ptV + _rcV[k]._ito;
-    Point  afr(pfr->_x, pfr->_y);
+    Point     afr(pfr->_x, pfr->_y);
     if (_csV[ii].rtlev == pfr->_layer->getRoutingLevel()
         && _csV[ii].rect.intersects(afr)) {
       if (!(pfr->_pinpt || pfr->_c2pinpt)) {
@@ -1540,7 +1541,7 @@ void tmg_conn::connectTerm(int j, bool soft)
     // }
   }
   for (pc = _first_for_clear; pc; pc = pc->_next_for_clear) {
-    pc->_pinpt = 0;
+    pc->_pinpt   = 0;
     pc->_c2pinpt = 0;
   }
   _first_for_clear = NULL;
@@ -1812,16 +1813,16 @@ bool tmg_conn::checkConnected()
   if (_termN == 0)
     return true;
   int jstart = getStartNode();
-  x = NULL;
-  xstart = NULL;
+  x          = NULL;
+  xstart     = NULL;
   if (_ptV[jstart]._tindex >= 0) {
-    x = _termV + _ptV[jstart]._tindex;
+    x      = _termV + _ptV[jstart]._tindex;
     xstart = x;
   }
   int          jfr, jto, k;
   bool         is_short, is_loop;
   int          tstack0 = 0;
-  int tstackN = 0;
+  int          tstackN = 0;
   tmg_rcterm** tstackV = _tstackV;
   if (x)
     tstackV[tstackN++] = x;
@@ -1942,16 +1943,16 @@ void tmg_conn::treeReorder(bool verbose, bool quiet, bool no_convert)
   _path_rule = _net_rule;
 
   int jstart = getStartNode();
-  x = NULL;
-  xstart = NULL;
+  x          = NULL;
+  xstart     = NULL;
   if (_ptV[jstart]._tindex >= 0) {
-    x = _termV + _ptV[jstart]._tindex;
-    xstart = x; 
+    x      = _termV + _ptV[jstart]._tindex;
+    xstart = x;
   }
   int          jfr, jto, k;
   bool         is_short, is_loop;
   int          tstack0 = 0;
-  int tstackN = 0;
+  int          tstackN = 0;
   tmg_rcterm** tstackV = _tstackV;
   if (x)
     tstackV[tstackN++] = x;

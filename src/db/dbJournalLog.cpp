@@ -31,6 +31,7 @@
 // POSSIBILITY OF SUCH DAMAGE.
 
 #include "dbJournalLog.h"
+
 #include <string>
 
 namespace odb {

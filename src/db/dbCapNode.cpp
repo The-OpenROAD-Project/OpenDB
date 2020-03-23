@@ -31,6 +31,7 @@
 // POSSIBILITY OF SUCH DAMAGE.
 
 #include "dbCapNode.h"
+
 #include "db.h"
 #include "dbBlock.h"
 #include "dbCCSeg.h"
@@ -143,7 +144,7 @@ bool dbCapNode::needAdjustCC(double ccThreshHold)
 {
   dbSet<dbCCSeg>           ccSegs = getCCSegs();
   dbSet<dbCCSeg>::iterator ccitr;
-  uint cornerCnt = ((dbBlock*) getOwner())->getCornerCount();
+  uint cornerCnt = ((dbBlock*) getImpl()->getOwner())->getCornerCount();
   uint corner;
   uint cid;
   for (ccitr = ccSegs.begin(); ccitr != ccSegs.end(); ++ccitr) {
@@ -166,7 +167,7 @@ bool dbCapNode::groundCC(float gndFactor)
   dbCapNode*               agrNode;
   double                   deltaC;
   uint                     cid;
-  _dbBlock*                block     = (_dbBlock*) getOwner();
+  _dbBlock*                block     = (_dbBlock*) getImpl()->getOwner();
   uint                     cornerCnt = block->_corners_per_block;
   dbSet<dbCCSeg>           ccSegs    = getCCSegs();
   dbSet<dbCCSeg>::iterator ccitr;
@@ -226,7 +227,7 @@ void dbCapNode::adjustCC(uint                   adjOrder,
 void dbCapNode::adjustCapacitance(float factor, uint corner)
 {
   _dbCapNode* seg       = (_dbCapNode*) this;
-  _dbBlock*   block     = (_dbBlock*) getOwner();
+  _dbBlock*   block     = (_dbBlock*) seg->getOwner();
   uint        cornerCnt = block->_corners_per_block;
 
   ZASSERT(seg->_flags._foreign > 0);
@@ -256,7 +257,7 @@ void dbCapNode::adjustCapacitance(float factor, uint corner)
 
 void dbCapNode::adjustCapacitance(float factor)
 {
-  _dbBlock* block     = (_dbBlock*) getOwner();
+  _dbBlock* block     = (_dbBlock*) getImpl()->getOwner();
   uint      cornerCnt = block->_corners_per_block;
   uint      corner;
   for (corner = 0; corner < cornerCnt; corner++)
@@ -266,7 +267,7 @@ void dbCapNode::adjustCapacitance(float factor)
 double dbCapNode::getCapacitance(uint corner)
 {
   _dbCapNode* seg       = (_dbCapNode*) this;
-  _dbBlock*   block     = (_dbBlock*) getOwner();
+  _dbBlock*   block     = (_dbBlock*) seg->getOwner();
   uint        cornerCnt = block->_corners_per_block;
 
   if (seg->_flags._foreign > 0) {
@@ -282,7 +283,7 @@ void dbCapNode::getGndCap(double* gndcap, double* totalcap)
   _dbCapNode* seg = (_dbCapNode*) this;
   if (seg->_flags._foreign == 0)
     return;
-  _dbBlock* block     = (_dbBlock*) getOwner();
+  _dbBlock* block     = (_dbBlock*) seg->getOwner();
   uint      cornerCnt = block->_corners_per_block;
   double    gcap;
   for (uint ii = 0; ii < cornerCnt; ii++) {
@@ -299,7 +300,7 @@ void dbCapNode::addGndCap(double* gndcap, double* totalcap)
   _dbCapNode* seg = (_dbCapNode*) this;
   if (seg->_flags._foreign == 0)
     return;
-  _dbBlock* block     = (_dbBlock*) getOwner();
+  _dbBlock* block     = (_dbBlock*) seg->getOwner();
   uint      cornerCnt = block->_corners_per_block;
   double    gcap;
   for (uint ii = 0; ii < cornerCnt; ii++) {
@@ -346,10 +347,10 @@ void dbCapNode::addGndTotalCap(double* gndcap,
 
 void dbCapNode::getCapTable(double* cap)
 {
-  _dbBlock* block     = (_dbBlock*) getOwner();
-  uint      cornerCnt = block->_corners_per_block;
+  _dbCapNode* seg       = (_dbCapNode*) this;
+  _dbBlock*   block     = (_dbBlock*) seg->getOwner();
+  uint        cornerCnt = block->_corners_per_block;
 
-  _dbCapNode* seg = (_dbCapNode*) this;
   for (uint ii = 0; ii < cornerCnt; ii++)
     cap[ii] = (*block->_c_val_tbl)[(seg->getOID() - 1) * cornerCnt + 1 + ii];
 }
@@ -358,7 +359,7 @@ void dbCapNode::addCapnCapacitance(dbCapNode* other)
 {
   _dbCapNode* seg       = (_dbCapNode*) this;
   _dbCapNode* oseg      = (_dbCapNode*) other;
-  _dbBlock*   block     = (_dbBlock*) getOwner();
+  _dbBlock*   block     = (_dbBlock*) seg->getOwner();
   uint        cornerCnt = block->_corners_per_block;
   for (uint corner = 0; corner < cornerCnt; corner++) {
     float& value
@@ -386,7 +387,7 @@ void dbCapNode::addCapnCapacitance(dbCapNode* other)
 void dbCapNode::setCapacitance(double cap, int corner)
 {
   _dbCapNode* seg       = (_dbCapNode*) this;
-  _dbBlock*   block     = (_dbBlock*) getOwner();
+  _dbBlock*   block     = (_dbBlock*) seg->getOwner();
   uint        cornerCnt = block->_corners_per_block;
   ZASSERT((corner >= 0) && ((uint) corner < cornerCnt));
   float& value
@@ -416,7 +417,7 @@ void dbCapNode::setCapacitance(double cap, int corner)
 void dbCapNode::addCapacitance(double cap, int corner)
 {
   _dbCapNode* seg       = (_dbCapNode*) this;
-  _dbBlock*   block     = (_dbBlock*) getOwner();
+  _dbBlock*   block     = (_dbBlock*) seg->getOwner();
   uint        cornerCnt = block->_corners_per_block;
   ZASSERT((corner >= 0) && ((uint) corner < cornerCnt));
   float& value
@@ -476,24 +477,24 @@ bool dbCapNode::isDangling()
 
 dbITerm* dbCapNode::getITerm(dbBlock* mblock)
 {
-  dbBlock*    block = mblock ? mblock : (dbBlock*) getOwner();
   _dbCapNode* seg   = (_dbCapNode*) this;
+  dbBlock*    block = mblock ? mblock : (dbBlock*) seg->getOwner();
   if (!seg->_flags._iterm)
     return NULL;
   return dbITerm::getITerm(block, seg->_node_num);
 }
 dbBTerm* dbCapNode::getBTerm(dbBlock* mblock)
 {
-  dbBlock*    block = mblock ? mblock : (dbBlock*) getOwner();
   _dbCapNode* seg   = (_dbCapNode*) this;
+  dbBlock*    block = mblock ? mblock : (dbBlock*) seg->getOwner();
   if (!seg->_flags._bterm)
     return NULL;
   return dbBTerm::getBTerm(block, seg->_node_num);
 }
 bool dbCapNode::isSourceTerm(dbBlock* mblock)
 {
-  dbBlock*    block = mblock ? mblock : (dbBlock*) getOwner();
   _dbCapNode* seg   = (_dbCapNode*) this;
+  dbBlock*    block = mblock ? mblock : (dbBlock*) seg->getOwner();
   dbIoType    iotype;
   if (seg->_flags._iterm) {
     dbITerm* iterm = dbITerm::getITerm(block, seg->_node_num);
@@ -514,8 +515,8 @@ bool dbCapNode::isSourceTerm(dbBlock* mblock)
 }
 bool dbCapNode::isInoutTerm(dbBlock* mblock)
 {
-  dbBlock*    block = mblock ? mblock : (dbBlock*) getOwner();
   _dbCapNode* seg   = (_dbCapNode*) this;
+  dbBlock*    block = mblock ? mblock : (dbBlock*) seg->getOwner();
   if (seg->_flags._iterm) {
     dbITerm* iterm = dbITerm::getITerm(block, seg->_node_num);
     if (iterm->getIoType() == dbIoType::INOUT)
@@ -550,7 +551,7 @@ bool dbCapNode::isBTerm()
 void dbCapNode::resetBTermFlag()
 {
   _dbCapNode* seg        = (_dbCapNode*) this;
-  _dbBlock*   block      = (_dbBlock*) getOwner();
+  _dbBlock*   block      = (_dbBlock*) seg->getOwner();
   uint        prev_flags = FLAGS(seg);
   seg->_flags._bterm     = 0;
 
@@ -563,7 +564,7 @@ void dbCapNode::resetBTermFlag()
 void dbCapNode::resetITermFlag()
 {
   _dbCapNode* seg        = (_dbCapNode*) this;
-  _dbBlock*   block      = (_dbBlock*) getOwner();
+  _dbBlock*   block      = (_dbBlock*) seg->getOwner();
   uint        prev_flags = FLAGS(seg);
   seg->_flags._iterm     = 0;
 
@@ -576,7 +577,7 @@ void dbCapNode::resetITermFlag()
 void dbCapNode::resetNameFlag()
 {
   _dbCapNode* seg        = (_dbCapNode*) this;
-  _dbBlock*   block      = (_dbBlock*) getOwner();
+  _dbBlock*   block      = (_dbBlock*) seg->getOwner();
   uint        prev_flags = FLAGS(seg);
   seg->_flags._name      = 0;
 
@@ -589,7 +590,7 @@ void dbCapNode::resetNameFlag()
 void dbCapNode::resetInternalFlag()
 {
   _dbCapNode* seg        = (_dbCapNode*) this;
-  _dbBlock*   block      = (_dbBlock*) getOwner();
+  _dbBlock*   block      = (_dbBlock*) seg->getOwner();
   uint        prev_flags = FLAGS(seg);
   seg->_flags._internal  = 0;
 
@@ -602,7 +603,7 @@ void dbCapNode::resetInternalFlag()
 void dbCapNode::resetBranchFlag()
 {
   _dbCapNode* seg        = (_dbCapNode*) this;
-  _dbBlock*   block      = (_dbBlock*) getOwner();
+  _dbBlock*   block      = (_dbBlock*) seg->getOwner();
   uint        prev_flags = FLAGS(seg);
   seg->_flags._branch    = 0;
 
@@ -615,7 +616,7 @@ void dbCapNode::resetBranchFlag()
 void dbCapNode::resetForeignFlag()
 {
   _dbCapNode* seg        = (_dbCapNode*) this;
-  _dbBlock*   block      = (_dbBlock*) getOwner();
+  _dbBlock*   block      = (_dbBlock*) seg->getOwner();
   uint        prev_flags = FLAGS(seg);
   seg->_flags._foreign   = 0;
 
@@ -628,7 +629,7 @@ void dbCapNode::resetForeignFlag()
 void dbCapNode::setBTermFlag()
 {
   _dbCapNode* seg        = (_dbCapNode*) this;
-  _dbBlock*   block      = (_dbBlock*) getOwner();
+  _dbBlock*   block      = (_dbBlock*) seg->getOwner();
   uint        prev_flags = FLAGS(seg);
   seg->_flags._bterm     = 1;
 
@@ -641,7 +642,7 @@ void dbCapNode::setBTermFlag()
 void dbCapNode::setITermFlag()
 {
   _dbCapNode* seg        = (_dbCapNode*) this;
-  _dbBlock*   block      = (_dbBlock*) getOwner();
+  _dbBlock*   block      = (_dbBlock*) seg->getOwner();
   uint        prev_flags = FLAGS(seg);
   seg->_flags._iterm     = 1;
 
@@ -654,7 +655,7 @@ void dbCapNode::setITermFlag()
 uint dbCapNode::incrChildrenCnt()
 {
   _dbCapNode* seg        = (_dbCapNode*) this;
-  _dbBlock*   block      = (_dbBlock*) getOwner();
+  _dbBlock*   block      = (_dbBlock*) seg->getOwner();
   uint        prev_flags = FLAGS(seg);
   seg->_flags._childrenCnt++;
 
@@ -678,7 +679,7 @@ void dbCapNode::setChildrenCnt(uint cnt)
 void dbCapNode::setBranchFlag()
 {
   _dbCapNode* seg        = (_dbCapNode*) this;
-  _dbBlock*   block      = (_dbBlock*) getOwner();
+  _dbBlock*   block      = (_dbBlock*) seg->getOwner();
   uint        prev_flags = FLAGS(seg);
   seg->_flags._branch    = 1;
 
@@ -691,7 +692,7 @@ void dbCapNode::setBranchFlag()
 void dbCapNode::setNameFlag()
 {
   _dbCapNode* seg        = (_dbCapNode*) this;
-  _dbBlock*   block      = (_dbBlock*) getOwner();
+  _dbBlock*   block      = (_dbBlock*) seg->getOwner();
   uint        prev_flags = FLAGS(seg);
   seg->_flags._name      = 1;
 
@@ -704,7 +705,7 @@ void dbCapNode::setNameFlag()
 void dbCapNode::setInternalFlag()
 {
   _dbCapNode* seg        = (_dbCapNode*) this;
-  _dbBlock*   block      = (_dbBlock*) getOwner();
+  _dbBlock*   block      = (_dbBlock*) seg->getOwner();
   uint        prev_flags = FLAGS(seg);
   seg->_flags._internal  = 1;
 
@@ -717,7 +718,7 @@ void dbCapNode::setInternalFlag()
 void dbCapNode::setForeignFlag()
 {
   _dbCapNode* seg        = (_dbCapNode*) this;
-  _dbBlock*   block      = (_dbBlock*) getOwner();
+  _dbBlock*   block      = (_dbBlock*) seg->getOwner();
   uint        prev_flags = FLAGS(seg);
   seg->_flags._foreign   = 1;
 
@@ -745,7 +746,7 @@ void dbCapNode::setSelect(bool val)
 void dbCapNode::setNode(uint node)
 {
   _dbCapNode* seg       = (_dbCapNode*) this;
-  _dbBlock*   block     = (_dbBlock*) getOwner();
+  _dbBlock*   block     = (_dbBlock*) seg->getOwner();
   uint        prev_node = seg->_node_num;
   seg->_node_num        = node;
 
@@ -768,7 +769,7 @@ uint dbCapNode::getNode()
 uint dbCapNode::getShapeId()
 {
   _dbCapNode* seg   = (_dbCapNode*) this;
-  dbBlock*    block = (dbBlock*) getOwner();
+  dbBlock*    block = (dbBlock*) seg->getOwner();
   if (seg->_flags._internal > 0)
     return seg->_node_num;
   else if (seg->_flags._iterm > 0) {
@@ -815,7 +816,7 @@ uint dbCapNode::getSortIndex()
 bool dbCapNode::getTermCoords(int& x, int& y, dbBlock* mblock)
 {
   _dbCapNode* seg   = (_dbCapNode*) this;
-  dbBlock*    block = mblock ? mblock : (dbBlock*) getOwner();
+  dbBlock*    block = mblock ? mblock : (dbBlock*) seg->getOwner();
   if (seg->_flags._iterm > 0) {
     dbITerm* iterm = dbITerm::getITerm(block, seg->_node_num);
     return (iterm->getAvgXY(&x, &y));
@@ -830,14 +831,14 @@ bool dbCapNode::getTermCoords(int& x, int& y, dbBlock* mblock)
 dbSet<dbCCSeg> dbCapNode::getCCSegs()
 {
   _dbCapNode* seg   = (_dbCapNode*) this;
-  _dbBlock*   block = (_dbBlock*) getOwner();
+  _dbBlock*   block = (_dbBlock*) seg->getOwner();
   return dbSet<dbCCSeg>(seg, block->_cc_seg_itr);
 }
 
 void dbCapNode::setNext(uint nextid)
 {
   _dbCapNode* seg       = (_dbCapNode*) this;
-  _dbBlock*   block     = (_dbBlock*) getOwner();
+  _dbBlock*   block     = (_dbBlock*) seg->getOwner();
   uint        prev_next = seg->_next;
   seg->_next            = nextid;
 
@@ -854,7 +855,7 @@ void dbCapNode::setNext(uint nextid)
 void dbCapNode::setNet(uint netid)
 {
   _dbCapNode* seg      = (_dbCapNode*) this;
-  _dbBlock*   block    = (_dbBlock*) getOwner();
+  _dbBlock*   block    = (_dbBlock*) seg->getOwner();
   uint        prev_net = seg->_net;
   seg->_net            = netid;
 
@@ -940,7 +941,7 @@ void dbCapNode::addToNet()
 void dbCapNode::destroy(dbCapNode* seg_, bool destroyCC)
 {
   _dbCapNode* seg   = (_dbCapNode*) seg_;
-  _dbBlock*   block = (_dbBlock*) seg_->getOwner();
+  _dbBlock*   block = (_dbBlock*) seg->getOwner();
   _dbNet*     net   = (_dbNet*) seg_->getNet();
 
   for (uint sid = seg->_cc_segs; destroyCC && sid; sid = seg->_cc_segs) {
@@ -998,8 +999,8 @@ dbNet* dbCapNode::getNet()
 
 void dbCapNode::printCC()
 {
-  dbBlock*    block = (dbBlock*) getOwner();
   _dbCapNode* node  = (_dbCapNode*) this;
+  dbBlock*    block = (dbBlock*) node->getOwner();
   uint        ccn   = node->_cc_segs;
   if (ccn == 0)
     return;
@@ -1010,8 +1011,8 @@ void dbCapNode::printCC()
 
 bool dbCapNode::checkCC()
 {
-  dbBlock*    block = (dbBlock*) getOwner();
   _dbCapNode* node  = (_dbCapNode*) this;
+  dbBlock*    block = (dbBlock*) node->getOwner();
   uint        ccn   = node->_cc_segs;
   if (ccn == 0)
     return true;

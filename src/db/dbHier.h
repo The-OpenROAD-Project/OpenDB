@@ -32,10 +32,10 @@
 
 #pragma once
 
-#include "odb.h"
+#include "dbCore.h"
 #include "dbId.h"
-#include "dbObject.h"
 #include "dbVector.h"
+#include "odb.h"
 
 namespace odb {
 
@@ -50,7 +50,7 @@ class dbDiff;
 //
 // Hidden proxy object hierarchy connectivity.
 //
-class _dbHier : public dbObject
+class _dbHier : public _dbObject
 {
  public:
   dbId<_dbInst>             _inst;
@@ -73,5 +73,3 @@ dbOStream& operator<<(dbOStream& stream, const _dbHier& inst_hdr);
 dbIStream& operator>>(dbIStream& stream, _dbHier& inst_hdr);
 
 }  // namespace odb
-
-

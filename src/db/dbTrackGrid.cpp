@@ -31,7 +31,9 @@
 // POSSIBILITY OF SUCH DAMAGE.
 
 #include "dbTrackGrid.h"
+
 #include <algorithm>
+
 #include "db.h"
 #include "dbBlock.h"
 #include "dbChip.h"
@@ -114,7 +116,7 @@ void _dbTrackGrid::out(dbDiff& diff, char side, const char* field) const
 dbTechLayer* dbTrackGrid::getTechLayer()
 {
   _dbTrackGrid* grid = (_dbTrackGrid*) this;
-  _dbDatabase*  db   = getDatabase();
+  _dbDatabase*  db   = grid->getDatabase();
   _dbTech*      tech = db->_tech_tbl->getPtr(db->_tech);
   return (dbTechLayer*) tech->_layer_tbl->getPtr(grid->_layer);
 }
@@ -189,7 +191,7 @@ void dbTrackGrid::getGridY(std::vector<int>& y_grid)
 
 dbBlock* dbTrackGrid::getBlock()
 {
-  return (dbBlock*) getOwner();
+  return (dbBlock*) getImpl()->getOwner();
 }
 
 void dbTrackGrid::addGridPatternX(int origin_x, int line_count, int step)
@@ -252,7 +254,7 @@ dbTrackGrid* dbTrackGrid::create(dbBlock* block_, dbTechLayer* layer_)
     return NULL;
 
   _dbTrackGrid* grid = block->_track_grid_tbl->create();
-  grid->_layer       = layer_->getOID();
+  grid->_layer       = layer_->getImpl()->getOID();
   return (dbTrackGrid*) grid;
 }
 

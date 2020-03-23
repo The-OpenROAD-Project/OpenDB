@@ -32,12 +32,11 @@
 
 #pragma once
 
-#include "odb.h"
-#include "dbId.h"
-#include "dbObject.h"
-#include "dbTypes.h"
-
+#include "dbCore.h"
 #include "dbDatabase.h"
+#include "dbId.h"
+#include "dbTypes.h"
+#include "odb.h"
 
 namespace odb {
 
@@ -65,7 +64,7 @@ struct _dbCapNodeFlags
   uint _name : 1;
 };
 
-class _dbCapNode : public dbObject
+class _dbCapNode : public _dbObject
 {
  public:
   enum Fields  // dbJournal field names
@@ -152,5 +151,3 @@ inline dbIStream& operator>>(dbIStream& stream, _dbCapNode& seg)
 }
 
 }  // namespace odb
-
-

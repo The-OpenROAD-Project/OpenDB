@@ -31,6 +31,7 @@
 // POSSIBILITY OF SUCH DAMAGE.
 
 #include "dbHier.h"
+
 #include "db.h"
 #include "dbBTerm.h"
 #include "dbBlock.h"
@@ -115,7 +116,7 @@ _dbHier* _dbHier::create(dbInst* inst_, dbBlock* child_)
 {
   _dbInst*  inst   = (_dbInst*) inst_;
   _dbBlock* child  = (_dbBlock*) child_;
-  _dbBlock* parent = (_dbBlock*) inst_->getOwner();
+  _dbBlock* parent = (_dbBlock*) inst->getOwner();
 
   _dbMaster*     master = (_dbMaster*) inst_->getMaster();
   dbSet<dbBTerm> bterms = ((dbBlock*) child)->getBTerms();

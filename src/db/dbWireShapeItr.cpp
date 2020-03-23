@@ -276,10 +276,10 @@ nextOpCode:
 
       Rect b;
       box->getBox(b);
-      int     xmin = b.xMin() + _prev_x;
-      int     ymin = b.yMin() + _prev_y;
-      int     xmax = b.xMax() + _prev_x;
-      int     ymax = b.yMax() + _prev_y;
+      int  xmin = b.xMin() + _prev_x;
+      int  ymin = b.yMin() + _prev_y;
+      int  xmax = b.xMax() + _prev_x;
+      int  ymax = b.yMax() + _prev_y;
       Rect r(xmin, ymin, xmax, ymax);
       shape.setVia(via, r);
       return true;
@@ -306,10 +306,10 @@ nextOpCode:
 
       Rect b;
       box->getBox(b);
-      int     xmin = b.xMin() + _prev_x;
-      int     ymin = b.yMin() + _prev_y;
-      int     xmax = b.xMax() + _prev_x;
-      int     ymax = b.yMax() + _prev_y;
+      int  xmin = b.xMin() + _prev_x;
+      int  ymin = b.yMin() + _prev_y;
+      int  xmax = b.xMax() + _prev_x;
+      int  ymax = b.yMax() + _prev_y;
       Rect r(xmin, ymin, xmax, ymax);
       shape.setVia(via, r);
       return true;

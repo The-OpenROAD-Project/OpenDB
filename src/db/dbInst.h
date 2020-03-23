@@ -32,12 +32,12 @@
 
 #pragma once
 
-#include "odb.h"
+#include "dbCore.h"
+#include "dbDatabase.h"
 #include "dbId.h"
-#include "dbObject.h"
 #include "dbTypes.h"
 #include "dbVector.h"  // disconnect the child-iterm
-#include "dbDatabase.h"
+#include "odb.h"
 
 namespace odb {
 
@@ -71,7 +71,7 @@ struct _dbInstFlags
   uint                     _level : 9;
 };
 
-class _dbInst : public dbObject
+class _dbInst : public _dbObject
 {
  public:
   enum Field  // dbJournalField name
@@ -111,5 +111,3 @@ dbOStream& operator<<(dbOStream& stream, const _dbInst& inst);
 dbIStream& operator>>(dbIStream& stream, _dbInst& inst);
 
 }  // namespace odb
-
-

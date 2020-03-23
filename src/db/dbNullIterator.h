@@ -32,8 +32,8 @@
 
 #pragma once
 
-#include "odb.h"
 #include "dbIterator.h"
+#include "odb.h"
 
 namespace odb {
 
@@ -56,5 +56,3 @@ class dbNullIterator : public dbIterator
 };
 
 }  // namespace odb
-
-

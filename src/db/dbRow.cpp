@@ -31,6 +31,7 @@
 // POSSIBILITY OF SUCH DAMAGE.
 
 #include "dbRow.h"
+
 #include "db.h"
 #include "dbBlock.h"
 #include "dbDatabase.h"
@@ -176,7 +177,7 @@ void _dbRow::out(dbDiff& diff, char side, const char* field) const
 
 std::string dbRow::getName()
 {
-  _dbRow*  row = (_dbRow*) this;
+  _dbRow* row = (_dbRow*) this;
   return row->_name;
 }
 
@@ -189,7 +190,7 @@ const char* dbRow::getConstName()
 dbSite* dbRow::getSite()
 {
   _dbRow*      row  = (_dbRow*) this;
-  _dbDatabase* db   = (_dbDatabase*) getDatabase();
+  _dbDatabase* db   = (_dbDatabase*) row->getDatabase();
   _dbLib*      lib  = db->_lib_tbl->getPtr(row->_lib);
   _dbSite*     site = lib->_site_tbl->getPtr(row->_site);
   return (dbSite*) site;
@@ -241,7 +242,7 @@ void dbRow::getBBox(Rect& bbox)
   int         w    = site->getWidth();
   int         h    = site->getHeight();
   dbTransform transform(getOrient());
-  Rect     r(0, 0, w, h);
+  Rect        r(0, 0, w, h);
   transform.apply(r);
   int dx = (int) r.dx();
   int dy = (int) r.dy();

@@ -47,13 +47,13 @@ inline void dbArrayTable<T>::pushQ(uint& Q, _dbFreeObject* e)
   if (Q == 0) {
     e->_prev = 0;
     e->_next = 0;
-    Q        = e->getOID();
+    Q        = e->getImpl()->getOID();
   } else {
     e->_prev            = 0;
     e->_next            = Q;
     _dbFreeObject* head = (_dbFreeObject*) getFreeObj(Q);
-    head->_prev         = e->getOID();
-    Q                   = e->getOID();
+    head->_prev         = e->getImpl()->getOID();
+    Q                   = e->getImpl()->getOID();
   }
 }
 
@@ -74,7 +74,7 @@ inline _dbFreeObject* dbArrayTable<T>::popQ(uint& Q)
 template <class T>
 inline void dbArrayTable<T>::unlinkQ(uint& Q, _dbFreeObject* e)
 {
-  uint oid = e->getOID();
+  uint oid = e->getImpl()->getOID();
 
   if (oid == Q) {
     Q = e->_next;

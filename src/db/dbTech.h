@@ -32,11 +32,11 @@
 
 #pragma once
 
-#include "odb.h"
 #include "dbCore.h"
 #include "dbMatrix.h"
 #include "dbTypes.h"
 #include "dbVector.h"
+#include "odb.h"
 
 namespace odb {
 
@@ -77,7 +77,7 @@ struct _dbTechFlags
   uint                   _spare_bits : 22;
 };
 
-class _dbTech : public dbObject
+class _dbTech : public _dbObject
 {
  private:
   double _version;
@@ -135,5 +135,3 @@ dbOStream& operator<<(dbOStream& stream, const _dbTech& tech);
 dbIStream& operator>>(dbIStream& stream, _dbTech& tech);
 
 }  // namespace odb
-
-

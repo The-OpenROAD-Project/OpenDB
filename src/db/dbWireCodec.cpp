@@ -31,7 +31,9 @@
 // POSSIBILITY OF SUCH DAMAGE.
 
 #include "dbWireCodec.h"
+
 #include <ctype.h>
+
 #include "db.h"
 #include "dbBlock.h"
 #include "dbNet.h"
@@ -133,7 +135,7 @@ void dbWireEncoder::initPath(dbTechLayer*     layer,
   _point_cnt        = 0;
   _via_cnt          = 0;
   _layer            = layer;
-  _non_default_rule = rule->getOID();
+  _non_default_rule = rule->getImpl()->getOID();
 
   if (rule->isBlockRule())
     _rule_opcode = WOP_RULE | WOP_BLOCK_RULE;
@@ -347,10 +349,10 @@ int dbWireEncoder::addVia(dbVia* via)
 
   if (top == _layer) {
     _layer = bot;
-    addOp(WOP_VIA, via->getOID());
+    addOp(WOP_VIA, via->getImpl()->getOID());
   } else if (bot == _layer) {
     _layer = top;
-    addOp(WOP_VIA | WOP_VIA_EXIT_TOP, via->getOID());
+    addOp(WOP_VIA | WOP_VIA_EXIT_TOP, via->getImpl()->getOID());
   } else {
     ZASSERT(DB_WIRE_ENCODER_INVALID_VIA_LAYER);
     addOp(WOP_VIA, 0);
@@ -369,10 +371,10 @@ int dbWireEncoder::addTechVia(dbTechVia* via)
 
   if (top == _layer) {
     _layer = bot;
-    addOp(WOP_TECH_VIA, via->getOID());
+    addOp(WOP_TECH_VIA, via->getImpl()->getOID());
   } else if (bot == _layer) {
     _layer = top;
-    addOp(WOP_TECH_VIA | WOP_VIA_EXIT_TOP, via->getOID());
+    addOp(WOP_TECH_VIA | WOP_VIA_EXIT_TOP, via->getImpl()->getOID());
   } else {
     ZASSERT(DB_WIRE_ENCODER_INVALID_VIA_LAYER);
     addOp(WOP_TECH_VIA, 0);
@@ -385,13 +387,13 @@ int dbWireEncoder::addTechVia(dbTechVia* via)
 void dbWireEncoder::addITerm(dbITerm* iterm)
 {
   ZASSERT(_point_cnt != 0);
-  addOp(WOP_ITERM, iterm->getOID());
+  addOp(WOP_ITERM, iterm->getImpl()->getOID());
 }
 
 void dbWireEncoder::addBTerm(dbBTerm* bterm)
 {
   ZASSERT(_point_cnt != 0);
-  addOp(WOP_BTERM, bterm->getOID());
+  addOp(WOP_BTERM, bterm->getImpl()->getOID());
 }
 
 void dbWireEncoder::addBTermMapId(int id)
@@ -403,7 +405,7 @@ void dbWireEncoder::addBTermMapId(int id)
 void dbWireEncoder::newPath(dbTechLayer* layer, dbWireType type)
 {
   initPath(layer, type);
-  addOp(WOP_PATH | _wire_type, layer->getOID());
+  addOp(WOP_PATH | _wire_type, layer->getImpl()->getOID());
 }
 
 void dbWireEncoder::newPath(dbTechLayer*     layer,
@@ -411,7 +413,7 @@ void dbWireEncoder::newPath(dbTechLayer*     layer,
                             dbTechLayerRule* rule)
 {
   initPath(layer, type, rule);
-  addOp(WOP_PATH | _wire_type, layer->getOID());
+  addOp(WOP_PATH | _wire_type, layer->getImpl()->getOID());
   addOp(_rule_opcode, _non_default_rule);
 }
 
@@ -449,7 +451,7 @@ void dbWireEncoder::newPathShort(int          jct_id,
 {
   ZASSERT((jct_id >= 0) && (jct_id < _idx));
   initPath(layer, type);
-  addOp(WOP_SHORT | _wire_type, layer->getOID());
+  addOp(WOP_SHORT | _wire_type, layer->getImpl()->getOID());
   addOp(WOP_OPERAND, jct_id);
 }
 
@@ -459,7 +461,7 @@ void dbWireEncoder::newPathVirtualWire(int          jct_id,
 {
   ZASSERT((jct_id >= 0) && (jct_id < _idx));
   initPath(layer, type);
-  addOp(WOP_VWIRE | _wire_type, layer->getOID());
+  addOp(WOP_VWIRE | _wire_type, layer->getImpl()->getOID());
   addOp(WOP_OPERAND, jct_id);
 }
 
@@ -524,7 +526,7 @@ void dbWireEncoder::newPathShort(int              jct_id,
 {
   ZASSERT((jct_id >= 0) && (jct_id < _idx));
   initPath(layer, type, rule);
-  addOp(WOP_SHORT | _wire_type, layer->getOID());
+  addOp(WOP_SHORT | _wire_type, layer->getImpl()->getOID());
   addOp(WOP_OPERAND, jct_id);
   addOp(_rule_opcode, _non_default_rule);
 }
@@ -536,7 +538,7 @@ void dbWireEncoder::newPathVirtualWire(int              jct_id,
 {
   ZASSERT((jct_id >= 0) && (jct_id < _idx));
   initPath(layer, type, rule);
-  addOp(WOP_VWIRE | _wire_type, layer->getOID());
+  addOp(WOP_VWIRE | _wire_type, layer->getImpl()->getOID());
   addOp(WOP_OPERAND, jct_id);
   addOp(_rule_opcode, _non_default_rule);
 }
@@ -835,7 +837,7 @@ nextOpCode:
 
     case WOP_RULE:
       _default_width = false;
-      _block_rule = (opcode & WOP_BLOCK_RULE);
+      _block_rule    = (opcode & WOP_BLOCK_RULE);
       return _opcode = RULE;
 
     case WOP_X: {

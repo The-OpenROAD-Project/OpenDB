@@ -32,9 +32,9 @@
 
 #pragma once
 
-#include "odb.h"
+#include "dbCore.h"
 #include "dbId.h"
-#include "dbObject.h"
+#include "odb.h"
 
 namespace odb {
 
@@ -49,7 +49,7 @@ class dbDiff;
 //
 // Net and Instances names are unique and should not use the dbName cache.
 //
-class _dbName : public dbObject
+class _dbName : public _dbObject
 {
  public:
   // PERSISTANT-MEMBERS
@@ -72,5 +72,3 @@ dbOStream& operator<<(dbOStream& stream, const _dbName& n);
 dbIStream& operator>>(dbIStream& stream, _dbName& n);
 
 }  // namespace odb
-
-

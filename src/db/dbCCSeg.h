@@ -32,12 +32,11 @@
 
 #pragma once
 
-#include "odb.h"
-#include "dbId.h"
-#include "dbObject.h"
-#include "dbTypes.h"
-
+#include "dbCore.h"
 #include "dbDatabase.h"
+#include "dbId.h"
+#include "dbTypes.h"
+#include "odb.h"
 
 namespace odb {
 
@@ -55,7 +54,7 @@ struct _dbCCSegFlags
   uint _spare_bits : 26;
 };
 
-class _dbCCSeg : public dbObject
+class _dbCCSeg : public _dbObject
 {
  public:
   enum Fields  // dbJournal field names

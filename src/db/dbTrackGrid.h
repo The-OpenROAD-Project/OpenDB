@@ -32,11 +32,11 @@
 
 #pragma once
 
-#include "odb.h"
+#include "dbCore.h"
 #include "dbId.h"
-#include "dbObject.h"
 #include "dbTypes.h"
 #include "dbVector.h"
+#include "odb.h"
 
 namespace odb {
 
@@ -46,7 +46,7 @@ class dbIStream;
 class dbOStream;
 class dbDiff;
 
-class _dbTrackGrid : public dbObject
+class _dbTrackGrid : public _dbObject
 {
  public:
   dbId<_dbTechLayer> _layer;
@@ -129,5 +129,3 @@ inline dbIStream& operator>>(dbIStream& stream, _dbTrackGrid& grid)
 }
 
 }  // namespace odb
-
-

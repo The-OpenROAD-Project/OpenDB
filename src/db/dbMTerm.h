@@ -32,11 +32,11 @@
 
 #pragma once
 
-#include "odb.h"
+#include "dbCore.h"
 #include "dbId.h"
-#include "dbObject.h"
 #include "dbTypes.h"
 #include "dbVector.h"
+#include "odb.h"
 
 namespace odb {
 
@@ -57,7 +57,7 @@ struct _dbMTermFlags
   uint             _spare_bits : 23;
 };
 
-class _dbMTerm : public dbObject
+class _dbMTerm : public _dbObject
 {
  public:
   // PERSISTANT-MEMBERS
@@ -144,5 +144,3 @@ inline _dbMTerm::~_dbMTerm()
   ***********************************************************************************************************/
 }
 }  // namespace odb
-
-

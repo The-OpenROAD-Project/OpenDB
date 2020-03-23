@@ -31,6 +31,7 @@
 // POSSIBILITY OF SUCH DAMAGE.
 
 #include "dbBPin.h"
+
 #include "db.h"
 #include "dbBTerm.h"
 #include "dbBlock.h"
@@ -161,7 +162,7 @@ dbIStream& operator>>(dbIStream& stream, _dbBPin& bpin)
 dbBTerm* dbBPin::getBTerm()
 {
   _dbBPin*  pin   = (_dbBPin*) this;
-  _dbBlock* block = (_dbBlock*) getOwner();
+  _dbBlock* block = (_dbBlock*) pin->getOwner();
   return (dbBTerm*) block->_bterm_tbl->getPtr(pin->_bterm);
 }
 
@@ -172,7 +173,7 @@ dbBox* dbBPin::getBox()
   if (pin->_bbox == 0)
     return NULL;
 
-  _dbBlock* block = (_dbBlock*) getOwner();
+  _dbBlock* block = (_dbBlock*) pin->getOwner();
   _dbBox*   box   = block->_box_tbl->getPtr(pin->_bbox);
   return (dbBox*) box;
 }

@@ -31,6 +31,7 @@
 // POSSIBILITY OF SUCH DAMAGE.
 
 #include "dbTechVia.h"
+
 #include "db.h"
 #include "dbBox.h"
 #include "dbBoxItr.h"
@@ -276,7 +277,7 @@ void dbTechVia::setResistance(double resistance)
 
 dbTech* dbTechVia::getTech()
 {
-  return (dbTech*) getOwner();
+  return (dbTech*) getImpl()->getOwner();
 }
 
 dbBox* dbTechVia::getBBox()
@@ -286,14 +287,14 @@ dbBox* dbTechVia::getBBox()
   if (via->_bbox == 0)
     return NULL;
 
-  _dbTech* tech = (_dbTech*) getOwner();
+  _dbTech* tech = (_dbTech*) via->getOwner();
   return (dbBox*) tech->_box_tbl->getPtr(via->_bbox);
 }
 
 dbSet<dbBox> dbTechVia::getBoxes()
 {
   _dbTechVia* via  = (_dbTechVia*) this;
-  _dbTech*    tech = (_dbTech*) getOwner();
+  _dbTech*    tech = (_dbTech*) via->getOwner();
   return dbSet<dbBox>(via, tech->_box_itr);
 }
 
@@ -304,7 +305,7 @@ dbTechLayer* dbTechVia::getTopLayer()
   if (via->_top == 0)
     return NULL;
 
-  _dbTech* tech = (_dbTech*) getOwner();
+  _dbTech* tech = (_dbTech*) via->getOwner();
   return (dbTechLayer*) tech->_layer_tbl->getPtr(via->_top);
 }
 
@@ -315,7 +316,7 @@ dbTechLayer* dbTechVia::getBottomLayer()
   if (via->_bottom == 0)
     return NULL;
 
-  _dbTech* tech = (_dbTech*) getOwner();
+  _dbTech* tech = (_dbTech*) via->getOwner();
   return (dbTechLayer*) tech->_layer_tbl->getPtr(via->_bottom);
 }
 
@@ -326,7 +327,7 @@ dbTechNonDefaultRule* dbTechVia::getNonDefaultRule()
   if (via->_non_default_rule == 0)
     return NULL;
 
-  _dbTech* tech = (_dbTech*) getOwner();
+  _dbTech* tech = (_dbTech*) via->getOwner();
   return (dbTechNonDefaultRule*) tech->_non_default_rule_tbl->getPtr(
       via->_non_default_rule);
 }
@@ -340,7 +341,7 @@ bool dbTechVia::hasParams()
 void dbTechVia::setViaGenerateRule(dbTechViaGenerateRule* rule)
 {
   _dbTechVia* via     = (_dbTechVia*) this;
-  via->_generate_rule = rule->getOID();
+  via->_generate_rule = rule->getImpl()->getOID();
 }
 
 dbTechViaGenerateRule* dbTechVia::getViaGenerateRule()
@@ -350,7 +351,7 @@ dbTechViaGenerateRule* dbTechVia::getViaGenerateRule()
   if (via->_generate_rule == 0)
     return NULL;
 
-  _dbTech*                tech = (_dbTech*) getOwner();
+  _dbTech*                tech = (_dbTech*) via->getOwner();
   _dbTechViaGenerateRule* rule
       = tech->_via_generate_rule_tbl->getPtr(via->_generate_rule);
   return (dbTechViaGenerateRule*) rule;
@@ -380,7 +381,7 @@ void dbTechVia::setPattern(const char* pattern)
 void dbTechVia::setViaParams(const dbViaParams& params)
 {
   _dbTechVia* via         = (_dbTechVia*) this;
-  _dbTech*    tech        = (_dbTech*) getOwner();
+  _dbTech*    tech        = (_dbTech*) via->getOwner();
   via->_flags._has_params = 1;
 
   // Clear previous boxes
@@ -410,7 +411,7 @@ void dbTechVia::getViaParams(dbViaParams& params)
     params = dbViaParams();
   else {
     params        = via->_via_params;
-    _dbTech* tech = (_dbTech*) getOwner();
+    _dbTech* tech = (_dbTech*) via->getOwner();
     params._tech  = (dbTech*) tech;
   }
 }
@@ -488,12 +489,12 @@ dbTechVia* dbTechVia::getTechVia(dbTech* tech_, uint dbid_)
 
 void create_via_boxes(_dbTechVia* via, const dbViaParams& P)
 {
-  int                  rows = P.getNumCutRows();
-  int                  cols = P.getNumCutCols();
-  int                  row;
-  int                  y    = 0;
-  int                  maxX = 0;
-  int                  maxY = 0;
+  int               rows = P.getNumCutRows();
+  int               cols = P.getNumCutCols();
+  int               row;
+  int               y    = 0;
+  int               maxX = 0;
+  int               maxY = 0;
   std::vector<Rect> cutRects;
 
   for (row = 0; row < rows; ++row) {
@@ -515,8 +516,8 @@ void create_via_boxes(_dbTechVia* via, const dbViaParams& P)
 
   dbTechLayer* cut_layer = P.getCutLayer();
 
-  int                            dx = maxX / 2;
-  int                            dy = maxY / 2;
+  int                         dx = maxX / 2;
+  int                         dy = maxY / 2;
   std::vector<Rect>::iterator itr;
 
   for (itr = cutRects.begin(); itr != cutRects.end(); ++itr) {

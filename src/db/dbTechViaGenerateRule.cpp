@@ -31,6 +31,7 @@
 // POSSIBILITY OF SUCH DAMAGE.
 
 #include "dbTechViaGenerateRule.h"
+
 #include "db.h"
 #include "dbDatabase.h"
 #include "dbDiff.hpp"
@@ -159,7 +160,7 @@ uint dbTechViaGenerateRule::getViaLayerRuleCount()
 dbTechViaLayerRule* dbTechViaGenerateRule::getViaLayerRule(uint idx)
 {
   _dbTechViaGenerateRule* rule = (_dbTechViaGenerateRule*) this;
-  dbTech*                 tech = (dbTech*) getOwner();
+  dbTech*                 tech = (dbTech*) rule->getOwner();
 
   if (idx >= rule->_layer_rules.size())
     return NULL;

@@ -32,9 +32,9 @@
 
 #pragma once
 
-#include "odb.h"
+#include "dbCore.h"
 #include "dbId.h"
-#include "dbObject.h"
+#include "odb.h"
 
 namespace odb {
 
@@ -42,7 +42,7 @@ class dbIStream;
 class dbOStream;
 class dbDiff;
 
-class _dbMetrics : public dbObject
+class _dbMetrics : public _dbObject
 {
  public:
   int _worst_slack;
@@ -108,5 +108,3 @@ inline dbIStream& operator>>(dbIStream& stream, _dbMetrics& tmg)
 }
 
 }  // namespace odb
-
-

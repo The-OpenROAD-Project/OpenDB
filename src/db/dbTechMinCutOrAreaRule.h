@@ -32,10 +32,10 @@
 
 #pragma once
 
-#include "odb.h"
+#include "dbCore.h"
 #include "dbId.h"
-#include "dbObject.h"
 #include "dbTypes.h"
+#include "odb.h"
 
 namespace odb {
 
@@ -45,7 +45,7 @@ class dbIStream;
 class dbOStream;
 class dbDiff;
 
-class _dbTechMinCutRule : public dbObject
+class _dbTechMinCutRule : public _dbObject
 {
  public:
   // PERSISTENT-MEMBERS
@@ -101,7 +101,7 @@ inline _dbTechMinCutRule::~_dbTechMinCutRule()
 dbOStream& operator<<(dbOStream& stream, const _dbTechMinCutRule& rule);
 dbIStream& operator>>(dbIStream& stream, _dbTechMinCutRule& rule);
 
-class _dbTechMinEncRule : public dbObject
+class _dbTechMinEncRule : public _dbObject
 {
  public:
   // PERSISTENT-MEMBERS

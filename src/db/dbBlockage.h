@@ -32,9 +32,9 @@
 
 #pragma once
 
-#include "odb.h"
+#include "dbCore.h"
 #include "dbId.h"
-#include "dbObject.h"
+#include "odb.h"
 
 namespace odb {
 
@@ -51,7 +51,7 @@ struct _dbBlockageFlags
   uint _spare_bits : 31;
 };
 
-class _dbBlockage : public dbObject
+class _dbBlockage : public _dbObject
 {
  public:
   _dbBlockageFlags _flags;
@@ -108,5 +108,3 @@ inline dbIStream& operator>>(dbIStream& stream, _dbBlockage& blockage)
 }
 
 }  // namespace odb
-
-

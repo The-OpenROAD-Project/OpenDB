@@ -31,6 +31,7 @@
 // POSSIBILITY OF SUCH DAMAGE.
 
 #include "dbNameCache.h"
+
 #include "dbDatabase.h"
 #include "dbDiff.h"
 #include "dbDiff.hpp"

@@ -30,6 +30,8 @@
 // ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 // POSSIBILITY OF SUCH DAMAGE.
 
+#include "dbTechLayerAntennaRule.h"
+
 #include "db.h"
 #include "dbDatabase.h"
 #include "dbMaster.h"
@@ -37,7 +39,6 @@
 #include "dbTable.hpp"
 #include "dbTech.h"
 #include "dbTechLayer.h"
-#include "dbTechLayerAntennaRule.h"
 #include "lefout.h"
 
 namespace odb {
@@ -782,28 +783,29 @@ void dbTechAntennaPinModel::getGateArea(
     std::vector<std::pair<double, dbTechLayer*>>& data)
 {
   _dbTechAntennaPinModel* xmod = (_dbTechAntennaPinModel*) this;
-  xmod->getAntennaValues(getDatabase(), xmod->_gate_area, data);
+  xmod->getAntennaValues(getImpl()->getDatabase(), xmod->_gate_area, data);
 }
 
 void dbTechAntennaPinModel::getMaxAreaCAR(
     std::vector<std::pair<double, dbTechLayer*>>& data)
 {
   _dbTechAntennaPinModel* xmod = (_dbTechAntennaPinModel*) this;
-  xmod->getAntennaValues(getDatabase(), xmod->_max_area_car, data);
+  xmod->getAntennaValues(getImpl()->getDatabase(), xmod->_max_area_car, data);
 }
 
 void dbTechAntennaPinModel::getMaxSideAreaCAR(
     std::vector<std::pair<double, dbTechLayer*>>& data)
 {
   _dbTechAntennaPinModel* xmod = (_dbTechAntennaPinModel*) this;
-  xmod->getAntennaValues(getDatabase(), xmod->_max_sidearea_car, data);
+  xmod->getAntennaValues(
+      getImpl()->getDatabase(), xmod->_max_sidearea_car, data);
 }
 
 void dbTechAntennaPinModel::getMaxCutCAR(
     std::vector<std::pair<double, dbTechLayer*>>& data)
 {
   _dbTechAntennaPinModel* xmod = (_dbTechAntennaPinModel*) this;
-  xmod->getAntennaValues(getDatabase(), xmod->_max_cut_car, data);
+  xmod->getAntennaValues(getImpl()->getDatabase(), xmod->_max_cut_car, data);
 }
 
 void dbTechAntennaPinModel::writeLef(dbTech* tech, lefout& writer) const

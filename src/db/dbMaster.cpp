@@ -31,6 +31,7 @@
 // POSSIBILITY OF SUCH DAMAGE.
 
 #include "dbMaster.h"
+
 #include "db.h"
 #include "dbBox.h"
 #include "dbBoxItr.h"
@@ -480,14 +481,14 @@ dbMaster* dbMaster::getLEQ()
   if (master->_leq == 0)
     return NULL;
 
-  _dbLib* lib = (_dbLib*) getOwner();
+  _dbLib* lib = (_dbLib*) master->getOwner();
   return (dbMaster*) lib->_master_tbl->getPtr(master->_leq);
 }
 
 void dbMaster::setLEQ(dbMaster* leq)
 {
   _dbMaster* master = (_dbMaster*) this;
-  master->_leq      = leq->getOID();
+  master->_leq      = leq->getImpl()->getOID();
 }
 
 dbMaster* dbMaster::getEEQ()
@@ -497,14 +498,14 @@ dbMaster* dbMaster::getEEQ()
   if (master->_eeq == 0)
     return NULL;
 
-  _dbLib* lib = (_dbLib*) getOwner();
+  _dbLib* lib = (_dbLib*) master->getOwner();
   return (dbMaster*) lib->_master_tbl->getPtr(master->_eeq);
 }
 
 void dbMaster::setEEQ(dbMaster* eeq)
 {
   _dbMaster* master = (_dbMaster*) this;
-  master->_eeq      = eeq->getOID();
+  master->_eeq      = eeq->getImpl()->getOID();
 }
 
 dbSet<dbMTerm> dbMaster::getMTerms()
@@ -551,7 +552,7 @@ dbMTerm* dbMaster::findMTerm(dbBlock* block, const char* name)
 
 dbLib* dbMaster::getLib()
 {
-  return (dbLib*) getOwner();
+  return (dbLib*) getImpl()->getOwner();
 }
 
 dbSet<dbBox> dbMaster::getObstructions()
@@ -575,13 +576,13 @@ int dbMaster::getMTermCount()
 void dbMaster::setSite(dbSite* site)
 {
   _dbMaster* master = (_dbMaster*) this;
-  master->_site     = site->getOID();
+  master->_site     = site->getImpl()->getOID();
 }
 
 dbSite* dbMaster::getSite()
 {
   _dbMaster* master = (_dbMaster*) this;
-  _dbLib*    lib    = (_dbLib*) getOwner();
+  _dbLib*    lib    = (_dbLib*) master->getOwner();
 
   if (master->_site == 0)
     return NULL;

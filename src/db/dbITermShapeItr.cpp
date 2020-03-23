@@ -146,10 +146,10 @@ void dbITermShapeItr::getViaBox(dbBox* box, dbShape& shape)
 {
   Rect b;
   box->getBox(b);
-  int     xmin = b.xMin() + _via_x;
-  int     ymin = b.yMin() + _via_y;
-  int     xmax = b.xMax() + _via_x;
-  int     ymax = b.yMax() + _via_y;
+  int  xmin = b.xMin() + _via_x;
+  int  ymin = b.yMin() + _via_y;
+  int  xmax = b.xMax() + _via_x;
+  int  ymax = b.yMax() + _via_y;
   Rect r(xmin, ymin, xmax, ymax);
   _transform.apply(r);
   shape.setViaBox(_via, box->getTechLayer(), r);

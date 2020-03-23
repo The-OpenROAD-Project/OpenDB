@@ -32,8 +32,8 @@
 
 #pragma once
 
-#include "odb.h"
 #include "dbPagedVector.h"
+#include "odb.h"
 
 namespace odb {
 
@@ -95,5 +95,3 @@ template <class T>
 dbIStream& operator>>(dbIStream& stream, dbHashTable<T>& table);
 
 }  // namespace odb
-
-

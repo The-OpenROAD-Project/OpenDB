@@ -181,7 +181,7 @@ static bool checkITermConnect(dbITerm* iterm, dbShape& shape)
   dbMTerm* mterm = iterm->getMTerm();
   int      px, py;
   iterm->getInst()->getOrigin(px, py);
-  Point     origin = Point(px, py);
+  Point        origin = Point(px, py);
   dbOrientType orient = iterm->getInst()->getOrient();
   dbTransform  transform(orient, origin);
 
@@ -192,8 +192,8 @@ static bool checkITermConnect(dbITerm* iterm, dbShape& shape)
     dbSet<dbBox>           boxes = mpin->getGeometry();
     dbSet<dbBox>::iterator box_itr;
     for (box_itr = boxes.begin(); box_itr != boxes.end(); box_itr++) {
-      dbBox*  box = *box_itr;
-      Rect rect;
+      dbBox* box = *box_itr;
+      Rect   rect;
       if (box->isVia()) {
         dbTechVia* tv = box->getTechVia();
         if (tv->getTopLayer() == wlyr
@@ -263,7 +263,7 @@ void tmg_conn::checkConnected(bool verbose)
   itinfo*                  itV  = itV1;
   int                      itN  = iterms.size();
   if (itN > 32) {
-    itV = (itinfo*) malloc(itN * sizeof(itinfo));
+    itV  = (itinfo*) malloc(itN * sizeof(itinfo));
     itV2 = itV;
   }
   itinfo* x;
@@ -283,7 +283,7 @@ void tmg_conn::checkConnected(bool verbose)
   btinfo*                  btV  = btV1;
   int                      btN  = bterms.size();
   if (btN > 32) {
-    btV = (btinfo*) malloc(btN * sizeof(btinfo));
+    btV  = (btinfo*) malloc(btN * sizeof(btinfo));
     btV2 = btV;
   }
   btinfo* y;

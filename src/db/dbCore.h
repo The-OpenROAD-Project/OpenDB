@@ -44,10 +44,10 @@
 ///  dbTablePage
 ///
 
-#include "odb.h"
 #include "dbAttrTable.h"
 #include "dbId.h"
 #include "dbObject.h"
+#include "odb.h"
 
 namespace odb {
 
@@ -59,6 +59,29 @@ class dbObjectTable;
 #define DB_OFFSET_MASK (~DB_ALLOC_BIT)
 
 typedef dbObjectTable* (dbObject::*GetObjTbl_t)(dbObjectType);
+
+///////////////////////////////////////////////////////////////
+/// _dbObject definition
+///////////////////////////////////////////////////////////////
+class _dbObject : public dbObject
+{
+ private:
+  uint _oid;
+
+ public:
+  _dbDatabase*   getDatabase() const;
+  dbObjectTable* getTable() const;
+  dbObjectPage*  getObjectPage() const;
+  dbObject*      getOwner() const;
+  dbObjectType   getType() const;
+  uint           getOID() const;
+
+  template <class T>
+  friend class dbTable;
+  template <class T>
+  friend class dbArrayTable;
+  friend class _dbObject;
+};
 
 ///////////////////////////////////////////////////////////////
 /// dbObjectTable definition
@@ -103,7 +126,7 @@ class dbObjectTable
 /// _dbFreeObject definition - free-list object
 ///////////////////////////////////////////////////////////////
 
-class _dbFreeObject : public dbObject
+class _dbFreeObject : public _dbObject
 {
  public:
   uint _next;
@@ -150,10 +173,20 @@ inline dbObjectTable::dbObjectTable(_dbDatabase* db,
 }
 
 ///////////////////////////////////////////////////////////////
-/// dbObject inlines
+/// _dbObject inlines
 ///////////////////////////////////////////////////////////////
 
-inline uint dbObject::getOID() const
+inline _dbObject* dbObject::getImpl()
+{
+  return (_dbObject*) this;
+}
+
+inline const _dbObject* dbObject::getImpl() const
+{
+  return (_dbObject*) this;
+}
+
+inline uint _dbObject::getOID() const
 {
   uint          offset = (_oid & DB_OFFSET_MASK);
   char*         base   = (char*) this - offset;
@@ -161,7 +194,7 @@ inline uint dbObject::getOID() const
   return page->_page_addr | offset / page->_table->_obj_size;
 }
 
-inline dbObjectTable* dbObject::getTable() const
+inline dbObjectTable* _dbObject::getTable() const
 {
   uint          offset = (_oid & DB_OFFSET_MASK);
   char*         base   = (char*) this - offset;
@@ -169,7 +202,7 @@ inline dbObjectTable* dbObject::getTable() const
   return page->_table;
 }
 
-inline _dbDatabase* dbObject::getDatabase() const
+inline _dbDatabase* _dbObject::getDatabase() const
 {
   uint          offset = (_oid & DB_OFFSET_MASK);
   char*         base   = (char*) this - offset;
@@ -177,7 +210,7 @@ inline _dbDatabase* dbObject::getDatabase() const
   return page->_table->_db;
 }
 
-inline dbObject* dbObject::getOwner() const
+inline dbObject* _dbObject::getOwner() const
 {
   uint          offset = (_oid & DB_OFFSET_MASK);
   char*         base   = (char*) this - offset;
@@ -185,7 +218,7 @@ inline dbObject* dbObject::getOwner() const
   return page->_table->_owner;
 }
 
-inline dbObjectType dbObject::getType() const
+inline dbObjectType _dbObject::getType() const
 {
   uint          offset = (_oid & DB_OFFSET_MASK);
   char*         base   = (char*) this - offset;
@@ -193,7 +226,7 @@ inline dbObjectType dbObject::getType() const
   return page->_table->_type;
 }
 
-inline dbObjectPage* dbObject::getObjectPage() const
+inline dbObjectPage* _dbObject::getObjectPage() const
 {
   uint          offset = (_oid & DB_OFFSET_MASK);
   char*         base   = (char*) this - offset;
@@ -202,5 +235,3 @@ inline dbObjectPage* dbObject::getObjectPage() const
 }
 
 }  // namespace odb
-
-

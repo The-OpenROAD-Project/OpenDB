@@ -32,11 +32,11 @@
 
 #pragma once
 
-#include "odb.h"
+#include "dbCore.h"
 #include "dbId.h"
-#include "dbObject.h"
 #include "dbTypes.h"
 #include "dbVector.h"
+#include "odb.h"
 
 namespace odb {
 
@@ -50,7 +50,7 @@ struct _dbWireFlags
   uint _spare_bits : 31;
 };
 
-class _dbWire : public dbObject
+class _dbWire : public _dbObject
 {
  public:
   _dbWireFlags            _flags;
@@ -83,5 +83,3 @@ dbOStream& operator<<(dbOStream& stream, const _dbWire& wire);
 dbIStream& operator>>(dbIStream& stream, _dbWire& wire);
 
 }  // namespace odb
-
-

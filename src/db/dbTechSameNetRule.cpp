@@ -31,6 +31,7 @@
 // POSSIBILITY OF SUCH DAMAGE.
 
 #include "dbTechSameNetRule.h"
+
 #include "db.h"
 #include "dbDatabase.h"
 #include "dbTable.h"
@@ -91,14 +92,14 @@ void _dbTechSameNetRule::out(dbDiff& diff, char side, const char* field) const
 dbTechLayer* dbTechSameNetRule::getLayer1()
 {
   _dbTechSameNetRule* rule = (_dbTechSameNetRule*) this;
-  _dbTech*            tech = (_dbTech*) getOwner();
+  _dbTech*            tech = (_dbTech*) rule->getOwner();
   return (dbTechLayer*) tech->_layer_tbl->getPtr(rule->_layer_1);
 }
 
 dbTechLayer* dbTechSameNetRule::getLayer2()
 {
   _dbTechSameNetRule* rule = (_dbTechSameNetRule*) this;
-  _dbTech*            tech = (_dbTech*) getOwner();
+  _dbTech*            tech = (_dbTech*) rule->getOwner();
   return (dbTechLayer*) tech->_layer_tbl->getPtr(rule->_layer_2);
 }
 

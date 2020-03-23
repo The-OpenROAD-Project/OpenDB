@@ -31,6 +31,7 @@
 // POSSIBILITY OF SUCH DAMAGE.
 
 #include "dbTechViaLayerRule.h"
+
 #include "db.h"
 #include "dbDatabase.h"
 #include "dbDiff.hpp"
@@ -259,7 +260,7 @@ dbTechLayer* dbTechViaLayerRule::getLayer()
   if (rule->_layer == 0)
     return NULL;
 
-  _dbTech* tech = (_dbTech*) getOwner();
+  _dbTech* tech = (_dbTech*) rule->getOwner();
   return (dbTechLayer*) tech->_layer_tbl->getPtr(rule->_layer);
 }
 
@@ -422,8 +423,8 @@ dbTechViaLayerRule* dbTechViaLayerRule::create(dbTech*        tech_,
   _dbTech*             tech    = (_dbTech*) tech_;
   _dbTechViaRule*      rule    = (_dbTechViaRule*) rule_;
   _dbTechViaLayerRule* layrule = tech->_via_layer_rule_tbl->create();
-  layrule->_layer              = layer->getOID();
-  rule->_layer_rules.push_back(layrule->getOID());
+  layrule->_layer              = layer->getImpl()->getOID();
+  rule->_layer_rules.push_back(layrule->getImpl()->getOID());
   return (dbTechViaLayerRule*) layrule;
 }
 
@@ -434,8 +435,8 @@ dbTechViaLayerRule* dbTechViaLayerRule::create(dbTech*                tech_,
   _dbTech*                tech    = (_dbTech*) tech_;
   _dbTechViaGenerateRule* rule    = (_dbTechViaGenerateRule*) rule_;
   _dbTechViaLayerRule*    layrule = tech->_via_layer_rule_tbl->create();
-  layrule->_layer                 = layer->getOID();
-  rule->_layer_rules.push_back(layrule->getOID());
+  layrule->_layer                 = layer->getImpl()->getOID();
+  rule->_layer_rules.push_back(layrule->getImpl()->getOID());
   return (dbTechViaLayerRule*) layrule;
 }
 

@@ -38,6 +38,7 @@ namespace odb {
 
 class dbBlock;
 class dbNet;
+class dbWire;
 
 void orderWires(dbBlock* b,
                 bool     force,

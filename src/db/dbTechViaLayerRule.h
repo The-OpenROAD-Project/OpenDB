@@ -32,11 +32,11 @@
 
 #pragma once
 
-#include "odb.h"
+#include "dbCore.h"
 #include "dbId.h"
-#include "dbObject.h"
 #include "dbTypes.h"
 #include "geom.h"
+#include "odb.h"
 
 namespace odb {
 
@@ -63,7 +63,7 @@ struct _dbTechViaLayerRuleFlags
   uint _spare_bits : 23;
 };
 
-class _dbTechViaLayerRule : public dbObject
+class _dbTechViaLayerRule : public _dbObject
 {
  public:
   // PERSISTANT-MEMBERS
@@ -77,7 +77,7 @@ class _dbTechViaLayerRule : public dbObject
   int                      _spacing_x;
   int                      _spacing_y;
   double                   _resistance;
-  Rect                  _rect;
+  Rect                     _rect;
   dbId<_dbTechLayer>       _layer;
 
   _dbTechViaLayerRule(_dbDatabase*, const _dbTechViaLayerRule& v);
@@ -99,5 +99,3 @@ dbOStream& operator<<(dbOStream& stream, const _dbTechViaLayerRule& v);
 dbIStream& operator>>(dbIStream& stream, _dbTechViaLayerRule& v);
 
 }  // namespace odb
-
-

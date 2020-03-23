@@ -30,11 +30,12 @@
 // ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 // POSSIBILITY OF SUCH DAMAGE.
 
+#include "dbMTerm.h"
+
 #include "db.h"
 #include "dbDatabase.h"
 #include "dbLib.h"
 #include "dbMPinItr.h"
-#include "dbMTerm.h"
 #include "dbMaster.h"
 #include "dbTable.h"
 #include "dbTable.hpp"
@@ -261,7 +262,7 @@ std::string dbMTerm::getName()
 
 char* dbMTerm::getName(dbInst* inst, char* ttname)
 {
-  dbBlock*  block  = (dbBlock*) inst->getOwner();
+  dbBlock*  block  = (dbBlock*) inst->getImpl()->getOwner();
   dbMaster* master = inst->getMaster();
   return (getName(block, master, ttname));
 }
@@ -324,20 +325,20 @@ bool dbMTerm::isSetMark()
 
 dbMaster* dbMTerm::getMaster()
 {
-  return (dbMaster*) getOwner();
+  return (dbMaster*) getImpl()->getOwner();
 }
 
 dbSet<dbMPin> dbMTerm::getMPins()
 {
   _dbMTerm*  mterm  = (_dbMTerm*) this;
-  _dbMaster* master = (_dbMaster*) getOwner();
+  _dbMaster* master = (_dbMaster*) mterm->getOwner();
   return dbSet<dbMPin>(mterm, master->_mpin_itr);
 }
 
 dbSet<dbTarget> dbMTerm::getTargets()
 {
   _dbMTerm*  mterm  = (_dbMTerm*) this;
-  _dbMaster* master = (_dbMaster*) getOwner();
+  _dbMaster* master = (_dbMaster*) mterm->getOwner();
   return dbSet<dbTarget>(mterm, master->_target_itr);
 }
 
@@ -395,13 +396,13 @@ dbTechAntennaPinModel* dbMTerm::createDefaultAntennaModel()
   // Reinitialize the object to its default state...
   if (m != NULL) {
     m->~_dbTechAntennaPinModel();
-    new (m) _dbTechAntennaPinModel(getDatabase());
-    m->_mterm = getOID();
+    new (m) _dbTechAntennaPinModel(mterm->getDatabase());
+    m->_mterm = getImpl()->getOID();
   } else {
-    _dbMaster* master = (_dbMaster*) getOwner();
+    _dbMaster* master = (_dbMaster*) mterm->getOwner();
     m                 = master->_antenna_pin_model_tbl->create();
     mterm->_oxide1    = m->getOID();
-    m->_mterm         = getOID();
+    m->_mterm         = getImpl()->getOID();
   }
 
   return (dbTechAntennaPinModel*) m;
@@ -415,13 +416,13 @@ dbTechAntennaPinModel* dbMTerm::createOxide2AntennaModel()
   // Reinitialize the object to its default state...
   if (m != NULL) {
     m->~_dbTechAntennaPinModel();
-    new (m) _dbTechAntennaPinModel(getDatabase());
-    m->_mterm = getOID();
+    new (m) _dbTechAntennaPinModel(mterm->getDatabase());
+    m->_mterm = getImpl()->getOID();
   } else {
-    _dbMaster* master = (_dbMaster*) getOwner();
+    _dbMaster* master = (_dbMaster*) mterm->getOwner();
     m                 = master->_antenna_pin_model_tbl->create();
     mterm->_oxide2    = m->getOID();
-    m->_mterm         = getOID();
+    m->_mterm         = getImpl()->getOID();
   }
 
   return (dbTechAntennaPinModel*) m;
@@ -446,7 +447,7 @@ dbTechAntennaPinModel* dbMTerm::getDefaultAntennaModel() const
   if (mterm->_oxide1 == 0)
     return NULL;
 
-  _dbMaster* master = (_dbMaster*) getOwner();
+  _dbMaster* master = (_dbMaster*) mterm->getOwner();
   return (dbTechAntennaPinModel*) master->_antenna_pin_model_tbl->getPtr(
       mterm->_oxide1);
 }
@@ -458,7 +459,7 @@ dbTechAntennaPinModel* dbMTerm::getOxide2AntennaModel() const
   if (mterm->_oxide2 == 0)
     return NULL;
 
-  _dbMaster* master = (_dbMaster*) getOwner();
+  _dbMaster* master = (_dbMaster*) mterm->getOwner();
   return (dbTechAntennaPinModel*) master->_antenna_pin_model_tbl->getPtr(
       mterm->_oxide2);
 }
@@ -467,7 +468,7 @@ void dbMTerm::getDiffArea(std::vector<std::pair<double, dbTechLayer*>>& data)
 {
   _dbMTerm* mterm = (_dbMTerm*) this;
   _dbTechAntennaPinModel::getAntennaValues(
-      getDatabase(), mterm->_diffarea, data);
+      mterm->getDatabase(), mterm->_diffarea, data);
 }
 
 void dbMTerm::writeAntennaLef(lefout& writer) const
@@ -476,8 +477,8 @@ void dbMTerm::writeAntennaLef(lefout& writer) const
 
   dbVector<_dbTechAntennaAreaElement*>::iterator ant_iter;
 
-  dbMaster* tpmtr = (dbMaster*) getOwner();
-  dbLib*    tplib = (dbLib*) tpmtr->getOwner();
+  dbMaster* tpmtr = (dbMaster*) mterm->getOwner();
+  dbLib*    tplib = (dbLib*) tpmtr->getImpl()->getOwner();
   dbTech*   tech  = tplib->getTech();
 
   for (ant_iter = mterm->_par_met_area.begin();

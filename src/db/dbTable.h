@@ -32,13 +32,13 @@
 
 #pragma once
 
+#include <vector>
+
 #include "ZException.h"
-#include "odb.h"
 #include "dbCore.h"
 #include "dbIterator.h"
 #include "dbVector.h"
-
-#include <vector>
+#include "odb.h"
 
 namespace odb {
 
@@ -183,5 +183,3 @@ template <class T>
 dbIStream& operator>>(dbIStream& stream, dbTable<T>& table);
 
 }  // namespace odb
-
-

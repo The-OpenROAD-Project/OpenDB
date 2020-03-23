@@ -31,6 +31,7 @@
 // POSSIBILITY OF SUCH DAMAGE.
 
 #include "dbMetrics.h"
+
 #include "db.h"
 #include "dbBlock.h"
 #include "dbDiff.h"

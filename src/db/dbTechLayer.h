@@ -32,11 +32,11 @@
 
 #pragma once
 
-#include "odb.h"
 #include "dbCore.h"
 #include "dbMatrix.h"
 #include "dbTypes.h"
 #include "dbVector.h"
+#include "odb.h"
 
 namespace odb {
 
@@ -53,7 +53,7 @@ class dbIStream;
 class dbOStream;
 class dbDiff;
 
-class _dbTechLayer : public dbObject
+class _dbTechLayer : public _dbObject
 {
  public:
   // PERSISTENT-MEMBERS
@@ -92,7 +92,7 @@ class _dbTechLayer : public dbObject
   int    _min_step;
   int    _min_step_max_length;
   int    _min_step_max_edges;
-  
+
   struct
   {  // Protrusion
     uint _width;
@@ -111,12 +111,12 @@ class _dbTechLayer : public dbObject
   dbVector<uint>                     _v55sp_width_idx;
   dbMatrix<uint>                     _v55sp_spacing;
 
-  dbVector<uint>                     _two_widths_sp_idx;
-  dbVector<int>                      _two_widths_sp_prl;
-  dbMatrix<uint>                     _two_widths_sp_spacing;
+  dbVector<uint> _two_widths_sp_idx;
+  dbVector<int>  _two_widths_sp_prl;
+  dbMatrix<uint> _two_widths_sp_spacing;
 
-  dbId<_dbTechLayerAntennaRule>      _oxide1;
-  dbId<_dbTechLayerAntennaRule>      _oxide2;
+  dbId<_dbTechLayerAntennaRule> _oxide1;
+  dbId<_dbTechLayerAntennaRule> _oxide2;
 
   _dbTechLayer(_dbDatabase* db);
   _dbTechLayer(_dbDatabase* db, const _dbTechLayer& l);
@@ -141,5 +141,3 @@ dbOStream& operator<<(dbOStream& stream, const _dbTechLayer& layer);
 dbIStream& operator>>(dbIStream& stream, _dbTechLayer& layer);
 
 }  // namespace odb
-
-

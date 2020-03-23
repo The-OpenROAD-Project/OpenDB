@@ -32,11 +32,11 @@
 
 #pragma once
 
-#include "odb.h"
+#include "dbCore.h"
 #include "dbId.h"
-#include "dbObject.h"
 #include "dbTypes.h"
 #include "dbVector.h"
+#include "odb.h"
 
 namespace odb {
 
@@ -45,7 +45,7 @@ class dbIStream;
 class dbOStream;
 class dbDiff;
 
-class _dbGCellGrid : public dbObject
+class _dbGCellGrid : public _dbObject
 {
  public:
   dbVector<int> _x_origin;
@@ -115,5 +115,3 @@ inline dbIStream& operator>>(dbIStream& stream, _dbGCellGrid& grid)
 }
 
 }  // namespace odb
-
-

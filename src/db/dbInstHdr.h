@@ -32,10 +32,10 @@
 
 #pragma once
 
-#include "odb.h"
+#include "dbCore.h"
 #include "dbId.h"
-#include "dbObject.h"
 #include "dbVector.h"
+#include "odb.h"
 
 namespace odb {
 
@@ -50,7 +50,7 @@ class dbIStream;
 class dbOStream;
 class dbDiff;
 
-class dbInstHdr : public dbObject
+class dbInstHdr : public _dbObject
 {
  public:
   dbBlock*  getBlock();
@@ -61,7 +61,7 @@ class dbInstHdr : public dbObject
   static void       destroy(dbInstHdr* hdr);
 };
 
-class _dbInstHdr : public dbObject
+class _dbInstHdr : public _dbObject
 {
  public:
   int                       _mterm_cnt;
@@ -87,5 +87,3 @@ dbOStream& operator<<(dbOStream& stream, const _dbInstHdr& inst_hdr);
 dbIStream& operator>>(dbIStream& stream, _dbInstHdr& inst_hdr);
 
 }  // namespace odb
-
-

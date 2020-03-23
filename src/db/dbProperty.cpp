@@ -31,6 +31,7 @@
 // POSSIBILITY OF SUCH DAMAGE.
 
 #include "dbProperty.h"
+
 #include "db.h"
 #include "dbBlock.h"
 #include "dbChip.h"
@@ -237,7 +238,7 @@ next_object:
     }
 
     default:
-      object = object->getOwner();
+      object = object->getImpl()->getOwner();
       goto next_object;
   }
 
@@ -275,7 +276,7 @@ next_object:
     }
 
     default:
-      object = object->getOwner();
+      object = object->getImpl()->getOwner();
       goto next_object;
   }
 
@@ -313,7 +314,7 @@ next_object:
     }
 
     default:
-      object = object->getOwner();
+      object = object->getImpl()->getOwner();
       goto next_object;
   }
 
@@ -321,10 +322,11 @@ next_object:
   return NULL;
 }
 
-_dbProperty* _dbProperty::createProperty(dbObject*     object,
+_dbProperty* _dbProperty::createProperty(dbObject*     object_,
                                          const char*   name,
                                          _PropTypeEnum type)
 {
+  _dbObject*            object    = (_dbObject*) object_;
   dbTable<_dbProperty>* propTable = getPropTable(object);
 
   // Create property
@@ -343,7 +345,7 @@ _dbProperty* _dbProperty::createProperty(dbObject*     object,
   dbObjectTable*    table    = object->getTable();
   dbId<_dbProperty> propList = table->getPropList(oid);
   prop->_next                = propList;
-  propList                   = prop->getOID();
+  propList                   = prop->getImpl()->getOID();
   table->setPropList(oid, propList);
   return prop;
 }
@@ -466,8 +468,9 @@ void dbProperty::destroy(dbProperty* prop_)
 
 void dbProperty::destroyProperties(dbObject* obj)
 {
-  uint              oid      = obj->getOID();
-  dbObjectTable*    objTable = obj->getTable();
+  _dbObject*        object   = obj->getImpl();
+  uint              oid      = object->getOID();
+  dbObjectTable*    objTable = object->getTable();
   dbId<_dbProperty> cur      = objTable->getPropList(oid);
 
   if (!cur)

@@ -31,6 +31,7 @@
 // POSSIBILITY OF SUCH DAMAGE.
 
 #include "dbSWire.h"
+
 #include "db.h"
 #include "dbBlock.h"
 #include "dbDiff.hpp"
@@ -154,13 +155,13 @@ void _dbSWire::out(dbDiff& diff, char side, const char* field) const
 
 dbBlock* dbSWire::getBlock()
 {
-  return (dbBlock*) getOwner();
+  return (dbBlock*) getImpl()->getOwner();
 }
 
 dbNet* dbSWire::getNet()
 {
   _dbSWire* wire  = (_dbSWire*) this;
-  _dbBlock* block = (_dbBlock*) getOwner();
+  _dbBlock* block = (_dbBlock*) wire->getOwner();
   return (dbNet*) block->_net_tbl->getPtr(wire->_net);
 }
 
@@ -177,14 +178,14 @@ dbNet* dbSWire::getShield()
   if (wire->_shield == 0)
     return NULL;
 
-  _dbBlock* block = (_dbBlock*) getOwner();
+  _dbBlock* block = (_dbBlock*) wire->getOwner();
   return (dbNet*) block->_net_tbl->getPtr(wire->_shield);
 }
 
 dbSet<dbSBox> dbSWire::getWires()
 {
   _dbSWire* wire  = (_dbSWire*) this;
-  _dbBlock* block = (_dbBlock*) getOwner();
+  _dbBlock* block = (_dbBlock*) wire->getOwner();
   return dbSet<dbSBox>(wire, block->_sbox_itr);
 }
 

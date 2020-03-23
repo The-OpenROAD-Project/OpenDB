@@ -30,6 +30,8 @@
 // ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 // POSSIBILITY OF SUCH DAMAGE.
 
+#include "dbTech.h"
+
 #include "db.h"
 #include "dbBox.h"
 #include "dbBoxItr.h"
@@ -39,7 +41,6 @@
 #include "dbPropertyItr.h"
 #include "dbTable.h"
 #include "dbTable.hpp"
-#include "dbTech.h"
 #include "dbTechLayer.h"
 #include "dbTechLayerAntennaRule.h"
 #include "dbTechLayerItr.h"
@@ -1006,8 +1007,8 @@ dbTech* dbTech::getTech(dbDatabase* db_, uint dbid_)
 
 void dbTech::destroy(dbTech* tech_)
 {
-  _dbDatabase* db   = tech_->getDatabase();
   _dbTech*     tech = (_dbTech*) tech_;
+  _dbDatabase* db   = tech->getDatabase();
   dbProperty::destroyProperties(tech);
   db->_tech_tbl->destroy(tech);
   db->_tech = 0;

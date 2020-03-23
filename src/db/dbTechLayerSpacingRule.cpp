@@ -30,13 +30,14 @@
 // ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 // POSSIBILITY OF SUCH DAMAGE.
 
+#include "dbTechLayerSpacingRule.h"
+
 #include "db.h"
 #include "dbDatabase.h"
 #include "dbTable.h"
 #include "dbTable.hpp"
 #include "dbTech.h"
 #include "dbTechLayer.h"
-#include "dbTechLayerSpacingRule.h"
 #include "lefout.h"
 
 namespace odb {
@@ -428,8 +429,8 @@ bool dbTechLayerSpacingRule::getCutLayer4Spacing(dbTechLayer*& outly) const
   if (_lsp->_flags._rule != CUT_LAYER_BELOW)
     return false;
 
-  dbTechLayer* tmply   = (dbTechLayer*) getOwner();
-  dbTech*      tmptech = (dbTech*) tmply->getOwner();
+  dbTechLayer* tmply   = (dbTechLayer*) _lsp->getOwner();
+  dbTech*      tmptech = (dbTech*) tmply->getImpl()->getOwner();
   outly                = tmply->getTechLayer(tmptech, _lsp->_cut_layer_below);
   return true;
 }
@@ -619,7 +620,7 @@ void dbTechLayerSpacingRule::setCutLayer4Spacing(dbTechLayer* cutly)
   assert((_lsp->_flags._rule == DEFAULT)
          || (_lsp->_flags._rule == CUT_LAYER_BELOW));
 
-  dbTechLayer* tmply = (dbTechLayer*) getOwner();
+  dbTechLayer* tmply = (dbTechLayer*) _lsp->getOwner();
   ZASSERT(cutly->getNumber() < tmply->getNumber());
   _dbTechLayer* ct_ly = (_dbTechLayer*) cutly;
 
@@ -631,7 +632,7 @@ dbTechLayerSpacingRule* dbTechLayerSpacingRule::create(dbTechLayer* inly)
 {
   _dbTechLayer*            layer   = (_dbTechLayer*) inly;
   _dbTechLayerSpacingRule* newrule = layer->_spacing_rules_tbl->create();
-  newrule->_layer                  = inly->getOID();
+  newrule->_layer                  = inly->getImpl()->getOID();
 
   return ((dbTechLayerSpacingRule*) newrule);
 }

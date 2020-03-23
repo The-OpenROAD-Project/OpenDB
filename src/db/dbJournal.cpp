@@ -31,6 +31,7 @@
 // POSSIBILITY OF SUCH DAMAGE.
 
 #include "dbJournal.h"
+
 #include "db.h"
 #include "dbBlock.h"
 #include "dbCCSeg.h"
@@ -1170,7 +1171,7 @@ void dbJournal::redo_updateCCSegField()
       double ttcap[ADS_MAX_CORNER];
       char   ccCaps[400];
       ccCaps[0] = '\0';
-      int pos = 0;
+      int pos   = 0;
       for (uint ii = 0; ii < cornerCnt; ii++) {
         _log.pop(ttcap[ii]);
         pos += sprintf(&ccCaps[pos], "%f ", ttcap[ii]);

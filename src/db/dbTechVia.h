@@ -32,11 +32,11 @@
 
 #pragma once
 
-#include "odb.h"
+#include "dbCore.h"
 #include "dbId.h"
-#include "dbObject.h"
 #include "dbTypes.h"
 #include "dbViaParams.h"
+#include "odb.h"
 
 namespace odb {
 
@@ -57,7 +57,7 @@ struct _dbTechViaFlags
   uint _spare_bits : 29;
 };
 
-class _dbTechVia : public dbObject
+class _dbTechVia : public _dbObject
 {
  public:
   // PERSISTANT-MEMBERS
@@ -90,5 +90,3 @@ dbOStream& operator<<(dbOStream& stream, const _dbTechVia& via);
 dbIStream& operator>>(dbIStream& stream, _dbTechVia& via);
 
 }  // namespace odb
-
-

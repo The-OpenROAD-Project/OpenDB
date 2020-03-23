@@ -31,6 +31,7 @@
 // POSSIBILITY OF SUCH DAMAGE.
 
 #include "dbBlockCallBackObj.h"
+
 #include "dbBlock.h"
 
 namespace odb {

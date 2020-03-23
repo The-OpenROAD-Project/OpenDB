@@ -32,10 +32,10 @@
 
 #pragma once
 
-#include "odb.h"
+#include "dbCore.h"
 #include "dbId.h"
-#include "dbObject.h"
 #include "dbTypes.h"
+#include "odb.h"
 
 namespace odb {
 
@@ -53,7 +53,7 @@ struct _dbTechSameNetRuleFlags
   uint _spare_bits : 31;
 };
 
-class _dbTechSameNetRule : public dbObject
+class _dbTechSameNetRule : public _dbObject
 {
  public:
   // PERSISTANT-MEMBERS
@@ -118,5 +118,3 @@ inline dbIStream& operator>>(dbIStream& stream, _dbTechSameNetRule& rule)
 }
 
 }  // namespace odb
-
-

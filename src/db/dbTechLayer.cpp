@@ -30,12 +30,13 @@
 // ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 // POSSIBILITY OF SUCH DAMAGE.
 
+#include "dbTechLayer.h"
+
 #include "db.h"
 #include "dbDatabase.h"
 #include "dbTable.h"
 #include "dbTable.hpp"
 #include "dbTech.h"
-#include "dbTechLayer.h"
 #include "dbTechLayerAntennaRule.h"
 #include "dbTechLayerSpacingRule.h"
 #include "dbTechMinCutOrAreaRule.h"
@@ -1015,9 +1016,11 @@ void dbTechLayer::addTwoWidthsIndexEntry(uint width, int parallel_run_length)
   layer->_two_widths_sp_prl.push_back(parallel_run_length);
 }
 
-void dbTechLayer::addTwoWidthsSpacingTableEntry(uint inrow, uint incol, uint spacing)
+void dbTechLayer::addTwoWidthsSpacingTableEntry(uint inrow,
+                                                uint incol,
+                                                uint spacing)
 {
-  _dbTechLayer* layer                 = (_dbTechLayer*) this;
+  _dbTechLayer* layer                         = (_dbTechLayer*) this;
   layer->_two_widths_sp_spacing(inrow, incol) = spacing;
 }
 
@@ -1088,13 +1091,13 @@ dbTechLayerAntennaRule* dbTechLayer::createDefaultAntennaRule()
   // Reinitialize the object to its default state...
   if (r != NULL) {
     r->~_dbTechLayerAntennaRule();
-    new (r) _dbTechLayerAntennaRule(getDatabase());
-    r->_layer = getOID();
+    new (r) _dbTechLayerAntennaRule(layer->getDatabase());
+    r->_layer = getImpl()->getOID();
   } else {
-    _dbTech* tech  = (_dbTech*) getOwner();
+    _dbTech* tech  = (_dbTech*) layer->getOwner();
     r              = tech->_antenna_rule_tbl->create();
     layer->_oxide1 = r->getOID();
-    r->_layer      = getOID();
+    r->_layer      = getImpl()->getOID();
   }
 
   return (dbTechLayerAntennaRule*) r;
@@ -1109,13 +1112,13 @@ dbTechLayerAntennaRule* dbTechLayer::createOxide2AntennaRule()
   // Reinitialize the object to its default state...
   if (r != NULL) {
     r->~_dbTechLayerAntennaRule();
-    new (r) _dbTechLayerAntennaRule(getDatabase());
-    r->_layer = getOID();
+    new (r) _dbTechLayerAntennaRule(layer->getDatabase());
+    r->_layer = getImpl()->getOID();
   } else {
-    _dbTech* tech  = (_dbTech*) getOwner();
+    _dbTech* tech  = (_dbTech*) layer->getOwner();
     r              = tech->_antenna_rule_tbl->create();
     layer->_oxide2 = r->getOID();
-    r->_layer      = getOID();
+    r->_layer      = getImpl()->getOID();
   }
 
   return (dbTechLayerAntennaRule*) r;
@@ -1136,7 +1139,7 @@ bool dbTechLayer::hasOxide2AntennaRule() const
 dbTechLayerAntennaRule* dbTechLayer::getDefaultAntennaRule() const
 {
   _dbTechLayer* layer = (_dbTechLayer*) this;
-  _dbTech*      tech  = (_dbTech*) getOwner();
+  _dbTech*      tech  = (_dbTech*) layer->getOwner();
 
   if (layer->_oxide1 == 0)
     return NULL;
@@ -1148,7 +1151,7 @@ dbTechLayerAntennaRule* dbTechLayer::getDefaultAntennaRule() const
 dbTechLayerAntennaRule* dbTechLayer::getOxide2AntennaRule() const
 {
   _dbTechLayer* layer = (_dbTechLayer*) this;
-  _dbTech*      tech  = (_dbTech*) getOwner();
+  _dbTech*      tech  = (_dbTech*) layer->getOwner();
 
   if (layer->_oxide2 == 0)
     return NULL;
@@ -1448,7 +1451,7 @@ uint dbTechLayer::getMinStepMaxEdges() const
 
 void dbTechLayer::setMinStepMaxEdges(uint edges)
 {
-  _dbTechLayer* layer         = (_dbTechLayer*) this;
+  _dbTechLayer* layer        = (_dbTechLayer*) this;
   layer->_min_step_max_edges = edges;
 }
 
@@ -1497,7 +1500,7 @@ int dbTechLayer::getRoutingLevel()
 dbTechLayer* dbTechLayer::getLowerLayer()
 {
   _dbTechLayer* layer = (_dbTechLayer*) this;
-  _dbTech*      tech  = (_dbTech*) getOwner();
+  _dbTech*      tech  = (_dbTech*) layer->getOwner();
 
   if (layer->_lower == 0)
     return NULL;
@@ -1508,7 +1511,7 @@ dbTechLayer* dbTechLayer::getLowerLayer()
 dbTechLayer* dbTechLayer::getUpperLayer()
 {
   _dbTechLayer* layer = (_dbTechLayer*) this;
-  _dbTech*      tech  = (_dbTech*) getOwner();
+  _dbTech*      tech  = (_dbTech*) layer->getOwner();
 
   if (layer->_upper == 0)
     return NULL;
@@ -1518,7 +1521,7 @@ dbTechLayer* dbTechLayer::getUpperLayer()
 
 dbTech* dbTechLayer::getTech()
 {
-  return (dbTech*) getOwner();
+  return (dbTech*) getImpl()->getOwner();
 }
 
 dbTechLayer* dbTechLayer::create(dbTech*         tech_,

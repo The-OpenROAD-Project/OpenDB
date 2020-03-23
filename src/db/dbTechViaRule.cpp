@@ -31,6 +31,7 @@
 // POSSIBILITY OF SUCH DAMAGE.
 
 #include "dbTechViaRule.h"
+
 #include "db.h"
 #include "dbDatabase.h"
 #include "dbDiff.hpp"
@@ -147,7 +148,7 @@ std::string dbTechViaRule::getName()
 void dbTechViaRule::addVia(dbTechVia* via)
 {
   _dbTechViaRule* rule = (_dbTechViaRule*) this;
-  rule->_vias.push_back(via->getOID());
+  rule->_vias.push_back(via->getImpl()->getOID());
 }
 
 uint dbTechViaRule::getViaCount()
@@ -159,7 +160,7 @@ uint dbTechViaRule::getViaCount()
 dbTechVia* dbTechViaRule::getVia(uint idx)
 {
   _dbTechViaRule* rule = (_dbTechViaRule*) this;
-  dbTech*         tech = (dbTech*) getOwner();
+  dbTech*         tech = (dbTech*) rule->getOwner();
 
   if (idx >= rule->_vias.size())
     return NULL;
@@ -177,7 +178,7 @@ uint dbTechViaRule::getViaLayerRuleCount()
 dbTechViaLayerRule* dbTechViaRule::getViaLayerRule(uint idx)
 {
   _dbTechViaRule* rule = (_dbTechViaRule*) this;
-  dbTech*         tech = (dbTech*) getOwner();
+  dbTech*         tech = (dbTech*) rule->getOwner();
 
   if (idx >= rule->_layer_rules.size())
     return NULL;

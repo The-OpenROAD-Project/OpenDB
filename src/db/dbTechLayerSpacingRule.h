@@ -32,10 +32,10 @@
 
 #pragma once
 
-#include "odb.h"
+#include "dbCore.h"
 #include "dbId.h"
-#include "dbObject.h"
 #include "dbTypes.h"
+#include "odb.h"
 
 namespace odb {
 
@@ -45,7 +45,7 @@ class dbIStream;
 class dbOStream;
 class dbDiff;
 
-class _dbTechLayerSpacingRule : public dbObject
+class _dbTechLayerSpacingRule : public _dbObject
 {
  public:
   // PERSISTENT-MEMBERS
@@ -118,7 +118,7 @@ dbIStream& operator>>(dbIStream& stream, _dbTechLayerSpacingRule& rule);
 
 ///  This structure defines entries in the V5.5 influence spacing rule table.
 
-class _dbTechV55InfluenceEntry : public dbObject
+class _dbTechV55InfluenceEntry : public _dbObject
 {
  public:
   uint _width;
@@ -146,7 +146,8 @@ inline _dbTechV55InfluenceEntry::_dbTechV55InfluenceEntry(
 {
 }
 
-inline _dbTechV55InfluenceEntry::_dbTechV55InfluenceEntry(_dbDatabase* /* unused: db */)
+inline _dbTechV55InfluenceEntry::_dbTechV55InfluenceEntry(
+    _dbDatabase* /* unused: db */)
 {
   _width   = 0;
   _within  = 0;

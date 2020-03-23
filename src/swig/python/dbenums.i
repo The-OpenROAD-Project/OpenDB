@@ -345,9 +345,11 @@
 	} else if (strcasecmp(str, "CORE_TIELOW") == 0) {
 		$1 = odb::dbMasterType::Value::CORE_TIELOW;
 	} else if (strcasecmp(str, "CORE_SPACER") == 0) {
-		$1 = odb::dbMasterType::Value::CORE_AREAIO;
-	} else if (strcasecmp(str, "CORE_AREAIO") == 0) {
 		$1 = odb::dbMasterType::Value::CORE_SPACER;
+	} else if (strcasecmp(str, "CORE_ANTENNACELL") == 0) {
+		$1 = odb::dbMasterType::Value::CORE_ANTENNACELL;
+	} else if (strcasecmp(str, "CORE_WELLTAP") == 0) {
+		$1 = odb::dbMasterType::Value::CORE_WELLTAP;
 	} else if (strcasecmp(str, "ENDCAP") == 0) {
 		$1 = odb::dbMasterType::Value::ENDCAP;
 	} else if (strcasecmp(str, "ENDCAP_PRE") == 0) {

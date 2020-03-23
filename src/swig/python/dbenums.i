@@ -251,10 +251,16 @@
 		obj = PyString_FromString("NONE");
 	} else if ($1.getValue() == odb::dbMasterType::Value::COVER) {
 		obj = PyString_FromString("COVER");
+	} else if ($1.getValue() == odb::dbMasterType::Value::COVER_BUMP) {
+		obj = PyString_FromString("COVER_BUMP");
 	} else if ($1.getValue() == odb::dbMasterType::Value::RING) {
 		obj = PyString_FromString("RING");
 	} else if ($1.getValue() == odb::dbMasterType::Value::BLOCK) {
 		obj = PyString_FromString("BLOCK");
+	} else if ($1.getValue() == odb::dbMasterType::Value::BLOCK_BLACKBOX) {
+		obj = PyString_FromString("BLOCK_BLACKBOX");
+	} else if ($1.getValue() == odb::dbMasterType::Value::BLOCK_SOFT) {
+		obj = PyString_FromString("BLOCK_SOFT");
 	} else if ($1.getValue() == odb::dbMasterType::Value::PAD) {
 		obj = PyString_FromString("PAD");
 	} else if ($1.getValue() == odb::dbMasterType::Value::PAD_INPUT) {
@@ -267,6 +273,8 @@
 		obj = PyString_FromString("PAD_POWER");
 	} else if ($1.getValue() == odb::dbMasterType::Value::PAD_SPACER) {
 		obj = PyString_FromString("PAD_SPACER");
+	} else if ($1.getValue() == odb::dbMasterType::Value::PAD_AREAIO) {
+		obj = PyString_FromString("PAD_AREAIO");
 	} else if ($1.getValue() == odb::dbMasterType::Value::CORE) {
 		obj = PyString_FromString("CORE");
 	} else if ($1.getValue() == odb::dbMasterType::Value::CORE_FEEDTHRU) {
@@ -277,6 +285,10 @@
 		obj = PyString_FromString("CORE_TIELOW");
 	} else if ($1.getValue() == odb::dbMasterType::Value::CORE_SPACER) {
 		obj = PyString_FromString("CORE_SPACER");
+	} else if ($1.getValue() == odb::dbMasterType::Value::CORE_ANTENNACELL) {
+		obj = PyString_FromString("CORE_ANTENNACELL");
+	} else if ($1.getValue() == odb::dbMasterType::Value::CORE_WELLTAP) {
+		obj = PyString_FromString("CORE_WELLTAP");
 	} else if ($1.getValue() == odb::dbMasterType::Value::ENDCAP) {
 		obj = PyString_FromString("ENDCAP");
 	} else if ($1.getValue() == odb::dbMasterType::Value::ENDCAP_PRE) {
@@ -300,10 +312,16 @@
 		$1 = odb::dbMasterType::Value::NONE;
 	} else if (strcasecmp(str, "COVER") == 0) {
 		$1 = odb::dbMasterType::Value::COVER;
+	} else if (strcasecmp(str, "COVER_BUMP") == 0) {
+		$1 = odb::dbMasterType::Value::COVER_BUMP;
 	} else if (strcasecmp(str, "RING") == 0) {
 		$1 = odb::dbMasterType::Value::RING;
 	} else if (strcasecmp(str, "BLOCK") == 0) {
 		$1 = odb::dbMasterType::Value::BLOCK;
+	} else if (strcasecmp(str, "BLOCK_BLACKBOX") == 0) {
+		$1 = odb::dbMasterType::Value::BLOCK_BLACKBOX;
+	} else if (strcasecmp(str, "BLOCK_SOFT") == 0) {
+		$1 = odb::dbMasterType::Value::BLOCK_SOFT;
 	} else if (strcasecmp(str, "PAD") == 0) {
 		$1 = odb::dbMasterType::Value::PAD;
 	} else if (strcasecmp(str, "PAD_INPUT") == 0) {
@@ -316,6 +334,8 @@
 		$1 = odb::dbMasterType::Value::PAD_POWER;
 	} else if (strcasecmp(str, "PAD_SPACER") == 0) {
 		$1 = odb::dbMasterType::Value::PAD_SPACER;
+	} else if (strcasecmp(str, "PAD_AREAIO") == 0) {
+		$1 = odb::dbMasterType::Value::PAD_AREAIO;
 	} else if (strcasecmp(str, "CORE") == 0) {
 		$1 = odb::dbMasterType::Value::CORE;
 	} else if (strcasecmp(str, "CORE_FEEDTHRU") == 0) {
@@ -325,6 +345,8 @@
 	} else if (strcasecmp(str, "CORE_TIELOW") == 0) {
 		$1 = odb::dbMasterType::Value::CORE_TIELOW;
 	} else if (strcasecmp(str, "CORE_SPACER") == 0) {
+		$1 = odb::dbMasterType::Value::CORE_AREAIO;
+	} else if (strcasecmp(str, "CORE_AREAIO") == 0) {
 		$1 = odb::dbMasterType::Value::CORE_SPACER;
 	} else if (strcasecmp(str, "ENDCAP") == 0) {
 		$1 = odb::dbMasterType::Value::ENDCAP;
@@ -350,9 +372,15 @@
 			found = true;
 		} 	else if (strcasecmp(str, "COVER") == 0) {
 			found = true;
+		} 	else if (strcasecmp(str, "COVER_BUMP") == 0) {
+			found = true;
 		} 	else if (strcasecmp(str, "RING") == 0) {
 			found = true;
 		} 	else if (strcasecmp(str, "BLOCK") == 0) {
+			found = true;
+		} 	else if (strcasecmp(str, "BLOCK_BLACKBOX") == 0) {
+			found = true;
+		} 	else if (strcasecmp(str, "BLOCK_SOFT") == 0) {
 			found = true;
 		} 	else if (strcasecmp(str, "PAD") == 0) {
 			found = true;
@@ -366,6 +394,8 @@
 			found = true;
 		} 	else if (strcasecmp(str, "PAD_SPACER") == 0) {
 			found = true;
+		} 	else if (strcasecmp(str, "PAD_AREAIO") == 0) {
+			found = true;
 		} 	else if (strcasecmp(str, "CORE") == 0) {
 			found = true;
 		} 	else if (strcasecmp(str, "CORE_FEEDTHRU") == 0) {
@@ -375,6 +405,10 @@
 		} 	else if (strcasecmp(str, "CORE_TIELOW") == 0) {
 			found = true;
 		} 	else if (strcasecmp(str, "CORE_SPACER") == 0) {
+			found = true;
+		} 	else if (strcasecmp(str, "CORE_ANTENNACELL") == 0) {
+			found = true;
+		} 	else if (strcasecmp(str, "CORE_WELLTAP") == 0) {
 			found = true;
 		} 	else if (strcasecmp(str, "ENDCAP") == 0) {
 			found = true;

@@ -285,11 +285,20 @@
 	 	case odb::dbMasterType::Value::COVER:
 			obj = Tcl_NewStringObj("COVER", -1);
 			break;
+	 	case odb::dbMasterType::Value::COVER_BUMP:
+			obj = Tcl_NewStringObj("COVER_BUMP", -1);
+			break;
 	 	case odb::dbMasterType::Value::RING:
 			obj = Tcl_NewStringObj("RING", -1);
 			break;
 	 	case odb::dbMasterType::Value::BLOCK:
 			obj = Tcl_NewStringObj("BLOCK", -1);
+			break;
+	 	case odb::dbMasterType::Value::BLOCK_BLACKBOX:
+			obj = Tcl_NewStringObj("BLOCK_BLACKBOX", -1);
+			break;
+	 	case odb::dbMasterType::Value::BLOCK_SOFT:
+			obj = Tcl_NewStringObj("BLOCK_SOFT", -1);
 			break;
 	 	case odb::dbMasterType::Value::PAD:
 			obj = Tcl_NewStringObj("PAD", -1);
@@ -309,6 +318,9 @@
 	 	case odb::dbMasterType::Value::PAD_SPACER:
 			obj = Tcl_NewStringObj("PAD_SPACER", -1);
 			break;
+	 	case odb::dbMasterType::Value::PAD_AREAIO:
+			obj = Tcl_NewStringObj("PAD_AREAIO", -1);
+			break;
 	 	case odb::dbMasterType::Value::CORE:
 			obj = Tcl_NewStringObj("CORE", -1);
 			break;
@@ -323,6 +335,12 @@
 			break;
 	 	case odb::dbMasterType::Value::CORE_SPACER:
 			obj = Tcl_NewStringObj("CORE_SPACER", -1);
+			break;
+	 	case odb::dbMasterType::Value::CORE_ANTENNACELL:
+			obj = Tcl_NewStringObj("CORE_ANTENNACELL", -1);
+			break;
+	 	case odb::dbMasterType::Value::CORE_WELLTAP:
+			obj = Tcl_NewStringObj("CORE_WELLTAP", -1);
 			break;
 	 	case odb::dbMasterType::Value::ENDCAP:
 			obj = Tcl_NewStringObj("ENDCAP", -1);
@@ -354,10 +372,16 @@
 		$1 = odb::dbMasterType::Value::NONE;
 	} else if (strcasecmp(str, "COVER") == 0) {
 		$1 = odb::dbMasterType::Value::COVER;
+	} else if (strcasecmp(str, "COVER_BUMP") == 0) {
+		$1 = odb::dbMasterType::Value::COVER_BUMP;
 	} else if (strcasecmp(str, "RING") == 0) {
 		$1 = odb::dbMasterType::Value::RING;
 	} else if (strcasecmp(str, "BLOCK") == 0) {
 		$1 = odb::dbMasterType::Value::BLOCK;
+	} else if (strcasecmp(str, "BLOCK_BLACKBOX") == 0) {
+		$1 = odb::dbMasterType::Value::BLOCK_BLACKBOX;
+	} else if (strcasecmp(str, "BLOCK_SOFT") == 0) {
+		$1 = odb::dbMasterType::Value::BLOCK_SOFT;
 	} else if (strcasecmp(str, "PAD") == 0) {
 		$1 = odb::dbMasterType::Value::PAD;
 	} else if (strcasecmp(str, "PAD_INPUT") == 0) {
@@ -370,6 +394,8 @@
 		$1 = odb::dbMasterType::Value::PAD_POWER;
 	} else if (strcasecmp(str, "PAD_SPACER") == 0) {
 		$1 = odb::dbMasterType::Value::PAD_SPACER;
+	} else if (strcasecmp(str, "PAD_AREAIO") == 0) {
+		$1 = odb::dbMasterType::Value::PAD_AREAIO;
 	} else if (strcasecmp(str, "CORE") == 0) {
 		$1 = odb::dbMasterType::Value::CORE;
 	} else if (strcasecmp(str, "CORE_FEEDTHRU") == 0) {
@@ -380,6 +406,10 @@
 		$1 = odb::dbMasterType::Value::CORE_TIELOW;
 	} else if (strcasecmp(str, "CORE_SPACER") == 0) {
 		$1 = odb::dbMasterType::Value::CORE_SPACER;
+	} else if (strcasecmp(str, "CORE_ANTENNACELL") == 0) {
+		$1 = odb::dbMasterType::Value::CORE_ANTENNACELL;
+	} else if (strcasecmp(str, "CORE_WELLTAP") == 0) {
+		$1 = odb::dbMasterType::Value::CORE_WELLTAP;
 	} else if (strcasecmp(str, "ENDCAP") == 0) {
 		$1 = odb::dbMasterType::Value::ENDCAP;
 	} else if (strcasecmp(str, "ENDCAP_PRE") == 0) {
@@ -404,9 +434,15 @@
 			found = true;
 		} 	else if (strcasecmp(str, "COVER") == 0) {
 			found = true;
+		} 	else if (strcasecmp(str, "COVER_BUMP") == 0) {
+			found = true;
 		} 	else if (strcasecmp(str, "RING") == 0) {
 			found = true;
 		} 	else if (strcasecmp(str, "BLOCK") == 0) {
+			found = true;
+		} 	else if (strcasecmp(str, "BLOCK_BLACKBOX") == 0) {
+			found = true;
+		} 	else if (strcasecmp(str, "BLOCK_SOFT") == 0) {
 			found = true;
 		} 	else if (strcasecmp(str, "PAD") == 0) {
 			found = true;
@@ -420,6 +456,8 @@
 			found = true;
 		} 	else if (strcasecmp(str, "PAD_SPACER") == 0) {
 			found = true;
+		} 	else if (strcasecmp(str, "PAD_AREAIO") == 0) {
+			found = true;
 		} 	else if (strcasecmp(str, "CORE") == 0) {
 			found = true;
 		} 	else if (strcasecmp(str, "CORE_FEEDTHRU") == 0) {
@@ -429,6 +467,10 @@
 		} 	else if (strcasecmp(str, "CORE_TIELOW") == 0) {
 			found = true;
 		} 	else if (strcasecmp(str, "CORE_SPACER") == 0) {
+			found = true;
+		} 	else if (strcasecmp(str, "CORE_ANTENNACELL") == 0) {
+			found = true;
+		} 	else if (strcasecmp(str, "CORE_WELLTAP") == 0) {
 			found = true;
 		} 	else if (strcasecmp(str, "ENDCAP") == 0) {
 			found = true;

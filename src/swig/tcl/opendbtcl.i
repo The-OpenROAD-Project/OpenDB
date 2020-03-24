@@ -34,6 +34,7 @@ using namespace odb;
 %typemap(in) (uint) = (int);
 %typemap(out) (uint) = (int);
 %typemap(out) (uint64) = (long);
+%apply int* OUTPUT {int* x, int* y};
 
 %include "dbenums.i"
 %include "parserenums.i"

@@ -1,6 +1,6 @@
 # Include python
-find_package(PythonLibs REQUIRED)
-include_directories(${PYTHON_INCLUDE_PATH})
+find_package(Python3 COMPONENTS Development REQUIRED)
+include_directories(${Python3_INCLUDE_DIRS})
 
 set(OPENDB_PYTHON_SWIG_FILES
     ${PROJECT_SOURCE_DIR}/src/swig/python/opendbpy.i
@@ -16,15 +16,15 @@ set(CMAKE_SWIG_FLAGS
     "-w509,503,501,472,467,402,401,317,325,378,383,389,365,362,314,258,240,203,201")
 # Add swig module
 swig_add_library(opendbpy 
+    TYPE     SHARED
     LANGUAGE python 
-    SOURCES ${OPENDB_PYTHON_SWIG_FILES}
+    SOURCES  ${OPENDB_PYTHON_SWIG_FILES}
 )
 swig_link_libraries(opendbpy
     PUBLIC
-        opendb 
-        ${PYTHON_LIBRARIES}
+        opendb
+        Python3::Python
 )
-set_property(TARGET opendbpy PROPERTY POSITION_INDEPENDENT_CODE ON)
 
 # Files to install with Python
 set(PYTHON_INSTALL_FILES

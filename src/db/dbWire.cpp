@@ -30,8 +30,6 @@
 // ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 // POSSIBILITY OF SUCH DAMAGE.
 
-#include "dbWire.h"
-
 #include <algorithm>
 
 #include "db.h"
@@ -44,6 +42,7 @@
 #include "dbTable.hpp"
 #include "dbTechLayerRule.h"
 #include "dbVia.h"
+#include "dbWire.h"
 #include "dbWireOpcode.h"
 
 namespace odb {
@@ -1431,7 +1430,7 @@ prevOpCode:
   }
 }
 
-inline bool createTechVia(_dbWire* wire, int idx, dbShape& shape)
+inline bool createVia(_dbWire* wire, int idx, dbShape& shape)
 {
   dbBlock* block   = (dbBlock*) wire->getOwner();
   dbTech*  tech    = wire->getDb()->getTech();
@@ -1458,7 +1457,7 @@ inline bool createTechVia(_dbWire* wire, int idx, dbShape& shape)
   return true;
 }
 
-inline bool createVia(_dbWire* wire, int idx, dbShape& shape)
+inline bool createTechVia(_dbWire* wire, int idx, dbShape& shape)
 {
   dbBlock*   block   = (dbBlock*) wire->getOwner();
   dbTech*    tech    = wire->getDb()->getTech();
@@ -1504,10 +1503,10 @@ bool dbWire::getPrevVia(int idx, dbShape& shape)
         opcode = getPrevOpcode(wire, idx);
 
         switch (opcode & WOP_OPCODE_MASK) {
-          case WOP_VIA:
+          case WOP_TECH_VIA:
             return createTechVia(wire, idx, shape);
 
-          case WOP_TECH_VIA:
+          case WOP_VIA:
             return createVia(wire, idx, shape);
 
           default:
@@ -1518,10 +1517,10 @@ bool dbWire::getPrevVia(int idx, dbShape& shape)
       break;
     }
 
-    case WOP_VIA:
+    case WOP_TECH_VIA:
       return createTechVia(wire, idx, shape);
 
-    case WOP_TECH_VIA:
+    case WOP_VIA:
       return createVia(wire, idx, shape);
 
     default:
@@ -1562,10 +1561,10 @@ nextOpCode:
     case WOP_COLINEAR:
       return false;
 
-    case WOP_VIA:
+    case WOP_TECH_VIA:
       return createTechVia(wire, idx, shape);
 
-    case WOP_TECH_VIA:
+    case WOP_VIA:
       return createVia(wire, idx, shape);
 
     default:

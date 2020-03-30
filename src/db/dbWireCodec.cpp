@@ -30,8 +30,6 @@
 // ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 // POSSIBILITY OF SUCH DAMAGE.
 
-#include "dbWireCodec.h"
-
 #include <ctype.h>
 
 #include "db.h"
@@ -41,6 +39,7 @@
 #include "dbTech.h"
 #include "dbTechLayerRule.h"
 #include "dbWire.h"
+#include "dbWireCodec.h"
 #include "dbWireOpcode.h"
 #include "logger.h"
 
@@ -384,6 +383,16 @@ int dbWireEncoder::addTechVia(dbTechVia* via)
   return jct_id;
 }
 
+void dbWireEncoder::addRect(int deltaX1, int deltaY1, int deltaX2, int deltaY2)
+{
+  // order must match dbWireDecoder::next
+  ZASSERT(_point_cnt != 0);
+  addOp(WOP_RECT, deltaX1);
+  addOp(WOP_OPERAND, deltaY1);
+  addOp(WOP_OPERAND, deltaX2);
+  addOp(WOP_OPERAND, deltaY2);
+}
+
 void dbWireEncoder::addITerm(dbITerm* iterm)
 {
   ZASSERT(_point_cnt != 0);
@@ -394,12 +403,6 @@ void dbWireEncoder::addBTerm(dbBTerm* bterm)
 {
   ZASSERT(_point_cnt != 0);
   addOp(WOP_BTERM, bterm->getImpl()->getOID());
-}
-
-void dbWireEncoder::addBTermMapId(int id)
-{
-  ZASSERT(_point_cnt != 0);
-  addOp(WOP_BTERM_MAP, id);
 }
 
 void dbWireEncoder::newPath(dbTechLayer* layer, dbWireType type)
@@ -634,6 +637,10 @@ void dbWireDecoder::begin(dbWire* wire)
   _wire_type     = dbWireType::NONE;
   _point_cnt     = 0;
   _property      = 0;
+  _deltaX1       = 0;
+  _deltaY1       = 0;
+  _deltaX2       = 0;
+  _deltaY2       = 0;
 }
 
 inline unsigned char dbWireDecoder::nextOp(int& value)
@@ -713,8 +720,8 @@ nextOpCode:
     case WOP_BTERM:
       return BTERM;
 
-    case WOP_BTERM_MAP:
-      return BTERM_MAP_ID;
+    case WOP_RECT:
+      return RECT;
 
     case WOP_VWIRE:
       return VWIRE;
@@ -942,6 +949,14 @@ nextOpCode:
       return _opcode = TECH_VIA;
     }
 
+    case WOP_RECT:
+      // order matches dbWireEncoder::addRect
+      _deltaX1 = _operand;
+      nextOp(_deltaY1);
+      nextOp(_deltaX2);
+      nextOp(_deltaY2);
+      return _opcode = RECT;
+
     case WOP_ITERM:
       return _opcode = ITERM;
 
@@ -986,9 +1001,6 @@ nextOpCode:
       nextOp(_operand2);
       return _opcode = VWIRE;
     }
-
-    case WOP_BTERM_MAP:
-      return _opcode = BTERM_MAP_ID;
 
     case WOP_NOP:
       goto nextOpCode;
@@ -1050,6 +1062,18 @@ dbTechVia* dbWireDecoder::getTechVia() const
   return via;
 }
 
+void dbWireDecoder::getRect(int& deltaX1,
+                            int& deltaY1,
+                            int& deltaX2,
+                            int& deltaY2) const
+{
+  ZASSERT(_opcode == RECT);
+  deltaX1 = _deltaX1;
+  deltaY1 = _deltaY1;
+  deltaX2 = _deltaX2;
+  deltaY2 = _deltaY2;
+}
+
 dbITerm* dbWireDecoder::getITerm() const
 {
   ZASSERT(_opcode == ITERM);
@@ -1062,12 +1086,6 @@ dbBTerm* dbWireDecoder::getBTerm() const
   ZASSERT(_opcode == BTERM);
   dbBTerm* bterm = dbBTerm::getBTerm(_block, _operand);
   return bterm;
-}
-
-int dbWireDecoder::getBTermMapId() const
-{
-  ZASSERT(_opcode == BTERM_MAP_ID);
-  return _operand;
 }
 
 dbWireType dbWireDecoder::getWireType() const
@@ -1268,20 +1286,26 @@ void dumpDecoder4Net(dbNet* innet)
         break;
       }
 
+      case dbWireDecoder::RECT: {
+        int deltaX1;
+        int deltaY1;
+        int deltaX2;
+        int deltaY2;
+        decoder.getRect(deltaX1, deltaY1, deltaX2, deltaY2);
+        break;
+      }
+
       case dbWireDecoder::ITERM: {
         notice(0, "%s Found Iterm\n", prfx);
         break;
       }
+
       case dbWireDecoder::BTERM: {
         notice(0, "%s Found Bterm\n", prfx);
         break;
       }
-      case dbWireDecoder::BTERM_MAP_ID: {
-        notice(0, "%s Found Bterm-map-id\n", prfx);
-        break;
-      }
 
-      case dbWireDecoder::RULE: {
+     case dbWireDecoder::RULE: {
         if (strcmp(
                 lyr_rule->getNonDefaultRule()->getName().c_str(),
                 (decoder.getRule())->getNonDefaultRule()->getName().c_str())) {

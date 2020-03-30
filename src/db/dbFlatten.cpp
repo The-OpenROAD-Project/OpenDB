@@ -813,23 +813,7 @@ void dbFlatten::fixWire(dbVector<unsigned char>& opcodes,
       }
 
       case WOP_BTERM: {
-        if (bterm_map == NULL) {
-          opcodes[i] = WOP_NOP;
-          data[i]    = 0;
-        } else {
-          dbBTerm*    bterm = dbBTerm::getBTerm(src, data[i]);
-          std::string name  = bterm->getName();
-          dbIntProperty::create(bterm_map, name.c_str(), _next_bterm_map_id);
-          opcodes[i] = WOP_BTERM_MAP;
-          data[i]    = _next_bterm_map_id;
-          ;
-          ++_next_bterm_map_id;
-        }
-
-        break;
-      }
-
-      case WOP_BTERM_MAP: {
+        assert(bterm_map == NULL);
         opcodes[i] = WOP_NOP;
         data[i]    = 0;
         break;

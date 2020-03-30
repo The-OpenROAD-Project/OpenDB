@@ -896,7 +896,7 @@ void defout_impl::writeBTerm(dbBTerm* bterm)
 
     const char* sig_type = defSigType(bterm->getSigType());
     fprintf(_out, " + USE %s", sig_type);
-    
+
     fprintf(_out, " ;\n");
   } else
     notice(0,
@@ -1452,7 +1452,6 @@ void defout_impl::writeWire(dbWire* wire)
 
       case dbWireDecoder::ITERM:
       case dbWireDecoder::BTERM:
-      case dbWireDecoder::BTERM_MAP_ID:
         break;
 
       case dbWireDecoder::RULE: {
@@ -1468,6 +1467,24 @@ void defout_impl::writeWire(dbWire* wire)
             fprintf(_out, " TAPERRULE %s ", name.c_str());
           }
         }
+        break;
+      }
+
+      case dbWireDecoder::RECT: {
+        if ((++point_cnt & 7) == 0)
+          fprintf(_out, "\n    ");
+
+        int deltaX1;
+        int deltaY1;
+        int deltaX2;
+        int deltaY2;
+        decode.getRect(deltaX1, deltaY1, deltaX2, deltaY2);
+        deltaX1 = defdist(deltaX1);
+        deltaY1 = defdist(deltaY1);
+        deltaX2 = defdist(deltaX2);
+        deltaY2 = defdist(deltaY2);
+        fprintf(
+            _out, " RECT ( %d %d %d %d ) ", deltaX1, deltaY1, deltaX2, deltaY2);
         break;
       }
 

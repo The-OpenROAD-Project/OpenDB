@@ -34,8 +34,8 @@
 
 #include <vector>
 
-#include "odb.h"
 #include "dbTypes.h"
+#include "odb.h"
 
 namespace odb {
 
@@ -347,6 +347,11 @@ class dbWireEncoder
   int addTechVia(dbTechVia* via);
 
   ///
+  /// Add a rect (aka patch wire) relative the previous point
+  ///
+  void addRect(int deltaX1, int deltaY1, int deltaX2, int deltaY2);
+
+  ///
   /// Connect an iterm to the previous point.
   ///
   void addITerm(dbITerm* iterm);
@@ -440,11 +445,6 @@ class dbWireEncoder
   ///
   void clear();
 
-  ///
-  /// For internal use only.
-  ///
-  void addBTermMapId(int id);
-
   ////////////////////////////////////////////////////////////////////////////////////////////////////////////
   //
   // Depreciated methods:
@@ -501,9 +501,9 @@ class dbWireDecoder
     POINT_EXT,     /// A point on a path with an extension.
     VIA,           /// A VIA instance on a path.
     TECH_VIA,      /// A TECH-VIA instance on a path with an extension.
+    RECT,          /// A rect / patch wire
     ITERM,         /// A dbITerm connected to the previous point/via
     BTERM,         /// A dbBTerm connected to the previous point/via
-    BTERM_MAP_ID,  /// (For internal use only) Mapping id to hierarchical bterm
     RULE,          /// Use non-default rule
     END_DECODE     /// No more path elements to decode.
   };
@@ -525,6 +525,10 @@ class dbWireDecoder
   int          _point_cnt;
   OpCode       _opcode;
   uint         _property;
+  int          _deltaX1;
+  int          _deltaY1;
+  int          _deltaX2;
+  int          _deltaY2;
 
   unsigned char nextOp(int& value);
   unsigned char nextOp(uint& value);
@@ -591,6 +595,11 @@ class dbWireDecoder
   dbTechVia* getTechVia() const;
 
   ///
+  /// Get deltas of the RECT.
+  ///
+  void getRect(int& deltaX1, int& deltaY1, int& deltaX2, int& deltaY2) const;
+
+  ///
   /// Get value of the ITERM OpCode.
   ///
   dbITerm* getITerm() const;
@@ -622,11 +631,6 @@ class dbWireDecoder
   /// junction-id of the previous point from which this branch emerges.
   ///
   int getJunctionValue() const;
-
-  ///
-  /// Get the bterm map id
-  ///
-  int getBTermMapId() const;
 };
 
 ///
@@ -636,5 +640,3 @@ void dumpDecoder(dbBlock* inblk, const char* net_name_or_id);
 void dumpDecoder4Net(dbNet* innet);
 
 }  // namespace odb
-
-

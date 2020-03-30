@@ -137,9 +137,6 @@ void dbRtTree::addObjects(dbWireEncoder& encoder, dbRtNode* node)
       encoder.addBTerm((dbBTerm*) obj);
     }
   }
-
-  if (node->_bterm_map_id != -1)
-    encoder.addBTermMapId(node->_bterm_map_id);
 }
 
 void dbRtVia::getBBox(Rect& bbox)
@@ -692,6 +689,10 @@ void dbRtTree::decode(dbWire* wire, bool decode_bterms_iterms)
         break;
       }
 
+      case dbWireDecoder::RECT: {
+        // ignored
+        break;
+      }
       case dbWireDecoder::ITERM: {
         if (decode_bterms_iterms)
           prev->addObject((dbObject*) decoder.getITerm());
@@ -701,13 +702,6 @@ void dbRtTree::decode(dbWire* wire, bool decode_bterms_iterms)
       case dbWireDecoder::BTERM: {
         if (decode_bterms_iterms)
           prev->addObject((dbObject*) decoder.getBTerm());
-        break;
-      }
-
-      case dbWireDecoder::BTERM_MAP_ID: {
-        assert(prev->_bterm_map_id == -1);
-        if (decode_bterms_iterms)
-          prev->_bterm_map_id = decoder.getBTermMapId();
         break;
       }
 

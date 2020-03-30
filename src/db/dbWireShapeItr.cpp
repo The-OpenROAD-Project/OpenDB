@@ -315,9 +315,24 @@ nextOpCode:
       return true;
     }
 
+    case WOP_RECT: {
+      int deltaX1 = operand;
+      int deltaY1;
+      int deltaX2;
+      int deltaY2;
+      nextOp(deltaY1);
+      nextOp(deltaX2);
+      nextOp(deltaY2);
+      shape.setSegmentFromRect(_prev_x + deltaX1,
+                               _prev_y + deltaY1,
+                               _prev_x + deltaX2,
+                               _prev_y + deltaY2,
+                               _layer);
+      return true;
+    }
+
     case WOP_ITERM:
     case WOP_BTERM:
-    case WOP_BTERM_MAP:
     case WOP_OPERAND:
     case WOP_PROPERTY:
     case WOP_NOP:

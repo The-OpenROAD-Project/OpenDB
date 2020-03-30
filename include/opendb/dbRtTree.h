@@ -63,6 +63,8 @@ class dbRtVWire;
 //
 //     The graph is undirected and cannot contain cycles.
 //
+//   Patch wires (rects) are not exposed in the tree.
+//
 class dbRtTree
 {
  public:

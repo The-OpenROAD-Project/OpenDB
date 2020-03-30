@@ -288,7 +288,7 @@ uint dbWire::equal(dbWire* target)
     if (src_op != tgt_op)
       return (1 + pjunction);
 
-    if (src_op == WOP_ITERM || src_op == WOP_BTERM || src_op == WOP_BTERM_MAP)
+    if (src_op == WOP_ITERM || src_op == WOP_BTERM)
       continue;
 
     if (src->_data[idx] != tgt->_data[idx])
@@ -403,8 +403,7 @@ void dbWire::donateWireSeg(dbWire* w1, dbRSeg** new_rsegs)
     opcode = wire->_opcodes[jj];
     opcd   = opcode & WOP_OPCODE_MASK;
     data   = wire->_data[jj];
-    if (opcd == WOP_ITERM || opcd == WOP_BTERM || opcd == WOP_BTERM_MAP
-        || opcd == WOP_NOP)
+    if (opcd == WOP_ITERM || opcd == WOP_BTERM || opcd == WOP_NOP)
       continue;
     if (opcd == WOP_JUNCTION) {
       data = destid[data];
@@ -468,8 +467,7 @@ void dbWire::shuffleWireSeg(dbNet** newNets, dbRSeg** new_rsegs)
   for (jj = 0; jj < wlen; jj++) {
     opcode = wire->_opcodes[jj];
     opcd   = opcode & WOP_OPCODE_MASK;
-    if (opcd == WOP_ITERM || opcd == WOP_BTERM || opcd == WOP_BTERM_MAP
-        || opcd == WOP_NOP)
+    if (opcd == WOP_ITERM || opcd == WOP_BTERM || opcd == WOP_NOP)
       continue;
     data = wire->_data[jj];
     switch (opcd) {
@@ -864,8 +862,8 @@ void dbWire::printWire(FILE* fp, int fid, int tid)
         fprintf(fp, "WOP_BTERM :");
         break;
       }
-      case WOP_BTERM_MAP: {
-        fprintf(fp, "WOP_BTERM_MAP :");
+      case WOP_RECT: {
+        fprintf(fp, "WOP_RECT :");
         break;
       }
       case WOP_OPERAND: {
@@ -1718,8 +1716,7 @@ void dbWire::copy(dbWire* dst_,
     for (i = 0; i < n; ++i) {
       unsigned char opcode = dst->_opcodes[i] & WOP_OPCODE_MASK;
 
-      if (opcode == WOP_ITERM || opcode == WOP_BTERM
-          || opcode == WOP_BTERM_MAP) {
+      if (opcode == WOP_ITERM || opcode == WOP_BTERM) {
         dst->_opcodes[i] = WOP_NOP;
         dst->_data[i]    = 0;
       }

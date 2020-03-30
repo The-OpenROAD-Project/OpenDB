@@ -66,6 +66,9 @@ class dbWireEncoder;
 //
 //   This graph may be edited and encoded back to the wire.
 //
+//   Patch wires (rects) are not exposed in the graph.
+//
+//
 class dbWireGraph
 {
  public:

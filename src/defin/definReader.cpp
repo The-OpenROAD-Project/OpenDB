@@ -317,7 +317,7 @@ int definReader::blockageCallback(defrCallbackType_e /* unused: type */,
     }
 
     for (int i = 0; i < blockage->numPolygons(); ++i) {
-      defiPoints            defPoints = blockage->getPolygon(i);
+      defiPoints         defPoints = blockage->getPolygon(i);
       std::vector<Point> points;
       reader->translate(defPoints, points);
       blockageR->blockageRoutingPolygon(points);
@@ -348,8 +348,8 @@ int definReader::blockageCallback(defrCallbackType_e /* unused: type */,
 }
 
 int definReader::componentsCallback(defrCallbackType_e /* unused: type */,
-                                    defiComponent*     comp,
-                                    defiUserData       data)
+                                    defiComponent* comp,
+                                    defiUserData   data)
 {
   definReader*    reader     = (definReader*) data;
   definComponent* componentR = reader->_componentR;
@@ -398,9 +398,9 @@ int definReader::componentsCallback(defrCallbackType_e /* unused: type */,
 }
 
 int definReader::componentMaskShiftCallback(
-                                            defrCallbackType_e           /* unused: type */,
-                                            defiComponentMaskShiftLayer* /* unused: shiftLayers */,
-    defiUserData                 data)
+    defrCallbackType_e /* unused: type */,
+    defiComponentMaskShiftLayer* /* unused: shiftLayers */,
+    defiUserData data)
 {
   definReader* reader = (definReader*) data;
   reader->error("COMPONENTMASKSHIFT is unsupported");
@@ -408,8 +408,8 @@ int definReader::componentMaskShiftCallback(
 }
 
 int definReader::dieAreaCallback(defrCallbackType_e /* unused: type */,
-                                 defiBox*           box,
-                                 defiUserData       data)
+                                 defiBox*     box,
+                                 defiUserData data)
 {
   definReader* reader = (definReader*) data;
 
@@ -434,16 +434,16 @@ int definReader::dieAreaCallback(defrCallbackType_e /* unused: type */,
       notice(0,
              "warning: Polygon DIEAREA statement not supported.  The bounding "
              "box will be used instead\n");
-      int                             xmin = INT_MAX;
-      int                             ymin = INT_MAX;
-      int                             xmax = INT_MIN;
-      int                             ymax = INT_MIN;
+      int                          xmin = INT_MAX;
+      int                          ymin = INT_MAX;
+      int                          xmax = INT_MIN;
+      int                          ymax = INT_MIN;
       std::vector<Point>::iterator itr;
 
       for (itr = P.begin(); itr != P.end(); ++itr) {
         Point& p = *itr;
-        int       x = p.getX();
-        int       y = p.getY();
+        int    x = p.getX();
+        int    y = p.getY();
 
         if (x < xmin)
           xmin = x;
@@ -466,8 +466,8 @@ int definReader::dieAreaCallback(defrCallbackType_e /* unused: type */,
 }
 
 int definReader::extensionCallback(defrCallbackType_e /* unused: type */,
-                                   const char*        /* unused: extension */,
-                                   defiUserData       data)
+                                   const char* /* unused: extension */,
+                                   defiUserData data)
 {
   definReader* reader = (definReader*) data;
   reader->error("Syntax extensions (BEGINEXT/ENDEXT) are unsupported");
@@ -475,8 +475,8 @@ int definReader::extensionCallback(defrCallbackType_e /* unused: type */,
 }
 
 int definReader::fillsCallback(defrCallbackType_e /* unused: type */,
-                               int                /* unused: count */,
-                               defiUserData       data)
+                               int /* unused: count */,
+                               defiUserData data)
 {
   definReader* reader = (definReader*) data;
 
@@ -488,8 +488,8 @@ int definReader::fillsCallback(defrCallbackType_e /* unused: type */,
 // This is incomplete but won't be reached because of the
 // fillsCallback
 int definReader::fillCallback(defrCallbackType_e /* unused: type */,
-                              defiFill*          fill,
-                              defiUserData       data)
+                              defiFill*    fill,
+                              defiUserData data)
 {
   definReader* reader = (definReader*) data;
   definFill*   fillR  = reader->_fillR;
@@ -506,7 +506,7 @@ int definReader::fillCallback(defrCallbackType_e /* unused: type */,
   }
 
   for (int i = 0; i < fill->numPolygons(); ++i) {
-    defiPoints            defPoints = fill->getPolygon(i);
+    defiPoints         defPoints = fill->getPolygon(i);
     std::vector<Point> points;
     reader->translate(defPoints, points);
 
@@ -519,8 +519,8 @@ int definReader::fillCallback(defrCallbackType_e /* unused: type */,
 }
 
 int definReader::gcellGridCallback(defrCallbackType_e /* unused: type */,
-                                   defiGcellGrid*     grid,
-                                   defiUserData       data)
+                                   defiGcellGrid* grid,
+                                   defiUserData   data)
 {
   definReader* reader = (definReader*) data;
   defDirection dir    = (grid->macro()[0] == 'X') ? DEF_X : DEF_Y;
@@ -531,8 +531,8 @@ int definReader::gcellGridCallback(defrCallbackType_e /* unused: type */,
 }
 
 int definReader::groupNameCallback(defrCallbackType_e /* unused: type */,
-                                   const char*        name,
-                                   defiUserData       data)
+                                   const char*  name,
+                                   defiUserData data)
 {
   definReader* reader = (definReader*) data;
   reader->_regionR->begin(name, /* group */ true);
@@ -540,8 +540,8 @@ int definReader::groupNameCallback(defrCallbackType_e /* unused: type */,
 }
 
 int definReader::groupMemberCallback(defrCallbackType_e /* unused: type */,
-                                     const char*        member,
-                                     defiUserData       data)
+                                     const char*  member,
+                                     defiUserData data)
 {
   definReader* reader = (definReader*) data;
   reader->_regionR->inst(member);
@@ -549,8 +549,8 @@ int definReader::groupMemberCallback(defrCallbackType_e /* unused: type */,
 }
 
 int definReader::groupCallback(defrCallbackType_e /* unused: type */,
-                               defiGroup*         group,
-                               defiUserData       data)
+                               defiGroup*   group,
+                               defiUserData data)
 {
   definReader* reader  = (definReader*) data;
   definRegion* regionR = reader->_regionR;
@@ -565,87 +565,17 @@ int definReader::groupCallback(defrCallbackType_e /* unused: type */,
 }
 
 int definReader::historyCallback(defrCallbackType_e /* unused: type */,
-                                 const char*        /* unused: extension */,
-                                 defiUserData       data)
+                                 const char* /* unused: extension */,
+                                 defiUserData data)
 {
   definReader* reader = (definReader*) data;
   reader->error("HISTORY is unsupported");
   return PARSE_ERROR;
 }
 
-// This is a ugly workaround.  We handle precisely the case that a
-// path consists of a single layer/point/rect sequence of min width
-// and nothing more.  This is all TritonRoute writes to DEF currently
-// so that is all we support (used for min area violations).  Anything
-// else will generate a parser error.
-static bool handleRectPath(defiPath* path, definNet* netR)
-{
-  const char* layerName    = nullptr;
-  bool        hasPoint = false;
-  bool        hasRect  = false;
-  int         x;
-  int         y;
-  int         deltaX1;
-  int         deltaY1;
-  int         deltaX2;
-  int         deltaY2;
-
-  path->initTraverse();
-  int pathId;
-  while ((pathId = path->next()) != DEFIPATH_DONE) {
-    switch (pathId) {
-      case DEFIPATH_LAYER: {
-        layerName = path->getLayer();
-        break;
-      }
-      case DEFIPATH_POINT: {
-        if (hasPoint) {
-          return false;
-        }
-        hasPoint = true;
-        path->getPoint(&x, &y);
-        break;
-      }
-      case DEFIPATH_RECT: {
-        if (hasRect) {
-          return false;
-        }
-        hasRect = true;
-        path->getViaRect(&deltaX1, &deltaY1, &deltaX2, &deltaY2);
-        break;
-      }
-      default:
-        return false;
-    }
-  }
-
-  netR->path(layerName);
-  int minWidth = netR->getLayer()->getWidth();
-  int ext = minWidth / 2;
-
-  if (deltaX2 - deltaX1 == minWidth) {  // vertical
-    if (-deltaX1 != deltaX2) { // must be centered on this point
-      return false;
-    }
-    netR->pathPoint(x, y + deltaY1 + ext);
-    netR->pathPoint(x, y + deltaY2 - ext);
-  } else if (deltaY2 - deltaY1 == minWidth) {  // horizontal
-    if (-deltaY1 != deltaY2) { // must be centered on this point
-      return false;
-    }
-    netR->pathPoint(x + deltaX1 + ext, y);
-    netR->pathPoint(x + deltaX2 - ext, y);
-  } else {
-    return false;
-  }
-  netR->pathEnd();
-
-  return true;
-}
-
 int definReader::netCallback(defrCallbackType_e /* unused: type */,
-                             defiNet*           net,
-                             defiUserData       data)
+                             defiNet*     net,
+                             defiUserData data)
 {
   definReader* reader = (definReader*) data;
   definNet*    netR   = reader->_netR;
@@ -732,10 +662,6 @@ int definReader::netCallback(defrCallbackType_e /* unused: type */,
     for (int j = 0; j < wire->numPaths(); ++j) {
       defiPath* path = wire->path(j);
 
-      if (handleRectPath(path, netR)) {
-        continue;
-      }
-
       path->initTraverse();
 
       int pathId;
@@ -793,7 +719,12 @@ int definReader::netCallback(defrCallbackType_e /* unused: type */,
             break;
 
           case DEFIPATH_RECT: {
-            return PARSE_ERROR;
+            int deltaX1;
+            int deltaY1;
+            int deltaX2;
+            int deltaY2;
+            path->getViaRect(&deltaX1, &deltaY1, &deltaX2, &deltaY2);
+            netR->pathRect(deltaX1, deltaY1, deltaX2, deltaY2);
             break;
           }
 
@@ -825,8 +756,8 @@ int definReader::netCallback(defrCallbackType_e /* unused: type */,
 }
 
 int definReader::nonDefaultRuleCallback(defrCallbackType_e /* unused: type */,
-                                        defiNonDefault*    rule,
-                                        defiUserData       data)
+                                        defiNonDefault* rule,
+                                        defiUserData    data)
 {
   definReader*         reader = (definReader*) data;
   definNonDefaultRule* ruleR  = reader->_non_default_ruleR;
@@ -876,8 +807,8 @@ int definReader::nonDefaultRuleCallback(defrCallbackType_e /* unused: type */,
 }
 
 int definReader::pinCallback(defrCallbackType_e /* unused: type */,
-                             defiPin*           pin,
-                             defiUserData       data)
+                             defiPin*     pin,
+                             defiUserData data)
 {
   definReader* reader = (definReader*) data;
   definPin*    pinR   = reader->_pinR;
@@ -979,8 +910,8 @@ int definReader::pinCallback(defrCallbackType_e /* unused: type */,
 }
 
 int definReader::pinsEndCallback(defrCallbackType_e /* unused: type */,
-                                 void*              /* unused: v */,
-                                 defiUserData       data)
+                                 void* /* unused: v */,
+                                 defiUserData data)
 {
   definReader* reader = (definReader*) data;
   reader->_pinR->pinsEnd();
@@ -988,8 +919,8 @@ int definReader::pinsEndCallback(defrCallbackType_e /* unused: type */,
 }
 
 int definReader::pinPropCallback(defrCallbackType_e /* unused: type */,
-                                 defiPinProp*       prop,
-                                 defiUserData       data)
+                                 defiPinProp* prop,
+                                 defiUserData data)
 {
   definReader*   reader = (definReader*) data;
   definPinProps* propR  = reader->_pin_propsR;
@@ -1002,8 +933,8 @@ int definReader::pinPropCallback(defrCallbackType_e /* unused: type */,
 }
 
 int definReader::pinsStartCallback(defrCallbackType_e /* unused: type */,
-                                   int                number,
-                                   defiUserData       data)
+                                   int          number,
+                                   defiUserData data)
 {
   definReader* reader = (definReader*) data;
   reader->_pinR->pinsBegin(number);
@@ -1011,8 +942,8 @@ int definReader::pinsStartCallback(defrCallbackType_e /* unused: type */,
 }
 
 int definReader::propCallback(defrCallbackType_e /* unused: type */,
-                              defiProp*          prop,
-                              defiUserData       data)
+                              defiProp*    prop,
+                              defiUserData data)
 {
   definReader*   reader     = (definReader*) data;
   definPropDefs* prop_defsR = reader->_prop_defsR;
@@ -1078,8 +1009,8 @@ int definReader::propCallback(defrCallbackType_e /* unused: type */,
 }
 
 int definReader::propEndCallback(defrCallbackType_e /* unused: type */,
-                                 void*              /* unused: v */,
-                                 defiUserData       data)
+                                 void* /* unused: v */,
+                                 defiUserData data)
 {
   definReader* reader = (definReader*) data;
   reader->_prop_defsR->endDefinitions();
@@ -1087,8 +1018,8 @@ int definReader::propEndCallback(defrCallbackType_e /* unused: type */,
 }
 
 int definReader::propStartCallback(defrCallbackType_e /* unused: type */,
-                                   void*              /* unused: v */,
-                                   defiUserData       data)
+                                   void* /* unused: v */,
+                                   defiUserData data)
 {
   definReader* reader = (definReader*) data;
   reader->_prop_defsR->beginDefinitions();
@@ -1096,8 +1027,8 @@ int definReader::propStartCallback(defrCallbackType_e /* unused: type */,
 }
 
 int definReader::regionCallback(defrCallbackType_e /* unused: type */,
-                                defiRegion*        region,
-                                defiUserData       data)
+                                defiRegion*  region,
+                                defiUserData data)
 {
   definReader* reader  = (definReader*) data;
   definRegion* regionR = reader->_regionR;
@@ -1127,8 +1058,8 @@ int definReader::regionCallback(defrCallbackType_e /* unused: type */,
 }
 
 int definReader::rowCallback(defrCallbackType_e /* unused: type */,
-                             defiRow*           row,
-                             defiUserData       data)
+                             defiRow*     row,
+                             defiUserData data)
 {
   definReader* reader = (definReader*) data;
   definRow*    rowR   = reader->_rowR;
@@ -1170,8 +1101,8 @@ int definReader::rowCallback(defrCallbackType_e /* unused: type */,
 }
 
 int definReader::scanchainsCallback(defrCallbackType_e /* unused: type */,
-                                    int                /* unused: count */,
-                                    defiUserData       data)
+                                    int /* unused: count */,
+                                    defiUserData data)
 {
   definReader* reader = (definReader*) data;
   reader->error("SCANCHAINS are unsupported");
@@ -1179,8 +1110,8 @@ int definReader::scanchainsCallback(defrCallbackType_e /* unused: type */,
 }
 
 int definReader::slotsCallback(defrCallbackType_e /* unused: type */,
-                               int                /* unused: count */,
-                               defiUserData       data)
+                               int /* unused: count */,
+                               defiUserData data)
 {
   definReader* reader = (definReader*) data;
   reader->error("SLOTS are unsupported");
@@ -1188,8 +1119,8 @@ int definReader::slotsCallback(defrCallbackType_e /* unused: type */,
 }
 
 int definReader::stylesCallback(defrCallbackType_e /* unused: type */,
-                                int                /* unused: count */,
-                                defiUserData       data)
+                                int /* unused: count */,
+                                defiUserData data)
 {
   definReader* reader = (definReader*) data;
   reader->error("STYLES are unsupported");
@@ -1197,8 +1128,8 @@ int definReader::stylesCallback(defrCallbackType_e /* unused: type */,
 }
 
 int definReader::technologyCallback(defrCallbackType_e /* unused: type */,
-                                    const char*        /* unused: name */,
-                                    defiUserData       data)
+                                    const char* /* unused: name */,
+                                    defiUserData data)
 {
   definReader* reader = (definReader*) data;
   reader->error("TECHNOLOGY is unsupported");
@@ -1206,8 +1137,8 @@ int definReader::technologyCallback(defrCallbackType_e /* unused: type */,
 }
 
 int definReader::trackCallback(defrCallbackType_e /* unused: type */,
-                               defiTrack*         track,
-                               defiUserData       data)
+                               defiTrack*   track,
+                               defiUserData data)
 {
   definReader* reader = (definReader*) data;
 
@@ -1255,8 +1186,8 @@ int definReader::unitsCallback(defrCallbackType_e, double d, defiUserData data)
 }
 
 int definReader::viaCallback(defrCallbackType_e /* unused: type */,
-                             defiVia*           via,
-                             defiUserData       data)
+                             defiVia*     via,
+                             defiUserData data)
 {
   definReader* reader = (definReader*) data;
   definVia*    viaR   = reader->_viaR;
@@ -1350,8 +1281,8 @@ int definReader::viaCallback(defrCallbackType_e /* unused: type */,
 }
 
 int definReader::specialNetCallback(defrCallbackType_e /* unused: type */,
-                                    defiNet*           net,
-                                    defiUserData       data)
+                                    defiNet*     net,
+                                    defiUserData data)
 {
   definReader* reader = (definReader*) data;
   definSNet*   snetR  = reader->_snetR;

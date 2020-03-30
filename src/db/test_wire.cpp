@@ -315,9 +315,9 @@ void print_encoding(dbWire* wire)
         break;
       }
 
+      case dbWireDecoder::RECT:
       case dbWireDecoder::ITERM:
       case dbWireDecoder::BTERM:
-      case dbWireDecoder::BTERM_MAP_ID:
       case dbWireDecoder::RULE:
         break;
 

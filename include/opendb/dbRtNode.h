@@ -113,7 +113,6 @@ class dbRtNode
   dbRtEdge*              _tail;
   DListEntry<dbRtNode>   _rt_node;
   bool                   _visited;
-  int                    _bterm_map_id;
 
   void add_edge(dbRtEdge* edge)
   {
@@ -159,8 +158,7 @@ class dbRtNode
         _rt_tree(NULL),
         _head(NULL),
         _tail(NULL),
-        _visited(false),
-        _bterm_map_id(-1)
+        _visited(false)
   {
   }
 
@@ -217,12 +215,6 @@ class dbRtNode
 
   // Set the value of the visited flag.
   void setVisited(bool value) { _visited = value; }
-
-  // Get the bterm-map-id
-  int getBTermMapId() const { return _bterm_map_id; }
-
-  // Set the bterm-map-id
-  void setBTermMapId(int id) { _bterm_map_id = id; }
 
   // returns true if this node has no edges
   bool isOrphan() const { return _head == NULL; }

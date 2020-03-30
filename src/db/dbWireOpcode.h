@@ -69,7 +69,7 @@ namespace odb {
 #define WOP_OPERAND 11    //  X X X X 1 0 1 1 :  operand = integer operand
 #define WOP_PROPERTY 12   //  X X X X 1 1 0 0 :  operand = integer operand
 #define WOP_VWIRE 13      //  W W W X 1 1 0 1 :  operand = integer operand
-#define WOP_BTERM_MAP 14  //  X X X X 1 1 1 0 :  operand = bterm-map-id
+#define WOP_RECT 14       //  X X X X 1 1 1 0 :  operand = first offset
 #define WOP_NOP 15        //  X X X X 1 1 1 1 :  operand = 0
 
 // opcode-flags

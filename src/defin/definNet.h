@@ -35,9 +35,9 @@
 #include <map>
 #include <string>
 
-#include "odb.h"
 #include "dbWireCodec.h"
 #include "definBase.h"
+#include "odb.h"
 
 namespace odb {
 
@@ -95,6 +95,7 @@ class definNet : public definBase
   void pathPoint(int x, int y, int ext);
   void pathVia(const char* via);
   void pathVia(const char* via, dbOrientType orient);
+  void pathRect(int deltaX1, int deltaY1, int deltaX2, int deltaY2);
   void pathEnd();
   void wireEnd();
   void source(dbSourceType source);
@@ -115,11 +116,11 @@ class definNet : public definBase
   definNet();
   virtual ~definNet();
   virtual void init() override;
-  void skipWires() { _skip_wires = true; }
-  void skipConnections() { _skip_signal_connections = true; }
-  void replaceWires() { _replace_wires = true; }
-  void setAssemblyMode() { _assembly_mode = true; }
-  void namesAreDBIDs() { _names_are_ids = true; }
+  void         skipWires() { _skip_wires = true; }
+  void         skipConnections() { _skip_signal_connections = true; }
+  void         replaceWires() { _replace_wires = true; }
+  void         setAssemblyMode() { _assembly_mode = true; }
+  void         namesAreDBIDs() { _names_are_ids = true; }
 };
 
 }  // namespace odb

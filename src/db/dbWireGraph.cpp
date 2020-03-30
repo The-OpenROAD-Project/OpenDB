@@ -424,7 +424,8 @@ void dbWireGraph::decode(dbWire* wire)
         break;
       }
 
-      case dbWireDecoder::BTERM_MAP_ID:
+      case dbWireDecoder::RECT:
+        // ignored
         break;
 
       case dbWireDecoder::RULE: {

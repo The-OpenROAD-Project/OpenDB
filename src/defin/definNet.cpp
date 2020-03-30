@@ -573,6 +573,12 @@ void definNet::pathVia(const char* via_name)
   }
 }
 
+void definNet::pathRect(int deltaX1, int deltaY1, int deltaX2, int deltaY2)
+{
+  _wire_encoder.addRect(
+      dbdist(deltaX1), dbdist(deltaY1), dbdist(deltaX2), dbdist(deltaY2));
+}
+
 void definNet::pathEnd()
 {
   _cur_layer = NULL;

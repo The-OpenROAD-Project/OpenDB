@@ -33,12 +33,12 @@
 #pragma once
 
 #include "ZException.h"
-#include "odb.h"
 #include "dbObject.h"
 #include "dbSet.h"
 #include "dbTransform.h"
 #include "dbWireCodec.h"
 #include "geom.h"
+#include "odb.h"
 
 namespace odb {
 
@@ -120,6 +120,8 @@ class dbShape
                   bool         has_cur_ext,
                   int          dw,
                   dbTechLayer* layer);
+
+  void setSegmentFromRect(int x1, int y1, int x2, int y2, dbTechLayer* layer);
 
   void setVia(dbVia* via, const Rect& r)
   {
@@ -260,6 +262,8 @@ class dbShape
 ///
 /// dbWireShapeItr - Iterate the shapes of a dbWire.
 ///
+/// RECT in the dbWire are treats as segments for convenience
+///
 class dbWireShapeItr
 {
  public:
@@ -298,7 +302,7 @@ class dbWireShapeItr
 struct dbWirePath
 {
   int          junction_id;  // junction id of this point
-  Point     point;        // starting point of path
+  Point        point;        // starting point of path
   dbTechLayer* layer;        // starting layer of path
   dbBTerm*     bterm;        // dbBTerm connected at this point, otherwise NULL
   dbITerm*     iterm;        // dbITerm connected at this point, otherwise NULL
@@ -313,7 +317,7 @@ struct dbWirePath
 struct dbWirePathShape
 {
   int          junction_id;  // junction id of this point
-  Point     point;        // starting point of path
+  Point        point;        // starting point of path
   dbTechLayer* layer;        // layer of shape, or exit layer of via
   dbBTerm*     bterm;        // dbBTerm connected at this point, otherwise NULL
   dbITerm*     iterm;        // dbITerm connected at this point, otherwise NULL
@@ -673,11 +677,21 @@ inline void dbShape::setSegment(int          prev_x,
   _via   = NULL;
 }
 
+inline void dbShape::setSegmentFromRect(int          x1,
+                                        int          y1,
+                                        int          x2,
+                                        int          y2,
+                                        dbTechLayer* layer)
+{
+  _type = dbShape::SEGMENT;
+  _rect.reset(x1, y1, x2, y2);
+  _layer = layer;
+  _via   = nullptr;
+}
+
 //
 // Print utilities declared here
 //
 void dumpWirePaths4Net(dbNet* innet, const char* module_name, const char* tag);
 
 }  // namespace odb
-
-

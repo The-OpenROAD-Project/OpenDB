@@ -6,9 +6,9 @@ source [file join $tcl_dir "test_helpers.tcl"]
 
 # Open database, load lef and design
 
-set db [dbDatabase_create]
-set lib [odb_read_lef $db [file join $data_dir "Nangate45" "NangateOpenCellLibrary.mod.lef"]]
-odb_read_def $db [file join $data_dir "gcd" "floorplan.def"]
+set db [odb::dbDatabase_create]
+set lib [odb::read_lef $db [file join $data_dir "Nangate45" "NangateOpenCellLibrary.mod.lef"]]
+odb::read_def $db [file join $data_dir "gcd" "floorplan.def"]
 set chip [$db getChip]
 
 # Block checks
@@ -16,7 +16,7 @@ set chip [$db getChip]
 set block [$chip getBlock]
 set tech [$db getTech]
 
-set via [dbVia_create $block via1_960x340]
+set via [odb::dbVia_create $block via1_960x340]
 
 check "via name" {$via getName} via1_960x340
 check "via params" {$via hasParams} 0

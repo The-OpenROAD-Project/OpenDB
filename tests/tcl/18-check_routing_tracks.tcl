@@ -4,9 +4,9 @@ set data_dir [file join $tests_dir "data"]
 set opendb_dir [file dirname $tests_dir]
 source [file join $tcl_dir "test_helpers.tcl"]
 
-set db [dbDatabase_create]
-set lib [odb_read_lef $db [file join $data_dir "Nangate45" "NangateOpenCellLibrary.mod.lef"]]
-odb_read_def $db [file join $data_dir "gcd" "floorplan.def"]
+set db [odb::dbDatabase_create]
+set lib [odb::read_lef $db [file join $data_dir "Nangate45" "NangateOpenCellLibrary.mod.lef"]]
+odb::read_def $db [file join $data_dir "gcd" "floorplan.def"]
 set chip [$db getChip]
 set tech [$db getTech]
 

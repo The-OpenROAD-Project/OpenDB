@@ -4,8 +4,8 @@ set data_dir [file join $tests_dir "data"]
 source [file join $tcl_dir "test_helpers.tcl"]
 
 # Open database and load LEF
-set db [dbDatabase_create]
-odb_read_lef $db [file join $data_dir "gscl45nm.lef"]
+set db [odb::dbDatabase_create]
+odb::read_lef $db [file join $data_dir "gscl45nm.lef"]
 set tech [$db getTech]
 # Basic LEF checks"
 check "lef version" {$tech getLefVersion} "5.5"

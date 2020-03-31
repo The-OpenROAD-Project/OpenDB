@@ -4,9 +4,9 @@ set data_dir [file join $tests_dir "data"]
 set opendb_dir [file dirname $tests_dir]
 source [file join $tcl_dir "test_helpers.tcl"]
 
-set db [dbDatabase_create]
-odb_read_lef $db [file join $data_dir "gscl45nm.lef"]
-odb_read_def $db [file join $data_dir "parser_test.def"]
+set db [odb::dbDatabase_create]
+odb::read_lef $db [file join $data_dir "gscl45nm.lef"]
+odb::read_def $db [file join $data_dir "parser_test.def"]
 set chip [$db getChip]
 if {$chip == "NULL"} {
     puts "Read DEF Failed"
@@ -15,7 +15,7 @@ if {$chip == "NULL"} {
 
 set block [$chip getBlock]
 set out_def [file join $opendb_dir "build" "parser_test_out.def"]
-set def_write_result [odb_write_def $block $out_def]
+set def_write_result [odb::write_def $block $out_def]
 if {$def_write_result != 1} {
     exit 1
 }

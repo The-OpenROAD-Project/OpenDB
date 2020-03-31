@@ -4,10 +4,10 @@ set data_dir [file join $tests_dir "data"]
 set opendb_dir [file dirname $tests_dir]
 source [file join $tcl_dir "test_helpers.tcl"]
 
-set db [dbDatabase_create]
-set lib [odb_read_lef $db [file join $data_dir "gscl45nm.lef"]]
+set db [odb::dbDatabase_create]
+set lib [odb::read_lef $db [file join $data_dir "gscl45nm.lef"]]
 set tech [$db getTech]
-odb_read_def $db [file join $data_dir "design.def"]
+odb::read_def $db [file join $data_dir "design.def"]
 set chip [$db getChip]
 
 set vias [$tech getVias]
@@ -17,9 +17,9 @@ set via2 [lindex $vias 1]
 set via3 [lindex $vias 2]
 
 set block [$chip getBlock]
-set net [dbNet_create $block "w1"]
-set wire [dbWire_create $net]
-set wire_encoder [dbWireEncoder]
+set net [odb::dbNet_create $block "w1"]
+set wire [odb::dbWire_create $net]
+set wire_encoder [odb::dbWireEncoder]
 
 # Encoding
 $wire_encoder begin $wire
@@ -38,5 +38,5 @@ $wire_encoder newPath $jid2
 set jid3 [$wire_encoder addTechVia $via2]
 $wire_encoder end
 
-set result [odb_write_def $block $opendb_dir/build/wire_encoder.def]
+set result [odb::write_def $block $opendb_dir/build/wire_encoder.def]
 exit [expr $result != 1]

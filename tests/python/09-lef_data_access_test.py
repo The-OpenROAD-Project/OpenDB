@@ -7,8 +7,8 @@ opendb_dir = os.path.abspath(os.path.join(tests_dir, os.pardir))
 data_dir = os.path.join(tests_dir, "data")
 
 db = odb.dbDatabase.create()
-odb.odb_read_lef(db, os.path.join(data_dir, "gscl45nm.lef"))
-odb.odb_read_def(db, os.path.join(data_dir, "design.def"))
+odb.read_lef(db, os.path.join(data_dir, "gscl45nm.lef"))
+odb.read_def(db, os.path.join(data_dir, "design.def"))
 tech = db.getTech()
 
 

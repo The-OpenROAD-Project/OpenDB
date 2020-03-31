@@ -7,8 +7,8 @@ opendb_dir = os.path.abspath(os.path.join(tests_dir, os.pardir))
 data_dir = os.path.join(tests_dir, "data")
 
 db = odb.dbDatabase.create()
-odb.odb_read_lef(db, os.path.join(data_dir, "gscl45nm.lef"))
-odb.odb_read_def(db, os.path.join(data_dir, "design.def"))
+odb.read_lef(db, os.path.join(data_dir, "gscl45nm.lef"))
+odb.read_def(db, os.path.join(data_dir, "design.def"))
 chip = db.getChip()
 tech = db.getTech()
 
@@ -38,6 +38,6 @@ wire_encoder.newPath(jid2)
 jid3=wire_encoder.addTechVia(via2)
 wire_encoder.end()
 
-result = odb.odb_write_def(block, os.path.join(opendb_dir, "build/wire_encoder.def"))
+result = odb.write_def(block, os.path.join(opendb_dir, "build/wire_encoder.def"))
 if(result!=1):
     exit("Write DEF failed")

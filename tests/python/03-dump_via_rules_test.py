@@ -7,7 +7,7 @@ opendb_dir = os.path.abspath(os.path.join(tests_dir, os.pardir))
 data_dir = os.path.join(tests_dir, "data")
 
 db = odb.dbDatabase.create()
-lib = odb.odb_read_lef(db, os.path.join(data_dir, "gscl45nm.lef"))
+lib = odb.read_lef(db, os.path.join(data_dir, "gscl45nm.lef"))
 if lib == None:
     exit("Lib not created")
  

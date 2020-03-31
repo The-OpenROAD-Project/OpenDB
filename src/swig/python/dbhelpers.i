@@ -6,7 +6,7 @@
 #include "defout.h"
 
 odb::dbLib*
-odb_read_lef(odb::dbDatabase* db, const char* path)
+read_lef(odb::dbDatabase* db, const char* path)
 {
   lefin lefParser(db, false);
   const char *libname = basename(const_cast<char*>(path));
@@ -18,7 +18,7 @@ odb_read_lef(odb::dbDatabase* db, const char* path)
 }
 
 odb::dbChip*
-odb_read_def(odb::dbDatabase* db, std::string path)
+read_def(odb::dbDatabase* db, std::string path)
 {
   std::vector<odb::dbLib *> libs;
   for (dbLib *lib : db->getLibs()) {
@@ -29,7 +29,7 @@ odb_read_def(odb::dbDatabase* db, std::string path)
 }
 
 int
-odb_write_def(odb::dbBlock* block, const char* path,
+write_def(odb::dbBlock* block, const char* path,
 	      odb::defout::Version version = odb::defout::Version::DEF_5_8)
 {
   defout writer;
@@ -38,14 +38,14 @@ odb_write_def(odb::dbBlock* block, const char* path,
 }
 
 int
-odb_write_lef(odb::dbLib* lib, const char* path)
+write_lef(odb::dbLib* lib, const char* path)
 {
   lefout writer;
   return writer.writeTechAndLib(lib, path);
 }
 
 odb::dbDatabase*
-odb_read_db(odb::dbDatabase* db, const char* db_path)
+read_db(odb::dbDatabase* db, const char* db_path)
 {
   FILE *fp = fopen(db_path, "rb");
   if (!fp) {
@@ -60,7 +60,7 @@ odb_read_db(odb::dbDatabase* db, const char* db_path)
 }
 
 int
-odb_write_db(odb::dbDatabase* db, const char* db_path)
+write_db(odb::dbDatabase* db, const char* db_path)
 {
   FILE *fp = fopen(db_path, "wb");
   if (!fp) {
@@ -77,15 +77,15 @@ odb_write_db(odb::dbDatabase* db, const char* db_path)
 %}
 
 odb::dbLib*
-odb_read_lef(odb::dbDatabase* db, const char* path);
+read_lef(odb::dbDatabase* db, const char* path);
 odb::dbChip*
-odb_read_def(odb::dbDatabase* db, std::string path);
+read_def(odb::dbDatabase* db, std::string path);
 
 int
-odb_write_def(odb::dbBlock* block, const char* path,
+write_def(odb::dbBlock* block, const char* path,
 	      odb::defout::Version version = odb::defout::Version::DEF_5_8);
 int
-odb_write_lef(odb::dbLib* lib, const char* path);
+write_lef(odb::dbLib* lib, const char* path);
 
-odb::dbDatabase* odb_read_db(odb::dbDatabase* db, const char* db_path);
-int odb_write_db(odb::dbDatabase* db, const char* db_path);
+odb::dbDatabase* read_db(odb::dbDatabase* db, const char* db_path);
+int write_db(odb::dbDatabase* db, const char* db_path);

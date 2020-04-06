@@ -36,6 +36,12 @@ using namespace odb;
 %typemap(out) (uint64) = (long);
 %apply int* OUTPUT {int* x, int* y};
 
+%ignore odb::dbTechLayerAntennaRule::pwl_pair;
+%ignore odb::dbTechLayerAntennaRule::getPAR_PWL() const;
+%ignore odb::dbTechLayerAntennaRule::getCAR_PWL() const;
+%ignore odb::dbTechLayerAntennaRule::getPSR_PWL() const;
+%ignore odb::dbTechLayerAntennaRule::getCSR_PWL() const;
+
 %include "dbenums.i"
 %include "parserenums.i"
 %include "dbtypes.i"

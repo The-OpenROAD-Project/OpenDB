@@ -340,7 +340,6 @@ void _ARuleRatio::setRatios(double ratio, double diff_ratio)
 void _ARuleRatio::setPWL(const vector<double>& diff_idx,
                          const vector<double>& ratios)
 {
-  return;
   assert((_diff_idx.size() == 0) && (_diff_ratio.size() == 0));
   _diff_idx   = diff_idx;
   _diff_ratio = ratios;

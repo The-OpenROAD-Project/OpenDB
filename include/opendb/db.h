@@ -2722,7 +2722,7 @@ class dbInst : public dbObject
   /// This method returns the lower-left corner
   /// of the bounding box of this instance.
   ///
-  void getLocation(int& x, int& y);
+  void getLocation(int& x, int& y) const;
 
   ///
   /// This method sets the lower-left corner

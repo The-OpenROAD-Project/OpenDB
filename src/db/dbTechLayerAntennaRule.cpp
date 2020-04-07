@@ -340,7 +340,6 @@ void _ARuleRatio::setRatios(double ratio, double diff_ratio)
 void _ARuleRatio::setPWL(const vector<double>& diff_idx,
                          const vector<double>& ratios)
 {
-  return;
   assert((_diff_idx.size() == 0) && (_diff_ratio.size() == 0));
   _diff_idx   = diff_idx;
   _diff_ratio = ratios;
@@ -542,6 +541,58 @@ void dbTechLayerAntennaRule::setSideAreaFactor(double factor, double diffuse)
   _dbTechLayerAntennaRule* ant_rule = (_dbTechLayerAntennaRule*) this;
 
   ant_rule->_sidearea_mult.setFactors(factor, diffuse);
+}
+
+double dbTechLayerAntennaRule::getPAR() const
+{
+  auto ant_rule = (const _dbTechLayerAntennaRule*) this;
+  return ant_rule->_par_area_val._ratio;
+}
+
+double dbTechLayerAntennaRule::getCAR() const
+{
+  auto ant_rule = (const _dbTechLayerAntennaRule*) this;
+  return ant_rule->_cum_area_val._ratio;
+}
+
+double dbTechLayerAntennaRule::getPSR() const
+{
+  auto ant_rule = (const _dbTechLayerAntennaRule*) this;
+  return ant_rule->_par_sidearea_val._ratio;
+}
+
+double dbTechLayerAntennaRule::getCSR() const
+{
+  auto ant_rule = (const _dbTechLayerAntennaRule*) this;
+  return ant_rule->_cum_sidearea_val._ratio;
+}
+
+dbTechLayerAntennaRule::pwl_pair dbTechLayerAntennaRule::getPAR_PWL() const
+{
+  auto ant_rule = (const _dbTechLayerAntennaRule*) this;
+  auto rule = ant_rule->_par_area_val;
+  return pwl_pair{rule._diff_idx, rule._diff_ratio};
+}
+
+dbTechLayerAntennaRule::pwl_pair dbTechLayerAntennaRule::getCAR_PWL() const
+{
+  auto ant_rule = (const _dbTechLayerAntennaRule*) this;
+  auto rule = ant_rule->_cum_area_val;
+  return pwl_pair{rule._diff_idx, rule._diff_ratio};
+}
+
+dbTechLayerAntennaRule::pwl_pair dbTechLayerAntennaRule::getPSR_PWL() const
+{
+  auto ant_rule = (const _dbTechLayerAntennaRule*) this;
+  auto rule = ant_rule->_par_sidearea_val;
+  return pwl_pair{rule._diff_idx, rule._diff_ratio};
+}
+
+dbTechLayerAntennaRule::pwl_pair dbTechLayerAntennaRule::getCSR_PWL() const
+{
+  auto ant_rule = (const _dbTechLayerAntennaRule*) this;
+  auto rule = ant_rule->_cum_sidearea_val;
+  return pwl_pair{rule._diff_idx, rule._diff_ratio};
 }
 
 void dbTechLayerAntennaRule::setPAR(double ratio, double diff_ratio)

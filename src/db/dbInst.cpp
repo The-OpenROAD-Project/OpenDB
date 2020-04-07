@@ -461,13 +461,13 @@ void dbInst::setLocationOrient(dbOrientType orient)
   setLocation(x, y);
 }
 
-void dbInst::getLocation(int& x, int& y)
+void dbInst::getLocation(int& x, int& y) const
 {
-  _dbInst*  inst  = (_dbInst*) this;
-  _dbBlock* block = (_dbBlock*) inst->getOwner();
-  _dbBox*   bbox  = block->_box_tbl->getPtr(inst->_bbox);
-  x               = bbox->_rect.xMin();
-  y               = bbox->_rect.yMin();
+  const _dbInst* inst  = (const _dbInst*) this;
+  _dbBlock*      block = (_dbBlock*) inst->getOwner();
+  _dbBox*        bbox  = block->_box_tbl->getPtr(inst->_bbox);
+  x                    = bbox->_rect.xMin();
+  y                    = bbox->_rect.yMin();
 }
 
 void dbInst::setLocation(int x, int y)

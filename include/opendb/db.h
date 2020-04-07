@@ -2722,7 +2722,7 @@ class dbInst : public dbObject
   /// This method returns the lower-left corner
   /// of the bounding box of this instance.
   ///
-  void getLocation(int& x, int& y);
+  void getLocation(int& x, int& y) const;
 
   ///
   /// This method sets the lower-left corner
@@ -6541,10 +6541,28 @@ class dbTechLayerAntennaRule : public dbObject
   void setAreaFactor(double factor, double diffuse = -1.0);
   void setSideAreaFactor(double factor, double diffuse = -1.0);
 
+  // If return value is 0 then the value is unset
+  double getPAR() const;
+  double getCAR() const;
+  double getPSR() const;
+  double getCSR() const;
+
   void setPAR(double ratio, double diff_ratio = 0.0);
   void setCAR(double ratio, double diff_ratio = 0.0);
   void setPSR(double ratio, double diff_ratio = 0.0);
   void setCSR(double ratio, double diff_ratio = 0.0);
+
+  // if indices.size()==0 then these are unset
+  // if indices.size()==1 then this is a single value rather than a PWL
+  struct pwl_pair {
+    const std::vector<double>& indices;
+    const std::vector<double>& ratios;
+  };
+
+  pwl_pair getPAR_PWL() const;
+  pwl_pair getCAR_PWL() const;
+  pwl_pair getPSR_PWL() const;
+  pwl_pair getCSR_PWL() const;
 
   void setPAR_PWL(const std::vector<double>& diff_idx,
                   const std::vector<double>& ratios);

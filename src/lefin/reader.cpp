@@ -561,6 +561,8 @@ bool lefin_parse(lefin* lef, const char* file_name)
 
   fclose(file);
 
+  lefrClear();
+
   if (res)
     return false;
 

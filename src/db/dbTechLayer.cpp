@@ -592,13 +592,13 @@ dbObjectTable* _dbTechLayer::getObjectTable(dbObjectType type)
 //
 ////////////////////////////////////////////////////////////////////
 
-std::string dbTechLayer::getName()
+std::string dbTechLayer::getName() const
 {
   _dbTechLayer* layer = (_dbTechLayer*) this;
   return layer->_name;
 }
 
-const char* dbTechLayer::getConstName()
+const char* dbTechLayer::getConstName() const
 {
   _dbTechLayer* layer = (_dbTechLayer*) this;
   return layer->_name;

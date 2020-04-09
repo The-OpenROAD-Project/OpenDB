@@ -5720,12 +5720,12 @@ class dbTechLayer : public dbObject
   ///
   /// Get the layer name.
   ///
-  std::string getName();
+  std::string getName() const;
 
   ///
   /// Get the layer name.
   ///
-  const char* getConstName();
+  const char* getConstName() const;
 
   ///
   /// Returns true if this layer has an alias.

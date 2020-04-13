@@ -797,4 +797,45 @@ bool dbMaster::isFiller()
       return false;
   }
 }
+
+bool dbMaster::isCoreAutoPlaceable()
+{
+  // Use switch so if new types are added we get a compiler warning.
+  switch (getType()) {
+    case dbMasterType::CORE:
+    case dbMasterType::CORE_FEEDTHRU:
+    case dbMasterType::CORE_TIEHIGH:
+    case dbMasterType::CORE_TIELOW:
+    case dbMasterType::CORE_SPACER:
+    case dbMasterType::CORE_WELLTAP:
+    case dbMasterType::CORE_ANTENNACELL:
+    case dbMasterType::BLOCK:
+    case dbMasterType::BLOCK_BLACKBOX:
+    case dbMasterType::BLOCK_SOFT:
+    case dbMasterType::ENDCAP:
+    case dbMasterType::ENDCAP_PRE:
+    case dbMasterType::ENDCAP_POST:
+    case dbMasterType::ENDCAP_TOPLEFT:
+    case dbMasterType::ENDCAP_TOPRIGHT:
+    case dbMasterType::ENDCAP_BOTTOMLEFT:
+    case dbMasterType::ENDCAP_BOTTOMRIGHT:
+      return true;
+      // These classes are completely ignored by the placer.
+    case dbMasterType::COVER:
+    case dbMasterType::COVER_BUMP:
+    case dbMasterType::RING:
+    case dbMasterType::PAD:
+    case dbMasterType::PAD_AREAIO:
+    case dbMasterType::PAD_INPUT:
+    case dbMasterType::PAD_OUTPUT:
+    case dbMasterType::PAD_INOUT:
+    case dbMasterType::PAD_POWER:
+    case dbMasterType::PAD_SPACER:
+    case dbMasterType::NONE:
+      return false;
+  }
+  // gcc warning
+  return false;
+}
+
 }  // namespace odb

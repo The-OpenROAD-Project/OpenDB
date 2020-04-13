@@ -5147,6 +5147,12 @@ class dbMaster : public dbObject
   dbMasterType getType();
 
   ///
+  /// This master can be placed automatically in the core.
+  /// Pad, ring, cover, and none are false.
+  ///
+  bool isCoreAutoPlaceable();
+
+  ///
   /// Set the type of this master cell
   ///
   void setType(dbMasterType type);

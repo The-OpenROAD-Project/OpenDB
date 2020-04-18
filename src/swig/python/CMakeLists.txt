@@ -19,6 +19,7 @@ swig_add_library(opendbpy
     TYPE     SHARED
     LANGUAGE python 
     SOURCES  ${OPENDB_PYTHON_SWIG_FILES}
+    OUTPUT_DIR ${CMAKE_CURRENT_BINARY_DIR}/opendbpy
 )
 swig_link_libraries(opendbpy
     PUBLIC
@@ -26,16 +27,21 @@ swig_link_libraries(opendbpy
         Python3::Python
 )
 
-# Files to install with Python
-set(PYTHON_INSTALL_FILES
-    ${CMAKE_CURRENT_BINARY_DIR}/opendbpy.py
-    ${CMAKE_CURRENT_BINARY_DIR}/_opendbpy.so
+set_target_properties( opendbpy
+    PROPERTIES
+    ARCHIVE_OUTPUT_DIRECTORY "${CMAKE_CURRENT_BINARY_DIR}/opendbpy"
+    LIBRARY_OUTPUT_DIRECTORY "${CMAKE_CURRENT_BINARY_DIR}/opendbpy"
+    RUNTIME_OUTPUT_DIRECTORY "${CMAKE_CURRENT_BINARY_DIR}/opendbpy"
 )
 
 # Configure setup.py and copy to output directory
 set(SETUP_PY_IN ${CMAKE_CURRENT_SOURCE_DIR}/setup.py.in)
 set(SETUP_PY_OUT ${CMAKE_CURRENT_BINARY_DIR}/setup.py)
 configure_file(${SETUP_PY_IN} ${SETUP_PY_OUT})
+
+set(INIT_PY_IN ${CMAKE_CURRENT_SOURCE_DIR}/__init__.py.in)
+set(INIT_PY_OUT ${CMAKE_CURRENT_BINARY_DIR}/opendbpy/__init__.py)
+configure_file(${INIT_PY_IN} ${INIT_PY_OUT})
 
 # Install target to call setup.py
 add_custom_target(install-python

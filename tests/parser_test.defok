@@ -63,20 +63,15 @@ NONDEFAULTRULE realrangeprop REAL RANGE 1.1 100.1 ;
 END PROPERTYDEFINITIONS
 DIEAREA ( 100 200 ) ( 400 600 ) ;
 ROW CORE_ROW_0 CoreSite 840 896 FS DO 793 BY 1 STEP 168 0 + PROPERTY X "DOG"  ;
-TRACKS Y 52 DO 857 STEP 104 LAYER metal1 ;
-TRACKS X 52 DO 1720 STEP 104 LAYER metal2 ;
-TRACKS Y 52 DO 857 STEP 104 LAYER metal2 ;
 GCELLGRID X 0 DO 100 STEP 600 ;
 GCELLGRID Y 10 DO 120 STEP 400 ;
-VIAS 12 ;
+VIAS 10 ;
     - VIA1 + RECT metal2 ( 1 2 ) ( 3 4 ) + RECT via2 ( 1 2 ) ( 3 4 ) + RECT metal3 ( 1 2 ) ( 3 4 ) ;
     - VIAGEN12_0 + RECT metal1 ( -4400 -3800 ) ( 4400 3800 ) + RECT metal2 ( -4500 -3800 ) ( 4500 3800 ) + RECT via1 ( -3600 -3800 ) ( -2000 -2200 ) + RECT via1 ( -3600 2200 ) ( -2000 3800 ) + RECT via1 ( 2000 -3800 ) ( 3600 -2200 ) + RECT via1 ( 2000 2200 ) ( 3600 3800 ) ;
     - VIAGEN12_2 + RECT metal1 ( -2500 -1500 ) ( 2500 1500 ) + RECT metal2 ( -2500 -1500 ) ( 2500 1500 ) + RECT via1 ( -2360 -960 ) ( -760 640 ) + RECT via1 ( -1320 -960 ) ( 280 640 ) + RECT via1 ( 760 -960 ) ( 2360 640 ) ;
     - VIAGEN12_3 + RECT metal1 ( -1600 -1600 ) ( 1600 1600 ) + RECT metal2 ( -1600 -1600 ) ( 1600 1600 ) + RECT via1 ( -800 -800 ) ( 800 800 ) ;
     - VIAGEN12_4 + VIARULE M2_M1 + CUTSIZE 1600 1600  + LAYERS metal1 via1 metal2  + CUTSPACING 5600 6100  + ENCLOSURE 100 100 150 150  + ROWCOL 5 14  + ORIGIN 10 -10  + OFFSET 0 0 20 -20  + PATTERNNAME 2_FFE0_3_FFFF ;
     - M2_M1rct_0 + RECT via1 ( -25 -65 ) ( 25 65 ) + RECT metal1 ( -35 -95 ) ( 35 95 ) + RECT metal2 ( -65 -65 ) ( 65 65 ) ;
-    - VIAGEN12_1 + RECT metal2 ( -2500 -1500 ) ( 2500 1500 ) + RECT via1 ( -2400 -960 ) ( -700 640 ) ;
-    - CUSTOMVIA ;
     - TURNM1_1 + RECT metal1 ( -100 -60 ) ( 100 60 ) ;
     - TURNM2_1 + RECT metal2 ( -100 -60 ) ( 100 60 ) ;
     - TURNM3_1 + RECT metal3 ( -100 -60 ) ( 100 60 ) ;
@@ -117,7 +112,7 @@ COMPONENTS 12 ;
     - _d1_ DFFPOSX1 + SOURCE NETLIST ;
     - _d2_ DFFPOSX1 + FIXED ( 1 2 ) N ;
     - _d3_ DFFPOSX1 + WEIGHT 10 ;
-    - _d4_ DFFPOSX1 ;
+    - _d4_ DFFPOSX1 + REGION region1 ;
     - _d5_ DFFPOSX1 ;
     - _d6_ DFFPOSX1 ;
     - _d7_ DFFPOSX1 ;
@@ -128,18 +123,18 @@ COMPONENTS 12 ;
 END COMPONENTS
 PINS 13 ;
     - inp0 + NET inp0 + DIRECTION INPUT + USE SIGNAL + FIXED ( 55 60 ) N + LAYER metal1 ( -5 -10 ) ( 5 10 ) ;
-    - inp1 + NET inp1 + DIRECTION INPUT ;
-    - clk + NET clk + DIRECTION INPUT ;
-    - out[8] + NET out[8] + SPECIAL + DIRECTION INPUT ;
-    - out[7] + NET out[7] + DIRECTION INPUT + SUPPLYSENSITIVITY clk ;
-    - out[6] + NET out[6] + DIRECTION INPUT + GROUNDSENSITIVITY inp0 ;
+    - inp1 + NET inp1 + DIRECTION INPUT + USE SIGNAL ;
+    - clk + NET clk + DIRECTION INPUT + USE SIGNAL ;
+    - out[8] + NET out[8] + SPECIAL + DIRECTION INPUT + USE SIGNAL ;
+    - out[7] + NET out[7] + DIRECTION INPUT + SUPPLYSENSITIVITY clk + USE SIGNAL ;
+    - out[6] + NET out[6] + DIRECTION INPUT + GROUNDSENSITIVITY inp0 + USE SIGNAL ;
     - out[5] + NET out[5] + DIRECTION INPUT + USE ANALOG ;
-    - out[4] + NET out[4] + DIRECTION INPUT ;
-    - out[3] + NET out[3] + DIRECTION OUTPUT ;
-    - out[2] + NET out[2] + DIRECTION OUTPUT ;
-    - out[1] + NET out[1] + DIRECTION OUTPUT ;
-    - out[0] + NET out[0] + DIRECTION OUTPUT ;
-    - vdd + NET VDD + SPECIAL + DIRECTION INPUT ;
+    - out[4] + NET out[4] + DIRECTION INPUT + USE SIGNAL ;
+    - out[3] + NET out[3] + DIRECTION OUTPUT + USE SIGNAL ;
+    - out[2] + NET out[2] + DIRECTION OUTPUT + USE SIGNAL ;
+    - out[1] + NET out[1] + DIRECTION OUTPUT + USE SIGNAL ;
+    - out[0] + NET out[0] + DIRECTION OUTPUT + USE SIGNAL ;
+    - vdd + NET VDD + SPECIAL + DIRECTION INPUT + USE SIGNAL ;
 END PINS
 PINPROPERTIES 2 ;
   - PIN clk + PROPERTY PP 3  ;
@@ -195,6 +190,6 @@ NETS 24 ;
     - _xout8 + USE SIGNAL ;
 END NETS
 GROUPS 1 ;
-    - region _d4_ ;
+    - group1 _d0_ _g0_ + REGION region1 + PROPERTY strprop "aString" intprop 1 realprop 1.1 intrangeprop 25 realrangeprop 25.25  ;
 END GROUPS
 END DESIGN

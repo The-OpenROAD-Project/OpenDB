@@ -160,6 +160,9 @@ bool _dbTech::operator==(const _dbTech& rhs) const
   if (*_name_cache != *rhs._name_cache)
     return false;
 
+  if (_via_hash != rhs._via_hash)
+    return false;
+
   return true;
 }
 
@@ -190,6 +193,9 @@ void _dbTech::differences(dbDiff&        diff,
   DIFF_FIELD(_non_default_rules);
   DIFF_VECTOR(_samenet_rules);
   DIFF_MATRIX(_samenet_matrix);
+  if (!diff.deepDiff()) {
+    DIFF_HASH_TABLE(_via_hash);
+  }
   DIFF_TABLE_NO_DEEP(_layer_tbl);
   DIFF_TABLE_NO_DEEP(_via_tbl);
   DIFF_TABLE_NO_DEEP(_non_default_rule_tbl);
@@ -230,6 +236,9 @@ void _dbTech::out(dbDiff& diff, char side, const char* field) const
   DIFF_OUT_FIELD(_non_default_rules);
   DIFF_OUT_VECTOR(_samenet_rules);
   DIFF_OUT_MATRIX(_samenet_matrix);
+  if (!diff.deepDiff()) {
+    DIFF_OUT_HASH_TABLE(_via_hash);
+  }
   DIFF_OUT_TABLE_NO_DEEP(_layer_tbl);
   DIFF_OUT_TABLE_NO_DEEP(_via_tbl);
   DIFF_OUT_TABLE_NO_DEEP(_non_default_rule_tbl);
@@ -351,6 +360,8 @@ _dbTech::_dbTech(_dbDatabase* db)
       db, this, (GetObjTbl_t) &_dbTech::getObjectTable, dbPropertyObj);
   ZALLOCATED(_prop_tbl);
 
+  _via_hash.setTable(_via_tbl);
+
   _name_cache
       = new _dbNameCache(db, this, (GetObjTbl_t) &_dbTech::getObjectTable);
   ZALLOCATED(_name_cache);
@@ -378,7 +389,8 @@ _dbTech::_dbTech(_dbDatabase* db, const _dbTech& t)
       _top(t._top),
       _non_default_rules(t._non_default_rules),
       _samenet_rules(t._samenet_rules),
-      _samenet_matrix(t._samenet_matrix)
+      _samenet_matrix(t._samenet_matrix),
+      _via_hash(t._via_hash)
 {
   strncpy(_version_buf, t._version_buf, 10);
 
@@ -419,6 +431,8 @@ _dbTech::_dbTech(_dbDatabase* db, const _dbTech& t)
 
   _prop_tbl = new dbTable<_dbProperty>(db, this, *t._prop_tbl);
   ZALLOCATED(_prop_tbl);
+
+  _via_hash.setTable(_via_tbl);
 
   _name_cache = new _dbNameCache(db, this, *t._name_cache);
   ZALLOCATED(_name_cache);
@@ -488,6 +502,7 @@ dbOStream& operator<<(dbOStream& stream, const _dbTech& tech)
   stream << *tech._via_generate_rule_tbl;
   stream << *tech._prop_tbl;
   stream << *tech._name_cache;
+  stream << tech._via_hash;
   return stream;
 }
 
@@ -524,6 +539,7 @@ dbIStream& operator>>(dbIStream& stream, _dbTech& tech)
   stream >> *tech._via_generate_rule_tbl;
   stream >> *tech._prop_tbl;
   stream >> *tech._name_cache;
+  stream >> tech._via_hash;
 
   return stream;
 }
@@ -669,17 +685,8 @@ dbSet<dbTechVia> dbTech::getVias()
 
 dbTechVia* dbTech::findVia(const char* name)
 {
-  dbSet<dbTechVia>           vias = getVias();
-  dbSet<dbTechVia>::iterator itr;
-
-  for (itr = vias.begin(); itr != vias.end(); ++itr) {
-    _dbTechVia* via = (_dbTechVia*) *itr;
-
-    if (strcmp(via->_name, name) == 0)
-      return (dbTechVia*) via;
-  }
-
-  return NULL;
+  _dbTech* tech = (_dbTech*) this;
+  return (dbTechVia*) tech->_via_hash.find(name);
 }
 
 int dbTech::getLefUnits()

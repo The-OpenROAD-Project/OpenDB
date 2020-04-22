@@ -93,6 +93,9 @@ bool _dbTechVia::operator==(const _dbTechVia& rhs) const
   if (_via_params != rhs._via_params)
     return false;
 
+  if (_next_entry != rhs._next_entry)
+    return false;
+
   return true;
 }
 
@@ -114,6 +117,7 @@ void _dbTechVia::differences(dbDiff&           diff,
   DIFF_FIELD(_non_default_rule);
   DIFF_FIELD(_generate_rule);
   DIFF_STRUCT(_via_params);
+  DIFF_FIELD_NO_DEEP(_next_entry);
   DIFF_END
 }
 
@@ -133,6 +137,7 @@ void _dbTechVia::out(dbDiff& diff, char side, const char* field) const
   DIFF_OUT_FIELD(_non_default_rule);
   DIFF_OUT_FIELD(_generate_rule);
   DIFF_OUT_STRUCT(_via_params);
+  DIFF_OUT_FIELD_NO_DEEP(_next_entry);
   DIFF_END
 }
 
@@ -153,7 +158,8 @@ _dbTechVia::_dbTechVia(_dbDatabase*, const _dbTechVia& v)
       _bottom(v._bottom),
       _non_default_rule(v._non_default_rule),
       _generate_rule(v._generate_rule),
-      _via_params(v._via_params)
+      _via_params(v._via_params),
+      _next_entry(v._next_entry)
 {
   if (v._name) {
     _name = strdup(v._name);
@@ -200,6 +206,7 @@ dbOStream& operator<<(dbOStream& stream, const _dbTechVia& via)
   stream << via._generate_rule;
   stream << via._via_params;
   stream << via._pattern;
+  stream << via._next_entry;
   return stream;
 }
 
@@ -217,6 +224,7 @@ dbIStream& operator>>(dbIStream& stream, _dbTechVia& via)
   stream >> via._generate_rule;
   stream >> via._via_params;
   stream >> via._pattern;
+  stream >> via._next_entry;
 
   return stream;
 }
@@ -425,6 +433,7 @@ dbTechVia* dbTechVia::create(dbTech* tech_, const char* name_)
   _dbTechVia* via  = tech->_via_tbl->create();
   via->_name       = strdup(name_);
   ZALLOCATED(via->_name);
+  tech->_via_hash.insert(via);
   tech->_via_cnt++;
   return (dbTechVia*) via;
 }
@@ -458,6 +467,7 @@ dbTechVia* dbTechVia::clone(dbTechNonDefaultRule* rule_,
         = 0;  // DEFAULT via not allowed for non-default rule
 
   tech->_via_cnt++;
+  tech->_via_hash.insert(via);
   rule->_vias.push_back(via->getOID());
   return (dbTechVia*) via;
 }
@@ -477,6 +487,7 @@ dbTechVia* dbTechVia::create(dbTechNonDefaultRule* rule_, const char* name_)
   ZALLOCATED(via->_name);
   tech->_via_cnt++;
   via->_non_default_rule = rule->getOID();
+  tech->_via_hash.insert(via);
   rule->_vias.push_back(via->getOID());
   return (dbTechVia*) via;
 }

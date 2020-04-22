@@ -33,6 +33,7 @@
 #pragma once
 
 #include "dbCore.h"
+#include "dbHashTable.hpp"
 #include "dbMatrix.h"
 #include "dbTypes.h"
 #include "dbVector.h"
@@ -96,6 +97,7 @@ class _dbTech : public _dbObject
   dbId<_dbTechNonDefaultRule>         _non_default_rules;
   dbVector<dbId<_dbTechSameNetRule> > _samenet_rules;
   dbMatrix<dbId<_dbTechSameNetRule> > _samenet_matrix;
+  dbHashTable<_dbTechVia>             _via_hash;
 
   // NON-PERSISTANT-STREAMED-MEMBERS
   dbTable<_dbTechLayer>*            _layer_tbl;

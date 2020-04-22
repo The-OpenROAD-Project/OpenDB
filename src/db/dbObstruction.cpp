@@ -30,14 +30,13 @@
 // ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 // POSSIBILITY OF SUCH DAMAGE.
 
-#include "dbObstruction.h"
-
 #include "db.h"
 #include "dbBlock.h"
 #include "dbBox.h"
 #include "dbDatabase.h"
 #include "dbDiff.hpp"
 #include "dbInst.h"
+#include "dbObstruction.h"
 #include "dbSet.h"
 #include "dbTable.h"
 #include "dbTable.hpp"
@@ -395,6 +394,15 @@ dbObstruction* dbObstruction::create(dbBlock*     block_,
   // Update bounding box of block
   block->add_rect(box->_rect);
   return (dbObstruction*) obs;
+}
+
+void dbObstruction::destroy(dbObstruction* obstruction)
+{
+  _dbObstruction* obs   = (_dbObstruction*) obstruction;
+  _dbBlock*       block = (_dbBlock*) obs->getOwner();
+
+  dbProperty::destroyProperties(obs);
+  block->_obstruction_tbl->destroy(obs);
 }
 
 dbObstruction* dbObstruction::getObstruction(dbBlock* block_, uint dbid_)

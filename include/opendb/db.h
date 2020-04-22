@@ -3919,6 +3919,11 @@ class dbObstruction : public dbObject
   dbBlock* getBlock();
 
   ///
+  /// Delete this obstruction from this block.
+  ///
+  static void destroy(dbObstruction* obstruction);
+
+  ///
   /// Create a routing obstruction.
   ///
   static dbObstruction* create(dbBlock*     block,

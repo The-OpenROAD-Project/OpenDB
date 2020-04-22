@@ -138,6 +138,8 @@ void definNet::begin(const char* name)
   _wire              = NULL;
   _rule_for_path     = NULL;
   _found_new_routing = false;
+  if (_net_cnt % 100000 == 0)
+    notice(0, "\t\tCreated %d Nets\n", _net_cnt);
 }
 
 void definNet::beginMustjoin(const char* iname, const char* tname)

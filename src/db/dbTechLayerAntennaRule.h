@@ -157,6 +157,10 @@ class _dbTechLayerAntennaRule : public _dbObject
   _ARuleRatio        _cum_area_val;
   _ARuleRatio        _par_sidearea_val;
   _ARuleRatio        _cum_sidearea_val;
+  _ARuleRatio        _area_diff_reduce_val;
+  double             _gate_plus_diff_factor;
+  double             _area_minus_diff_factor;
+  bool               _has_antenna_cumroutingpluscut;
 
   _dbTechLayerAntennaRule(_dbDatabase*) {}
   _dbTechLayerAntennaRule(_dbDatabase*, const _dbTechLayerAntennaRule& r)
@@ -166,7 +170,10 @@ class _dbTechLayerAntennaRule : public _dbObject
         _par_area_val(r._par_area_val),
         _cum_area_val(r._cum_area_val),
         _par_sidearea_val(r._par_sidearea_val),
-        _cum_sidearea_val(r._cum_sidearea_val)
+        _cum_sidearea_val(r._cum_sidearea_val),
+        _area_diff_reduce_val(r._area_diff_reduce_val),
+        _gate_plus_diff_factor(r._gate_plus_diff_factor),
+        _area_minus_diff_factor(r._area_minus_diff_factor)
   {
   }
 

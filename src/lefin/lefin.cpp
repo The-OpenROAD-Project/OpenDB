@@ -236,8 +236,8 @@ bool lefin::addGeoms(dbObject* object, bool is_pin, lefiGeometries* geometry)
         break;
       }
       case lefiGeomPathIterE: {
-        lefiGeomPathIter*     pathItr = geometry->getPathIter(i);
-        int                   j;
+        lefiGeomPathIter*  pathItr = geometry->getPathIter(i);
+        int                j;
         std::vector<Point> points;
 
         for (j = 0; j < pathItr->numPoints; j++) {
@@ -256,21 +256,21 @@ bool lefin::addGeoms(dbObject* object, bool is_pin, lefiGeometries* geometry)
           for (dy = 0, y_idx = 0; y_idx < numY; ++y_idx, dy += stepY) {
             if (points.size() == 1) {
               Point p = points[0];
-              int      x = p.getX() + dx;
-              int      y = p.getY() + dy;
+              int   x = p.getX() + dx;
+              int   y = p.getY() + dy;
               create_path_box(object, is_pin, layer, dw, x, y, x, y);
               continue;
             }
 
             std::vector<Point>::iterator itr    = points.begin();
             Point                        p      = *itr;
-            int                             prev_x = p.getX() + dx;
-            int                             prev_y = p.getY() + dy;
+            int                          prev_x = p.getX() + dx;
+            int                          prev_y = p.getY() + dy;
 
             for (++itr; itr != points.end(); ++itr) {
               Point c     = *itr;
-              int      cur_x = c.getX() + dx;
-              int      cur_y = c.getY() + dy;
+              int   cur_x = c.getX() + dx;
+              int   cur_y = c.getY() + dy;
               create_path_box(
                   object, is_pin, layer, dw, cur_x, cur_y, prev_x, prev_y);
               prev_x = cur_x;
@@ -446,7 +446,8 @@ void lefin::createPolygon(dbObject*        object,
   }
 }
 
-void lefin::antenna(lefin::AntennaType /* unused: type */, double /* unused: value */)
+void lefin::antenna(lefin::AntennaType /* unused: type */,
+                    double /* unused: value */)
 {
 }
 
@@ -845,6 +846,31 @@ void lefin::layer(lefiLayer* layer)
           cur_ant_rule->setCSR_PWL(dffdx, dffratio);
         }
       }
+
+      if (cur_model->hasAntennaCumRoutingPlusCut()) {
+        cur_ant_rule->setAntennaCumRoutingPlusCut();
+      }
+
+      if (cur_model->hasAntennaGatePlusDiff()) {
+        double factor = cur_model->antennaGatePlusDiff();
+        cur_ant_rule->setGatePlusDiffFactor(factor);
+      }
+
+      if (cur_model->hasAntennaAreaMinusDiff()) {
+        double factor = cur_model->antennaAreaMinusDiff();
+        cur_ant_rule->setAreaMinusDiffFactor(factor);
+      }
+
+      if (cur_model->hasAntennaAreaDiffReducePWL()) {
+        dffdx.clear();
+        dffratio.clear();
+        cur_pwl = cur_model->antennaAreaDiffReducePWL();
+        for (k = 0; k < cur_pwl->numPWL(); k++) {
+          dffdx.push_back(cur_pwl->PWLdiffusion(k));
+          dffratio.push_back(cur_pwl->PWLratio(k));
+        }
+        cur_ant_rule->setAreaDiffReduce_PWL(dffdx, dffratio);
+      }
     }
   }
 
@@ -880,9 +906,9 @@ void lefin::layer(lefiLayer* layer)
     l->setDirection(direction);
   }
 
-  if (layer->hasResistance()) // routing layers
+  if (layer->hasResistance())  // routing layers
     l->setResistance(layer->resistance());
-  else if (layer->hasResistancePerCut()) // via layers
+  else if (layer->hasResistancePerCut())  // via layers
     l->setResistance(layer->resistancePerCut());
 
   if (layer->hasCapacitance())
@@ -1770,10 +1796,10 @@ void lefin::viaGenerateRule(lefiViaRule* viaRule)
     }
 
     if (viaRule->layer(idx)->hasRect()) {
-      int     xMin = dbdist(viaRule->layer(idx)->xl());
-      int     yMin = dbdist(viaRule->layer(idx)->yl());
-      int     xMax = dbdist(viaRule->layer(idx)->xh());
-      int     yMax = dbdist(viaRule->layer(idx)->yh());
+      int  xMin = dbdist(viaRule->layer(idx)->xl());
+      int  yMin = dbdist(viaRule->layer(idx)->yl());
+      int  xMax = dbdist(viaRule->layer(idx)->xh());
+      int  yMax = dbdist(viaRule->layer(idx)->yh());
       Rect r(xMin, yMin, xMax, yMax);
       layrule->setRect(r);
     }

@@ -40,6 +40,7 @@ using namespace odb;
 %ignore odb::dbTechLayerAntennaRule::getCAR_PWL() const;
 %ignore odb::dbTechLayerAntennaRule::getPSR_PWL() const;
 %ignore odb::dbTechLayerAntennaRule::getCSR_PWL() const;
+%ignore odb::dbTechLayerAntennaRule::getAreaDiffReduce_PWL() const;
 
 %include "dbenums.i"
 %include "parserenums.i"

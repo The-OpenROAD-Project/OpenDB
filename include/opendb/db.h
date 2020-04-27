@@ -38,7 +38,6 @@
 #include <vector>
 
 #include "ISdb.h"
-#include "odb.h"
 #include "dbObject.h"
 #include "dbPrintControl.h"
 #include "dbSet.h"
@@ -46,6 +45,7 @@
 #include "dbViaParams.h"
 #include "geom.h"
 #include "logger.h"
+#include "odb.h"
 
 #define ADS_MAX_CORNER 10
 
@@ -3607,11 +3607,11 @@ class dbWire : public dbObject
   ///    vias that do not exists in the dst-block are copied to the src-block.
   ///
   ///
-  static void copy(dbWire*        dst,
-                   dbWire*        src,
+  static void copy(dbWire*     dst,
+                   dbWire*     src,
                    const Rect& bbox,
-                   bool           removeITermsBTerms = true,
-                   bool           copyVias           = true);
+                   bool        removeITermsBTerms = true,
+                   bool        copyVias           = true);
 
   ///
   /// Create a wire.
@@ -5792,7 +5792,7 @@ class dbTechLayer : public dbObject
   ///
   bool hasV55SpacingRules() const;
   void printV55SpacingRules(lefout& writer) const;
-  bool getV55SpacingTable(std::vector<std::vector<uint> >& sptbl) const;
+  bool getV55SpacingTable(std::vector<std::vector<uint>>& sptbl) const;
 
   void initV55LengthIndex(uint numelems);
   void addV55LengthEntry(uint length);
@@ -5810,7 +5810,7 @@ class dbTechLayer : public dbObject
   ///
   bool hasTwoWidthsSpacingRules() const;
   void printTwoWidthsSpacingRules(lefout& writer) const;
-  bool getTwoWidthsSpacingTable(std::vector<std::vector<uint> >& sptbl) const;
+  bool getTwoWidthsSpacingTable(std::vector<std::vector<uint>>& sptbl) const;
   uint getTwoWidthsSpacingTableNumWidths() const;
   uint getTwoWidthsSpacingTableWidth(uint row) const;
   bool getTwoWidthsSpacingTableHasPRL(uint row) const;
@@ -5897,20 +5897,20 @@ class dbTechLayer : public dbObject
   ///  Get/set MINSTEP parameter.  This interface is used when a
   ///  reasonable default exists.
   ///
-  bool                   hasMinStep() const;
-  uint                   getMinStep() const;
-  void                   setMinStep(uint min_step);
+  bool hasMinStep() const;
+  uint getMinStep() const;
+  void setMinStep(uint min_step);
 
   dbTechLayerMinStepType getMinStepType() const;
   void                   setMinStepType(dbTechLayerMinStepType type);
 
-  bool                   hasMinStepMaxLength() const;
-  uint                   getMinStepMaxLength() const;
-  void                   setMinStepMaxLength(uint length);
+  bool hasMinStepMaxLength() const;
+  uint getMinStepMaxLength() const;
+  void setMinStepMaxLength(uint length);
 
-  bool                   hasMinStepMaxEdges() const;
-  uint                   getMinStepMaxEdges() const;
-  void                   setMinStepMaxEdges(uint edges);
+  bool hasMinStepMaxEdges() const;
+  uint getMinStepMaxEdges() const;
+  void setMinStepMaxEdges(uint edges);
 
   ///
   ///  Get/set PROTRUSIONWIDTH parameter.  This interface is used when a
@@ -6549,14 +6549,22 @@ class dbTechLayerAntennaRule : public dbObject
   bool isValid() const;
   void writeLef(lefout& writer) const;
 
+  void setGatePlusDiffFactor(double factor);
+  void setAreaMinusDiffFactor(double factor);
+
   void setAreaFactor(double factor, double diffuse = -1.0);
   void setSideAreaFactor(double factor, double diffuse = -1.0);
+
+  bool hasAntennaCumRoutingPlusCut() const;
+  void setAntennaCumRoutingPlusCut(bool value = true);
 
   // If return value is 0 then the value is unset
   double getPAR() const;
   double getCAR() const;
   double getPSR() const;
   double getCSR() const;
+  double getGatePlusDiffFactor() const;
+  double getAreaMinusDiffFactor() const;
 
   void setPAR(double ratio, double diff_ratio = 0.0);
   void setCAR(double ratio, double diff_ratio = 0.0);
@@ -6565,7 +6573,8 @@ class dbTechLayerAntennaRule : public dbObject
 
   // if indices.size()==0 then these are unset
   // if indices.size()==1 then this is a single value rather than a PWL
-  struct pwl_pair {
+  struct pwl_pair
+  {
     const std::vector<double>& indices;
     const std::vector<double>& ratios;
   };
@@ -6574,6 +6583,7 @@ class dbTechLayerAntennaRule : public dbObject
   pwl_pair getCAR_PWL() const;
   pwl_pair getPSR_PWL() const;
   pwl_pair getCSR_PWL() const;
+  pwl_pair getAreaDiffReduce_PWL() const;
 
   void setPAR_PWL(const std::vector<double>& diff_idx,
                   const std::vector<double>& ratios);
@@ -6583,6 +6593,9 @@ class dbTechLayerAntennaRule : public dbObject
                   const std::vector<double>& ratios);
   void setCSR_PWL(const std::vector<double>& diff_idx,
                   const std::vector<double>& ratios);
+
+  void setAreaDiffReduce_PWL(const std::vector<double>& areas,
+                             const std::vector<double>& factors);
 
   static dbTechLayerAntennaRule* getAntennaRule(dbTech* inly, uint dbid);
 };
@@ -6946,5 +6959,3 @@ class dbViaParams : private _dbViaParams
 };
 
 }  // namespace odb
-
-

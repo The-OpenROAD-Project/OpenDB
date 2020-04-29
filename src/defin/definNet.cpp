@@ -331,12 +331,6 @@ void definNet::wire(dbWireType type)
   _taper_rule = NULL;
 }
 
-void definNet::pathStyle(int /* unused: style */)
-{
-  notice(0, "error: styles are not supported on wires\n");
-  ++_errors;
-}
-
 void definNet::path(const char* layer_name)
 {
   _rule_for_path = _non_default_rule;

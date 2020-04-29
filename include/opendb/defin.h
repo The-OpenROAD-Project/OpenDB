@@ -59,6 +59,7 @@ class defin
   void skipShields();
   void skipBlockWires();
   void skipFillWires();
+  void continueOnErrors();
   void namesAreDBIDs();
   void setAssemblyMode();
   void useBlockName(const char* name);

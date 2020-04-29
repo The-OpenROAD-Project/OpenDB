@@ -80,7 +80,6 @@ class definSNet : public definBase
   virtual void polygon(const char* layer, std::vector<defPoint>& points);
   virtual void wire(dbWireType type, const char* shield);
   virtual void path(const char* layer, int width);
-  virtual void pathStyle(int style);
   virtual void pathShape(const char* type);
   virtual void pathPoint(int x, int y);
   virtual void pathPoint(int x, int y, int ext);

@@ -76,6 +76,11 @@ void defin::skipFillWires()
   _reader->skipFillWires();
 }
 
+void defin::continueOnErrors()
+{
+  _reader->continueOnErrors();
+}
+
 void defin::namesAreDBIDs()
 {
   _reader->namesAreDBIDs();

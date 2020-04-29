@@ -72,6 +72,7 @@ class definReader : public definBase
   definPinProps*          _pin_propsR;
   std::vector<definBase*> _interfaces;
   bool                    _update;
+  bool                    _continue_on_errors;
   const char*             _block_name;
 
   void init();
@@ -221,6 +222,7 @@ class definReader : public definBase
   void skipShields();
   void skipBlockWires();
   void skipFillWires();
+  void continueOnErrors();
   void useBlockName(const char* name);
   void namesAreDBIDs();
   void setAssemblyMode();

@@ -88,7 +88,6 @@ class definNet : public definBase
   void use(dbSigType type);
   void wire(dbWireType type);
   void path(const char* layer);
-  void pathStyle(int style);
   void pathTaper(const char* layer);
   void pathTaperRule(const char* layer, const char* rule);
   void pathPoint(int x, int y);

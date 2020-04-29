@@ -322,12 +322,6 @@ void definSNet::path(const char* layer_name, int width)
   }
 }
 
-void definSNet::pathStyle(int /* unused: style */)
-{
-  notice(0, "error: styles are not supported on wires\n");
-  ++_errors;
-}
-
 void definSNet::pathShape(const char* shape)
 {
   if (_skip_shields && (_wire_type == dbWireType::SHIELD))

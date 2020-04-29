@@ -54,6 +54,12 @@
 #include "definTracks.h"
 #include "definVia.h"
 
+#define UNSUPPORTED(msg)              \
+  reader->error((msg));               \
+  if (!reader->_continue_on_errors) { \
+    return PARSE_ERROR;               \
+  }
+
 namespace odb {
 
 class DefHeader
@@ -88,8 +94,9 @@ class DefHeader
 
 definReader::definReader(dbDatabase* db)
 {
-  _db         = db;
-  _block_name = NULL;
+  _db                 = db;
+  _block_name         = NULL;
+  _continue_on_errors = false;
 
   _blockageR         = new definBlockage;
   _componentR        = new definComponent;
@@ -183,6 +190,11 @@ void definReader::skipFillWires()
   _snetR->skipFillWires();
 }
 
+void definReader::continueOnErrors()
+{
+  _continue_on_errors = true;
+}
+
 void definReader::replaceWires()
 {
   _netR->replaceWires();
@@ -264,23 +276,19 @@ int definReader::blockageCallback(defrCallbackType_e /* unused: type */,
   definBlockage* blockageR = reader->_blockageR;
 
   if (blockage->hasExceptpgnet()) {
-    reader->error("EXCEPTPGNET on blockage is unsupported");
-    return PARSE_ERROR;
+    UNSUPPORTED("EXCEPTPGNET on blockage is unsupported");
   }
 
   if (blockage->hasMask()) {
-    reader->error("MASK on blockage is unsupported");
-    return PARSE_ERROR;
+    UNSUPPORTED("MASK on blockage is unsupported");
   }
 
   if (blockage->hasSoft()) {
-    reader->error("SOFT on blockage is unsupported");
-    return PARSE_ERROR;
+    UNSUPPORTED("SOFT on blockage is unsupported");
   }
 
   if (blockage->hasPartial()) {
-    reader->error("PARTIAL on blockage is unsupported");
-    return PARSE_ERROR;
+    UNSUPPORTED("PARTIAL on blockage is unsupported");
   }
 
   if (blockage->hasLayer()) {
@@ -355,23 +363,19 @@ int definReader::componentsCallback(defrCallbackType_e /* unused: type */,
   definComponent* componentR = reader->_componentR;
 
   if (comp->hasEEQ()) {
-    reader->error("EEQMASTER on component is unsupported");
-    return PARSE_ERROR;
+    UNSUPPORTED("EEQMASTER on component is unsupported");
   }
 
   if (comp->maskShiftSize() > 0) {
-    reader->error("MASKSHIFT on component is unsupported");
-    return PARSE_ERROR;
+    UNSUPPORTED("MASKSHIFT on component is unsupported");
   }
 
   if (comp->hasHalo() > 0) {
-    reader->error("HALO on component is unsupported");
-    return PARSE_ERROR;
+    UNSUPPORTED("HALO on component is unsupported");
   }
 
   if (comp->hasRouteHalo() > 0) {
-    reader->error("ROUTEHALO on component is unsupported");
-    return PARSE_ERROR;
+    UNSUPPORTED("ROUTEHALO on component is unsupported");
   }
 
   componentR->begin(comp->id(), comp->name());
@@ -403,8 +407,8 @@ int definReader::componentMaskShiftCallback(
     defiUserData data)
 {
   definReader* reader = (definReader*) data;
-  reader->error("COMPONENTMASKSHIFT is unsupported");
-  return PARSE_ERROR;
+  UNSUPPORTED("COMPONENTMASKSHIFT is unsupported");
+  return PARSE_OK;
 }
 
 int definReader::dieAreaCallback(defrCallbackType_e /* unused: type */,
@@ -420,9 +424,7 @@ int definReader::dieAreaCallback(defrCallbackType_e /* unused: type */,
     reader->translate(points, P);
 
     if (P.size() < 2) {
-      notice(0, "error: Invalid DIEAREA statement, missing point(s)\n");
-      ++reader->_errors;
-      return PARSE_ERROR;
+      UNSUPPORTED("Invalid DIEAREA statement, missing point(s)");
     }
 
     if (P.size() == 2) {
@@ -470,8 +472,8 @@ int definReader::extensionCallback(defrCallbackType_e /* unused: type */,
                                    defiUserData data)
 {
   definReader* reader = (definReader*) data;
-  reader->error("Syntax extensions (BEGINEXT/ENDEXT) are unsupported");
-  return PARSE_ERROR;
+  UNSUPPORTED("Syntax extensions (BEGINEXT/ENDEXT) are unsupported");
+  return PARSE_OK;
 }
 
 int definReader::fillsCallback(defrCallbackType_e /* unused: type */,
@@ -481,8 +483,8 @@ int definReader::fillsCallback(defrCallbackType_e /* unused: type */,
   definReader* reader = (definReader*) data;
 
   // definFill doesn't do anything! Just error out for now
-  reader->error("FILL is unsupported");
-  return PARSE_ERROR;
+  UNSUPPORTED("FILL is unsupported");
+  return PARSE_OK;
 }
 
 // This is incomplete but won't be reached because of the
@@ -569,8 +571,8 @@ int definReader::historyCallback(defrCallbackType_e /* unused: type */,
                                  defiUserData data)
 {
   definReader* reader = (definReader*) data;
-  reader->error("HISTORY is unsupported");
-  return PARSE_ERROR;
+  UNSUPPORTED("HISTORY is unsupported");
+  return PARSE_OK;
 }
 
 int definReader::netCallback(defrCallbackType_e /* unused: type */,
@@ -581,43 +583,35 @@ int definReader::netCallback(defrCallbackType_e /* unused: type */,
   definNet*    netR   = reader->_netR;
 
   if (net->numShieldNets() > 0) {
-    reader->error("SHIELDNET on net is unsupported");
-    return PARSE_ERROR;
+    UNSUPPORTED("SHIELDNET on net is unsupported");
   }
 
   if (net->numVpins() > 0) {
-    reader->error("VPIN on net is unsupported");
-    return PARSE_ERROR;
+    UNSUPPORTED("VPIN on net is unsupported");
   }
 
   if (net->hasSubnets()) {
-    reader->error("SUBNET on net is unsupported");
-    return PARSE_ERROR;
+    UNSUPPORTED("SUBNET on net is unsupported");
   }
 
   if (net->hasXTalk()) {
-    reader->error("XTALK on net is unsupported");
-    return PARSE_ERROR;
+    UNSUPPORTED("XTALK on net is unsupported");
   }
 
   if (net->hasFrequency()) {
-    reader->error("FREQUENCY on net is unsupported");
-    return PARSE_ERROR;
+    UNSUPPORTED("FREQUENCY on net is unsupported");
   }
 
   if (net->hasOriginal()) {
-    reader->error("ORIGINAL on net is unsupported");
-    return PARSE_ERROR;
+    UNSUPPORTED("ORIGINAL on net is unsupported");
   }
 
   if (net->hasPattern()) {
-    reader->error("PATTERN on net is unsupported");
-    return PARSE_ERROR;
+    UNSUPPORTED("PATTERN on net is unsupported");
   }
 
   if (net->hasCap()) {
-    reader->error("ESTCAP on net is unsupported");
-    return PARSE_ERROR;
+    UNSUPPORTED("ESTCAP on net is unsupported");
   }
 
   netR->begin(net->name());
@@ -644,8 +638,7 @@ int definReader::netCallback(defrCallbackType_e /* unused: type */,
 
   for (int i = 0; i < net->numConnections(); ++i) {
     if (net->pinIsSynthesized(i)) {
-      reader->error("SYNTHESIZED on net's connection is unsupported");
-      return PARSE_ERROR;
+      UNSUPPORTED("SYNTHESIZED on net's connection is unsupported");
     }
 
     if (net->pinIsMustJoin(i)) {
@@ -714,8 +707,7 @@ int definReader::netCallback(defrCallbackType_e /* unused: type */,
           }
 
           case DEFIPATH_STYLE:
-            netR->pathStyle(path->getStyle());
-            return PARSE_ERROR;  // callback issues error
+            UNSUPPORTED("styles are not supported on wires");
             break;
 
           case DEFIPATH_RECT: {
@@ -729,17 +721,17 @@ int definReader::netCallback(defrCallbackType_e /* unused: type */,
           }
 
           case DEFIPATH_VIRTUALPOINT:
-            reader->error("VIRTUAL in net's routing is unsupported");
-            return PARSE_ERROR;
+            UNSUPPORTED("VIRTUAL in net's routing is unsupported");
+            break;
 
           case DEFIPATH_MASK:
           case DEFIPATH_VIAMASK:
-            reader->error("MASK in net's routing is unsupported");
-            return PARSE_ERROR;
+            UNSUPPORTED("MASK in net's routing is unsupported");
+            break;
 
           default:
-            reader->error("Unknown construct in net's routing is unsupported");
-            return PARSE_ERROR;
+            UNSUPPORTED("Unknown construct in net's routing is unsupported");
+            break;
         }
       }
       netR->pathEnd();
@@ -770,8 +762,7 @@ int definReader::nonDefaultRuleCallback(defrCallbackType_e /* unused: type */,
 
   for (int i = 0; i < rule->numLayers(); ++i) {
     if (rule->hasLayerDiagWidth(i)) {
-      reader->error("DIAGWIDTH on non-default rule is unsupported");
-      return PARSE_ERROR;
+      UNSUPPORTED("DIAGWIDTH on non-default rule is unsupported");
     }
 
     ruleR->beginLayerRule(rule->layerName(i), rule->layerWidthVal(i));
@@ -814,35 +805,28 @@ int definReader::pinCallback(defrCallbackType_e /* unused: type */,
   definPin*    pinR   = reader->_pinR;
 
   if (pin->numVias() > 0) {
-    reader->error("VIA in pins is unsupported");
-    return PARSE_ERROR;
+    UNSUPPORTED("VIA in pins is unsupported");
   }
 
   if (pin->hasNetExpr()) {
-    reader->error("NETEXPR on pin is unsupported");
-    return PARSE_ERROR;
+    UNSUPPORTED("NETEXPR on pin is unsupported");
   }
 
   if (pin->hasAPinPartialMetalArea() || pin->hasAPinPartialMetalSideArea()
       || pin->hasAPinDiffArea() || pin->hasAPinPartialCutArea()
       || pin->numAntennaModel() > 0) {
-    reader->error("Antenna data on pin is unsupported");
-    return PARSE_ERROR;
+    UNSUPPORTED("Antenna data on pin is unsupported");
   }
 
   if (pin->numPorts() > 1) {
     // TritonRoute doesn't support these either
-    notice(0, "error: pin with multiple ports is not supported\n");
-    ++reader->_errors;
-    return PARSE_ERROR;
+    UNSUPPORTED("pin with multiple ports is not supported");
   }
 
   if (pin->numPolygons() > 0) {
     // The db does support polygons but the callback code seems incorrect to me
     // (ignores layers!).  Delaying support until I can fix it.
-    notice(0, "error: polygons in pins are not supported\n");
-    ++reader->_errors;
-    return PARSE_ERROR;
+    UNSUPPORTED("polygons in pins are not supported");
   }
 
   pinR->pinBegin(pin->pinName(), pin->netName());
@@ -869,8 +853,7 @@ int definReader::pinCallback(defrCallbackType_e /* unused: type */,
 
   for (int i = 0; i < pin->numLayer(); ++i) {
     if (pin->layerMask(i) != 0) {
-      reader->error("MASK on pin's layer is unsupported");
-      return PARSE_ERROR;
+      UNSUPPORTED("MASK on pin's layer is unsupported");
     }
 
     int xl;
@@ -1105,8 +1088,8 @@ int definReader::scanchainsCallback(defrCallbackType_e /* unused: type */,
                                     defiUserData data)
 {
   definReader* reader = (definReader*) data;
-  reader->error("SCANCHAINS are unsupported");
-  return PARSE_ERROR;
+  UNSUPPORTED("SCANCHAINS are unsupported");
+  return PARSE_OK;
 }
 
 int definReader::slotsCallback(defrCallbackType_e /* unused: type */,
@@ -1114,8 +1097,8 @@ int definReader::slotsCallback(defrCallbackType_e /* unused: type */,
                                defiUserData data)
 {
   definReader* reader = (definReader*) data;
-  reader->error("SLOTS are unsupported");
-  return PARSE_ERROR;
+  UNSUPPORTED("SLOTS are unsupported");
+  return PARSE_OK;
 }
 
 int definReader::stylesCallback(defrCallbackType_e /* unused: type */,
@@ -1123,8 +1106,8 @@ int definReader::stylesCallback(defrCallbackType_e /* unused: type */,
                                 defiUserData data)
 {
   definReader* reader = (definReader*) data;
-  reader->error("STYLES are unsupported");
-  return PARSE_ERROR;
+  UNSUPPORTED("STYLES are unsupported");
+  return PARSE_OK;
 }
 
 int definReader::technologyCallback(defrCallbackType_e /* unused: type */,
@@ -1132,8 +1115,8 @@ int definReader::technologyCallback(defrCallbackType_e /* unused: type */,
                                     defiUserData data)
 {
   definReader* reader = (definReader*) data;
-  reader->error("TECHNOLOGY is unsupported");
-  return PARSE_ERROR;
+  UNSUPPORTED("TECHNOLOGY is unsupported");
+  return PARSE_OK;
 }
 
 int definReader::trackCallback(defrCallbackType_e /* unused: type */,
@@ -1143,8 +1126,7 @@ int definReader::trackCallback(defrCallbackType_e /* unused: type */,
   definReader* reader = (definReader*) data;
 
   if (track->firstTrackMask() != 0) {
-    reader->error("MASK on track is unsupported");
-    return PARSE_ERROR;
+    UNSUPPORTED("MASK on track is unsupported");
   }
 
   defDirection dir = track->macro()[0] == 'X' ? DEF_X : DEF_Y;
@@ -1164,13 +1146,13 @@ int definReader::unitsCallback(defrCallbackType_e, double d, defiUserData data)
 
   // Truncation error
   if (d > reader->_tech->getDbUnitsPerMicron()) {
-    notice(0,
-           "error: The DEF UNITS DISTANCE MICRONS convert factor (%d) is "
-           "greater than the database units per micron (%d) value.\n",
-           (int) d,
-           reader->_tech->getDbUnitsPerMicron());
-    ++reader->_errors;
-    return PARSE_ERROR;
+    char buf[256];
+    sprintf(buf,
+            "The DEF UNITS DISTANCE MICRONS convert factor (%d) is "
+            "greater than the database units per micron (%d) value.",
+            (int) d,
+            reader->_tech->getDbUnitsPerMicron());
+    UNSUPPORTED(buf);
   }
 
   reader->units(d);
@@ -1193,8 +1175,7 @@ int definReader::viaCallback(defrCallbackType_e /* unused: type */,
   definVia*    viaR   = reader->_viaR;
 
   if (via->numPolygons() > 0) {
-    reader->error("POLYGON in via is unsupported");
-    return PARSE_ERROR;
+    UNSUPPORTED("POLYGON in via is unsupported");
   }
 
   viaR->viaBegin(via->name());
@@ -1227,7 +1208,9 @@ int definReader::viaCallback(defrCallbackType_e /* unused: type */,
     viaR->viaRule(viaRuleName);
     viaR->viaCutSize(xSize, ySize);
     if (!viaR->viaLayers(botLayer, cutLayer, topLayer)) {
-      return PARSE_ERROR;
+      if (!reader->_continue_on_errors) {
+        return PARSE_ERROR;
+      }
     }
     viaR->viaCutSpacing(xCutSpacing, yCutSpacing);
     viaR->viaEnclosure(xBotEnc, yBotEnc, xTopEnc, yTopEnc);
@@ -1262,8 +1245,7 @@ int definReader::viaCallback(defrCallbackType_e /* unused: type */,
 
   for (int i = 0; i < via->numLayers(); ++i) {
     if (via->hasRectMask(i)) {
-      reader->error("MASK on via rect is unsupported");
-      return PARSE_ERROR;
+      UNSUPPORTED("MASK on via rect is unsupported");
     }
 
     char* layer;
@@ -1288,41 +1270,33 @@ int definReader::specialNetCallback(defrCallbackType_e /* unused: type */,
   definSNet*   snetR  = reader->_snetR;
 
   if (net->hasCap()) {
-    reader->error("ESTCAP on special net is unsupported");
-    return PARSE_ERROR;
+    UNSUPPORTED("ESTCAP on special net is unsupported");
   }
 
   if (net->hasPattern()) {
-    reader->error("PATTERN on special net is unsupported");
-    return PARSE_ERROR;
+    UNSUPPORTED("PATTERN on special net is unsupported");
   }
 
   if (net->hasOriginal()) {
-    reader->error("ORIGINAL on special net is unsupported");
-    return PARSE_ERROR;
+    UNSUPPORTED("ORIGINAL on special net is unsupported");
   }
 
   if (net->numShieldNets() > 0) {
-    reader->error("SHIELDNET on special net is unsupported");
-    return PARSE_ERROR;
+    UNSUPPORTED("SHIELDNET on special net is unsupported");
   }
 
   if (net->hasVoltage()) {
-    reader->error("VOLTAGE on special net is unsupported");
-    return PARSE_ERROR;
+    UNSUPPORTED("VOLTAGE on special net is unsupported");
   }
 
   if (net->numPolygons() > 0) {
     // The db does support polygons but the callback code seems incorrect to me
     // (ignores layers!).  Delaying support until I can fix it.
-    notice(0, "error: polygons in special nets are not supported\n");
-    ++reader->_errors;
-    return PARSE_ERROR;
+    UNSUPPORTED("polygons in special nets are not supported");
   }
 
   if (net->numViaSpecs() > 0) {
-    reader->error("VIA in special net is unsupported");
-    return PARSE_ERROR;
+    UNSUPPORTED("VIA in special net is unsupported");
   }
 
   snetR->begin(net->name());
@@ -1379,8 +1353,7 @@ int definReader::specialNetCallback(defrCallbackType_e /* unused: type */,
             const char* viaName = path->getVia();
             int         nextId  = path->next();
             if (nextId == DEFIPATH_VIAROTATION) {
-              reader->error("Rotated via in special net is unsupported");
-              return PARSE_ERROR;
+              UNSUPPORTED("Rotated via in special net is unsupported");
               // TODO: Make this take and store rotation
               // snetR->pathVia(viaName,
               //                translate_orientation(path->getViaRotation()));
@@ -1418,19 +1391,16 @@ int definReader::specialNetCallback(defrCallbackType_e /* unused: type */,
             break;
 
           case DEFIPATH_STYLE:
-            snetR->pathStyle(path->getStyle());
-            return PARSE_ERROR;  // callback issues error
+            UNSUPPORTED("styles are not supported on wires");
             break;
 
           case DEFIPATH_MASK:
           case DEFIPATH_VIAMASK:
-            reader->error("MASK in special net's routing is unsupported");
-            return PARSE_ERROR;
+            UNSUPPORTED("MASK in special net's routing is unsupported");
 
           default:
-            reader->error(
+            UNSUPPORTED(
                 "Unknown construct in special net's routing is unsupported");
-            return PARSE_ERROR;
         }
       }
       snetR->pathEnd();
@@ -1814,7 +1784,9 @@ bool definReader::createBlock(const char* file)
   int res = defrRead(f, file, (defiUserData) this, /* case sensitive */ 1);
   if (res != 0 || _errors != 0) {
     notice(0, "DEF parser returns an error!");
-    exit(2);
+    if (!_continue_on_errors) {
+      exit(2);
+    }
   }
 
   defrClear();
@@ -1847,7 +1819,9 @@ bool definReader::replaceWires(const char* file)
   int res = defrRead(f, file, (defiUserData) this, /* case sensitive */ 1);
   if (res != 0) {
     notice(0, "DEF parser returns an error!");
-    exit(2);
+    if (!_continue_on_errors) {
+      exit(2);
+    }
   }
 
   defrClear();

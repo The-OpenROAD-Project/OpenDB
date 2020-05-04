@@ -624,28 +624,28 @@ double dbTechLayerAntennaRule::getCSR() const
 dbTechLayerAntennaRule::pwl_pair dbTechLayerAntennaRule::getPAR_PWL() const
 {
   auto ant_rule = (const _dbTechLayerAntennaRule*) this;
-  auto rule     = ant_rule->_par_area_val;
+  auto& rule     = ant_rule->_par_area_val;
   return pwl_pair{rule._diff_idx, rule._diff_ratio};
 }
 
 dbTechLayerAntennaRule::pwl_pair dbTechLayerAntennaRule::getCAR_PWL() const
 {
   auto ant_rule = (const _dbTechLayerAntennaRule*) this;
-  auto rule     = ant_rule->_cum_area_val;
+  auto& rule     = ant_rule->_cum_area_val;
   return pwl_pair{rule._diff_idx, rule._diff_ratio};
 }
 
 dbTechLayerAntennaRule::pwl_pair dbTechLayerAntennaRule::getPSR_PWL() const
 {
   auto ant_rule = (const _dbTechLayerAntennaRule*) this;
-  auto rule     = ant_rule->_par_sidearea_val;
+  auto& rule     = ant_rule->_par_sidearea_val;
   return pwl_pair{rule._diff_idx, rule._diff_ratio};
 }
 
 dbTechLayerAntennaRule::pwl_pair dbTechLayerAntennaRule::getCSR_PWL() const
 {
   auto ant_rule = (const _dbTechLayerAntennaRule*) this;
-  auto rule     = ant_rule->_cum_sidearea_val;
+  auto& rule     = ant_rule->_cum_sidearea_val;
   return pwl_pair{rule._diff_idx, rule._diff_ratio};
 }
 

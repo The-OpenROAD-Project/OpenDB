@@ -6552,8 +6552,17 @@ class dbTechLayerAntennaRule : public dbObject
   void setGatePlusDiffFactor(double factor);
   void setAreaMinusDiffFactor(double factor);
 
-  void setAreaFactor(double factor, double diffuse = -1.0);
-  void setSideAreaFactor(double factor, double diffuse = -1.0);
+  void setAreaFactor(double factor, bool diffuse = false);
+  void setSideAreaFactor(double factor, bool diffuse = false);
+
+  bool hasAreaFactor() const;
+  bool hasSideAreaFactor() const;
+
+  double getAreaFactor() const;
+  double getSideAreaFactor() const;
+
+  bool isAreaFactorDiffUseOnly() const;
+  bool isSideAreaFactorDiffUseOnly() const;
 
   bool hasAntennaCumRoutingPlusCut() const;
   void setAntennaCumRoutingPlusCut(bool value = true);
@@ -6566,10 +6575,10 @@ class dbTechLayerAntennaRule : public dbObject
   double getGatePlusDiffFactor() const;
   double getAreaMinusDiffFactor() const;
 
-  void setPAR(double ratio, double diff_ratio = 0.0);
-  void setCAR(double ratio, double diff_ratio = 0.0);
-  void setPSR(double ratio, double diff_ratio = 0.0);
-  void setCSR(double ratio, double diff_ratio = 0.0);
+  void setPAR(double ratio);
+  void setCAR(double ratio);
+  void setPSR(double ratio);
+  void setCSR(double ratio);
 
   // if indices.size()==0 then these are unset
   // if indices.size()==1 then this is a single value rather than a PWL
@@ -6579,23 +6588,30 @@ class dbTechLayerAntennaRule : public dbObject
     const std::vector<double>& ratios;
   };
 
-  pwl_pair getPAR_PWL() const;
-  pwl_pair getCAR_PWL() const;
-  pwl_pair getPSR_PWL() const;
-  pwl_pair getCSR_PWL() const;
-  pwl_pair getAreaDiffReduce_PWL() const;
+  pwl_pair getDiffPAR() const;
+  pwl_pair getDiffCAR() const;
+  pwl_pair getDiffPSR() const;
+  pwl_pair getDiffCSR() const;
+  pwl_pair getAreaDiffReduce() const;
 
-  void setPAR_PWL(const std::vector<double>& diff_idx,
+  // PWL
+  void setDiffPAR(const std::vector<double>& diff_idx,
                   const std::vector<double>& ratios);
-  void setCAR_PWL(const std::vector<double>& diff_idx,
+  void setDiffCAR(const std::vector<double>& diff_idx,
                   const std::vector<double>& ratios);
-  void setPSR_PWL(const std::vector<double>& diff_idx,
+  void setDiffPSR(const std::vector<double>& diff_idx,
                   const std::vector<double>& ratios);
-  void setCSR_PWL(const std::vector<double>& diff_idx,
+  void setDiffCSR(const std::vector<double>& diff_idx,
                   const std::vector<double>& ratios);
 
-  void setAreaDiffReduce_PWL(const std::vector<double>& areas,
-                             const std::vector<double>& factors);
+  // Single value
+  void setDiffPAR(double ratio);
+  void setDiffCAR(double ratio);
+  void setDiffPSR(double ratio);
+  void setDiffCSR(double ratio);
+
+  void setAreaDiffReduce(const std::vector<double>& areas,
+                         const std::vector<double>& factors);
 
   static dbTechLayerAntennaRule* getAntennaRule(dbTech* inly, uint dbid);
 };

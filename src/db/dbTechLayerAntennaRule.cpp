@@ -52,13 +52,10 @@ bool _ARuleFactor::operator==(const _ARuleFactor& rhs) const
   if (_factor != rhs._factor)
     return false;
 
-  if (_factor_diffuse != rhs._factor_diffuse)
-    return false;
-
   if (_explicit != rhs._explicit)
     return false;
 
-  if (_explicit_diffuse != rhs._explicit_diffuse)
+  if (_diff_use_only != rhs._diff_use_only)
     return false;
 
   return true;
@@ -74,9 +71,8 @@ void _ARuleFactor::differences(dbDiff&             diff,
     diff.begin_object("<> _ARuleFactor\n");
 
   DIFF_FIELD(_factor);
-  DIFF_FIELD(_factor_diffuse);
   DIFF_FIELD(_explicit);
-  DIFF_FIELD(_explicit_diffuse);
+  DIFF_FIELD(_diff_use_only);
 
   diff.end_object();
 }
@@ -89,9 +85,8 @@ void _ARuleFactor::out(dbDiff& diff, char side, const char* field) const
     diff.begin_object("%c _ARuleFactor\n", side);
 
   DIFF_OUT_FIELD(_factor);
-  DIFF_OUT_FIELD(_factor_diffuse);
   DIFF_OUT_FIELD(_explicit);
-  DIFF_OUT_FIELD(_explicit_diffuse);
+  DIFF_OUT_FIELD(_diff_use_only);
   diff.end_object();
 }
 
@@ -309,34 +304,27 @@ void _dbTechAntennaPinModel::out(dbDiff&     diff,
 //
 ////////////////////////////////////////////////////////////////////
 
-void _ARuleFactor::setFactors(double factor, double diffuse)
+void _ARuleFactor::setFactor(double factor, bool diffuse)
 {
-  if (factor >= 0.0) {
-    _factor   = factor;
-    _explicit = true;
-  }
-
-  if ((factor >= 0.0) || (diffuse >= 0.0)) {
-    _factor_diffuse   = (diffuse >= 0.0) ? diffuse : factor;
-    _explicit_diffuse = ((diffuse >= 0.0) && (_factor_diffuse != _factor));
-  }
+  assert(factor > 0.0);
+  _factor        = factor;
+  _diff_use_only = diffuse;
+  _explicit      = true;
 }
 
 dbOStream& operator<<(dbOStream& stream, const _ARuleFactor& arf)
 {
   stream << arf._factor;
-  stream << arf._factor_diffuse;
   stream << arf._explicit;
-  stream << arf._explicit_diffuse;
+  stream << arf._diff_use_only;
   return stream;
 }
 
 dbIStream& operator>>(dbIStream& stream, _ARuleFactor& arf)
 {
   stream >> arf._factor;
-  stream >> arf._factor_diffuse;
   stream >> arf._explicit;
-  stream >> arf._explicit_diffuse;
+  stream >> arf._diff_use_only;
   return stream;
 }
 
@@ -346,18 +334,22 @@ dbIStream& operator>>(dbIStream& stream, _ARuleFactor& arf)
 //
 ////////////////////////////////////////////////////////////////////
 
-void _ARuleRatio::setRatios(double ratio, double diff_ratio)
+void _ARuleRatio::setRatio(double ratio)
 {
   assert(ratio > 0);
   _ratio = ratio;
-  if (diff_ratio > 0) {
-    _diff_idx.assign(1, 0.0);
-    _diff_ratio.assign(1, diff_ratio);
-  }
 }
 
-void _ARuleRatio::setPWL(const vector<double>& diff_idx,
-                         const vector<double>& ratios)
+void _ARuleRatio::setDiff(double ratio)
+{
+  assert(ratio > 0);
+  assert((_diff_idx.size() == 0) && (_diff_ratio.size() == 0));
+  _diff_idx.assign(1, 0.0);
+  _diff_ratio.assign(1, ratio);
+}
+
+void _ARuleRatio::setDiff(const vector<double>& diff_idx,
+                          const vector<double>& ratios)
 {
   assert((_diff_idx.size() == 0) && (_diff_ratio.size() == 0));
   _diff_idx   = diff_idx;
@@ -444,15 +436,12 @@ void dbTechLayerAntennaRule::writeLef(lefout& writer) const
 {
   _dbTechLayerAntennaRule* ant_rule = (_dbTechLayerAntennaRule*) this;
 
-  if (ant_rule->_area_mult._explicit)
+  if (ant_rule->_area_mult._explicit) {
     fprintf(writer.out(),
-            "    ANTENNAAREAFACTOR %g ;\n",
-            ant_rule->_area_mult._factor);
-
-  if (ant_rule->_area_mult._explicit_diffuse)
-    fprintf(writer.out(),
-            "    ANTENNAAREAFACTOR %g DIFFUSEONLY ;\n",
-            ant_rule->_area_mult._factor_diffuse);
+            "    ANTENNAAREAFACTOR %g %s;\n",
+            ant_rule->_area_mult._factor,
+            ant_rule->_area_mult._diff_use_only ? "DIFFUSEONLY " : "");
+  }
 
   if (ant_rule->_has_antenna_cumroutingpluscut) {
     fprintf(writer.out(), "    ANTENNACUMROUTINGPLUSCUT ;\n");
@@ -470,15 +459,12 @@ void dbTechLayerAntennaRule::writeLef(lefout& writer) const
             ant_rule->_area_minus_diff_factor);
   }
 
-  if (ant_rule->_sidearea_mult._explicit)
+  if (ant_rule->_sidearea_mult._explicit) {
     fprintf(writer.out(),
-            "    ANTENNASIDEAREAFACTOR %g ;\n",
-            ant_rule->_sidearea_mult._factor);
-
-  if (ant_rule->_sidearea_mult._explicit_diffuse)
-    fprintf(writer.out(),
-            "    ANTENNASIDEAREAFACTOR %g DIFFUSEONLY ;\n",
-            ant_rule->_sidearea_mult._factor_diffuse);
+            "    ANTENNASIDEAREAFACTOR %g %s;\n",
+            ant_rule->_sidearea_mult._factor,
+            ant_rule->_sidearea_mult._diff_use_only ? "DIFFUSEONLY" : "");
+  }
 
   dbVector<double>::const_iterator diffdx_itr;
   dbVector<double>::const_iterator ratio_itr;
@@ -583,18 +569,54 @@ void dbTechLayerAntennaRule::writeLef(lefout& writer) const
   }
 }
 
-void dbTechLayerAntennaRule::setAreaFactor(double factor, double diffuse)
+bool dbTechLayerAntennaRule::hasAreaFactor() const
 {
-  _dbTechLayerAntennaRule* ant_rule = (_dbTechLayerAntennaRule*) this;
-
-  ant_rule->_area_mult.setFactors(factor, diffuse);
+  auto ant_rule = (const _dbTechLayerAntennaRule*) this;
+  return ant_rule->_area_mult._explicit;
 }
 
-void dbTechLayerAntennaRule::setSideAreaFactor(double factor, double diffuse)
+bool dbTechLayerAntennaRule::hasSideAreaFactor() const
+{
+  auto ant_rule = (const _dbTechLayerAntennaRule*) this;
+  return ant_rule->_sidearea_mult._explicit;
+}
+
+double dbTechLayerAntennaRule::getAreaFactor() const
+{
+  auto ant_rule = (const _dbTechLayerAntennaRule*) this;
+  return ant_rule->_area_mult._factor;
+}
+
+double dbTechLayerAntennaRule::getSideAreaFactor() const
+{
+  auto ant_rule = (const _dbTechLayerAntennaRule*) this;
+  return ant_rule->_sidearea_mult._factor;
+}
+
+bool dbTechLayerAntennaRule::isAreaFactorDiffUseOnly() const
+{
+  auto ant_rule = (const _dbTechLayerAntennaRule*) this;
+  return ant_rule->_area_mult._diff_use_only;
+}
+
+bool dbTechLayerAntennaRule::isSideAreaFactorDiffUseOnly() const
+{
+  auto ant_rule = (const _dbTechLayerAntennaRule*) this;
+  return ant_rule->_sidearea_mult._diff_use_only;
+}
+
+void dbTechLayerAntennaRule::setAreaFactor(double factor, bool diffuse)
 {
   _dbTechLayerAntennaRule* ant_rule = (_dbTechLayerAntennaRule*) this;
 
-  ant_rule->_sidearea_mult.setFactors(factor, diffuse);
+  ant_rule->_area_mult.setFactor(factor, diffuse);
+}
+
+void dbTechLayerAntennaRule::setSideAreaFactor(double factor, bool diffuse)
+{
+  _dbTechLayerAntennaRule* ant_rule = (_dbTechLayerAntennaRule*) this;
+
+  ant_rule->_sidearea_mult.setFactor(factor, diffuse);
 }
 
 double dbTechLayerAntennaRule::getPAR() const
@@ -621,92 +643,120 @@ double dbTechLayerAntennaRule::getCSR() const
   return ant_rule->_cum_sidearea_val._ratio;
 }
 
-dbTechLayerAntennaRule::pwl_pair dbTechLayerAntennaRule::getPAR_PWL() const
+dbTechLayerAntennaRule::pwl_pair dbTechLayerAntennaRule::getDiffPAR() const
 {
-  auto ant_rule = (const _dbTechLayerAntennaRule*) this;
+  auto  ant_rule = (const _dbTechLayerAntennaRule*) this;
   auto& rule     = ant_rule->_par_area_val;
   return pwl_pair{rule._diff_idx, rule._diff_ratio};
 }
 
-dbTechLayerAntennaRule::pwl_pair dbTechLayerAntennaRule::getCAR_PWL() const
+dbTechLayerAntennaRule::pwl_pair dbTechLayerAntennaRule::getDiffCAR() const
 {
-  auto ant_rule = (const _dbTechLayerAntennaRule*) this;
+  auto  ant_rule = (const _dbTechLayerAntennaRule*) this;
   auto& rule     = ant_rule->_cum_area_val;
   return pwl_pair{rule._diff_idx, rule._diff_ratio};
 }
 
-dbTechLayerAntennaRule::pwl_pair dbTechLayerAntennaRule::getPSR_PWL() const
+dbTechLayerAntennaRule::pwl_pair dbTechLayerAntennaRule::getDiffPSR() const
 {
-  auto ant_rule = (const _dbTechLayerAntennaRule*) this;
+  auto  ant_rule = (const _dbTechLayerAntennaRule*) this;
   auto& rule     = ant_rule->_par_sidearea_val;
   return pwl_pair{rule._diff_idx, rule._diff_ratio};
 }
 
-dbTechLayerAntennaRule::pwl_pair dbTechLayerAntennaRule::getCSR_PWL() const
+dbTechLayerAntennaRule::pwl_pair dbTechLayerAntennaRule::getDiffCSR() const
 {
-  auto ant_rule = (const _dbTechLayerAntennaRule*) this;
+  auto  ant_rule = (const _dbTechLayerAntennaRule*) this;
   auto& rule     = ant_rule->_cum_sidearea_val;
   return pwl_pair{rule._diff_idx, rule._diff_ratio};
 }
 
-void dbTechLayerAntennaRule::setPAR(double ratio, double diff_ratio)
+void dbTechLayerAntennaRule::setPAR(double ratio)
 {
   _dbTechLayerAntennaRule* ant_rule = (_dbTechLayerAntennaRule*) this;
 
-  ant_rule->_par_area_val.setRatios(ratio, diff_ratio);
+  ant_rule->_par_area_val.setRatio(ratio);
 }
 
-void dbTechLayerAntennaRule::setCAR(double ratio, double diff_ratio)
+void dbTechLayerAntennaRule::setCAR(double ratio)
 {
   _dbTechLayerAntennaRule* ant_rule = (_dbTechLayerAntennaRule*) this;
 
-  ant_rule->_cum_area_val.setRatios(ratio, diff_ratio);
+  ant_rule->_cum_area_val.setRatio(ratio);
 }
 
-void dbTechLayerAntennaRule::setPSR(double ratio, double diff_ratio)
+void dbTechLayerAntennaRule::setPSR(double ratio)
 {
   _dbTechLayerAntennaRule* ant_rule = (_dbTechLayerAntennaRule*) this;
 
-  ant_rule->_par_sidearea_val.setRatios(ratio, diff_ratio);
+  ant_rule->_par_sidearea_val.setRatio(ratio);
 }
 
-void dbTechLayerAntennaRule::setCSR(double ratio, double diff_ratio)
+void dbTechLayerAntennaRule::setCSR(double ratio)
 {
   _dbTechLayerAntennaRule* ant_rule = (_dbTechLayerAntennaRule*) this;
 
-  ant_rule->_cum_sidearea_val.setRatios(ratio, diff_ratio);
+  ant_rule->_cum_sidearea_val.setRatio(ratio);
 }
 
-void dbTechLayerAntennaRule::setPAR_PWL(const vector<double>& diff_idx,
+void dbTechLayerAntennaRule::setDiffPAR(double ratio)
+{
+  _dbTechLayerAntennaRule* ant_rule = (_dbTechLayerAntennaRule*) this;
+
+  ant_rule->_par_area_val.setDiff(ratio);
+}
+
+void dbTechLayerAntennaRule::setDiffCAR(double ratio)
+{
+  _dbTechLayerAntennaRule* ant_rule = (_dbTechLayerAntennaRule*) this;
+
+  ant_rule->_cum_area_val.setDiff(ratio);
+}
+
+void dbTechLayerAntennaRule::setDiffPSR(double ratio)
+{
+  _dbTechLayerAntennaRule* ant_rule = (_dbTechLayerAntennaRule*) this;
+
+  ant_rule->_par_sidearea_val.setDiff(ratio);
+}
+
+void dbTechLayerAntennaRule::setDiffCSR(double ratio)
+{
+  _dbTechLayerAntennaRule* ant_rule = (_dbTechLayerAntennaRule*) this;
+
+  ant_rule->_cum_sidearea_val.setDiff(ratio);
+}
+
+void dbTechLayerAntennaRule::setDiffPAR(const vector<double>& diff_idx,
                                         const vector<double>& ratios)
 {
   _dbTechLayerAntennaRule* ant_rule = (_dbTechLayerAntennaRule*) this;
 
-  ant_rule->_par_area_val.setPWL(diff_idx, ratios);
+  ant_rule->_par_area_val.setDiff(diff_idx, ratios);
 }
 
-void dbTechLayerAntennaRule::setCAR_PWL(const vector<double>& diff_idx,
+void dbTechLayerAntennaRule::setDiffCAR(const vector<double>& diff_idx,
                                         const vector<double>& ratios)
 {
   _dbTechLayerAntennaRule* ant_rule = (_dbTechLayerAntennaRule*) this;
 
-  ant_rule->_cum_area_val.setPWL(diff_idx, ratios);
+  ant_rule->_cum_area_val.setDiff(diff_idx, ratios);
 }
 
-void dbTechLayerAntennaRule::setPSR_PWL(const vector<double>& diff_idx,
+void dbTechLayerAntennaRule::setDiffPSR(const vector<double>& diff_idx,
                                         const vector<double>& ratios)
 {
   _dbTechLayerAntennaRule* ant_rule = (_dbTechLayerAntennaRule*) this;
 
-  ant_rule->_par_sidearea_val.setPWL(diff_idx, ratios);
+  ant_rule->_par_sidearea_val.setDiff(diff_idx, ratios);
 }
 
-void dbTechLayerAntennaRule::setCSR_PWL(const vector<double>& diff_idx,
+void dbTechLayerAntennaRule::setDiffCSR(const vector<double>& diff_idx,
                                         const vector<double>& ratios)
 {
   _dbTechLayerAntennaRule* ant_rule = (_dbTechLayerAntennaRule*) this;
 
-  ant_rule->_cum_sidearea_val.setPWL(diff_idx, ratios);
+  ant_rule->_cum_sidearea_val.setDiff(diff_idx, ratios);
 }
 
 dbTechLayerAntennaRule* dbTechLayerAntennaRule::getAntennaRule(dbTech* _tech,
@@ -752,7 +802,7 @@ void dbTechLayerAntennaRule::setAreaMinusDiffFactor(double factor)
   ant_rule->_area_minus_diff_factor = factor;
 }
 
-dbTechLayerAntennaRule::pwl_pair dbTechLayerAntennaRule::getAreaDiffReduce_PWL()
+dbTechLayerAntennaRule::pwl_pair dbTechLayerAntennaRule::getAreaDiffReduce()
     const
 {
   _dbTechLayerAntennaRule* ant_rule = (_dbTechLayerAntennaRule*) this;
@@ -760,12 +810,12 @@ dbTechLayerAntennaRule::pwl_pair dbTechLayerAntennaRule::getAreaDiffReduce_PWL()
   return pwl_pair{rule._diff_idx, rule._diff_ratio};
 }
 
-void dbTechLayerAntennaRule::setAreaDiffReduce_PWL(
+void dbTechLayerAntennaRule::setAreaDiffReduce(
     const std::vector<double>& areas,
     const std::vector<double>& factors)
 {
   _dbTechLayerAntennaRule* ant_rule = (_dbTechLayerAntennaRule*) this;
-  ant_rule->_area_diff_reduce_val.setPWL(areas, factors);
+  ant_rule->_area_diff_reduce_val.setDiff(areas, factors);
 }
 
 ////////////////////////////////////////////////////////////////////

@@ -57,14 +57,11 @@ class _ARuleFactor
 {
  public:
   double _factor;
-  double _factor_diffuse;
   bool   _explicit;
-  bool   _explicit_diffuse;
+  bool   _diff_use_only;
 
-  _ARuleFactor(const _ARuleFactor& f);
   _ARuleFactor();
-  ~_ARuleFactor();
-  void setFactors(double factor, double diffuse);
+  void setFactor(double factor, bool diffuse);
   bool operator==(const _ARuleFactor& rhs) const;
   bool operator!=(const _ARuleFactor& rhs) const { return !operator==(rhs); }
   void differences(dbDiff&             diff,
@@ -73,24 +70,11 @@ class _ARuleFactor
   void out(dbDiff& diff, char side, const char* field) const;
 };
 
-inline _ARuleFactor::_ARuleFactor(const _ARuleFactor& f)
-    : _factor(f._factor),
-      _factor_diffuse(f._factor_diffuse),
-      _explicit(f._explicit),
-      _explicit_diffuse(f._explicit_diffuse)
-{
-}
-
 inline _ARuleFactor::_ARuleFactor()
 {
-  _factor           = 1.0;
-  _factor_diffuse   = _factor;
-  _explicit         = false;
-  _explicit_diffuse = _explicit;
-}
-
-inline _ARuleFactor::~_ARuleFactor()
-{
+  _factor        = 1.0;
+  _explicit      = false;
+  _diff_use_only = false;
 }
 
 dbOStream& operator<<(dbOStream& stream, const _ARuleFactor& arf);
@@ -109,12 +93,11 @@ class _ARuleRatio
   dbVector<double> _diff_ratio;
 
   _ARuleRatio();
-  _ARuleRatio(const _ARuleRatio& r);
-  ~_ARuleRatio();
 
-  void setRatios(double ratio, double diff_ratio);
-  void setPWL(const std::vector<double>& diff_idx,
-              const std::vector<double>& ratios);
+  void setRatio(double ratio);
+  void setDiff(const std::vector<double>& diff_idx,
+               const std::vector<double>& ratios);
+  void setDiff(double ratio);  // single value stored as PWL
 
   bool operator==(const _ARuleRatio& rhs) const;
   bool operator!=(const _ARuleRatio& rhs) const { return !operator==(rhs); }
@@ -124,19 +107,7 @@ class _ARuleRatio
   void out(dbDiff& diff, char side, const char* field) const;
 };
 
-inline _ARuleRatio::_ARuleRatio(const _ARuleRatio& r)
-    : _ratio(r._ratio), _diff_idx(r._diff_idx), _diff_ratio(r._diff_ratio)
-{
-}
-
-inline _ARuleRatio::_ARuleRatio()
-{
-  _ratio = 0;
-  _diff_idx.clear();
-  _diff_ratio.clear();
-}
-
-inline _ARuleRatio::~_ARuleRatio()
+inline _ARuleRatio::_ARuleRatio() : _ratio(0.0)
 {
 }
 

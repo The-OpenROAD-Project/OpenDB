@@ -772,79 +772,71 @@ void lefin::layer(lefiLayer* layer)
       }
 
       if (cur_model->hasAntennaAreaRatio()) {
-        if (cur_model->hasAntennaDiffAreaRatio())
-          cur_ant_rule->setPAR(cur_model->antennaAreaRatio(),
-                               cur_model->antennaDiffAreaRatio());
-        else
-          cur_ant_rule->setPAR(cur_model->antennaAreaRatio());
+        cur_ant_rule->setPAR(cur_model->antennaAreaRatio());
+      }
 
-        if (cur_model->hasAntennaDiffAreaRatioPWL()) {
-          dffdx.clear();
-          dffratio.clear();
-          cur_pwl = cur_model->antennaDiffAreaRatioPWL();
-          for (k = 0; k < cur_pwl->numPWL(); k++) {
-            dffdx.push_back(cur_pwl->PWLdiffusion(k));
-            dffratio.push_back(cur_pwl->PWLratio(k));
-          }
-          cur_ant_rule->setPAR_PWL(dffdx, dffratio);
+      if (cur_model->hasAntennaDiffAreaRatio()) {
+        cur_ant_rule->setDiffPAR(cur_model->antennaDiffAreaRatio());
+      } else if (cur_model->hasAntennaDiffAreaRatioPWL()) {
+        dffdx.clear();
+        dffratio.clear();
+        cur_pwl = cur_model->antennaDiffAreaRatioPWL();
+        for (k = 0; k < cur_pwl->numPWL(); k++) {
+          dffdx.push_back(cur_pwl->PWLdiffusion(k));
+          dffratio.push_back(cur_pwl->PWLratio(k));
         }
+        cur_ant_rule->setDiffPAR(dffdx, dffratio);
       }
 
       if (cur_model->hasAntennaCumAreaRatio()) {
-        if (cur_model->hasAntennaCumDiffAreaRatio())
-          cur_ant_rule->setCAR(cur_model->antennaCumAreaRatio(),
-                               cur_model->antennaCumDiffAreaRatio());
-        else
-          cur_ant_rule->setCAR(cur_model->antennaCumAreaRatio());
+        cur_ant_rule->setCAR(cur_model->antennaCumAreaRatio());
+      }
 
-        if (cur_model->hasAntennaCumDiffAreaRatioPWL()) {
-          dffdx.clear();
-          dffratio.clear();
-          cur_pwl = cur_model->antennaCumDiffAreaRatioPWL();
-          for (k = 0; k < cur_pwl->numPWL(); k++) {
-            dffdx.push_back(cur_pwl->PWLdiffusion(k));
-            dffratio.push_back(cur_pwl->PWLratio(k));
-          }
-          cur_ant_rule->setCAR_PWL(dffdx, dffratio);
+      if (cur_model->hasAntennaCumDiffAreaRatio()) {
+        cur_ant_rule->setDiffCAR(cur_model->antennaCumDiffAreaRatio());
+      } else if (cur_model->hasAntennaCumDiffAreaRatioPWL()) {
+        dffdx.clear();
+        dffratio.clear();
+        cur_pwl = cur_model->antennaCumDiffAreaRatioPWL();
+        for (k = 0; k < cur_pwl->numPWL(); k++) {
+          dffdx.push_back(cur_pwl->PWLdiffusion(k));
+          dffratio.push_back(cur_pwl->PWLratio(k));
         }
+        cur_ant_rule->setDiffCAR(dffdx, dffratio);
       }
 
       if (cur_model->hasAntennaSideAreaRatio()) {
-        if (cur_model->hasAntennaDiffSideAreaRatio())
-          cur_ant_rule->setPSR(cur_model->antennaSideAreaRatio(),
-                               cur_model->antennaDiffSideAreaRatio());
-        else
-          cur_ant_rule->setPSR(cur_model->antennaSideAreaRatio());
+        cur_ant_rule->setPSR(cur_model->antennaSideAreaRatio());
+      }
 
-        if (cur_model->hasAntennaDiffSideAreaRatioPWL()) {
-          dffdx.clear();
-          dffratio.clear();
-          cur_pwl = cur_model->antennaDiffSideAreaRatioPWL();
-          for (k = 0; k < cur_pwl->numPWL(); k++) {
-            dffdx.push_back(cur_pwl->PWLdiffusion(k));
-            dffratio.push_back(cur_pwl->PWLratio(k));
-          }
-          cur_ant_rule->setPSR_PWL(dffdx, dffratio);
+      if (cur_model->hasAntennaDiffSideAreaRatio()) {
+        cur_ant_rule->setDiffPSR(cur_model->antennaDiffSideAreaRatio());
+      } else if (cur_model->hasAntennaDiffSideAreaRatioPWL()) {
+        dffdx.clear();
+        dffratio.clear();
+        cur_pwl = cur_model->antennaDiffSideAreaRatioPWL();
+        for (k = 0; k < cur_pwl->numPWL(); k++) {
+          dffdx.push_back(cur_pwl->PWLdiffusion(k));
+          dffratio.push_back(cur_pwl->PWLratio(k));
         }
+        cur_ant_rule->setDiffPSR(dffdx, dffratio);
       }
 
       if (cur_model->hasAntennaCumSideAreaRatio()) {
-        if (cur_model->hasAntennaCumDiffSideAreaRatio())
-          cur_ant_rule->setCSR(cur_model->antennaCumSideAreaRatio(),
-                               cur_model->antennaCumDiffSideAreaRatio());
-        else
-          cur_ant_rule->setCSR(cur_model->antennaCumSideAreaRatio());
+        cur_ant_rule->setCSR(cur_model->antennaCumSideAreaRatio());
+      }
 
-        if (cur_model->hasAntennaCumDiffSideAreaRatioPWL()) {
-          dffdx.clear();
-          dffratio.clear();
-          cur_pwl = cur_model->antennaCumDiffSideAreaRatioPWL();
-          for (k = 0; k < cur_pwl->numPWL(); k++) {
-            dffdx.push_back(cur_pwl->PWLdiffusion(k));
-            dffratio.push_back(cur_pwl->PWLratio(k));
-          }
-          cur_ant_rule->setCSR_PWL(dffdx, dffratio);
+      if (cur_model->hasAntennaCumDiffSideAreaRatio()) {
+        cur_ant_rule->setDiffCSR(cur_model->antennaCumDiffSideAreaRatio());
+      } else if (cur_model->hasAntennaCumDiffSideAreaRatioPWL()) {
+        dffdx.clear();
+        dffratio.clear();
+        cur_pwl = cur_model->antennaCumDiffSideAreaRatioPWL();
+        for (k = 0; k < cur_pwl->numPWL(); k++) {
+          dffdx.push_back(cur_pwl->PWLdiffusion(k));
+          dffratio.push_back(cur_pwl->PWLratio(k));
         }
+        cur_ant_rule->setDiffCSR(dffdx, dffratio);
       }
 
       if (cur_model->hasAntennaCumRoutingPlusCut()) {
@@ -869,7 +861,7 @@ void lefin::layer(lefiLayer* layer)
           dffdx.push_back(cur_pwl->PWLdiffusion(k));
           dffratio.push_back(cur_pwl->PWLratio(k));
         }
-        cur_ant_rule->setAreaDiffReduce_PWL(dffdx, dffratio);
+        cur_ant_rule->setAreaDiffReduce(dffdx, dffratio);
       }
     }
   }

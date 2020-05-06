@@ -1327,8 +1327,10 @@ void dbBlock::ComputeBBox()
 
   for (iitr = insts.begin(); iitr != insts.end(); ++iitr) {
     dbInst* inst = *iitr;
-    _dbBox* box  = (_dbBox*) inst->getBBox();
-    bbox->_rect.merge(box->_rect);
+    if (inst->isPlaced()) {
+      _dbBox* box  = (_dbBox*) inst->getBBox();
+      bbox->_rect.merge(box->_rect);
+    }
   }
 
   dbSet<dbBTerm>           bterms = getBTerms();
@@ -1341,10 +1343,12 @@ void dbBlock::ComputeBBox()
 
     for (pitr = bpins.begin(); pitr != bpins.end(); ++pitr) {
       dbBPin* bp  = *pitr;
-      dbBox*  box = bp->getBox();
-      Rect    r;
-      box->getBox(r);
-      bbox->_rect.merge(r);
+      if (bp->getPlacementStatus().isPlaced()) {
+        dbBox*  box = bp->getBox();
+        Rect    r;
+        box->getBox(r);
+        bbox->_rect.merge(r);
+      }
     }
   }
 
@@ -1374,6 +1378,10 @@ void dbBlock::ComputeBBox()
     if (wire->getBBox(r)) {
       bbox->_rect.merge(r);
     }
+  }
+
+  if (bbox->_rect.xMin() == INT_MAX) { // empty block
+    bbox->_rect.reset(0, 0, 0, 0);
   }
 
   block->_flags._valid_bbox = 1;

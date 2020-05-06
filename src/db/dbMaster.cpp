@@ -462,7 +462,7 @@ void dbMaster::setHeight(uint h)
   master->_height   = h;
 }
 
-dbMasterType dbMaster::getType()
+dbMasterType dbMaster::getType() const
 {
   _dbMaster* master = (_dbMaster*) this;
   return dbMasterType(master->_flags._type);

@@ -2776,6 +2776,16 @@ class dbInst : public dbObject
   dbPlacementStatus getPlacementStatus();
 
   ///
+  /// Is the placement status of this instance fixed
+  ///
+  bool isFixed() { return getPlacementStatus().isFixed(); }
+
+  ///
+  /// Is the placement status of this instance placed
+  ///
+  bool isPlaced() { return getPlacementStatus().isPlaced(); }
+
+  ///
   /// Set the placement status of this instance.
   ///
   void setPlacementStatus(dbPlacementStatus status);
@@ -2877,7 +2887,7 @@ class dbInst : public dbObject
   ///
   /// Get the Master of this instance.
   ///
-  dbMaster* getMaster();
+  dbMaster* getMaster() const;
 
   ///
   /// Get the instance-terminals of this instance.
@@ -3040,6 +3050,26 @@ class dbInst : public dbObject
   /// inputs
   ///
   void setLevel(uint v, bool fromPI);
+
+  ///
+  /// Is the master's type BLOCK or any of its subtypes
+  ///
+  bool isBlock() const;
+
+  ///
+  /// Is the master's type CORE or any of its subtypes
+  ///
+  bool isCore() const;
+
+  ///
+  /// Is the master's type PAD or any of its subtypes
+  ///
+  bool isPad() const;
+
+  ///
+  /// Is the master's type ENDCAP or any of its subtypes
+  ///
+  bool isEndCap() const;
 
   ///
   /// Create a new instance.
@@ -5149,7 +5179,27 @@ class dbMaster : public dbObject
   ///
   /// Get the type of this master cell
   ///
-  dbMasterType getType();
+  dbMasterType getType() const;
+
+  ///
+  /// Is the type BLOCK or any of its subtypes
+  ///
+  bool isBlock() const { return getType().isBlock(); }
+
+  ///
+  /// Is the type CORE or any of its subtypes
+  ///
+  bool isCore() const { return getType().isCore(); }
+
+  ///
+  /// Is the type PAD or any of its subtypes
+  ///
+  bool isPad() const { return getType().isPad(); }
+
+  ///
+  /// Is the type ENDCAP or any of its subtypes
+  ///
+  bool isEndCap() const { return getType().isEndCap(); }
 
   ///
   /// This master can be placed automatically in the core.

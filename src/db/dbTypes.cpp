@@ -30,12 +30,11 @@
 // ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 // POSSIBILITY OF SUCH DAMAGE.
 
-#include "dbTypes.h"
-
 #include <ctype.h>
 #include <string.h>
 
 #include "dbId.h"
+#include "dbTypes.h"
 
 namespace odb {
 
@@ -369,8 +368,36 @@ const char* dbPlacementStatus::getString() const
 
 bool dbPlacementStatus::isPlaced() const
 {
-  return ((_value == PLACED) || (_value == LOCKED) || (_value == FIRM)
-          || (_value == COVER));
+  switch (_value) {
+    case NONE:
+    case UNPLACED:
+    case SUGGESTED:
+      return false;
+    case PLACED:
+    case LOCKED:
+    case FIRM:
+    case COVER:
+      return true;
+  }
+  assert(false);
+  return false;
+}
+
+bool dbPlacementStatus::isFixed() const
+{
+  switch (_value) {
+    case NONE:
+    case UNPLACED:
+    case SUGGESTED:
+    case PLACED:
+      return false;
+    case LOCKED:
+    case FIRM:
+    case COVER:
+      return true;
+  }
+  assert(false);
+  return false;
 }
 
 dbMasterType::dbMasterType(const char* value)
@@ -596,6 +623,158 @@ const char* dbMasterType::getString() const
   }
 
   return value;
+}
+
+bool dbMasterType::isBlock() const
+{
+  switch (_value) {
+    case BLOCK:
+    case BLOCK_BLACKBOX:
+    case BLOCK_SOFT:
+      return true;
+    case NONE:
+    case COVER:
+    case COVER_BUMP:
+    case RING:
+    case PAD:
+    case PAD_INPUT:
+    case PAD_OUTPUT:
+    case PAD_INOUT:
+    case PAD_POWER:
+    case PAD_SPACER:
+    case PAD_AREAIO:
+    case CORE:
+    case CORE_FEEDTHRU:
+    case CORE_TIEHIGH:
+    case CORE_TIELOW:
+    case CORE_SPACER:
+    case CORE_ANTENNACELL:
+    case CORE_WELLTAP:
+    case ENDCAP:
+    case ENDCAP_PRE:
+    case ENDCAP_POST:
+    case ENDCAP_TOPLEFT:
+    case ENDCAP_TOPRIGHT:
+    case ENDCAP_BOTTOMLEFT:
+    case ENDCAP_BOTTOMRIGHT:
+      return false;
+  }
+  assert(false);
+  return false;
+}
+
+bool dbMasterType::isCore() const
+{
+  switch (_value) {
+    case CORE:
+    case CORE_FEEDTHRU:
+    case CORE_TIEHIGH:
+    case CORE_TIELOW:
+    case CORE_SPACER:
+    case CORE_ANTENNACELL:
+    case CORE_WELLTAP:
+      return true;
+    case NONE:
+    case COVER:
+    case COVER_BUMP:
+    case RING:
+    case BLOCK:
+    case BLOCK_BLACKBOX:
+    case BLOCK_SOFT:
+    case PAD:
+    case PAD_INPUT:
+    case PAD_OUTPUT:
+    case PAD_INOUT:
+    case PAD_POWER:
+    case PAD_SPACER:
+    case PAD_AREAIO:
+    case ENDCAP:
+    case ENDCAP_PRE:
+    case ENDCAP_POST:
+    case ENDCAP_TOPLEFT:
+    case ENDCAP_TOPRIGHT:
+    case ENDCAP_BOTTOMLEFT:
+    case ENDCAP_BOTTOMRIGHT:
+      return false;
+  }
+  assert(false);
+  return false;
+}
+
+bool dbMasterType::isPad() const
+{
+  switch (_value) {
+    case PAD:
+    case PAD_INPUT:
+    case PAD_OUTPUT:
+    case PAD_INOUT:
+    case PAD_POWER:
+    case PAD_SPACER:
+    case PAD_AREAIO:
+      return true;
+    case NONE:
+    case COVER:
+    case COVER_BUMP:
+    case RING:
+    case BLOCK:
+    case BLOCK_BLACKBOX:
+    case BLOCK_SOFT:
+    case CORE:
+    case CORE_FEEDTHRU:
+    case CORE_TIEHIGH:
+    case CORE_TIELOW:
+    case CORE_SPACER:
+    case CORE_ANTENNACELL:
+    case CORE_WELLTAP:
+    case ENDCAP:
+    case ENDCAP_PRE:
+    case ENDCAP_POST:
+    case ENDCAP_TOPLEFT:
+    case ENDCAP_TOPRIGHT:
+    case ENDCAP_BOTTOMLEFT:
+    case ENDCAP_BOTTOMRIGHT:
+      return false;
+  }
+  assert(false);
+  return false;
+}
+
+bool dbMasterType::isEndCap() const
+{
+  switch (_value) {
+    case ENDCAP:
+    case ENDCAP_PRE:
+    case ENDCAP_POST:
+    case ENDCAP_TOPLEFT:
+    case ENDCAP_TOPRIGHT:
+    case ENDCAP_BOTTOMLEFT:
+    case ENDCAP_BOTTOMRIGHT:
+      return true;
+    case NONE:
+    case COVER:
+    case COVER_BUMP:
+    case RING:
+    case BLOCK:
+    case BLOCK_BLACKBOX:
+    case BLOCK_SOFT:
+    case PAD:
+    case PAD_INPUT:
+    case PAD_OUTPUT:
+    case PAD_INOUT:
+    case PAD_POWER:
+    case PAD_SPACER:
+    case PAD_AREAIO:
+    case CORE:
+    case CORE_FEEDTHRU:
+    case CORE_TIEHIGH:
+    case CORE_TIELOW:
+    case CORE_SPACER:
+    case CORE_ANTENNACELL:
+    case CORE_WELLTAP:
+      return false;
+  }
+  assert(false);
+  return false;
 }
 
 dbTechLayerType::dbTechLayerType(const char* value)

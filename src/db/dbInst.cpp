@@ -30,8 +30,6 @@
 // ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 // POSSIBILITY OF SUCH DAMAGE.
 
-#include "dbInst.h"
-
 #include <algorithm>
 
 #include "db.h"
@@ -47,6 +45,7 @@
 #include "dbHier.h"
 #include "dbITerm.h"
 #include "dbITermItr.h"
+#include "dbInst.h"
 #include "dbInstHdr.h"
 #include "dbJournal.h"
 #include "dbLib.h"
@@ -786,7 +785,7 @@ dbBlock* dbInst::getBlock()
   return (dbBlock*) getImpl()->getOwner();
 }
 
-dbMaster* dbInst::getMaster()
+dbMaster* dbInst::getMaster() const
 {
   _dbInst*     inst     = (_dbInst*) this;
   _dbBlock*    block    = (_dbBlock*) inst->getOwner();
@@ -795,6 +794,27 @@ dbMaster* dbInst::getMaster()
   _dbLib*      lib      = db->_lib_tbl->getPtr(inst_hdr->_lib);
   return (dbMaster*) lib->_master_tbl->getPtr(inst_hdr->_master);
 }
+
+bool dbInst::isBlock() const
+{
+  return getMaster()->isBlock();
+}
+
+bool dbInst::isCore() const
+{
+  return getMaster()->isCore();
+}
+
+bool dbInst::isPad() const
+{
+  return getMaster()->isPad();
+}
+
+bool dbInst::isEndCap() const
+{
+  return getMaster()->isEndCap();
+}
+
 dbITerm* dbInst::getClockedTerm()
 {
   dbMaster* m = getMaster();

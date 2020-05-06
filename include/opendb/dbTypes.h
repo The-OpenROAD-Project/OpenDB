@@ -273,9 +273,14 @@ class dbPlacementStatus
   operator Value() const { return _value; }
 
   ///
-  ///  True Iff value corresponds to a definite (not suggested) placement.
+  ///  True Iff value corresponds to a PLACED, LOCKED, FIRM, or COVER
   ///
   bool isPlaced() const;
+
+  ///
+  ///  True Iff value corresponds to LOCKED, FIRM, or COVER
+  ///
+  bool isFixed() const;
 
  private:
   Value _value;
@@ -363,6 +368,26 @@ class dbMasterType
   /// Cast operator
   ///
   operator Value() const { return _value; }
+
+  ///
+  /// Is the type BLOCK or any of its subtypes
+  ///
+  bool isBlock() const;
+
+  ///
+  /// Is the type CORE or any of its subtypes
+  ///
+  bool isCore() const;
+
+  ///
+  /// Is the type PAD or any of its subtypes
+  ///
+  bool isPad() const;
+
+  ///
+  /// Is the type ENDCAP or any of its subtypes
+  ///
+  bool isEndCap() const;
 
  private:
   Value _value;

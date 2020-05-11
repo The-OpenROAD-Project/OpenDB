@@ -311,6 +311,11 @@ class dbDatabase : public dbObject
   uint getNumberOfMasters();
 
   ///
+  /// Set the global padding
+  ///
+  void setPadding(uint left, uint right);
+
+  ///
   /// Translate a database-name to a database object.
   ///
   // dbObject * resolveDbName( const char * dbname );
@@ -3072,6 +3077,18 @@ class dbInst : public dbObject
   bool isEndCap() const;
 
   ///
+  /// Set the padding on this instance
+  ///
+  void setPadding(uint left, uint right);
+
+  ///
+  /// get the padding on this instance
+  ///  Looks at this instance first, then the master, and
+  ///  finally the database to find the value.
+  ///
+  void getPadding(uint* left, uint* right);
+
+  ///
   /// Create a new instance.
   /// Returns NULL if an instance with this name already exists.
   /// Returns NULL if the master is not FROZEN.
@@ -5364,6 +5381,11 @@ class dbMaster : public dbObject
   /// Returns a database unique id for this master.
   ///
   int getMasterId();
+
+  ///
+  /// Set the padding on this master
+  ///
+  void setPadding(uint left, uint right);
 
   ///
   /// Create a new master.

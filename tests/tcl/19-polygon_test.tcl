@@ -7,9 +7,18 @@ set or [odb::orSet $ps1 $ps2]
 
 set test []
 foreach poly [odb::getPolygons $or] {
+    set pts []
     foreach pt [odb::getPoints $poly] {
-        lappend test [$pt getX]
+        lappend pts [$pt getX] [$pt getY]
     }
+    lappend test $pts
 }
 
-check "polygon points" {list $test} {{0 20 20 10 10 0}}
+check "polygon points" {list $test} {{{0 0 20 0 20 10 10 10 10 20 0 20}}}
+
+set test []
+foreach rect [odb::getRectangles $or] {
+    lappend test [list [$rect xMin] [$rect yMin] [$rect xMax] [$rect yMax]]
+}
+
+check "rectangles" {list $test} {{{0 0 20 10} {0 10 10 20}}}

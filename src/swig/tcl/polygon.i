@@ -7,6 +7,7 @@
 
 using namespace boost::polygon::operators;
 
+using Rectangle = boost::polygon::rectangle_data<int>;
 using Polygon90 = boost::polygon::polygon_90_with_holes_data<int>;
 using Polygon90Set = boost::polygon::polygon_90_set_data<int>;
 
@@ -64,6 +65,20 @@ std::vector<Polygon90> getPolygons(const Polygon90Set* set)
   return s;
 }
 
+std::vector<odb::Rect> getRectangles(const Polygon90Set* set)
+{
+  std::vector<Rectangle> rects;
+  set->get_rectangles(rects);
+
+  // Convert from Boost rect to OpenDB rect
+  std::vector<odb::Rect> result;
+  result.reserve(rects.size());
+  for (auto& r : rects) {
+    result.emplace_back(xl(r), yl(r), xh(r), yh(r));
+  }
+  return result;
+}
+
 std::vector<Point> getPoints(const Polygon90* polygon)
 {
   std::vector<Point> pts;
@@ -75,6 +90,7 @@ std::vector<Point> getPoints(const Polygon90* polygon)
 %}
 
 %template(Points) std::vector<odb::Point>;
+%template(Rects) std::vector<odb::Rect>;
 %template(Polygon90Set) std::vector<Polygon90>;
 %template(Polygon90Sets) std::vector<Polygon90Set>;
 
@@ -85,6 +101,7 @@ Polygon90Set* newSetFromRect(int xLo, int yLo, int xHi, int yHi);
 // Query methods - return vectors for easy swig'ing
 std::vector<odb::Point> getPoints(const Polygon90* polygon);
 std::vector<Polygon90> getPolygons(const Polygon90Set* set);
+std::vector<odb::Rect> getRectangles(const Polygon90Set* set);
 
 
 %newobject bloatSet;

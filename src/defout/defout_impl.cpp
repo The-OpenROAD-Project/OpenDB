@@ -1123,7 +1123,7 @@ void defout_impl::writeBlockages(dbBlock* block)
     if (blk->isSoft())
       fprintf(_out, " + SOFT");
 
-    if (blk->getMaxDensity() < 100)
+    if (blk->getMaxDensity() > 0)
       fprintf(_out, " + PARTIAL %f", blk->getMaxDensity());
 
     if (inst) {

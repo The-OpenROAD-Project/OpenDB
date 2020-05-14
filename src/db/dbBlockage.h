@@ -81,7 +81,7 @@ inline _dbBlockage::_dbBlockage(_dbDatabase*)
   _flags._pushed_down = 0;
   _flags._spare_bits  = 0;
   _flags._soft        = 0;
-  _max_density        = 100.0;
+  _max_density        = 0.0;
 }
 
 inline _dbBlockage::_dbBlockage(_dbDatabase*, const _dbBlockage& b)

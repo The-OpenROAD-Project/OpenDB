@@ -182,7 +182,7 @@ void definBlockage::blockagePlacementBegin()
   _fills       = false;
   _pushdown    = false;
   _soft        = false;
-  _max_density = 100.0;
+  _max_density = 0.0;
 }
 
 void definBlockage::blockagePlacementComponent(const char* comp)
@@ -232,7 +232,7 @@ void definBlockage::blockagePlacementRect(int x1, int y1, int x2, int y2)
     b->setSoft();
   }
 
-  if (_max_density < 100) {
+  if (_max_density > 0) {
     b->setMaxDensity(_max_density);
   }
 }

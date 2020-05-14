@@ -1115,6 +1115,12 @@ class dbBlock : public dbObject
   void getDieArea(Rect& rect);
 
   ///
+  /// Get the core area. This computes the bbox of the rows
+  /// and is O(#rows) in runtime.
+  ///
+  void getCoreArea(Rect& rect);
+
+  ///
   /// Set print control
   ///
   void setPrintControl(const char* name, const char* netn, const char* instn);

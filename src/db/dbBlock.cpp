@@ -1328,7 +1328,7 @@ void dbBlock::ComputeBBox()
   for (iitr = insts.begin(); iitr != insts.end(); ++iitr) {
     dbInst* inst = *iitr;
     if (inst->isPlaced()) {
-      _dbBox* box  = (_dbBox*) inst->getBBox();
+      _dbBox* box = (_dbBox*) inst->getBBox();
       bbox->_rect.merge(box->_rect);
     }
   }
@@ -1342,10 +1342,10 @@ void dbBlock::ComputeBBox()
     dbSet<dbBPin>::iterator pitr;
 
     for (pitr = bpins.begin(); pitr != bpins.end(); ++pitr) {
-      dbBPin* bp  = *pitr;
+      dbBPin* bp = *pitr;
       if (bp->getPlacementStatus().isPlaced()) {
-        dbBox*  box = bp->getBox();
-        Rect    r;
+        dbBox* box = bp->getBox();
+        Rect   r;
         box->getBox(r);
         bbox->_rect.merge(r);
       }
@@ -1380,7 +1380,7 @@ void dbBlock::ComputeBBox()
     }
   }
 
-  if (bbox->_rect.xMin() == INT_MAX) { // empty block
+  if (bbox->_rect.xMin() == INT_MAX) {  // empty block
     bbox->_rect.reset(0, 0, 0, 0);
   }
 
@@ -1745,6 +1745,17 @@ void dbBlock::getDieArea(Rect& r)
 {
   _dbBlock* block = (_dbBlock*) this;
   r               = block->_die_area;
+}
+
+void dbBlock::getCoreArea(Rect& rect)
+{
+  rect.mergeInit();
+
+  for (dbRow* row : getRows()) {
+    Rect rowRect;
+    row->getBBox(rowRect);
+    rect.merge(rowRect);
+  }
 }
 
 FILE* dbBlock::getPtFile()

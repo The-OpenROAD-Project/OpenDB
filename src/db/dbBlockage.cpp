@@ -30,10 +30,9 @@
 // ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 // POSSIBILITY OF SUCH DAMAGE.
 
-#include "dbBlockage.h"
-
 #include "db.h"
 #include "dbBlock.h"
+#include "dbBlockage.h"
 #include "dbBox.h"
 #include "dbDatabase.h"
 #include "dbDiff.h"
@@ -67,10 +66,16 @@ bool _dbBlockage::operator==(const _dbBlockage& rhs) const
   if (_flags._pushed_down != rhs._flags._pushed_down)
     return false;
 
+  if (_flags._soft != rhs._flags._soft)
+    return false;
+
   if (_inst != rhs._inst)
     return false;
 
   if (_bbox != rhs._bbox)
+    return false;
+
+  if (_max_density != rhs._max_density)
     return false;
 
   return true;
@@ -108,6 +113,18 @@ bool _dbBlockage::operator<(const _dbBlockage& rhs) const
 
     if (_flags._pushed_down > rhs._flags._pushed_down)
       return false;
+
+    if (_flags._soft < rhs._flags._soft)
+      return true;
+
+    if (_flags._soft > rhs._flags._soft)
+      return false;
+
+    if (_max_density < rhs._max_density)
+      return true;
+
+    if (_max_density > rhs._max_density)
+      return false;
   }
 
   return false;
@@ -144,6 +161,8 @@ void _dbBlockage::differences(dbDiff&            diff,
   }
 
   DIFF_FIELD(_flags._pushed_down);
+  DIFF_FIELD(_flags._soft);
+  DIFF_FIELD(_max_density);
   DIFF_END
 }
 
@@ -167,6 +186,8 @@ void _dbBlockage::out(dbDiff& diff, char side, const char* field) const
   }
 
   DIFF_OUT_FIELD(_flags._pushed_down);
+  DIFF_OUT_FIELD(_flags._soft);
+  DIFF_OUT_FIELD(_max_density);
   DIFF_END
 }
 
@@ -198,6 +219,30 @@ bool dbBlockage::isPushedDown()
 {
   _dbBlockage* bkg = (_dbBlockage*) this;
   return bkg->_flags._pushed_down == 1;
+}
+
+void dbBlockage::setSoft()
+{
+  _dbBlockage* bkg  = (_dbBlockage*) this;
+  bkg->_flags._soft = 1;
+}
+
+bool dbBlockage::isSoft()
+{
+  _dbBlockage* bkg = (_dbBlockage*) this;
+  return bkg->_flags._soft == 1;
+}
+
+void dbBlockage::setMaxDensity(float max_density)
+{
+  _dbBlockage* bkg  = (_dbBlockage*) this;
+  bkg->_max_density = max_density;
+}
+
+float dbBlockage::getMaxDensity()
+{
+  _dbBlockage* bkg = (_dbBlockage*) this;
+  return bkg->_max_density;
 }
 
 dbBlock* dbBlockage::getBlock()

@@ -166,8 +166,10 @@ BLOCKAGES 4 ;
  - PLACEMENT
    + COMPONENT _d0_ RECT ( 1 2 ) ( 3 4 ) ;
  - PLACEMENT
+   + PARTIAL 12.34
    + PUSHDOWN RECT ( 1 2 ) ( 3 4 ) ;
  - PLACEMENT
+   + SOFT
    RECT ( 1 2 ) ( 3 4 ) ;
 END BLOCKAGES
 

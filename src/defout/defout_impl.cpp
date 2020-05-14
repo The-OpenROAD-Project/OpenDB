@@ -1120,6 +1120,12 @@ void defout_impl::writeBlockages(dbBlock* block)
 
     fprintf(_out, "    - PLACEMENT");
 
+    if (blk->isSoft())
+      fprintf(_out, " + SOFT");
+
+    if (blk->getMaxDensity() < 100)
+      fprintf(_out, " + PARTIAL %f", blk->getMaxDensity());
+
     if (inst) {
       if (_use_net_inst_ids)
         fprintf(_out, " + COMPONENT I%u", inst->getId());

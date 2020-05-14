@@ -30,12 +30,13 @@
 // ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 // POSSIBILITY OF SUCH DAMAGE.
 
-#include "definBlockage.h"
 #include <ctype.h>
 #include <stdio.h>
 #include <stdlib.h>
+
 #include "db.h"
 #include "dbShape.h"
+#include "definBlockage.h"
 #include "definPolygon.h"
 
 namespace odb {
@@ -142,7 +143,7 @@ void definBlockage::blockageRoutingPolygon(const std::vector<Point>& points)
   if (_layer == NULL)
     return;
 
-  definPolygon         polygon(points);
+  definPolygon      polygon(points);
   std::vector<Rect> R;
   polygon.decompose(R);
 
@@ -175,11 +176,13 @@ void definBlockage::blockageRoutingEnd()
 
 void definBlockage::blockagePlacementBegin()
 {
-  _layer    = NULL;
-  _inst     = NULL;
-  _slots    = false;
-  _fills    = false;
-  _pushdown = false;
+  _layer       = NULL;
+  _inst        = NULL;
+  _slots       = false;
+  _fills       = false;
+  _pushdown    = false;
+  _soft        = false;
+  _max_density = 100.0;
 }
 
 void definBlockage::blockagePlacementComponent(const char* comp)
@@ -197,6 +200,22 @@ void definBlockage::blockagePlacementPushdown()
   _pushdown = true;
 }
 
+void definBlockage::blockagePlacementSoft()
+{
+  _soft = true;
+}
+
+void definBlockage::blockagePlacementMaxDensity(double max_density)
+{
+  if (max_density >= 0 && max_density <= 100) {
+    _max_density = max_density;
+  } else {
+    notice(0,
+           "warning: Blockage max density %f not in [0, 100] will be ignored\n",
+           max_density);
+  }
+}
+
 void definBlockage::blockagePlacementRect(int x1, int y1, int x2, int y2)
 {
   x1            = dbdist(x1);
@@ -205,8 +224,17 @@ void definBlockage::blockagePlacementRect(int x1, int y1, int x2, int y2)
   y2            = dbdist(y2);
   dbBlockage* b = dbBlockage::create(_block, x1, y1, x2, y2, _inst);
 
-  if (_pushdown)
+  if (_pushdown) {
     b->setPushedDown();
+  }
+
+  if (_soft) {
+    b->setSoft();
+  }
+
+  if (_max_density < 100) {
+    b->setMaxDensity(_max_density);
+  }
 }
 
 void definBlockage::blockagePlacementEnd()

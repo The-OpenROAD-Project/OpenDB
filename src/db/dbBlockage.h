@@ -48,7 +48,8 @@ class dbDiff;
 struct _dbBlockageFlags
 {
   uint _pushed_down : 1;
-  uint _spare_bits : 31;
+  uint _soft : 1;
+  uint _spare_bits : 30;
 };
 
 class _dbBlockage : public _dbObject
@@ -57,6 +58,7 @@ class _dbBlockage : public _dbObject
   _dbBlockageFlags _flags;
   dbId<_dbInst>    _inst;
   dbId<_dbBox>     _bbox;
+  float            _max_density;
 
   _dbBlockage(_dbDatabase* db);
   _dbBlockage(_dbDatabase* db, const _dbBlockage& b);
@@ -78,10 +80,15 @@ inline _dbBlockage::_dbBlockage(_dbDatabase*)
 {
   _flags._pushed_down = 0;
   _flags._spare_bits  = 0;
+  _flags._soft        = 0;
+  _max_density        = 100.0;
 }
 
 inline _dbBlockage::_dbBlockage(_dbDatabase*, const _dbBlockage& b)
-    : _flags(b._flags), _inst(b._inst), _bbox(b._bbox)
+    : _flags(b._flags),
+      _inst(b._inst),
+      _bbox(b._bbox),
+      _max_density(b._max_density)
 {
 }
 
@@ -95,6 +102,7 @@ inline dbOStream& operator<<(dbOStream& stream, const _dbBlockage& blockage)
   stream << *bit_field;
   stream << blockage._inst;
   stream << blockage._bbox;
+  stream << blockage._max_density;
   return stream;
 }
 
@@ -104,6 +112,7 @@ inline dbIStream& operator>>(dbIStream& stream, _dbBlockage& blockage)
   stream >> *bit_field;
   stream >> blockage._inst;
   stream >> blockage._bbox;
+  stream >> blockage._max_density;
   return stream;
 }
 

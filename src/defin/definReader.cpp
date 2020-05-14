@@ -283,14 +283,6 @@ int definReader::blockageCallback(defrCallbackType_e /* unused: type */,
     UNSUPPORTED("MASK on blockage is unsupported");
   }
 
-  if (blockage->hasSoft()) {
-    UNSUPPORTED("SOFT on blockage is unsupported");
-  }
-
-  if (blockage->hasPartial()) {
-    UNSUPPORTED("PARTIAL on blockage is unsupported");
-  }
-
   if (blockage->hasLayer()) {
     // routing blockage
     blockageR->blockageRoutingBegin(blockage->layerName());
@@ -342,6 +334,14 @@ int definReader::blockageCallback(defrCallbackType_e /* unused: type */,
 
     if (blockage->hasPushdown()) {
       blockageR->blockagePlacementPushdown();
+    }
+
+    if (blockage->hasSoft()) {
+      blockageR->blockagePlacementSoft();
+    }
+
+    if (blockage->hasPartial()) {
+      blockageR->blockagePlacementMaxDensity(blockage->placementMaxDensity());
     }
 
     for (int i = 0; i < blockage->numRectangles(); ++i) {

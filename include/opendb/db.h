@@ -4023,6 +4023,26 @@ class dbBlockage : public dbObject
   bool isPushedDown();
 
   ///
+  /// Declare this blockage is soft.
+  ///
+  void setSoft();
+
+  ///
+  /// Returns true if this blockage is soft.
+  ///
+  bool isSoft();
+
+  ///
+  /// Set the max placement density percentage in [0,100]
+  ///
+  void setMaxDensity(float max_density);
+
+  ///
+  /// Returns the max placement density percentage
+  ///
+  float getMaxDensity();
+
+  ///
   /// Get the block this obstruction belongs too.
   ///
   dbBlock* getBlock();

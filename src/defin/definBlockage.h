@@ -47,10 +47,12 @@ class definBlockage : public definBase
   bool         _slots;
   bool         _fills;
   bool         _pushdown;
+  bool         _soft;
   bool         _has_min_spacing;
   bool         _has_effective_width;
   int          _min_spacing;
   int          _effective_width;
+  float        _max_density;
 
  public:
   // Routing Blockage interface methods
@@ -69,6 +71,8 @@ class definBlockage : public definBase
   virtual void blockagePlacementBegin();
   virtual void blockagePlacementComponent(const char* comp);
   virtual void blockagePlacementPushdown();
+  virtual void blockagePlacementSoft();
+  virtual void blockagePlacementMaxDensity(double max_density);
   virtual void blockagePlacementRect(int x1, int y1, int x2, int y2);
   virtual void blockagePlacementEnd();
 

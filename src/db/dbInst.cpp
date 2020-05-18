@@ -124,8 +124,6 @@ _dbInst::_dbInst(_dbDatabase*)
   _x                  = 0;
   _y                  = 0;
   _weight             = 0;
-  _left_padding       = padding_unset;
-  _right_padding      = padding_unset;
 }
 
 _dbInst::_dbInst(_dbDatabase*, const _dbInst& i)
@@ -134,8 +132,6 @@ _dbInst::_dbInst(_dbDatabase*, const _dbInst& i)
       _x(i._x),
       _y(i._y),
       _weight(i._weight),
-      _left_padding(i._left_padding),
-      _right_padding(i._right_padding),
       _next_entry(i._next_entry),
       _inst_hdr(i._inst_hdr),
       _bbox(i._bbox),
@@ -166,8 +162,6 @@ dbOStream& operator<<(dbOStream& stream, const _dbInst& inst)
   stream << inst._x;
   stream << inst._y;
   stream << inst._weight;
-  stream << inst._left_padding;
-  stream << inst._right_padding;
   stream << inst._next_entry;
   stream << inst._inst_hdr;
   stream << inst._bbox;
@@ -188,8 +182,6 @@ dbIStream& operator>>(dbIStream& stream, _dbInst& inst)
   stream >> inst._x;
   stream >> inst._y;
   stream >> inst._weight;
-  stream >> inst._left_padding;
-  stream >> inst._right_padding;
   stream >> inst._next_entry;
   stream >> inst._inst_hdr;
   stream >> inst._bbox;
@@ -252,12 +244,6 @@ bool _dbInst::operator==(const _dbInst& rhs) const
   if (_weight != rhs._weight)
     return false;
 
-  if (_left_padding != rhs._left_padding)
-    return false;
-
-  if (_right_padding != rhs._right_padding)
-    return false;
-
   if (_next_entry != rhs._next_entry)
     return false;
 
@@ -309,8 +295,6 @@ void _dbInst::differences(dbDiff&        diff,
   DIFF_FIELD(_x);
   DIFF_FIELD(_y);
   DIFF_FIELD(_weight);
-  DIFF_FIELD(_left_padding);
-  DIFF_FIELD(_right_padding);
   DIFF_FIELD_NO_DEEP(_next_entry);
   DIFF_FIELD_NO_DEEP(_inst_hdr);
   DIFF_OBJECT(_bbox, lhs_blk->_box_tbl, rhs_blk->_box_tbl);
@@ -362,8 +346,6 @@ void _dbInst::out(dbDiff& diff, char side, const char* field) const
   DIFF_OUT_FIELD(_x);
   DIFF_OUT_FIELD(_y);
   DIFF_OUT_FIELD(_weight);
-  DIFF_OUT_FIELD(_left_padding);
-  DIFF_OUT_FIELD(_right_padding);
   DIFF_OUT_FIELD_NO_DEEP(_next_entry);
   DIFF_OUT_FIELD_NO_DEEP(_inst_hdr);
   DIFF_OUT_OBJECT(_bbox, blk->_box_tbl);
@@ -1435,35 +1417,6 @@ dbITerm* dbInst::getFirstOutput()
   }
   warning(0, "instance %s has no output pin\n", getConstName());
   return NULL;
-}
-
-void dbInst::setPadding(uint left, uint right)
-{
-  _dbInst* inst = (_dbInst*) this;
-
-  inst->_left_padding  = left;
-  inst->_right_padding = right;
-}
-
-void dbInst::getPadding(uint* left, uint* right)
-{
-  _dbInst* inst = (_dbInst*) this;
-  if (inst->_left_padding != padding_unset) {
-    *left  = inst->_left_padding;
-    *right = inst->_right_padding;
-    return;
-  }
-
-  _dbMaster* master = (_dbMaster*) getMaster();
-  if (master->_left_padding != padding_unset) {
-    *left  = master->_left_padding;
-    *right = master->_right_padding;
-    return;
-  }
-
-  _dbDatabase* db = inst->getDatabase();
-  *left           = db->_left_padding;
-  *right          = db->_right_padding;
 }
 
 }  // namespace odb

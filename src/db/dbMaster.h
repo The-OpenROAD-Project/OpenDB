@@ -79,8 +79,6 @@ class _dbMaster : public _dbObject
   uint                             _width;
   uint                             _mterm_cnt;
   uint                             _id;
-  uint                             _left_padding;
-  uint                             _right_padding;
   char*                            _name;
   dbId<_dbMaster>                  _next_entry;
   dbId<_dbMaster>                  _leq;

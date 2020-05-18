@@ -30,6 +30,8 @@
 // ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 // POSSIBILITY OF SUCH DAMAGE.
 
+#include "dbDatabase.h"
+
 #include <algorithm>
 #include <map>
 #include <string>
@@ -42,7 +44,6 @@
 #include "dbCCSeg.h"
 #include "dbCapNode.h"
 #include "dbChip.h"
-#include "dbDatabase.h"
 #include "dbExtControl.h"
 #include "dbITerm.h"
 #include "dbJournal.h"
@@ -83,12 +84,6 @@ bool _dbDatabase::operator==(const _dbDatabase& rhs) const
   if (_master_id != rhs._master_id)
     return false;
 
-  if (_left_padding != rhs._left_padding)
-    return false;
-
-  if (_right_padding != rhs._right_padding)
-    return false;
-
   if (_chip != rhs._chip)
     return false;
 
@@ -119,8 +114,6 @@ void _dbDatabase::differences(dbDiff&            diff,
 {
   DIFF_BEGIN
   DIFF_FIELD(_master_id);
-  DIFF_FIELD(_left_padding);
-  DIFF_FIELD(_right_padding);
   DIFF_FIELD(_chip);
   DIFF_FIELD(_tech);
   DIFF_TABLE_NO_DEEP(_tech_tbl);
@@ -135,8 +128,6 @@ void _dbDatabase::out(dbDiff& diff, char side, const char* field) const
 {
   DIFF_OUT_BEGIN
   DIFF_OUT_FIELD(_master_id);
-  DIFF_OUT_FIELD(_left_padding);
-  DIFF_OUT_FIELD(_right_padding);
   DIFF_OUT_FIELD(_chip);
   DIFF_OUT_FIELD(_tech);
   DIFF_OUT_TABLE_NO_DEEP(_tech_tbl);
@@ -179,15 +170,13 @@ dbObjectTable* _dbDatabase::getObjectTable(dbObjectType type)
 
 _dbDatabase::_dbDatabase(_dbDatabase* /* unused: db */)
 {
-  _magic1        = ADS_DB_MAGIC1;
-  _magic2        = ADS_DB_MAGIC2;
-  _schema_major  = db_schema_major;
-  _schema_minor  = db_schema_minor;
-  _master_id     = 0;
-  _left_padding  = 0;
-  _right_padding = 0;
-  _file          = NULL;
-  _unique_id     = db_unique_id++;
+  _magic1       = ADS_DB_MAGIC1;
+  _magic2       = ADS_DB_MAGIC2;
+  _schema_major = db_schema_major;
+  _schema_minor = db_schema_minor;
+  _master_id    = 0;
+  _file         = NULL;
+  _unique_id    = db_unique_id++;
 
   _chip_tbl = new dbTable<_dbChip>(
       this, this, (GetObjTbl_t) &_dbDatabase::getObjectTable, dbChipObj, 2, 1);
@@ -219,15 +208,13 @@ _dbDatabase::_dbDatabase(_dbDatabase* /* unused: db */)
 //
 _dbDatabase::_dbDatabase(_dbDatabase* /* unused: db */, int id)
 {
-  _magic1        = ADS_DB_MAGIC1;
-  _magic2        = ADS_DB_MAGIC2;
-  _schema_major  = db_schema_major;
-  _schema_minor  = db_schema_minor;
-  _master_id     = 0;
-  _left_padding  = 0;
-  _right_padding = 0;
-  _file          = NULL;
-  _unique_id     = id;
+  _magic1       = ADS_DB_MAGIC1;
+  _magic2       = ADS_DB_MAGIC2;
+  _schema_major = db_schema_major;
+  _schema_minor = db_schema_minor;
+  _master_id    = 0;
+  _file         = NULL;
+  _unique_id    = id;
 
   _chip_tbl = new dbTable<_dbChip>(
       this, this, (GetObjTbl_t) &_dbDatabase::getObjectTable, dbChipObj, 2, 1);
@@ -259,8 +246,6 @@ _dbDatabase::_dbDatabase(_dbDatabase* /* unused: db */, const _dbDatabase& d)
       _schema_major(d._schema_major),
       _schema_minor(d._schema_minor),
       _master_id(d._master_id),
-      _left_padding(d._left_padding),
-      _right_padding(d._right_padding),
       _chip(d._chip),
       _tech(d._tech),
       _unique_id(db_unique_id++),
@@ -312,8 +297,6 @@ dbOStream& operator<<(dbOStream& stream, const _dbDatabase& db)
   stream << db._schema_minor;
   // notice(0, "stream out ==> db._master_id= %d\n", db._master_id);
   stream << db._master_id;
-  stream << db._left_padding;
-  stream << db._right_padding;
   stream << db._chip;
   stream << db._tech;
   stream << *db._tech_tbl;
@@ -347,8 +330,6 @@ dbIStream& operator>>(dbIStream& stream, _dbDatabase& db)
     throw ZException("incompatible database schema revision");
 
   stream >> db._master_id;
-  stream >> db._left_padding;
-  stream >> db._right_padding;
 
   // notice(0, "stream in ==> db._master_id= %d\n", db._master_id);
 
@@ -771,13 +752,6 @@ bool dbDatabase::diff(dbDatabase* db0_,
   diff.setIndentPerLevel(indent);
   db0->differences(diff, NULL, *db1);
   return diff.hasDifferences();
-}
-
-void dbDatabase::setPadding(uint left, uint right)
-{
-  _dbDatabase* db    = (_dbDatabase*) this;
-  db->_left_padding  = left;
-  db->_right_padding = right;
 }
 
 }  // namespace odb

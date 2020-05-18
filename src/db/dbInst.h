@@ -86,8 +86,6 @@ class _dbInst : public _dbObject
   int              _x;
   int              _y;
   int              _weight;
-  uint             _left_padding;
-  uint             _right_padding;
   dbId<_dbInst>    _next_entry;
   dbId<_dbInstHdr> _inst_hdr;
   dbId<_dbBox>     _bbox;

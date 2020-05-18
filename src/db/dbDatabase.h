@@ -32,8 +32,6 @@
 
 #pragma once
 
-#include <limits>
-
 #include "dbCore.h"
 #include "odb.h"
 
@@ -67,9 +65,6 @@ const uint db_schema_major   = 0;  // Not used...
 const uint db_schema_initial = 51;
 const uint db_schema_minor   = 51;  // Current revision number
 
-// Shared by dbDatabase, dbMaster, and dbInst
-const uint padding_unset = std::numeric_limits<uint>::max();
-
 template <class T>
 class dbTable;
 class _dbProperty;
@@ -91,8 +86,6 @@ class _dbDatabase : public _dbObject
   uint          _schema_major;
   uint          _schema_minor;
   uint          _master_id;  // for a unique id across all libraries
-  uint          _left_padding;
-  uint          _right_padding;
   dbId<_dbChip> _chip;
   dbId<_dbTech> _tech;
 

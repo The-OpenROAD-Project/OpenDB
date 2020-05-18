@@ -30,6 +30,8 @@
 // ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 // POSSIBILITY OF SUCH DAMAGE.
 
+#include "dbMaster.h"
+
 #include "db.h"
 #include "dbBox.h"
 #include "dbBoxItr.h"
@@ -39,7 +41,6 @@
 #include "dbMPin.h"
 #include "dbMPinItr.h"
 #include "dbMTerm.h"
-#include "dbMaster.h"
 #include "dbSite.h"
 #include "dbTable.h"
 #include "dbTable.hpp"
@@ -86,12 +87,6 @@ bool _dbMaster::operator==(const _dbMaster& rhs) const
     return false;
 
   if (_id != rhs._id)
-    return false;
-
-  if (_left_padding != rhs._left_padding)
-    return false;
-
-  if (_right_padding != rhs._right_padding)
     return false;
 
   if (_name && rhs._name) {
@@ -152,8 +147,6 @@ void _dbMaster::differences(dbDiff&          diff,
   DIFF_FIELD(_width);
   DIFF_FIELD(_mterm_cnt);
   DIFF_FIELD(_id);
-  DIFF_FIELD(_left_padding);
-  DIFF_FIELD(_right_padding);
   DIFF_FIELD(_name);
   DIFF_FIELD(_next_entry);
   DIFF_FIELD(_leq);
@@ -183,8 +176,6 @@ void _dbMaster::out(dbDiff& diff, char side, const char* field) const
   DIFF_OUT_FIELD(_width);
   DIFF_OUT_FIELD(_mterm_cnt);
   DIFF_OUT_FIELD(_id);
-  DIFF_OUT_FIELD(_left_padding);
-  DIFF_OUT_FIELD(_right_padding);
   DIFF_OUT_FIELD(_name);
   DIFF_OUT_FIELD(_next_entry);
   DIFF_OUT_FIELD(_leq);
@@ -217,15 +208,13 @@ _dbMaster::_dbMaster(_dbDatabase* db)
   _flags._sequential    = 0;
   _flags._spare_bits_19 = 0;
 
-  _x             = 0;
-  _y             = 0;
-  _height        = 0;
-  _width         = 0;
-  _mterm_cnt     = 0;
-  _id            = 0;
-  _left_padding  = padding_unset;
-  _right_padding = padding_unset;
-  _name          = 0;
+  _x         = 0;
+  _y         = 0;
+  _height    = 0;
+  _width     = 0;
+  _mterm_cnt = 0;
+  _id        = 0;
+  _name      = 0;
 
   _mterm_tbl = new dbTable<_dbMTerm>(
       db, this, (GetObjTbl_t) &_dbMaster::getObjectTable, dbMTermObj, 4, 2);
@@ -272,8 +261,6 @@ _dbMaster::_dbMaster(_dbDatabase* db, const _dbMaster& m)
       _width(m._width),
       _mterm_cnt(m._mterm_cnt),
       _id(m._id),
-      _left_padding(m._left_padding),
-      _right_padding(m._right_padding),
       _name(NULL),
       _next_entry(m._next_entry),
       _leq(m._leq),
@@ -347,8 +334,6 @@ dbOStream& operator<<(dbOStream& stream, const _dbMaster& master)
   stream << master._width;
   stream << master._mterm_cnt;
   stream << master._id;
-  stream << master._left_padding;
-  stream << master._right_padding;
   stream << master._name;
   stream << master._next_entry;
   stream << master._leq;
@@ -374,8 +359,6 @@ dbIStream& operator>>(dbIStream& stream, _dbMaster& master)
   stream >> master._width;
   stream >> master._mterm_cnt;
   stream >> master._id;
-  stream >> master._left_padding;
-  stream >> master._right_padding;
   stream >> master._name;
   stream >> master._next_entry;
   stream >> master._leq;
@@ -853,13 +836,6 @@ bool dbMaster::isCoreAutoPlaceable()
   }
   // gcc warning
   return false;
-}
-
-void dbMaster::setPadding(uint left, uint right)
-{
-  _dbMaster* master      = (_dbMaster*) this;
-  master->_left_padding  = left;
-  master->_right_padding = right;
 }
 
 }  // namespace odb

@@ -56,12 +56,8 @@ struct _dbCapNodeFlags
   uint _foreign : 1;
   uint _childrenCnt : 5;
   uint _select : 1;
-  union
-  {
-    uint _spare_bits : 20;
-    uint _sort_index : 20;
-  };
   uint _name : 1;
+  uint _sort_index : 20;
 };
 
 class _dbCapNode : public _dbObject
@@ -113,7 +109,7 @@ inline _dbCapNode::_dbCapNode(_dbDatabase*)
   _flags._childrenCnt = 0;
   _flags._select      = 0;
   _flags._name        = 0;
-  _flags._spare_bits  = 0;
+  _flags._sort_index  = 0;
   _net                = 0;
   _node_num           = 0;
 }

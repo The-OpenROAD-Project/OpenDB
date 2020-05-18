@@ -30,12 +30,12 @@
 // ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 // POSSIBILITY OF SUCH DAMAGE.
 
-#include "dbCapNode.h"
-
 #include "db.h"
+#include "dbCommon.h"
 #include "dbBlock.h"
 #include "dbCCSeg.h"
 #include "dbCCSegItr.h"
+#include "dbCapNode.h"
 #include "dbDatabase.h"
 #include "dbJournal.h"
 #include "dbNet.h"
@@ -46,7 +46,6 @@ namespace odb {
 
 double getExtCCmult(dbNet* aggressor);
 
-#define FLAGS(seg) (*((uint*) &seg->_flags))
 template class dbTable<_dbCapNode>;
 
 bool _dbCapNode::operator==(const _dbCapNode& rhs) const
@@ -552,117 +551,117 @@ void dbCapNode::resetBTermFlag()
 {
   _dbCapNode* seg        = (_dbCapNode*) this;
   _dbBlock*   block      = (_dbBlock*) seg->getOwner();
-  uint        prev_flags = FLAGS(seg);
+  uint        prev_flags = flagsToUInt(seg);
   seg->_flags._bterm     = 0;
 
   if (block->_journal) {
     debug("DB_ECO", "A", "ECO: resetBTermFlag, id: %d\n", getId());
     block->_journal->updateField(
-        this, _dbCapNode::FLAGS, prev_flags, FLAGS(seg));
+        this, _dbCapNode::FLAGS, prev_flags, flagsToUInt(seg));
   }
 }
 void dbCapNode::resetITermFlag()
 {
   _dbCapNode* seg        = (_dbCapNode*) this;
   _dbBlock*   block      = (_dbBlock*) seg->getOwner();
-  uint        prev_flags = FLAGS(seg);
+  uint        prev_flags = flagsToUInt(seg);
   seg->_flags._iterm     = 0;
 
   if (block->_journal) {
     debug("DB_ECO", "A", "ECO: resetITermFlag, id: %d\n", getId());
     block->_journal->updateField(
-        this, _dbCapNode::FLAGS, prev_flags, FLAGS(seg));
+        this, _dbCapNode::FLAGS, prev_flags, flagsToUInt(seg));
   }
 }
 void dbCapNode::resetNameFlag()
 {
   _dbCapNode* seg        = (_dbCapNode*) this;
   _dbBlock*   block      = (_dbBlock*) seg->getOwner();
-  uint        prev_flags = FLAGS(seg);
+  uint        prev_flags = flagsToUInt(seg);
   seg->_flags._name      = 0;
 
   if (block->_journal) {
     debug("DB_ECO", "A", "ECO: resetInternalFlag, id: %d\n", getId());
     block->_journal->updateField(
-        this, _dbCapNode::FLAGS, prev_flags, FLAGS(seg));
+        this, _dbCapNode::FLAGS, prev_flags, flagsToUInt(seg));
   }
 }
 void dbCapNode::resetInternalFlag()
 {
   _dbCapNode* seg        = (_dbCapNode*) this;
   _dbBlock*   block      = (_dbBlock*) seg->getOwner();
-  uint        prev_flags = FLAGS(seg);
+  uint        prev_flags = flagsToUInt(seg);
   seg->_flags._internal  = 0;
 
   if (block->_journal) {
     debug("DB_ECO", "A", "ECO: resetInternalFlag, id: %d\n", getId());
     block->_journal->updateField(
-        this, _dbCapNode::FLAGS, prev_flags, FLAGS(seg));
+        this, _dbCapNode::FLAGS, prev_flags, flagsToUInt(seg));
   }
 }
 void dbCapNode::resetBranchFlag()
 {
   _dbCapNode* seg        = (_dbCapNode*) this;
   _dbBlock*   block      = (_dbBlock*) seg->getOwner();
-  uint        prev_flags = FLAGS(seg);
+  uint        prev_flags = flagsToUInt(seg);
   seg->_flags._branch    = 0;
 
   if (block->_journal) {
     debug("DB_ECO", "A", "ECO: resetBranchFlag, id: %d\n", getId());
     block->_journal->updateField(
-        this, _dbCapNode::FLAGS, prev_flags, FLAGS(seg));
+        this, _dbCapNode::FLAGS, prev_flags, flagsToUInt(seg));
   }
 }
 void dbCapNode::resetForeignFlag()
 {
   _dbCapNode* seg        = (_dbCapNode*) this;
   _dbBlock*   block      = (_dbBlock*) seg->getOwner();
-  uint        prev_flags = FLAGS(seg);
+  uint        prev_flags = flagsToUInt(seg);
   seg->_flags._foreign   = 0;
 
   if (block->_journal) {
     debug("DB_ECO", "A", "ECO: resetForeignFlag, id: %d\n", getId());
     block->_journal->updateField(
-        this, _dbCapNode::FLAGS, prev_flags, FLAGS(seg));
+        this, _dbCapNode::FLAGS, prev_flags, flagsToUInt(seg));
   }
 }
 void dbCapNode::setBTermFlag()
 {
   _dbCapNode* seg        = (_dbCapNode*) this;
   _dbBlock*   block      = (_dbBlock*) seg->getOwner();
-  uint        prev_flags = FLAGS(seg);
+  uint        prev_flags = flagsToUInt(seg);
   seg->_flags._bterm     = 1;
 
   if (block->_journal) {
     debug("DB_ECO", "A", "ECO: setBTermFlag, id: %d\n", getId());
     block->_journal->updateField(
-        this, _dbCapNode::FLAGS, prev_flags, FLAGS(seg));
+        this, _dbCapNode::FLAGS, prev_flags, flagsToUInt(seg));
   }
 }
 void dbCapNode::setITermFlag()
 {
   _dbCapNode* seg        = (_dbCapNode*) this;
   _dbBlock*   block      = (_dbBlock*) seg->getOwner();
-  uint        prev_flags = FLAGS(seg);
+  uint        prev_flags = flagsToUInt(seg);
   seg->_flags._iterm     = 1;
 
   if (block->_journal) {
     debug("DB_ECO", "A", "ECO: setITermFlag, id: %d\n", getId());
     block->_journal->updateField(
-        this, _dbCapNode::FLAGS, prev_flags, FLAGS(seg));
+        this, _dbCapNode::FLAGS, prev_flags, flagsToUInt(seg));
   }
 }
 uint dbCapNode::incrChildrenCnt()
 {
   _dbCapNode* seg        = (_dbCapNode*) this;
   _dbBlock*   block      = (_dbBlock*) seg->getOwner();
-  uint        prev_flags = FLAGS(seg);
+  uint        prev_flags = flagsToUInt(seg);
   seg->_flags._childrenCnt++;
 
   if (block->_journal) {
     debug("DB_ECO", "A", "ECO: incrChildrenCnt, id: %d\n", getId());
     block->_journal->updateField(
-        this, _dbCapNode::FLAGS, prev_flags, FLAGS(seg));
+        this, _dbCapNode::FLAGS, prev_flags, flagsToUInt(seg));
   }
   return seg->_flags._childrenCnt;
 }
@@ -680,66 +679,66 @@ void dbCapNode::setBranchFlag()
 {
   _dbCapNode* seg        = (_dbCapNode*) this;
   _dbBlock*   block      = (_dbBlock*) seg->getOwner();
-  uint        prev_flags = FLAGS(seg);
+  uint        prev_flags = flagsToUInt(seg);
   seg->_flags._branch    = 1;
 
   if (block->_journal) {
     debug("DB_ECO", "A", "ECO: setBranchFlag, id: %d\n", getId());
     block->_journal->updateField(
-        this, _dbCapNode::FLAGS, prev_flags, FLAGS(seg));
+        this, _dbCapNode::FLAGS, prev_flags, flagsToUInt(seg));
   }
 }
 void dbCapNode::setNameFlag()
 {
   _dbCapNode* seg        = (_dbCapNode*) this;
   _dbBlock*   block      = (_dbBlock*) seg->getOwner();
-  uint        prev_flags = FLAGS(seg);
+  uint        prev_flags = flagsToUInt(seg);
   seg->_flags._name      = 1;
 
   if (block->_journal) {
     debug("DB_ECO", "A", "ECO: setInternalFlag, id: %d\n", getId());
     block->_journal->updateField(
-        this, _dbCapNode::FLAGS, prev_flags, FLAGS(seg));
+        this, _dbCapNode::FLAGS, prev_flags, flagsToUInt(seg));
   }
 }
 void dbCapNode::setInternalFlag()
 {
   _dbCapNode* seg        = (_dbCapNode*) this;
   _dbBlock*   block      = (_dbBlock*) seg->getOwner();
-  uint        prev_flags = FLAGS(seg);
+  uint        prev_flags = flagsToUInt(seg);
   seg->_flags._internal  = 1;
 
   if (block->_journal) {
     debug("DB_ECO", "A", "ECO: setInternalFlag, id: %d\n", getId());
     block->_journal->updateField(
-        this, _dbCapNode::FLAGS, prev_flags, FLAGS(seg));
+        this, _dbCapNode::FLAGS, prev_flags, flagsToUInt(seg));
   }
 }
 void dbCapNode::setForeignFlag()
 {
   _dbCapNode* seg        = (_dbCapNode*) this;
   _dbBlock*   block      = (_dbBlock*) seg->getOwner();
-  uint        prev_flags = FLAGS(seg);
+  uint        prev_flags = flagsToUInt(seg);
   seg->_flags._foreign   = 1;
 
   if (block->_journal) {
     debug("DB_ECO", "A", "ECO: setForeignFlag, id: %d\n", getId());
     block->_journal->updateField(
-        this, _dbCapNode::FLAGS, prev_flags, FLAGS(seg));
+        this, _dbCapNode::FLAGS, prev_flags, flagsToUInt(seg));
   }
 }
 void dbCapNode::setSelect(bool val)
 {
   _dbCapNode* seg = (_dbCapNode*) this;
   //_dbBlock * block = (_dbBlock *) getOwner();
-  // uint prev_flags = FLAGS(seg);
+  // uint prev_flags = flagsToUInt(seg);
   seg->_flags._select = val ? 1 : 0;
 
 #ifdef FULL_ECO
   if (block->_journal) {
     debug("DB_ECO", "A", "ECO: setSelect to %d, id: %d\n", val, getId());
     block->_journal->updateField(
-        this, _dbCapNode::FLAGS, prev_flags, FLAGS(seg));
+        this, _dbCapNode::FLAGS, prev_flags, flagsToUInt(seg));
   }
 #endif
 }

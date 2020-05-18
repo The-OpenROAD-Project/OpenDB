@@ -40,6 +40,7 @@
 #include "dbBlockCallBackObj.h"
 #include "dbBox.h"
 #include "dbChip.h"
+#include "dbCommon.h"
 #include "dbDatabase.h"
 #include "dbDiff.hpp"
 #include "dbHier.h"
@@ -86,8 +87,6 @@ class sortITerm
     return iterm1->_flags._mterm_idx < iterm2->_flags._mterm_idx;
   }
 };
-
-#define FLAGS(inst) (*((uint*) &inst->_flags))
 
 static void setInstBBox(_dbInst* inst)
 {
@@ -497,7 +496,7 @@ void dbInst::setOrient(dbOrientType orient)
   _dbInst*  inst  = (_dbInst*) this;
   _dbBlock* block = (_dbBlock*) inst->getOwner();
 #ifdef FULL_ECO
-  uint prev_flags = FLAGS(inst);
+  uint prev_flags = flagsToUInt(inst);
 #endif
   inst->_flags._orient = orient.getValue();
   setInstBBox(inst);
@@ -505,7 +504,7 @@ void dbInst::setOrient(dbOrientType orient)
 #ifdef FULL_ECO
   if (block->_journal) {
     debug("DB_ECO", "A", "ECO: setOrient %d\n", orient.getValue());
-    block->_journal->updateField(this, _dbInst::FLAGS, prev_flags, FLAGS(inst));
+    block->_journal->updateField(this, _dbInst::FLAGS, prev_flags, flagsToUInt(inst));
   }
 #endif
 
@@ -525,13 +524,13 @@ void dbInst::setPlacementStatus(dbPlacementStatus status)
 {
   _dbInst* inst = (_dbInst*) this;
   //_dbBlock * block = (_dbBlock *) getOwner();
-  // uint prev_flags = FLAGS(inst);
+  // uint prev_flags = flagsToUInt(inst);
   inst->_flags._status = status.getValue();
 
 #ifdef FULL_ECO
   if (block->_journal) {
     debug("DB_ECO", "A", "ECO: setPlacementStatus %d\n", status.getValue());
-    block->_journal->updateField(this, _dbInst::FLAGS, prev_flags, FLAGS(inst));
+    block->_journal->updateField(this, _dbInst::FLAGS, prev_flags, flagsToUInt(inst));
   }
 #endif
 }
@@ -612,7 +611,7 @@ void dbInst::setEcoCreate(bool v)
 {
   _dbInst* inst = (_dbInst*) this;
   // _dbBlock * block = (_dbBlock *) getOwner();
-  // uint prev_flags = FLAGS(inst);
+  // uint prev_flags = flagsToUInt(inst);
   if (v)
     inst->_flags._eco_create = 1;
   else
@@ -627,7 +626,7 @@ void dbInst::setEcoDestroy(bool v)
 {
   _dbInst* inst = (_dbInst*) this;
   // _dbBlock * block = (_dbBlock *) getOwner();
-  // uint prev_flags = FLAGS(inst);
+  // uint prev_flags = flagsToUInt(inst);
   if (v)
     inst->_flags._eco_destroy = 1;
   else
@@ -642,7 +641,7 @@ void dbInst::setEcoModify(bool v)
 {
   _dbInst* inst = (_dbInst*) this;
   // _dbBlock * block = (_dbBlock *) getOwner();
-  // uint prev_flags = FLAGS(inst);
+  // uint prev_flags = flagsToUInt(inst);
   if (v)
     inst->_flags._eco_modify = 1;
   else
@@ -658,12 +657,12 @@ void dbInst::setUserFlag1()
 {
   _dbInst* inst = (_dbInst*) this;
   //_dbBlock * block = (_dbBlock *) getOwner();
-  // uint prev_flags = FLAGS(inst);
+  // uint prev_flags = flagsToUInt(inst);
   inst->_flags._user_flag_1 = 1;
 
 #ifdef FULL_ECO
   if (block->_journal)
-    block->_journal->updateField(this, _dbInst::FLAGS, prev_flags, FLAGS(inst));
+    block->_journal->updateField(this, _dbInst::FLAGS, prev_flags, flagsToUInt(inst));
 #endif
 }
 
@@ -671,12 +670,12 @@ void dbInst::clearUserFlag1()
 {
   _dbInst* inst = (_dbInst*) this;
   //_dbBlock * block = (_dbBlock *) getOwner();
-  // uint prev_flags = FLAGS(inst);
+  // uint prev_flags = flagsToUInt(inst);
   inst->_flags._user_flag_1 = 0;
 
 #ifdef FULL_ECO
   if (block->_journal)
-    block->_journal->updateField(this, _dbInst::FLAGS, prev_flags, FLAGS(inst));
+    block->_journal->updateField(this, _dbInst::FLAGS, prev_flags, flagsToUInt(inst));
 #endif
 }
 
@@ -690,12 +689,12 @@ void dbInst::setUserFlag2()
 {
   _dbInst* inst = (_dbInst*) this;
   //_dbBlock * block = (_dbBlock *) getOwner();
-  // uint prev_flags = FLAGS(inst);
+  // uint prev_flags = flagsToUInt(inst);
   inst->_flags._user_flag_2 = 1;
 
 #ifdef FULL_ECO
   if (block->_journal)
-    block->_journal->updateField(this, _dbInst::FLAGS, prev_flags, FLAGS(inst));
+    block->_journal->updateField(this, _dbInst::FLAGS, prev_flags, flagsToUInt(inst));
 #endif
 }
 
@@ -703,12 +702,12 @@ void dbInst::clearUserFlag2()
 {
   _dbInst* inst = (_dbInst*) this;
   //_dbBlock * block = (_dbBlock *) getOwner();
-  // uint prev_flags = FLAGS(inst);
+  // uint prev_flags = flagsToUInt(inst);
   inst->_flags._user_flag_2 = 0;
 
 #ifdef FULL_ECO
   if (block->_journal)
-    block->_journal->updateField(this, _dbInst::FLAGS, prev_flags, FLAGS(inst));
+    block->_journal->updateField(this, _dbInst::FLAGS, prev_flags, flagsToUInt(inst));
 #endif
 }
 
@@ -722,12 +721,12 @@ void dbInst::setUserFlag3()
 {
   _dbInst* inst = (_dbInst*) this;
   //_dbBlock * block = (_dbBlock *) getOwner();
-  // uint prev_flags = FLAGS(inst);
+  // uint prev_flags = flagsToUInt(inst);
   inst->_flags._user_flag_3 = 1;
 
 #ifdef FULL_ECO
   if (block->_journal)
-    block->_journal->updateField(this, _dbInst::FLAGS, prev_flags, FLAGS(inst));
+    block->_journal->updateField(this, _dbInst::FLAGS, prev_flags, flagsToUInt(inst));
 #endif
 }
 
@@ -735,12 +734,12 @@ void dbInst::clearUserFlag3()
 {
   _dbInst* inst = (_dbInst*) this;
   //_dbBlock * block = (_dbBlock *) getOwner();
-  // uint prev_flags = FLAGS(inst);
+  // uint prev_flags = flagsToUInt(inst);
   inst->_flags._user_flag_3 = 0;
 
 #ifdef FULL_ECO
   if (block->_journal)
-    block->_journal->updateField(this, _dbInst::FLAGS, prev_flags, FLAGS(inst));
+    block->_journal->updateField(this, _dbInst::FLAGS, prev_flags, flagsToUInt(inst));
 #endif
 }
 

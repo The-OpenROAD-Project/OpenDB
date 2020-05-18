@@ -43,6 +43,7 @@
 #include "dbCCSegItr.h"
 #include "dbCapNode.h"
 #include "dbCapNodeItr.h"
+#include "dbCommon.h"
 #include "dbDatabase.h"
 #include "dbDiff.hpp"
 #include "dbExtControl.h"
@@ -73,7 +74,6 @@ static void set_symmetric_diff(dbDiff&                 diff,
                                std::vector<_dbITerm*>& lhs,
                                std::vector<_dbITerm*>& rhs);
 
-#define FLAGS(net) (*((uint*) &net->_flags))
 _dbNet::_dbNet(_dbDatabase*, const _dbNet& n)
     : _flags(n._flags),
       _name(NULL),
@@ -747,7 +747,7 @@ void dbNet::setWireType(dbWireType wire_type)
 {
   _dbNet* net = (_dbNet*) this;
   //_dbBlock * block = (_dbBlock *) getOwner();
-  // dimitri_fix : LOOK_AGAIN for FULL_ECO mode //uint prev_flags = FLAGS(net);
+  // dimitri_fix : LOOK_AGAIN for FULL_ECO mode //uint prev_flags = flagsToUInt(net);
   net->_flags._wire_type = wire_type.getValue();
 
 #ifdef FULL_ECO
@@ -757,7 +757,7 @@ void dbNet::setWireType(dbWireType wire_type)
           "ECO: net %d, setWireType: %d\n",
           getId(),
           wire_type.getValue());
-    block->_journal->updateField(this, _dbNet::FLAGS, prev_flags, FLAGS(net));
+    block->_journal->updateField(this, _dbNet::FLAGS, prev_flags, flagsToUInt(net));
   }
 #endif
 }
@@ -779,7 +779,7 @@ void dbNet::setSigType(dbSigType sig_type)
   _dbNet* net = (_dbNet*) this;
 #ifdef FULL_ECO
   _dbBlock* block      = (_dbBlock*) getOwner();
-  uint      prev_flags = FLAGS(net);
+  uint      prev_flags = flagsToUInt(net);
 #endif
   net->_flags._sig_type = sig_type.getValue();
 
@@ -790,7 +790,7 @@ void dbNet::setSigType(dbSigType sig_type)
           "ECO: net %d, setSigType: %d\n",
           getId(),
           sig_type.getValue());
-    block->_journal->updateField(this, _dbNet::FLAGS, prev_flags, FLAGS(net));
+    block->_journal->updateField(this, _dbNet::FLAGS, prev_flags, flagsToUInt(net));
   }
 #endif
 }
@@ -1122,13 +1122,13 @@ void dbNet::setSpef(bool value)
 {
   _dbNet* net = (_dbNet*) this;
   //_dbBlock * block = (_dbBlock *) getOwner();
-  // dimitri_fix : LOOK_AGAIN for FULL_ECO mode //uint prev_flags = FLAGS(net);
+  // dimitri_fix : LOOK_AGAIN for FULL_ECO mode //uint prev_flags = flagsToUInt(net);
   net->_flags._spef = (value == true) ? 1 : 0;
 
 #ifdef FULL_ECO
   if (block->_journal) {
     debug("DB_ECO", "A", "ECO: net %d, setSpef: %d\n", getId(), value);
-    block->_journal->updateField(this, _dbNet::FLAGS, prev_flags, FLAGS(net));
+    block->_journal->updateField(this, _dbNet::FLAGS, prev_flags, flagsToUInt(net));
   }
 #endif
 }
@@ -1143,13 +1143,13 @@ void dbNet::setSelect(bool value)
 {
   _dbNet* net = (_dbNet*) this;
   //_dbBlock * block = (_dbBlock *) getOwner();
-  // dimitri_fix : LOOK_AGAIN for FULL_ECO mode //uint prev_flags = FLAGS(net);
+  // dimitri_fix : LOOK_AGAIN for FULL_ECO mode //uint prev_flags = flagsToUInt(net);
   net->_flags._select = (value == true) ? 1 : 0;
 
 #ifdef FULL_ECO
   if (block->_journal) {
     debug("DB_ECO", "A", "ECO: net %d, setSelect: %d\n", getId(), value);
-    block->_journal->updateField(this, _dbNet::FLAGS, prev_flags, FLAGS(net));
+    block->_journal->updateField(this, _dbNet::FLAGS, prev_flags, flagsToUInt(net));
   }
 #endif
 }
@@ -1193,13 +1193,13 @@ void dbNet::setMark(bool value)
 {
   _dbNet* net = (_dbNet*) this;
   //_dbBlock * block = (_dbBlock *) getOwner();
-  // dimitri_fix : LOOK_AGAIN for FULL_ECO mode //uint prev_flags = FLAGS(net);
+  // dimitri_fix : LOOK_AGAIN for FULL_ECO mode //uint prev_flags = flagsToUInt(net);
   net->_flags._mark = (value == true) ? 1 : 0;
 
 #ifdef FULL_ECO
   if (block->_journal) {
     debug("DB_ECO", "A", "ECO: net %d, setMark: %d\n", getId(), value);
-    block->_journal->updateField(this, _dbNet::FLAGS, prev_flags, FLAGS(net));
+    block->_journal->updateField(this, _dbNet::FLAGS, prev_flags, flagsToUInt(net));
   }
 #endif
 }
@@ -1214,13 +1214,13 @@ void dbNet::setMark_1(bool value)
 {
   _dbNet* net = (_dbNet*) this;
   //_dbBlock * block = (_dbBlock *) getOwner();
-  // dimitri_fix : LOOK_AGAIN for FULL_ECO mode //uint prev_flags = FLAGS(net);
+  // dimitri_fix : LOOK_AGAIN for FULL_ECO mode //uint prev_flags = flagsToUInt(net);
   net->_flags._mark_1 = (value == true) ? 1 : 0;
 
 #ifdef FULL_ECO
   if (block->_journal) {
     debug("DB_ECO", "A", "ECO: net %d, setMark_1: %d\n", getId(), value);
-    block->_journal->updateField(this, _dbNet::FLAGS, prev_flags, FLAGS(net));
+    block->_journal->updateField(this, _dbNet::FLAGS, prev_flags, flagsToUInt(net));
   }
 #endif
 }
@@ -1314,14 +1314,14 @@ void dbNet::setWireOrdered(bool value)
   _dbNet* net = (_dbNet*) this;
 #ifdef FULL_ECO
   _dbBlock* block      = (_dbBlock*) getOwner();
-  uint      prev_flags = FLAGS(net);
+  uint      prev_flags = flagsToUInt(net);
 #endif
   net->_flags._wire_ordered = (value == true) ? 1 : 0;
 
 #ifdef FULL_ECO
   if (block->_journal) {
     debug("DB_ECO", "A", "ECO: net %d, setWireOrdered: %d\n", getId(), value);
-    block->_journal->updateField(this, _dbNet::FLAGS, prev_flags, FLAGS(net));
+    block->_journal->updateField(this, _dbNet::FLAGS, prev_flags, flagsToUInt(net));
   }
 #endif
 }
@@ -1337,14 +1337,14 @@ void dbNet::setBuffered(bool value)
   _dbNet* net = (_dbNet*) this;
 #ifdef FULL_ECO
   _dbBlock* block      = (_dbBlock*) getOwner();
-  uint      prev_flags = FLAGS(net);
+  uint      prev_flags = flagsToUInt(net);
 #endif
   net->_flags._buffered = (value == true) ? 1 : 0;
 
 #ifdef FULL_ECO
   if (block->_journal) {
     debug("DB_ECO", "A", "ECO: net %d, setBuffered: %d\n", getId(), value);
-    block->_journal->updateField(this, _dbNet::FLAGS, prev_flags, FLAGS(net));
+    block->_journal->updateField(this, _dbNet::FLAGS, prev_flags, flagsToUInt(net));
   }
 #endif
 }
@@ -1360,14 +1360,14 @@ void dbNet::setDisconnected(bool value)
   _dbNet* net = (_dbNet*) this;
 #ifdef FULL_ECO
   _dbBlock* block = (_dbBlock*) getOwner();
-// dimitri_fix : LOOK_AGAIN for FULL_ECO mode uint prev_flags = FLAGS(net);
+// dimitri_fix : LOOK_AGAIN for FULL_ECO mode uint prev_flags = flagsToUInt(net);
 #endif
   net->_flags._disconnected = (value == true) ? 1 : 0;
 
 #ifdef FULL_ECO
   if (block->_journal) {
     debug("DB_ECO", "A", "ECO: net %d, setDisconnected: %d\n", getId(), value);
-    block->_journal->updateField(this, _dbNet::FLAGS, prev_flags, FLAGS(net));
+    block->_journal->updateField(this, _dbNet::FLAGS, prev_flags, flagsToUInt(net));
   }
 #endif
 }
@@ -1377,7 +1377,7 @@ void dbNet::setWireAltered(bool value)
   _dbNet* net = (_dbNet*) this;
 #ifdef FULL_ECO
   _dbBlock* block = (_dbBlock*) getOwner();
-// dimitri_fix : LOOK_AGAIN for FULL_ECO mode uint prev_flags = FLAGS(net);
+// dimitri_fix : LOOK_AGAIN for FULL_ECO mode uint prev_flags = flagsToUInt(net);
 #endif
   net->_flags._wire_altered = (value == true) ? 1 : 0;
   if (value)
@@ -1386,7 +1386,7 @@ void dbNet::setWireAltered(bool value)
 #ifdef FULL_ECO
   if (block->_journal) {
     debug("DB_ECO", "A", "ECO: net %d, setWireAltered: %d\n", getId(), value);
-    block->_journal->updateField(this, _dbNet::FLAGS, prev_flags, FLAGS(net));
+    block->_journal->updateField(this, _dbNet::FLAGS, prev_flags, flagsToUInt(net));
   }
 #endif
 }
@@ -1402,14 +1402,14 @@ void dbNet::setExtracted(bool value)
   _dbNet* net = (_dbNet*) this;
 #ifdef FULL_ECO
   _dbBlock* block = (_dbBlock*) getOwner();
-// dimitri_fix : LOOK_AGAIN for FULL_ECO mode uint prev_flags = FLAGS(net);
+// dimitri_fix : LOOK_AGAIN for FULL_ECO mode uint prev_flags = flagsToUInt(net);
 #endif
   net->_flags._extracted = (value == true) ? 1 : 0;
 
 #ifdef FULL_ECO
   if (block->_journal) {
     debug("DB_ECO", "A", "ECO: net %d, setExtracted: %d\n", getId(), value);
-    block->_journal->updateField(this, _dbNet::FLAGS, prev_flags, FLAGS(net));
+    block->_journal->updateField(this, _dbNet::FLAGS, prev_flags, flagsToUInt(net));
   }
 #endif
 }
@@ -1425,14 +1425,14 @@ void dbNet::setRCgraph(bool value)
   _dbNet* net = (_dbNet*) this;
 #ifdef FULL_ECO
 //_dbBlock * block = (_dbBlock *) getOwner();
-// dimitri_fix : LOOK_AGAIN for FULL_ECO mode //uint prev_flags = FLAGS(net);
+// dimitri_fix : LOOK_AGAIN for FULL_ECO mode //uint prev_flags = flagsToUInt(net);
 #endif
   net->_flags._rc_graph = (value == true) ? 1 : 0;
 
 #ifdef FULL_ECO
   if (block->_journal) {
     debug("DB_ECO", "A", "ECO: net %d, setRCgraph: %d\n", getId(), value);
-    block->_journal->updateField(this, _dbNet::FLAGS, prev_flags, FLAGS(net));
+    block->_journal->updateField(this, _dbNet::FLAGS, prev_flags, flagsToUInt(net));
   }
 #endif
 }
@@ -1447,13 +1447,13 @@ void dbNet::setReduced(bool value)
 {
   _dbNet* net = (_dbNet*) this;
   //_dbBlock * block = (_dbBlock *) getOwner();
-  // dimitri_fix : LOOK_AGAIN for FULL_ECO mode //uint prev_flags = FLAGS(net);
+  // dimitri_fix : LOOK_AGAIN for FULL_ECO mode //uint prev_flags = flagsToUInt(net);
   net->_flags._reduced = (value == true) ? 1 : 0;
 
 #ifdef FULL_ECO
   if (block->_journal) {
     debug("DB_ECO", "A", "ECO: net %d, setReduced: %d\n", getId(), value);
-    block->_journal->updateField(this, _dbNet::FLAGS, prev_flags, FLAGS(net));
+    block->_journal->updateField(this, _dbNet::FLAGS, prev_flags, flagsToUInt(net));
   }
 #endif
 }
@@ -1595,7 +1595,7 @@ bool dbNet::setIOflag()
 {
   _dbNet* net = (_dbNet*) this;
   //_dbBlock * block = (_dbBlock *) getOwner();
-  // dimitri_fix : LOOK_AGAIN for FULL_ECO mode //uint prev_flags = FLAGS(net);
+  // dimitri_fix : LOOK_AGAIN for FULL_ECO mode //uint prev_flags = flagsToUInt(net);
   net->_flags._set_io   = 1;
   net->_flags._io       = 0;
   dbSet<dbBTerm> bterms = getBTerms();
@@ -1607,7 +1607,7 @@ bool dbNet::setIOflag()
 #ifdef FULL_ECO
     if (block->_journal) {
       debug("DB_ECO", "A", "ECO: net %d, setIOFlag\n", getId());
-      block->_journal->updateField(this, _dbNet::FLAGS, prev_flags, FLAGS(net));
+      block->_journal->updateField(this, _dbNet::FLAGS, prev_flags, flagsToUInt(net));
     }
 #endif
 
@@ -1617,7 +1617,7 @@ bool dbNet::setIOflag()
 #ifdef FULL_ECO
   if (block->_journal) {
     debug("DB_ECO", "A", "ECO: net %d, setIOFlag\n", getId());
-    block->_journal->updateField(this, _dbNet::FLAGS, prev_flags, FLAGS(net));
+    block->_journal->updateField(this, _dbNet::FLAGS, prev_flags, flagsToUInt(net));
   }
 #endif
 
@@ -1668,14 +1668,14 @@ void dbNet::setSpecial()
   _dbNet* net = (_dbNet*) this;
 #ifdef FULL_ECO
   _dbBlock* block = (_dbBlock*) getOwner();
-  // dimitri_fix : LOOK_AGAIN for FULL_ECO mode uint prev_flags = FLAGS(net);
+  // dimitri_fix : LOOK_AGAIN for FULL_ECO mode uint prev_flags = flagsToUInt(net);
 #endif
   net->_flags._special = 1;
 
 #ifdef FULL_ECO
   if (block->_journal) {
     debug("DB_ECO", "A", "ECO: net %d, setSpecial\n", getId());
-    block->_journal->updateField(this, _dbNet::FLAGS, prev_flags, FLAGS(net));
+    block->_journal->updateField(this, _dbNet::FLAGS, prev_flags, flagsToUInt(net));
   }
 #endif
 }
@@ -1685,14 +1685,14 @@ void dbNet::clearSpecial()
   _dbNet* net = (_dbNet*) this;
 #ifdef FULL_ECO
   _dbBlock* block = (_dbBlock*) getOwner();
-  // dimitri_fix : LOOK_AGAIN for FULL_ECO mode uint prev_flags = FLAGS(net);
+  // dimitri_fix : LOOK_AGAIN for FULL_ECO mode uint prev_flags = flagsToUInt(net);
 #endif
   net->_flags._special = 0;
 
 #ifdef FULL_ECO
   if (block->_journal) {
     debug("DB_ECO", "A", "ECO: net %d, clearSpecial\n", getId());
-    block->_journal->updateField(this, _dbNet::FLAGS, prev_flags, FLAGS(net));
+    block->_journal->updateField(this, _dbNet::FLAGS, prev_flags, flagsToUInt(net));
   }
 #endif
 }
@@ -1708,13 +1708,13 @@ void dbNet::setWildConnected()
   _dbNet* net = (_dbNet*) this;
 #ifdef FULL_ECO
   _dbBlock* block = (_dbBlock*) getOwner();
-  // uint prev_flags = FLAGS(net);
+  // uint prev_flags = flagsToUInt(net);
 #endif
   net->_flags._wild_connect = 1;
 #ifdef FULL_ECO
   if (block->_journal) {
     debug("DB_ECO", "A", "ECO: net %d, setWildConnected\n", getId());
-    block->_journal->updateField(this, _dbNet::FLAGS, prev_flags, FLAGS(net));
+    block->_journal->updateField(this, _dbNet::FLAGS, prev_flags, flagsToUInt(net));
   }
 #endif
 }
@@ -1724,14 +1724,14 @@ void dbNet::clearWildConnected()
   _dbNet* net = (_dbNet*) this;
 #ifdef FULL_ECO
   _dbBlock* block = (_dbBlock*) getOwner();
-  // uint prev_flags = FLAGS(net);
+  // uint prev_flags = flagsToUInt(net);
 #endif
   net->_flags._wild_connect = 0;
 
 #ifdef FULL_ECO
   if (block->_journal) {
     debug("DB_ECO", "A", "ECO: net %d, clearWildConnected\n", getId());
-    block->_journal->updateField(this, _dbNet::FLAGS, prev_flags, FLAGS(net));
+    block->_journal->updateField(this, _dbNet::FLAGS, prev_flags, flagsToUInt(net));
   }
 #endif
 }

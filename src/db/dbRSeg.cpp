@@ -35,6 +35,7 @@
 #include "db.h"
 #include "dbBlock.h"
 #include "dbCapNode.h"
+#include "dbCommon.h"
 #include "dbDatabase.h"
 #include "dbJournal.h"
 #include "dbNet.h"
@@ -45,8 +46,6 @@
 namespace odb {
 
 template class dbTable<_dbRSeg>;
-
-#define FLAGS(net) (*((uint*) &net->_flags))
 
 bool _dbRSeg::operator==(const _dbRSeg& rhs) const
 {

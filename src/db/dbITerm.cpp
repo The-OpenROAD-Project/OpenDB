@@ -38,6 +38,7 @@
 #include "dbBlock.h"
 #include "dbBlockCallBackObj.h"
 #include "dbChip.h"
+#include "dbCommon.h"
 #include "dbDatabase.h"
 #include "dbDiff.hpp"
 #include "dbHier.h"
@@ -59,9 +60,6 @@
 #endif
 
 namespace odb {
-#ifdef FULL_ECO
-#define FLAGS(iterm) (*((uint*) &iterm->_flags))
-#endif
 
 template class dbTable<_dbITerm>;
 
@@ -308,9 +306,9 @@ void dbITerm::setSpecial()
 {
   _dbITerm* iterm = (_dbITerm*) this;
   //_dbBlock * block = (_dbBlock *) getOwner();
-  // dimitri_fix: need to FIX on FULL_ECO uint prev_flags = FLAGS(iterm);
+  // dimitri_fix: need to FIX on FULL_ECO uint prev_flags = flagsToUInt(iterm);
 #ifdef FULL_ECO
-  uint prev_flags = FLAGS(iterm);
+  uint prev_flags = flagsToUInt(iterm);
 #endif
 
   iterm->_flags._special = 1;
@@ -318,7 +316,7 @@ void dbITerm::setSpecial()
 #ifdef FULL_ECO
   if (block->_journal) {
     debug("DB_ECO", "A", "ECO: Iterm %d, setSpecial\n", getId());
-    block->_journal->updateField(this, _dbNet::FLAGS, prev_flags, FLAGS(iterm));
+    block->_journal->updateField(this, _dbNet::FLAGS, prev_flags, flagsToUInt(iterm));
   }
 #endif
 }
@@ -327,9 +325,9 @@ void dbITerm::clearSpecial()
 {
   _dbITerm* iterm = (_dbITerm*) this;
   //_dbBlock * block = (_dbBlock *) getOwner();
-  // dimitri_fix: need to FIX on FULL_ECO //uint prev_flags = FLAGS(iterm);
+  // dimitri_fix: need to FIX on FULL_ECO //uint prev_flags = flagsToUInt(iterm);
 #ifdef FULL_ECO
-  uint prev_flags = FLAGS(iterm);
+  uint prev_flags = flagsToUInt(iterm);
 #endif
 
   iterm->_flags._special = 0;
@@ -337,7 +335,7 @@ void dbITerm::clearSpecial()
 #ifdef FULL_ECO
   if (block->_journal) {
     debug("DB_ECO", "A", "ECO: Iterm %d, clearSpecial\n", getId());
-    block->_journal->updateField(this, _dbNet::FLAGS, prev_flags, FLAGS(iterm));
+    block->_journal->updateField(this, _dbNet::FLAGS, prev_flags, flagsToUInt(iterm));
   }
 #endif
 }
@@ -346,9 +344,9 @@ void dbITerm::setSpef(uint v)
 {
   _dbITerm* iterm = (_dbITerm*) this;
   //_dbBlock * block = (_dbBlock *) getOwner();
-  // dimitri_fix: need to FIX on FULL_ECO //uint prev_flags = FLAGS(iterm);
+  // dimitri_fix: need to FIX on FULL_ECO //uint prev_flags = flagsToUInt(iterm);
 #ifdef FULL_ECO
-  uint prev_flags = FLAGS(iterm);
+  uint prev_flags = flagsToUInt(iterm);
 #endif
 
   iterm->_flags._spef = v;
@@ -356,7 +354,7 @@ void dbITerm::setSpef(uint v)
 #ifdef FULL_ECO
   if (block->_journal) {
     debug("DB_ECO", "A", "ECO: Iterm %d, setSpef\n", getId());
-    block->_journal->updateField(this, _dbNet::FLAGS, prev_flags, FLAGS(iterm));
+    block->_journal->updateField(this, _dbNet::FLAGS, prev_flags, flagsToUInt(iterm));
   }
 #endif
 }
@@ -388,10 +386,10 @@ bool dbITerm::isConnected()
 void dbITerm::setConnected()
 {
   _dbITerm* iterm = (_dbITerm*) this;
-  // dimitri_fix: need to FIX on FULL_ECO uint prev_flags = FLAGS(iterm);
+  // dimitri_fix: need to FIX on FULL_ECO uint prev_flags = flagsToUInt(iterm);
 #ifdef FULL_ECO
   _dbBlock* block      = (_dbBlock*) getOwner();
-  uint      prev_flags = FLAGS(iterm);
+  uint      prev_flags = flagsToUInt(iterm);
 #endif
 
   iterm->_flags._connected = 1;
@@ -399,7 +397,7 @@ void dbITerm::setConnected()
 #ifdef FULL_ECO
   if (block->_journal) {
     debug("DB_ECO", "A", "ECO: Iterm %d, setConnected\n", getId());
-    block->_journal->updateField(this, _dbNet::FLAGS, prev_flags, FLAGS(iterm));
+    block->_journal->updateField(this, _dbNet::FLAGS, prev_flags, flagsToUInt(iterm));
   }
 #endif
 }
@@ -407,10 +405,10 @@ void dbITerm::setConnected()
 void dbITerm::clearConnected()
 {
   _dbITerm* iterm = (_dbITerm*) this;
-  // uint prev_flags = FLAGS(iterm);
+  // uint prev_flags = flagsToUInt(iterm);
 #ifdef FULL_ECO
   _dbBlock* block      = (_dbBlock*) getOwner();
-  uint      prev_flags = FLAGS(iterm);
+  uint      prev_flags = flagsToUInt(iterm);
 #endif
 
   iterm->_flags._connected = 0;
@@ -418,7 +416,7 @@ void dbITerm::clearConnected()
 #ifdef FULL_ECO
   if (block->_journal) {
     debug("DB_ECO", "A", "ECO: Iterm %d, clearConnected\n", getId());
-    block->_journal->updateField(this, _dbNet::FLAGS, prev_flags, FLAGS(iterm));
+    block->_journal->updateField(this, _dbNet::FLAGS, prev_flags, flagsToUInt(iterm));
   }
 #endif
 }

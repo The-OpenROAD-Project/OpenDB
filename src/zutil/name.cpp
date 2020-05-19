@@ -61,7 +61,7 @@ Ath__nameTable::Ath__nameTable(uint n, char* zero)
 }
 uint Ath__nameTable::addName(char* name, uint dataId)
 {
-  uint             poolIndex;
+  uint             poolIndex = 0;
   Ath__nameBucket* b = _bucketPool->alloc(NULL, &poolIndex);
   b->set(name, dataId);
 
@@ -99,7 +99,7 @@ bool Ath__nameTable::readDB(FILE* fp)
 }
 void Ath__nameTable::allocName(char* name, uint nameId, bool hash)
 {
-  uint             poolIndex;
+  uint             poolIndex = 0;
   Ath__nameBucket* b = _bucketPool->alloc(NULL, &poolIndex);
   b->set(name, 0);
 

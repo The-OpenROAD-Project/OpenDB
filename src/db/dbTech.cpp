@@ -392,7 +392,7 @@ _dbTech::_dbTech(_dbDatabase* db, const _dbTech& t)
       _samenet_matrix(t._samenet_matrix),
       _via_hash(t._via_hash)
 {
-  strncpy(_version_buf, t._version_buf, 10);
+  strncpy(_version_buf, t._version_buf, sizeof(_version_buf));
 
   _layer_tbl = new dbTable<_dbTechLayer>(db, this, *t._layer_tbl);
   ZALLOCATED(_layer_tbl);
@@ -567,7 +567,7 @@ void _dbTech::_setLefVersion(double inver)
                           - (minor_version * 100);
   if (opt_minor_version > 0)
     snprintf(_version_buf,
-             10,
+             sizeof(_version_buf),
              "%d.%d.%d",
              major_version,
              minor_version,

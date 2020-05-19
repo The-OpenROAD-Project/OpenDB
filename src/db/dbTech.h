@@ -82,7 +82,7 @@ class _dbTech : public _dbObject
 {
  private:
   double _version;
-  char   _version_buf[10];  // Tmp for outputting string
+  char   _version_buf[35];  // Tmp for outputting string
  public:
   // PERSISTANT-MEMBERS
   int                                 _via_cnt;

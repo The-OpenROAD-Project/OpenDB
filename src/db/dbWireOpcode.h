@@ -120,6 +120,10 @@ inline void getPrevPoint(dbTech*    tech,
   unsigned char opcode;
   bool          look_for_x = true;
   bool          look_for_y = true;
+  // quiets compiler warnings
+  pnt._x = 0;
+  pnt._y = 0;
+  pnt._layer = nullptr;
 
 prevOpCode:
   ZASSERT(idx >= 0);

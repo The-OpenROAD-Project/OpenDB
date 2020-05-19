@@ -715,15 +715,17 @@ void dbCCSeg::swapCapnode(dbCapNode* orig_, dbCapNode* new_)
   uint        oid   = orig->getOID();
   uint        nid   = newn->getOID();
   uint        sidx;
-  if (oid == seg->_cap_node[0])
+  if (oid == seg->_cap_node[0]) {
     sidx = 0;
-  else if (oid == seg->_cap_node[1])
+  } else if (oid == seg->_cap_node[1]) {
     sidx = 1;
-  else
+  } else {
     error(0,
           "CCSeg %d does not have orig capNode %d. Can not swap.\n",
           seg->getOID(),
           oid);
+    return;
+  }
   unlink_cc_seg(block, orig, seg);
   seg->_cap_node[sidx] = nid;
   seg->_next[sidx]     = newn->_cc_segs;

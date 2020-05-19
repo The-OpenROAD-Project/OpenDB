@@ -1130,7 +1130,7 @@ void dumpDecoder4Net(dbNet* innet)
 
   dbTechLayer*     layer;
   dbWireType       wtype;
-  dbTechLayerRule* lyr_rule;
+  dbTechLayerRule* lyr_rule = nullptr;
   while (1) {
     opcode = decoder.next();
     if (opcode == dbWireDecoder::END_DECODE) {

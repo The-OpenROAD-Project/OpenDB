@@ -30,10 +30,9 @@
 // ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 // POSSIBILITY OF SUCH DAMAGE.
 
-#include "dbFlatten.h"
-
 #include "db.h"
 #include "dbCapNode.h"
+#include "dbFlatten.h"
 #include "dbInst.h"
 #include "dbNet.h"
 #include "dbObstruction.h"
@@ -715,7 +714,8 @@ void dbFlatten::fixWire(dbVector<unsigned char>& opcodes,
   uint               i;
   uint               n         = opcodes.size();
   uint               point_cnt = 0;
-  int                curX, curY;
+  int                curX      = 0;
+  int                curY      = 0;
   std::vector<Point> jct_points;
   jct_points.resize(opcodes.size());
 

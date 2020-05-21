@@ -1749,12 +1749,18 @@ void dbBlock::getDieArea(Rect& r)
 
 void dbBlock::getCoreArea(Rect& rect)
 {
-  rect.mergeInit();
+  auto rows = getRows();
+  if (rows.size() > 0) {
+    rect.mergeInit();
 
-  for (dbRow* row : getRows()) {
-    Rect rowRect;
-    row->getBBox(rowRect);
-    rect.merge(rowRect);
+    for (dbRow* row : rows) {
+      Rect rowRect;
+      row->getBBox(rowRect);
+      rect.merge(rowRect);
+    }
+  } else {
+    // Default to die area if there aren't any rows.
+    getDieArea(rect);
   }
 }
 

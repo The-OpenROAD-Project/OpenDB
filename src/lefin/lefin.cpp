@@ -1558,6 +1558,10 @@ void lefin::via(lefiVia* via, dbTechNonDefaultRule* rule)
   else
     v = dbTechVia::create(_tech, via->name());
 
+  for (int iii = 0; iii < via->numProperties(); iii++) {
+    dbStringProperty::create(v, via->propName(iii), via->propValue(iii));
+  }
+
   if (via->hasDefault())
     v->setDefault();
 

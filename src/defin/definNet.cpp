@@ -39,6 +39,8 @@
 #include "dbWireCodec.h"
 #include "definNet.h"
 
+#include "logger.h"
+
 namespace odb {
 
 inline uint get_net_dbid(const char* name)

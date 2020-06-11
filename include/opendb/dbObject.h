@@ -45,6 +45,7 @@ namespace odb {
 /// in dbObject.cpp
 ///
 class _dbDatabase;
+class dbDatabase;
 class dbOStream;
 class dbIStream;
 class dbObjectPage;
@@ -118,7 +119,7 @@ enum dbObjectType
   dbNameObj
 };
 
-class dbDatabase;
+//class dbDatabase;
 
 class dbObject
 {

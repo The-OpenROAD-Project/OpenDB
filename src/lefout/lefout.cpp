@@ -30,11 +30,12 @@
 // ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 // POSSIBILITY OF SUCH DAMAGE.
 
-#include <stdio.h>
-#include <algorithm>
+#include "lefout.h"
 #include "db.h"
 #include "dbTransform.h"
-#include "lefout.h"
+#include "logger.h"
+#include <algorithm>
+#include <stdio.h>
 
 using namespace odb;
 

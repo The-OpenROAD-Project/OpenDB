@@ -37,12 +37,12 @@
 #include <vector>
 
 #include "odb.h"
+#include "db.h"
 
 namespace odb {
 
 class ZObject;
 class dbDatabase;
-class dbObject;
 
 ////////////////////////////////////
 /// ZNamespace

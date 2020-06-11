@@ -32,7 +32,14 @@
 
 #pragma once
 
-#include "db.h"
+// #include "db.h"
+#include <list>
+#include <set>
+#include <string>
+#include <vector>
+
+#include "atypes.h"
+#include "dbObject.h"
 
 namespace odb {
 

@@ -39,6 +39,7 @@
 #include "dbShape.h"
 #include "definPolygon.h"
 #include "definSNet.h"
+#include "logger.h"
 
 namespace odb {
 

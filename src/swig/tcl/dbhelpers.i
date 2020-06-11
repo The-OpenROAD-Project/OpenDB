@@ -10,6 +10,7 @@
 
 %{
 #include <libgen.h>
+#include "../opendb/db.h"
 #include "lefin.h"
 #include "lefout.h"
 #include "defin.h"

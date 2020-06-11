@@ -40,6 +40,7 @@
 #include "dbMap.h"
 #include "dbWireCodec.h"
 #include "defout_impl.h"
+#include "logger.h"
 
 namespace odb {
 

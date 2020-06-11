@@ -40,6 +40,7 @@
 
 #include "ZException.h"
 #include "odb.h"
+#include "dbObject.h"
 #include "geom.h"
 
 namespace odb {
@@ -47,7 +48,6 @@ namespace odb {
 class dbDatabase;
 class ZSession;
 class ZObject;
-class dbObject;
 
 /////////////////////////////////
 /// Event value types

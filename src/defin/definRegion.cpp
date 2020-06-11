@@ -31,11 +31,12 @@
 // POSSIBILITY OF SUCH DAMAGE.
 
 #include "definRegion.h"
+#include "db.h"
+#include "logger.h"
 #include <ctype.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string>
-#include "db.h"
 
 namespace odb {
 

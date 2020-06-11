@@ -32,6 +32,7 @@
 
 #include "dbBTerm.h"
 
+#include "dbDatabase.h"
 #include "db.h"
 #include "dbArrayTable.h"
 #include "dbBPinItr.h"
@@ -39,7 +40,6 @@
 #include "dbBox.h"
 #include "dbBoxItr.h"
 #include "dbChip.h"
-#include "dbDatabase.h"
 #include "dbDiff.h"
 #include "dbDiff.hpp"
 #include "dbITerm.h"
@@ -48,6 +48,7 @@
 #include "dbTable.h"
 #include "dbTable.hpp"
 #include "dbTransform.h"
+#include "logger.h"
 
 namespace odb {
 

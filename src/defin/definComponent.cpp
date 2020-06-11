@@ -39,6 +39,7 @@
 #include "definComponent.h"
 #include "defiComponent.hpp"
 #include "defiUtil.hpp"
+#include "logger.h"
 
 namespace odb {
 

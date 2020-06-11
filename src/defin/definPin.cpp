@@ -37,6 +37,7 @@
 #include "db.h"
 #include "dbShape.h"
 #include "dbTransform.h"
+#include "logger.h"
 
 namespace odb {
 

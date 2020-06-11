@@ -31,6 +31,8 @@
 // POSSIBILITY OF SUCH DAMAGE.
 
 #include "create_box.h"
+#include "logger.h"
+#include "db.h"
 
 namespace odb {
 

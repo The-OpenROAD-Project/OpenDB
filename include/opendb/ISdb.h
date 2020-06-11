@@ -53,7 +53,7 @@ class dbBox;
 class dbBlock;
 class dbTech;
 class dbNet;
-
+class ZInterface;
 ///
 /// ISdb - Internal User Interface for ZRoute Area Search Infrastructure
 ///

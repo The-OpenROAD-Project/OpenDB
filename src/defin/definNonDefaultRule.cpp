@@ -31,10 +31,11 @@
 // POSSIBILITY OF SUCH DAMAGE.
 
 #include "definNonDefaultRule.h"
+#include "db.h"
+#include "logger.h"
 #include <ctype.h>
 #include <stdio.h>
 #include <stdlib.h>
-#include "db.h"
 
 namespace odb {
 

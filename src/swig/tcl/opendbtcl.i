@@ -2,8 +2,10 @@
 
 %{
 #define SWIG_FILE_WITH_INIT
+#include "../opendb/db.h"
+#include "dbObject.h"
+#include "dbSet.h"
 #include "geom.h"
-#include "db.h"
 #include "dbShape.h"
 #include "dbViaParams.h"
 #include "dbRtEdge.h"
@@ -17,9 +19,7 @@
 #include "dbMap.h"
 #include "dbRtTree.h"
 #include "dbCCSegSet.h"
-#include "dbSet.h"
 #include "dbTypes.h"
-#include "geom.h"
 #include "wOrder.h"
 
 using namespace odb;

@@ -31,11 +31,12 @@
 // POSSIBILITY OF SUCH DAMAGE.
 
 #include "definTracks.h"
+#include "db.h"
+#include "dbShape.h"
+#include "logger.h"
 #include <ctype.h>
 #include <stdio.h>
 #include <stdlib.h>
-#include "db.h"
-#include "dbShape.h"
 
 namespace odb {
 

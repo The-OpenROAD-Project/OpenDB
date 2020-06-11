@@ -38,6 +38,7 @@
 #include "dbShape.h"
 #include "definBlockage.h"
 #include "definPolygon.h"
+#include "logger.h"
 
 namespace odb {
 

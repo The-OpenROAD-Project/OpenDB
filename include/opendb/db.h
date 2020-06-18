@@ -6016,19 +6016,19 @@ class dbTechLayer : public dbObject
   void   setResistance(double res);
 
   ///
-  /// Get/Set the capacitance (pF per square dbu)
+  /// Get/Set the capacitance (pF per square micron)
   ///
   double getCapacitance();
   void   setCapacitance(double cap);
 
   ///
-  /// Get/Set the edge capacitance
+  /// Get/Set the edge capacitance (pF per micron)
   ///
   double getEdgeCapacitance();
   void   setEdgeCapacitance(double cap);
 
   ///
-  /// Get/Set the edge capacitance (pF per dbu)
+  /// Get/Set the wire extension
   ///
   uint getWireExtension();
   void setWireExtension(uint ext);

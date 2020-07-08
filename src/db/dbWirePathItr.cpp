@@ -212,6 +212,7 @@ nextOpCode:
     case dbWireDecoder::JUNCTION:
     case dbWireDecoder::SHORT:
     case dbWireDecoder::VWIRE:
+    case dbWireDecoder::RECT:
       return false;
 
     case dbWireDecoder::POINT: {

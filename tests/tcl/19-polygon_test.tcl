@@ -22,3 +22,11 @@ foreach rect [odb::getRectangles $or] {
 }
 
 check "rectangles" {list $test} {{{0 0 20 10} {0 10 10 20}}}
+
+set bloatXY [odb::bloatSet $ps1 5 10]
+set test []
+foreach rect [odb::getRectangles $bloatXY] {
+    lappend test [list [$rect xMin] [$rect yMin] [$rect xMax] [$rect yMax]]
+}
+
+check "bloatXY" {list $test} {{{-5 -10 25 20}}}

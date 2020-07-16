@@ -29,9 +29,23 @@ Polygon90Set* bloatSet(const Polygon90Set* set, int bloating)
   return new Polygon90Set(*set + bloating);
 }
 
+Polygon90Set* bloatSet(const Polygon90Set* set, int bloatX, int bloatY)
+{
+  Polygon90Set* result = new Polygon90Set(*set);
+  bloat(*result, bloatX, bloatX, bloatY, bloatY);
+  return result;
+}
+
 Polygon90Set* shrinkSet(const Polygon90Set* set, int shrinking)
 {
   return new Polygon90Set(*set - shrinking);
+}
+
+Polygon90Set* shrinkSet(const Polygon90Set* set, int shrinkX, int shrinkY)
+{
+  Polygon90Set* result = new Polygon90Set(*set);
+  shrink(*result, shrinkX, shrinkX, shrinkY, shrinkY);
+  return result;
 }
 
 Polygon90Set* andSet(const Polygon90Set* set1, const Polygon90Set* set2)
@@ -107,8 +121,14 @@ std::vector<odb::Rect> getRectangles(const Polygon90Set* set);
 %newobject bloatSet;
 Polygon90Set* bloatSet(Polygon90Set* set, int bloating);
 
+%newobject bloatSet;
+Polygon90Set* bloatSet(Polygon90Set* set, int bloatX, int bloatY);
+
 %newobject shrinkSet;
 Polygon90Set* shrinkSet(Polygon90Set* set, int shrinking);
+
+%newobject shrinkSet;
+Polygon90Set* shrinkSet(Polygon90Set* set, int shrinkX, int shrinkY);
 
 %newobject andSet;
 Polygon90Set* andSet(Polygon90Set* set1, const Polygon90Set* set2);

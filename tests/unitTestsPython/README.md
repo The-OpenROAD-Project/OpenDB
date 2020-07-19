@@ -4,11 +4,15 @@
 
 For running the python unit tests you will need to install first *testtools* which enables concurrent unit testing
 
-`pip3 install testtools`
+```shell
+pip3 install testtools
+```
 
 Then, you can run the unit tests from
 
-`./../unitTests.sh`
+```shell
+./../unitTests.sh
+```
 
 ### <u>Tests Structure</u>
 

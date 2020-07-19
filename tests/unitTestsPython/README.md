@@ -26,13 +26,20 @@ This includes `TestCase` class which inherits from `unittest.TestCase` with addi
 
   So, in the end, the expected behavior is:
 
-  `obj.SetterName(*args)`
+  ```python
+  obj.SetterName(*args)
+  
+  assert(obj.GetterName()==expectedVal)`
+  ```
 
-  `assert(obj.GetterName()==expectedVal)`
+  
 
 * `check(self,obj,GetterName,expectedVal,*args)` which tests against expected value
+
 * `change(self,obj,SetterName,*args)` which changes a value in the object
+
 * `main()` runs the `TestCase` in sequential order
+
 * `mainParallel(Test)` runs the passed `Test` class in parallel
 
 #### helper.py:

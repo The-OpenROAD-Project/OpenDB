@@ -1,47 +1,20 @@
-import importlib.util
 import opendbpy as odb
-import os
-import unittest
+import helper
+import odbUnitTest
 
 #TestNet: A unit test class for class dbNet
-#it inherits from unittest.TestCase and has access to the testing functions(asserts)
-class TestNet(unittest.TestCase):
+#it inherits from odbunittest.TestCase and has access to the testing functions(asserts)
+class TestNet(odbUnitTest.TestCase):
     #This Function is called before each of the test cases defined below
     #You should use it to create the instances you need to test (in our case n1,n2,n3)
     def setUp(self):
-        #Creating Database and Lib
-        self.db = odb.dbDatabase.create()
-        tech = odb.dbTech.create(self.db)
-        lib = odb.dbLib.create(self.db,"lib")
-        #Creating Chip and Block
-        odb.dbChip.create(self.db)
-        blockName = 'NetUnitTest'
-        block = odb.dbBlock_create(self.db.getChip(),blockName)
-        #Creating Master and2 and instance inst
-        and2 = odb.dbMaster_create(lib,"and2")
-        and2.setWidth(1000)
-        and2.setHeight(1000)
-        and2.setType('CORE')
-        odb.dbMTerm.create(and2,'a','INPUT')
-        odb.dbMTerm.create(and2,'b','INPUT')
-        odb.dbMTerm.create(and2,'o','OUTPUT')
-        and2.setFrozen()
-        inst = odb.dbInst.create(block,and2,"inst")
-        #creating our nets
-        self.n1 = odb.dbNet.create(block,"n1")
-        self.n2 = odb.dbNet.create(block,"n2")
-        self.n3 = odb.dbNet.create(block,"n3")
-        IN1 = odb.dbBTerm.create(self.n1,'IN1')
-        IN1.setIoType('INPUT')
-        IN2 = odb.dbBTerm.create(self.n2,'IN2')
-        IN2.setIoType('INPUT')
-        OUT = odb.dbBTerm.create(self.n3,'OUT')
-        OUT.setIoType('OUTPUT')
-        #connecting nets
-        odb.dbITerm.connect(inst,self.n1,inst.getMaster().findMTerm('a'))
-        odb.dbITerm.connect(inst,self.n2,inst.getMaster().findMTerm('b'))
-        odb.dbITerm.connect(inst,self.n3,inst.getMaster().findMTerm('o'))
-        pass
+        self.db = helper.create1LevelBlock()
+        block = self.db.getChip().getBlock()
+        inst = block.getInsts()[0]
+        self.n1 = inst.findITerm('a').getNet()
+        self.n2 = inst.findITerm('b').getNet()
+        self.n3 = inst.findITerm('o').getNet()
+        
     #this function is called after each of the test cases
     #you should free up space and destroy unneeded objects(cleanup step)
     def tearDown(self):
@@ -72,16 +45,6 @@ class TestNet(unittest.TestCase):
         self.check(self.n1,'maxInternalCapNum',1)
         self.check(self.n1,'groundCC',True,1)
         self.check(self.n2,'groundCC',False,1)
-        self.check(self.n1,'getCcCount',1)   
-        
-        
-    #Function to change a value and test the change effect
-    def changeAndTest(self,obj,SetterName,GetterName,expectedVal,*args):
-        getattr(obj, SetterName)(*args)
-        self.assertEqual(getattr(obj, GetterName)(),expectedVal)
-    def check(self,obj,GetterName,expectedVal,*args):
-        self.assertEqual(getattr(obj, GetterName)(*args),expectedVal)
-    def change(self,obj,SetterName,*args):
-        return getattr(obj, SetterName)(*args)
+        self.check(self.n1,'getCcCount',1)
 if __name__=='__main__':
-    unittest.main()
+    odbUnitTest.main()

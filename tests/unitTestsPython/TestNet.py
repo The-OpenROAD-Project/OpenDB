@@ -14,7 +14,6 @@ class TestNet(odbUnitTest.TestCase):
         self.n1 = inst.findITerm('a').getNet()
         self.n2 = inst.findITerm('b').getNet()
         self.n3 = inst.findITerm('o').getNet()
-        
     #this function is called after each of the test cases
     #you should free up space and destroy unneeded objects(cleanup step)
     def tearDown(self):
@@ -47,4 +46,4 @@ class TestNet(odbUnitTest.TestCase):
         self.check(self.n2,'groundCC',False,1)
         self.check(self.n1,'getCcCount',1)
 if __name__=='__main__':
-    odbUnitTest.main()
+    odbUnitTest.mainParallel(TestNet)

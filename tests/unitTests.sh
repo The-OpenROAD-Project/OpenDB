@@ -10,3 +10,7 @@ echo "================"
 echo "[1] dbNet Unit Test"
 python3 $BASE_DIR/unitTestsPython/TestNet.py
 echo ""
+
+echo "[1] Destroy Integration Test"
+python3 $BASE_DIR/unitTestsPython/TestDestroy.py
+echo ""

@@ -71,7 +71,6 @@ void definFill::fillBegin(const char* layer,
 
 void definFill::fillRect(int x1, int y1, int x2, int y2)
 {
-  printf("MATT: %d %d %d %d\n", x1, y1, x2, y2);
   x1 = dbdist(x1);
   y1 = dbdist(y1);
   x2 = dbdist(x2);

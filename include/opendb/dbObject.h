@@ -83,6 +83,7 @@ enum dbObjectType
   dbRSegObj,
   dbCCSegObj,
   dbRowObj,
+  dbFillObj,
   dbMetricsObj,
   dbRegionObj,
   dbHierObj,

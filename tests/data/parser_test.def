@@ -173,9 +173,10 @@ BLOCKAGES 4 ;
    RECT ( 1 2 ) ( 3 4 ) ;
 END BLOCKAGES
 
-#FILLS 1 ;
-# - LAYER metal1 RECT ( 1 2 ) ( 3 4 ) ;
-#END FILLS
+FILLS 1 ;
+ - LAYER metal1 RECT ( 1 2 ) ( 3 4 ) ;
+ - LAYER metal1 + OPC + MASK 2 RECT ( 1 2 ) ( 3 4 ) ;
+END FILLS
 
 VIAS 36 ;
 - VIA1

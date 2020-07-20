@@ -1,7 +1,7 @@
 ///////////////////////////////////////////////////////////////////////////////
 // BSD 3-Clause License
 //
-// Copyright (c) 2019, Nefelus Inc
+// Copyright (c) 2020, OpenRoad Project
 // All rights reserved.
 //
 // Redistribution and use in source and binary forms, with or without
@@ -32,29 +32,75 @@
 
 #pragma once
 
-#include "definBase.h"
+#include "dbCore.h"
+#include "dbId.h"
+#include "dbTypes.h"
 #include "odb.h"
 
 namespace odb {
 
-class dbTechLayer;
+template <class T>
+class dbTable;
+class dbIStream;
+class dbOStream;
+class dbSite;
+class dbLib;
+class dbDiff;
 
-class definFill : public definBase
+struct dbFillFlags
 {
-  dbTechLayer* _cur_layer;
-  uint         _mask_number;
-  bool         _needs_opc;
-
- public:
-  // Fill interface methods
-  virtual void fillBegin(const char* layer, bool needs_opc, int mask_number);
-  virtual void fillRect(int x1, int y1, int x2, int y2);
-  virtual void fillPolygon(std::vector<Point>& points);
-  virtual void fillEnd();
-
-  definFill();
-  virtual ~definFill();
-  void init();
+  uint _opc : 1;
+  uint _mask_id : 2;
+  uint _layer_id : 8;
+  uint _spare_bits : 21;
 };
+
+class _dbFill : public _dbObject
+{
+ public:
+  // PERSISTANT-MEMBERS
+  dbFillFlags _flags;
+  Rect        _rect;
+
+  _dbFill(_dbDatabase*, const _dbFill& r);
+  _dbFill(_dbDatabase*);
+
+  _dbTechLayer* getTechLayer() const;
+
+  bool operator==(const _dbFill& rhs) const;
+  bool operator!=(const _dbFill& rhs) const { return !operator==(rhs); }
+  bool operator<(const _dbFill& rhs) const;
+  void differences(dbDiff& diff, const char* field, const _dbFill& rhs) const;
+  void out(dbDiff& diff, char side, const char* field) const;
+};
+
+inline _dbFill::_dbFill(_dbDatabase*, const _dbFill& r)
+    : _flags(r._flags), _rect(r._rect)
+{
+}
+
+inline _dbFill::_dbFill(_dbDatabase*)
+{
+  _flags._opc      = false;
+  _flags._mask_id  = 0;
+  _flags._layer_id = 0;
+  _flags._spare_bits = 0;
+}
+
+inline dbOStream& operator<<(dbOStream& stream, const _dbFill& fill)
+{
+  uint* bit_field = (uint*) &fill._flags;
+  stream << *bit_field;
+  stream << fill._rect;
+  return stream;
+}
+
+inline dbIStream& operator>>(dbIStream& stream, _dbFill& fill)
+{
+  uint* bit_field = (uint*) &fill._flags;
+  stream >> *bit_field;
+  stream >> fill._rect;
+  return stream;
+}
 
 }  // namespace odb

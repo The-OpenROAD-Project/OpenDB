@@ -195,6 +195,7 @@ bool defout_impl::writeBlock(dbBlock* block, const char* def_file)
   writeBTerms(block);
   writePinProperties(block);
   writeBlockages(block);
+  writeFills(block);
   writeNets(block);
   writeGroups(block);
 
@@ -1149,6 +1150,40 @@ void defout_impl::writeBlockages(dbBlock* block)
 
   if (!first)
     fprintf(_out, "END BLOCKAGES\n");
+}
+
+void defout_impl::writeFills(dbBlock* block)
+{
+  dbSet<dbFill> fills     = block->getFills();
+  int           num_fills = fills.size();
+
+  if (num_fills == 0)
+    return;
+
+  fprintf(_out, "FILLS %d ;\n", num_fills);
+
+  for (dbFill* fill : fills) {
+    fprintf(_out, "    - LAYER %s", fill->getTechLayer()->getName().c_str());
+
+    uint mask = fill->maskNumber();
+    if (mask != 0)
+      fprintf(_out, " + MASK %u", mask);
+
+    if (fill->needsOPC())
+      fprintf(_out, " + OPC");
+
+    Rect r;
+    fill->getRect(r);
+
+    int x1 = defdist(r.xMin());
+    int y1 = defdist(r.yMin());
+    int x2 = defdist(r.xMax());
+    int y2 = defdist(r.yMax());
+
+    fprintf(_out, " RECT ( %d %d ) ( %d %d ) ;\n", x1, y1, x2, y2);
+  }
+
+  fprintf(_out, "END FILLS\n");
 }
 
 void defout_impl::writeNets(dbBlock* block)

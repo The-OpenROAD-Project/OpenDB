@@ -98,6 +98,7 @@ class defout_impl
   void writeRegions(dbBlock* block);
   void writeGroups(dbBlock* block);
   void writeBlockages(dbBlock* block);
+  void writeFills(dbBlock* block);
   void writeNets(dbBlock* block);
   void writeNet(dbNet* net);
   void writeSNet(dbNet* net);

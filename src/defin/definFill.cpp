@@ -30,12 +30,13 @@
 // ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 // POSSIBILITY OF SUCH DAMAGE.
 
-#include "definFill.h"
 #include <ctype.h>
 #include <stdio.h>
 #include <stdlib.h>
+
 #include "db.h"
 #include "dbShape.h"
+#include "definFill.h"
 
 namespace odb {
 
@@ -54,7 +55,9 @@ void definFill::init()
   _cur_layer = NULL;
 }
 
-void definFill::fillBegin(const char* layer)
+void definFill::fillBegin(const char* layer,
+                          bool needs_opc,
+                          int  mask_number)
 {
   _cur_layer = _tech->findLayer(layer);
 
@@ -62,14 +65,18 @@ void definFill::fillBegin(const char* layer)
     notice(0, "error: undefined layer (%s) referenced\n", layer);
     ++_errors;
   }
+  _mask_number = mask_number;
+  _needs_opc = needs_opc;
 }
 
 void definFill::fillRect(int x1, int y1, int x2, int y2)
 {
+  printf("MATT: %d %d %d %d\n", x1, y1, x2, y2);
   x1 = dbdist(x1);
   y1 = dbdist(y1);
   x2 = dbdist(x2);
   y2 = dbdist(y2);
+  dbFill::create(_block, _needs_opc, _mask_number, _cur_layer, x1, y1, x2, y2);
 }
 
 void definFill::fillPolygon(std::vector<Point>& /* unused: points */)

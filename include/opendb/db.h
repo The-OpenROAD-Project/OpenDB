@@ -91,6 +91,7 @@ class dbRSeg;
 class dbCCSeg;
 class dbBlockSearch;
 class dbRow;
+class dbFill;
 class dbTechAntennaPinModel;
 class dbBlockCallBackObj;
 class dbMetrics;
@@ -1091,6 +1092,11 @@ class dbBlock : public dbObject
   /// Get the rows of this block
   ///
   dbSet<dbRow> getRows();
+
+  ///
+  /// Get the fills in this block
+  ///
+  dbSet<dbFill> getFills();
 
   ///
   /// Get the list of masters used in this block.
@@ -4845,6 +4851,63 @@ class dbRow : public dbObject
   /// Translate a database-id back to a pointer.
   ///
   static dbRow* getRow(dbBlock* block, uint oid);
+};
+
+///////////////////////////////////////////////////////////////////////////////
+///
+/// A fill is the element that one metal fill shape
+///
+///////////////////////////////////////////////////////////////////////////////
+class dbFill : public dbObject
+{
+ public:
+  ///
+  /// Get the fill bounding box.
+  ///
+  void getRect(Rect& rect);
+
+  ///
+  /// Returns true if this fill requires OPC (Optical proximity correction)
+  ///
+  bool needsOPC();
+
+  ///
+  /// Which mask is used for double or triple patterning.  Zero is returned for
+  /// unassigned.  Values are typically in [1,3].
+  ///
+  uint maskNumber();
+
+  ///
+  /// Get the layer of this fill.
+  ///
+  dbTechLayer* getTechLayer();
+
+  ///
+  /// Create a new fill.
+  ///
+  static dbFill* create(dbBlock*     block,
+                        bool         needs_opc,
+                        uint         mask_number,
+                        dbTechLayer* layer,
+                        int          x1,
+                        int          y1,
+                        int          x2,
+                        int          y2);
+
+  ///
+  /// Destroy a fill.
+  ///
+  static void destroy(dbFill* fill);
+
+  ///
+  /// Destroy fills.
+  ///
+  static dbSet<dbFill>::iterator destroy(dbSet<dbFill>::iterator& itr);
+
+  ///
+  /// Translate a database-id back to a pointer.
+  ///
+  static dbFill* getFill(dbBlock* block, uint oid);
 };
 
 ///////////////////////////////////////////////////////////////////////////////

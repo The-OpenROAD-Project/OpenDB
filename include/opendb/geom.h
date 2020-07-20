@@ -138,10 +138,13 @@ class Rect
   Rect(int x1, int y1, int x2, int y2);
 
   Rect& operator=(const Rect& r) = default;
-  bool     operator==(const Rect& r) const;
-  bool     operator!=(const Rect& r) const;
-  bool     operator<(const Rect& r) const;
-
+  bool  operator==(const Rect& r) const;
+  bool  operator!=(const Rect& r) const;
+  bool  operator<(const Rect& r) const;
+  bool  operator>(const Rect& r) const { return r < *this; }
+  bool  operator<=(const Rect& r) const { return !(*this > r); }
+  bool  operator>=(const Rect& r) const { return !(*this < r); }
+  
   // Reinitialize the rectangle
   void init(int x1, int y1, int x2, int y2);
 

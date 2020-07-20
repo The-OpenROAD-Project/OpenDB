@@ -60,7 +60,8 @@ add_library(opendb
     dbRSeg.cpp 
     dbRSegItr.cpp 
     dbTechSameNetRule.cpp 
-    dbRow.cpp 
+    dbRow.cpp
+    dbFill.cpp
     dbShape.cpp 
     dbWireGraph.cpp 
     dbJournal.cpp 

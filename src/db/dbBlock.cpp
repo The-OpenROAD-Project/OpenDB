@@ -80,6 +80,7 @@
 #include "dbRegionInstItr.h"
 #include "dbRegionItr.h"
 #include "dbRow.h"
+#include "dbFill.h"
 #include "dbSBox.h"
 #include "dbSBoxItr.h"
 #include "dbSWire.h"
@@ -212,6 +213,10 @@ _dbBlock::_dbBlock(_dbDatabase* db)
   _row_tbl = new dbTable<_dbRow>(
       db, this, (GetObjTbl_t) &_dbBlock::getObjectTable, dbRowObj);
   ZALLOCATED(_row_tbl);
+
+  _fill_tbl = new dbTable<_dbFill>(
+      db, this, (GetObjTbl_t) &_dbBlock::getObjectTable, dbFillObj);
+  ZALLOCATED(_fill_tbl);
 
   _metrics_tbl = new dbTable<_dbMetrics>(
       db, this, (GetObjTbl_t) &_dbBlock::getObjectTable, dbMetricsObj, 16, 4);
@@ -428,6 +433,9 @@ _dbBlock::_dbBlock(_dbDatabase* db, const _dbBlock& block)
   _row_tbl = new dbTable<_dbRow>(db, this, *block._row_tbl);
   ZALLOCATED(_row_tbl);
 
+  _fill_tbl = new dbTable<_dbFill>(db, this, *block._fill_tbl);
+  ZALLOCATED(_fill_tbl);
+
   _metrics_tbl = new dbTable<_dbMetrics>(db, this, *block._metrics_tbl);
   ZALLOCATED(_metrics_tbl);
 
@@ -551,6 +559,7 @@ _dbBlock::~_dbBlock()
   delete _swire_tbl;
   delete _sbox_tbl;
   delete _row_tbl;
+  delete _fill_tbl;
   delete _metrics_tbl;
   delete _region_tbl;
   delete _hier_tbl;
@@ -734,6 +743,9 @@ dbObjectTable* _dbBlock::getObjectTable(dbObjectType type)
     case dbRowObj:
       return _row_tbl;
 
+    case dbFillObj:
+      return _fill_tbl;
+
     case dbMetricsObj:
       return _metrics_tbl;
 
@@ -823,6 +835,7 @@ dbOStream& operator<<(dbOStream& stream, const _dbBlock& block)
   stream << *block._swire_tbl;
   stream << *block._sbox_tbl;
   stream << *block._row_tbl;
+  stream << *block._fill_tbl;
   stream << *block._metrics_tbl;
   stream << *block._region_tbl;
   stream << *block._hier_tbl;
@@ -901,6 +914,7 @@ dbIStream& operator>>(dbIStream& stream, _dbBlock& block)
   stream >> *block._swire_tbl;
   stream >> *block._sbox_tbl;
   stream >> *block._row_tbl;
+  stream >> *block._fill_tbl;
   stream >> *block._metrics_tbl;
   stream >> *block._region_tbl;
   stream >> *block._hier_tbl;
@@ -1093,6 +1107,9 @@ bool _dbBlock::operator==(const _dbBlock& rhs) const
   if (*_row_tbl != *rhs._row_tbl)
     return false;
 
+  if (*_fill_tbl != *rhs._fill_tbl)
+    return false;
+
   if (*_metrics_tbl != *rhs._metrics_tbl)
     return false;
 
@@ -1192,6 +1209,7 @@ void _dbBlock::differences(dbDiff&         diff,
   DIFF_TABLE_NO_DEEP(_swire_tbl);
   DIFF_TABLE_NO_DEEP(_sbox_tbl);
   DIFF_TABLE(_row_tbl);
+  DIFF_TABLE(_fill_tbl);
   DIFF_TABLE(_metrics_tbl);
   DIFF_TABLE(_region_tbl);
   DIFF_TABLE_NO_DEEP(_hier_tbl);
@@ -1268,6 +1286,7 @@ void _dbBlock::out(dbDiff& diff, char side, const char* field) const
   DIFF_OUT_TABLE_NO_DEEP(_swire_tbl);
   DIFF_OUT_TABLE_NO_DEEP(_sbox_tbl);
   DIFF_OUT_TABLE(_row_tbl);
+  DIFF_OUT_TABLE(_fill_tbl);
   DIFF_OUT_TABLE(_metrics_tbl);
   DIFF_OUT_TABLE(_region_tbl);
   DIFF_OUT_TABLE_NO_DEEP(_hier_tbl);
@@ -1630,6 +1649,12 @@ dbSet<dbRow> dbBlock::getRows()
 {
   _dbBlock* block = (_dbBlock*) this;
   return dbSet<dbRow>(block, block->_row_tbl);
+}
+
+dbSet<dbFill> dbBlock::getFills()
+{
+  _dbBlock* block = (_dbBlock*) this;
+  return dbSet<dbFill>(block, block->_fill_tbl);
 }
 
 dbGCellGrid* dbBlock::getGCellGrid()

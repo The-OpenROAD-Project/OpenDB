@@ -480,10 +480,6 @@ int definReader::fillsCallback(defrCallbackType_e /* unused: type */,
                                int /* unused: count */,
                                defiUserData data)
 {
-  definReader* reader = (definReader*) data;
-
-  // definFill doesn't do anything! Just error out for now
-  UNSUPPORTED("FILL is unsupported");
   return PARSE_OK;
 }
 
@@ -500,7 +496,9 @@ int definReader::fillCallback(defrCallbackType_e /* unused: type */,
   // layer.  That can happen with via fill.  However the callback is
   // incomplete so it doesn't matter yet.
   if (fill->hasLayer()) {
-    fillR->fillBegin(fill->layerName());
+    fillR->fillBegin(fill->layerName(),
+                     fill->hasLayerOpc(),
+                     fill->layerMask());
   }
 
   for (int i = 0; i < fill->numRectangles(); ++i) {

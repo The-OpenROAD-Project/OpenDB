@@ -175,6 +175,11 @@ void dbObject::getDbName(char name[max_name_length]) const
         id      = impl->getOID();
         break;
 
+      case dbFillObj:
+        *cptr++ = 'F';
+        id      = impl->getOID();
+        break;
+
       case dbMetricsObj:
         *cptr++ = 'm';
         id      = impl->getOID();
@@ -573,6 +578,11 @@ dbObject* dbObject::resolveDbName(dbDatabase* db_, const char* name)
         obj = dbRow::getRow((dbBlock*) obj, oid);
         break;
 
+      case 'F':  // fill
+        oid = getOid(name);
+        obj = dbFill::getFill((dbBlock*) obj, oid);
+        break;
+
       case 'y':  // via-rule
         oid = getOid(name);
         obj = dbTechViaRule::getTechViaRule((dbTech*) obj, oid);
@@ -623,6 +633,7 @@ static const char* name_tbl[] = {"dbDatabase",
                                  "dbRSeg",
                                  "dbCCSeg",
                                  "dbRow",
+                                 "dbFill",
                                  "dbMetrics",
                                  "dbRegion",
                                  "dbHier",

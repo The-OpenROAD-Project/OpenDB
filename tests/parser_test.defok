@@ -148,9 +148,13 @@ BLOCKAGES 9 ;
     - LAYER metal3 + FILLS RECT ( 0 0 ) ( 5 2 ) ;
     - LAYER metal3 + FILLS RECT ( 3 2 ) ( 5 5 ) ;
     - PLACEMENT + COMPONENT _d0_ RECT ( 1 2 ) ( 3 4 ) ;
-    - PLACEMENT + PUSHDOWN RECT ( 1 2 ) ( 3 4 ) ;
-    - PLACEMENT RECT ( 1 2 ) ( 3 4 ) ;
+    - PLACEMENT + PARTIAL 12.340000 + PUSHDOWN RECT ( 1 2 ) ( 3 4 ) ;
+    - PLACEMENT + SOFT RECT ( 1 2 ) ( 3 4 ) ;
 END BLOCKAGES
+FILLS 2 ;
+    - LAYER metal1 RECT ( 1 2 ) ( 3 4 ) ;
+    - LAYER metal1 + MASK 2 + OPC RECT ( 1 2 ) ( 3 4 ) ;
+END FILLS
 SPECIALNETS 2 ;
     - VDD ( PIN vdd ) ( * vdd ) + USE POWER
       + ROUTED metal1 20 + SHAPE RING ( 0 0 ) ( 0 20 )

@@ -483,8 +483,6 @@ int definReader::fillsCallback(defrCallbackType_e /* unused: type */,
   return PARSE_OK;
 }
 
-// This is incomplete but won't be reached because of the
-// fillsCallback
 int definReader::fillCallback(defrCallbackType_e /* unused: type */,
                               defiFill*    fill,
                               defiUserData data)
@@ -492,9 +490,14 @@ int definReader::fillCallback(defrCallbackType_e /* unused: type */,
   definReader* reader = (definReader*) data;
   definFill*   fillR  = reader->_fillR;
 
-  // This isn't right as we don't call begin when we don't have a
-  // layer.  That can happen with via fill.  However the callback is
-  // incomplete so it doesn't matter yet.
+  if (fill->hasVia() || fill->hasViaOpc()) {
+    UNSUPPORTED("Via fill is unsupported");
+  }
+
+  if (fill->numPolygons() > 0) {
+    UNSUPPORTED("Polygon fill is unsupported");
+  }
+
   if (fill->hasLayer()) {
     fillR->fillBegin(fill->layerName(),
                      fill->hasLayerOpc(),

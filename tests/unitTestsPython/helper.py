@@ -1,29 +1,30 @@
 import opendbpy as odb
 import os
 
+
+def createSimpleDB():
+    db = odb.dbDatabase.create()
+    tech = odb.dbTech.create(db)
+    L1 = odb.dbTechLayer_create(tech,'L1','ROUTING')
+    lib = odb.dbLib.create(db,"lib")
+    odb.dbChip.create(db)
+    #Creating Master and2 and or2
+    and2 = createMaster2X1(lib,'and2',1000,1000,'a','b','o')
+    or2 = createMaster2X1(lib,'or2',500,500,'a','b','o')
+    return db,lib
+
+
 #logical expr OUT = (IN1&IN2)
 #     (n1)   +-----
 # IN1--------|a    \    (n3)
 #     (n2)   | (i1)o|-----------OUT
 # IN2--------|b    /            
 #            +-----             
-def create1LevelBlock():
-    db = odb.dbDatabase.create()
-    tech = odb.dbTech.create(db)
-    lib = odb.dbLib.create(db,"lib")
-    #Creating Chip and Block
-    odb.dbChip.create(db)
+def create1LevelBlock(db,lib,parent):
     blockName = '1LevelBlock'
-    block = odb.dbBlock_create(db.getChip(),blockName)
+    block = odb.dbBlock_create(parent,blockName,',')
     #Creating Master and2 and instance inst
-    and2 = odb.dbMaster_create(lib,"and2")
-    and2.setWidth(1000)
-    and2.setHeight(1000)
-    and2.setType('CORE')
-    odb.dbMTerm.create(and2,'a','INPUT')
-    odb.dbMTerm.create(and2,'b','INPUT')
-    odb.dbMTerm.create(and2,'o','OUTPUT')
-    and2.setFrozen()
+    and2 = lib.findMaster('and2')
     inst = odb.dbInst.create(block,and2,"inst")
     #creating our nets
     n1 = odb.dbNet.create(block,"n1")
@@ -39,7 +40,7 @@ def create1LevelBlock():
     odb.dbITerm.connect(inst,n1,inst.getMaster().findMTerm('a'))
     odb.dbITerm.connect(inst,n2,inst.getMaster().findMTerm('b'))
     odb.dbITerm.connect(inst,n3,inst.getMaster().findMTerm('o'))
-    return db
+    return block
 
 
 
@@ -55,32 +56,13 @@ def create1LevelBlock():
 #     (n4)   | (i2)o|-----------+
 # IN4--------|b    /
 #            +-----
-def create2LevelBlock():
-    db = odb.dbDatabase.create()
-    tech = odb.dbTech.create(db)
-    lib = odb.dbLib.create(db,"lib")
-    #Creating Chip and Block
-    odb.dbChip.create(db)
+def create2LevelBlock(db,lib,parent):
+    
     blockName = '2LevelBlock'
-    block = odb.dbBlock_create(db.getChip(),blockName)
-    #Creating Master and2 and instance inst
-    and2 = odb.dbMaster_create(lib,"and2")
-    and2.setWidth(1000)
-    and2.setHeight(1000)
-    and2.setType('CORE')
-    odb.dbMTerm.create(and2,'a','INPUT')
-    odb.dbMTerm.create(and2,'b','INPUT')
-    odb.dbMTerm.create(and2,'o','OUTPUT')
-    and2.setFrozen()
-    #creating Master or2
-    or2 = odb.dbMaster_create(lib,"or2")
-    or2.setWidth(500)
-    or2.setHeight(500)
-    or2.setType('CORE')
-    odb.dbMTerm.create(or2,'a','INPUT')
-    odb.dbMTerm.create(or2,'b','INPUT')
-    odb.dbMTerm.create(or2,'o','OUTPUT')
-    or2.setFrozen()
+    block = odb.dbBlock_create(parent,blockName,',')
+    
+    and2 = lib.findMaster('and2')
+    or2 = lib.findMaster('or2')
     #creating instances
     i1 = odb.dbInst.create(block,and2,"i1")
     i2 = odb.dbInst.create(block,and2,"i2")
@@ -117,4 +99,37 @@ def create2LevelBlock():
     odb.dbITerm.connect(i3,n6,i3.getMaster().findMTerm('b'))
     odb.dbITerm.connect(i3,n7,i3.getMaster().findMTerm('o'))
     
-    return db
+    P1 = odb.dbBPin_create(IN1)
+    P2 = odb.dbBPin_create(IN2)
+    P3 = odb.dbBPin_create(IN3)
+    P4 = odb.dbBPin_create(IN4)
+    P5 = odb.dbBPin_create(OUT)
+    
+    return block
+
+#  +-----
+#  |a    \    
+#        o|
+#  |b    /            
+#  +-----  
+def createMaster2X1(lib,name,width,height,in1,in2,out):
+    master = odb.dbMaster_create(lib,name)
+    master.setWidth(width)
+    master.setHeight(height)
+    master.setType('CORE')
+    odb.dbMTerm.create(master,in1,'INPUT')
+    odb.dbMTerm.create(master,in2,'INPUT')
+    odb.dbMTerm.create(master,out,'OUTPUT')
+    master.setFrozen()
+    return master
+def createMaster3X1(lib,name,width,height,in1,in2,in3,out):
+    master = odb.dbMaster_create(lib,name)
+    master.setWidth(width)
+    master.setHeight(height)
+    master.setType('CORE')
+    odb.dbMTerm.create(master,in1,'INPUT')
+    odb.dbMTerm.create(master,in2,'INPUT')
+    odb.dbMTerm.create(master,in3,'INPUT')
+    odb.dbMTerm.create(master,out,'OUTPUT')
+    master.setFrozen()
+    return master

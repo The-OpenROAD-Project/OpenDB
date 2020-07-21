@@ -8,8 +8,8 @@ class TestNet(odbUnitTest.TestCase):
     #This Function is called before each of the test cases defined below
     #You should use it to create the instances you need to test (in our case n1,n2,n3)
     def setUp(self):
-        self.db = helper.create1LevelBlock()
-        block = self.db.getChip().getBlock()
+        self.db,lib = helper.createSimpleDB()
+        block = helper.create1LevelBlock(self.db,lib,self.db.getChip())
         inst = block.getInsts()[0]
         self.n1 = inst.findITerm('a').getNet()
         self.n2 = inst.findITerm('b').getNet()

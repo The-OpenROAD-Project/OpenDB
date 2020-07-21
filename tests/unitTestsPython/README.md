@@ -62,3 +62,13 @@ Unit test class for testing dbNet. It inherits from `odbUnitTest.TestCase` . it 
 
 Integration test class for testing the `destroy(*args)` function on OpenDB. it follows the same structure as TestNet.py
 
+
+
+
+
+##### Problems Found In Testing
+
+* multiple core dumps that leads to aborting the process:
+  * dbNet.get1st*()			(when nothing on top of the list)
+  * childRegion.getParent()       (after destroying the parent region)
+

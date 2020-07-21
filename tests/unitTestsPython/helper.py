@@ -10,11 +10,14 @@ def createSimpleDB():
     odb.dbChip.create(db)
     #Creating Master and2 and or2
     and2 = createMaster2X1(lib,'and2',1000,1000,'a','b','o')
-    or2 = createMaster2X1(lib,'or2',500,500,'a','b','o')
+    or2  = createMaster2X1(lib,'or2',500,500,'a','b','o')
     return db,lib
 
 
+    
+    
 #logical expr OUT = (IN1&IN2)
+#
 #     (n1)   +-----
 # IN1--------|a    \    (n3)
 #     (n2)   | (i1)o|-----------OUT
@@ -108,9 +111,9 @@ def create2LevelBlock(db,lib,parent):
     return block
 
 #  +-----
-#  |a    \    
-#        o|
-#  |b    /            
+#  |in1   \    
+#      out|
+#  |in2  /            
 #  +-----  
 def createMaster2X1(lib,name,width,height,in1,in2,out):
     master = odb.dbMaster_create(lib,name)

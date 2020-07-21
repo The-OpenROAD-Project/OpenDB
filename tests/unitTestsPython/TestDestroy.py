@@ -21,6 +21,7 @@ class TestDestroy(odbUnitTest.TestCase):
         
     def tearDown(self):
         self.db.destroy(self.db)
+        
     def test_destroy_net(self):
         self.n1.destroy(self.n1)
         #check for Inst
@@ -135,7 +136,7 @@ class TestDestroy(odbUnitTest.TestCase):
         obst.destroy(obst)
         self.assertEqual(len(self.block.getObstructions()),0)
     def setup_regions(self):
-        parentRegion = odb.dbRegion_create(self.block,'parenRegion')
+        parentRegion = odb.dbRegion_create(self.block,'parentRegion')
         childRegion = odb.dbRegion_create(parentRegion,'childRegion')
         childRegion.addInst(self.i1)
         return parentRegion,childRegion
@@ -156,6 +157,7 @@ class TestDestroy(odbUnitTest.TestCase):
         self.assertEqual(len(parentRegion.getChildren()),0)
         self.assertEqual(len(self.block.getRegions()),1)
         self.assertEqual(self.block.getRegions()[0].getName(),parentRegion.getName())
+        
     def test_destroy_region_parent(self):
         parentRegion,childRegion = self.setup_regions()
         parentRegion.destroy(parentRegion)

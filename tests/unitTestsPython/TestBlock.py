@@ -2,6 +2,14 @@ import opendbpy as odb
 import helper
 import odbUnitTest
 
+def placeInst(inst,x,y):
+    inst.setLocation(x,y)
+    inst.setPlacementStatus('PLACED')
+    
+def placeBPin(bpin,layer,x1,y1,x2,y2):
+    odb.dbBox_create(bpin,layer,x1,y1,x2,y2)
+    bpin.setPlacementStatus('PLACED')
+    
 class TestBlock(odbUnitTest.TestCase):
     def setUp(self):
         self.db,self.lib = helper.createSimpleDB()
@@ -12,6 +20,8 @@ class TestBlock(odbUnitTest.TestCase):
         odb.dbTechNonDefaultRule_create(self.block,'non_default_1')
         self.parentRegion = odb.dbRegion_create(self.block,'parentRegion')
         self.childRegion = odb.dbRegion_create(self.parentRegion,'childRegion')
+        
+
     def tearDown(self):
         self.db.destroy(self.db)
     def test_find(self):
@@ -41,15 +51,49 @@ class TestBlock(odbUnitTest.TestCase):
         self.assertEqual(self.block.findRegion('parentRegion').getName(),'parentRegion')
         self.assertEqual(self.block.findRegion('childRegion').getName(),'childRegion')
         self.assertEqual(self.block.findRegion('childRegion').getParent().getName(),'parentRegion')
-    def test_find_extcornerblock(self):    
-        pass
-    def test_find_nondefaultrule(self):    
-        pass
-    def test_find_region(self):
-        pass 
         
-    
+        
+    def check_box_rect(self,min_x,min_y,max_x,max_y):
+        box = self.block.getBBox()
+        self.assertEqual(box.xMin(),min_x)
+        self.assertEqual(box.xMax(),max_x)
+        self.assertEqual(box.yMin(),min_y)
+        self.assertEqual(box.yMax(),max_y)
+        
+    def block_placement(self,test_num):
+        if(test_num>=1):
+            placeInst(self.block.findInst('i1'),0,3000)
+            placeInst(self.block.findInst('i2'),-1000,0)
+            placeInst(self.block.findInst('i3'),2000,-1000)
+        if(test_num>=2):
+            placeBPin(self.block.findBTerm('OUT').getBPins()[0],self.lib.getTech().findLayer('L1'),2500,-1000,2550,-950)
+        if(test_num>=3):
+            odb.dbObstruction_create(self.block,self.lib.getTech().findLayer('L1'),-1500,0,-1580,50)
+        if(test_num>=4):
+            n_s = odb.dbNet_create(self.block,'n_s')
+            swire = odb.dbSWire_create(n_s,'NONE')
+            odb.dbSBox_create(swire,self.lib.getTech().findLayer('L1'),0,4000,100,4100,'NONE')
+        if(test_num>=5):
+            pass
+            #TODO ADD WIRE
+             
+    def test_bbox0(self):
+        box = self.block.getBBox()
+        self.check_box_rect(0,0,0,0)
+    def test_bbox1(self):
+        self.block_placement(1)
+        box = self.block.getBBox()
+        self.check_box_rect(-1000,-1000,2500,4000)
+    def test_bbox2(self):
+        self.block_placement(2)
+        self.check_box_rect(-1000,-1000,2550,4000)
+    def test_bbox3(self):
+        self.block_placement(3)
+        self.check_box_rect(-1580,-1000,2550,4000)
+    def test_bbox4(self):
+        self.block_placement(4)
+        self.check_box_rect(-1580,-1000,2550,4100)
 if __name__=='__main__':
-#     odbUnitTest.mainParallel(TestBlock)
-    odbUnitTest.main()
+    odbUnitTest.mainParallel(TestBlock)
+#     odbUnitTest.main()
     

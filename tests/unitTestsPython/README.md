@@ -21,7 +21,7 @@ or in parallel by running
 ./../unitTests.sh parallel
 ```
 
-**Note**: The test cases with in each Unit Test run in parallel in both situations
+**Note**: The test cases within each Unit Test run in parallel in both situations
 
 --------------------------------------------------------------------------
 

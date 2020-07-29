@@ -188,6 +188,8 @@ void dbBPin::setPlacementStatus(dbPlacementStatus status)
 {
   _dbBPin* bpin        = (_dbBPin*) this;
   bpin->_flags._status = status.getValue();
+  _dbBlock* block = (_dbBlock*) bpin->getOwner();
+  block->_flags._valid_bbox=0;
 }
 
 bool dbBPin::hasEffectiveWidth()
@@ -253,16 +255,13 @@ void dbBPin::destroy(dbBPin* bpin_)
 
   while (cur) {
     _dbBPin* c = block->_bpin_tbl->getPtr(cur);
-
     if (cur == id) {
       if (prev == NULL)
         bterm->_bpins = bpin->_next_bpin;
       else
         prev->_next_bpin = bpin->_next_bpin;
-
       break;
     }
-
     prev = c;
     cur  = c->_next_bpin;
   }

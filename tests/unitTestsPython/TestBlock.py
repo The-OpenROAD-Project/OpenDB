@@ -60,20 +60,22 @@ class TestBlock(odbUnitTest.TestCase):
         self.assertEqual(box.yMin(), min_y)
         self.assertEqual(box.yMax(), max_y)
         
-    def block_placement(self, test_num):
-        if(test_num>=1):
+    def block_placement(self, test_num, flag):
+        if( (flag and test_num==1) or (not flag and test_num>=1) ):
+            if(flag):
+                print("here")
             placeInst(self.block.findInst('i1'), 0, 3000)
             placeInst(self.block.findInst('i2'), -1000, 0)
             placeInst(self.block.findInst('i3'), 2000, -1000)
-        if(test_num>=2):
+        if((flag and test_num==2) or (not flag and test_num>=2)):
             placeBPin(self.block.findBTerm('OUT').getBPins()[0], self.lib.getTech().findLayer('L1'), 2500, -1000, 2550, -950)
-        if(test_num>=3):
+        if((flag and test_num==3) or (not flag and test_num>=3)):
             odb.dbObstruction_create(self.block, self.lib.getTech().findLayer('L1'), -1500, 0, -1580, 50)
-        if(test_num>=4):
+        if((flag and test_num==4) or (not flag and test_num>=4)):
             n_s = odb.dbNet_create(self.block, 'n_s')
             swire = odb.dbSWire_create(n_s, 'NONE')
             odb.dbSBox_create(swire, self.lib.getTech().findLayer('L1'), 0, 4000, 100, 4100, 'NONE')
-        if(test_num>=5):
+        if((flag and test_num==5) or (not flag and test_num>=5)):
             pass
             #TODO ADD WIRE
              
@@ -81,17 +83,27 @@ class TestBlock(odbUnitTest.TestCase):
         box = self.block.getBBox()
         self.check_box_rect(0, 0, 0, 0)
     def test_bbox1(self):
-        self.block_placement(1)
         box = self.block.getBBox()
+        self.block_placement(1,False)
         self.check_box_rect(-1000, -1000, 2500, 4000)
     def test_bbox2(self):
-        self.block_placement(2)
+        box = self.block.getBBox()
+        self.block_placement(2,False)
         self.check_box_rect(-1000, -1000, 2550, 4000)
     def test_bbox3(self):
-        self.block_placement(3)
+#         self.block_placement(2,False)
+#         box = self.block.getBBox()
+#         self.block_placement(3,True)
+        placeInst(self.block.findInst('i1'), 0, 3000)
+        placeInst(self.block.findInst('i2'), -1000, 0)
+        placeInst(self.block.findInst('i3'), 2000, -1000)
+        placeBPin(self.block.findBTerm('OUT').getBPins()[0], self.lib.getTech().findLayer('L1'), 2500, -1000, 2550, -950)
+        box = self.block.getBBox()
+        odb.dbObstruction_create(self.block, self.lib.getTech().findLayer('L1'), -1500, 0, -1580, 50)
         self.check_box_rect(-1580, -1000, 2550, 4000)
     def test_bbox4(self):
-        self.block_placement(4)
+        box = self.block.getBBox()
+        self.block_placement(4,False)
         self.check_box_rect(-1580, -1000, 2550, 4100)
 if __name__=='__main__':
     odbUnitTest.mainParallel(TestBlock)

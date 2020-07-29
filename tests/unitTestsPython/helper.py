@@ -14,7 +14,28 @@ def createSimpleDB():
     return db, lib
 
 
+def createMultiLayerDB():
+    db = odb.dbDatabase.create()
+    tech = odb.dbTech.create(db)
     
+    m1 = odb.dbTechLayer_create(tech, "M1", 'ROUTING')
+    m1.setWidth(2000)
+    m2 = odb.dbTechLayer_create(tech, "M2", 'ROUTING')
+    m2.setWidth(2000)
+    m3 = odb.dbTechLayer_create(tech, "M3", 'ROUTING')
+    m3.setWidth(2000)
+
+    v12 = odb.dbTechVia_create(tech, "VIA12")
+    odb.dbBox_create(v12, m1, 0, 0, 2000, 2000)
+    odb.dbBox_create(v12, m2, 0, 0, 2000, 2000)
+
+    v23 = odb.dbTechVia_create(tech, "VIA23")
+    odb.dbBox_create(v23, m2, 0, 0, 2000, 2000)
+    odb.dbBox_create(v23, m3, 0, 0, 2000, 2000)
+
+    return db, tech, m1, m2, m3, v12, v23
+
+
     
 #logical expr OUT = (IN1&IN2)
 #

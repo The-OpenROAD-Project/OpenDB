@@ -18,7 +18,7 @@ class TestWireCodec(odbUnitTest.TestCase):
     def tearDown(self):
         self.db.destroy(self.db)
 
-    def test_encoding(self):
+    def test_decoder(self):
         encoder = odb.dbWireEncoder()
         encoder.begin(self.wire)
         encoder.newPath(self.m1, "ROUTED")
@@ -40,26 +40,143 @@ class TestWireCodec(odbUnitTest.TestCase):
         encoder.addPoint(3000, 18000, 6000)
         encoder.end()
 
-
+        
 
         decoder = odb.dbWireDecoder()
         decoder.begin(self.wire)
 
-        while decoder.peek() is not odb.dbWireDecoder.END_DECODE:
-            
-            nextOp = decoder.next()
-            print(str(nextOp) + " : " + self.pathsEnums[nextOp])
-            if nextOp == odb.dbWireDecoder.POINT:
-                point = decoder.getPoint()
-                print("Point: " + str(point))
-            elif nextOp == odb.dbWireDecoder.POINT_EXT:
-                x = int(1)
-                y = int(1)
-                z = int(1)
-                point = decoder.getPoint((x,y,z)) ## <== This gives an error, tried using new_int doesn't work as well.
-                print("Point: " + str(point))
+
+        # Encoding started with a path
+        nextOp = decoder.next()
+        assert nextOp == odb.dbWireDecoder.PATH
         
-        assert 1
+
+        # Check first point
+        nextOp = decoder.next()
+        assert nextOp == odb.dbWireDecoder.POINT
+        point = decoder.getPoint()
+        assert point == [2000, 2000]
+
+
+        # Check second point
+        nextOp = decoder.next()
+        assert nextOp == odb.dbWireDecoder.POINT
+        point = decoder.getPoint()
+        assert point == [10000, 2000]
+
+
+        # Check third point
+        nextOp = decoder.next()
+        assert nextOp == odb.dbWireDecoder.POINT
+        point = decoder.getPoint()
+        assert point == [18000, 2000]
+
+
+        # Check first junction id
+        nextOp = decoder.next()
+        assert nextOp == odb.dbWireDecoder.JUNCTION
+        jid = decoder.getJunctionValue()
+        assert jid == j1
+
+
+        # Check junction point
+        nextOp = decoder.next()
+        assert nextOp == odb.dbWireDecoder.POINT
+        point = decoder.getPoint()
+        assert point == [10000, 2000]
+
+
+        # Check tech via
+        nextOp = decoder.next()
+        assert nextOp == odb.dbWireDecoder.TECH_VIA
+        tchVia = decoder.getTechVia()
+        assert tchVia.getName() == self.v12.getName()
+
+
+        # Check next point
+        nextOp = decoder.next()
+        assert nextOp == odb.dbWireDecoder.POINT
+        point = decoder.getPoint()
+        assert point == [10000, 10000]
+
+
+        # Check next point
+        nextOp = decoder.next()
+        assert nextOp == odb.dbWireDecoder.POINT
+        point = decoder.getPoint()
+        assert point == [10000, 18000]
+
+        # Check second junction id
+        nextOp = decoder.next()
+        assert nextOp == odb.dbWireDecoder.JUNCTION
+        jid = decoder.getJunctionValue()
+        assert jid == j2
+
+
+        # Check junction point
+        nextOp = decoder.next()
+        assert nextOp == odb.dbWireDecoder.POINT
+        point = decoder.getPoint()
+        assert point == [10000, 10000]
+
+
+        # Check tech via
+        nextOp = decoder.next()
+        assert nextOp == odb.dbWireDecoder.TECH_VIA
+        tchVia = decoder.getTechVia()
+        assert tchVia.getName() == self.v12.getName()
+
+
+        # Check next point
+        nextOp = decoder.next()
+        assert nextOp == odb.dbWireDecoder.POINT_EXT
+        point = decoder.getPoint_ext()
+        assert point == [23000, 10000, 4000]
+
+        
+        # Check third junction id
+        nextOp = decoder.next()
+        assert nextOp == odb.dbWireDecoder.JUNCTION
+        jid = decoder.getJunctionValue()
+        assert jid == j3
+
+
+        # Check junction point
+        nextOp = decoder.next()
+        assert nextOp == odb.dbWireDecoder.POINT
+        point = decoder.getPoint()
+        assert point == [10000, 10000]
+
+        # Check next point
+        nextOp = decoder.next()
+        assert nextOp == odb.dbWireDecoder.POINT
+        point = decoder.getPoint()
+        assert point == [3000, 10000]
+
+        # Check tech via
+        nextOp = decoder.next()
+        assert nextOp == odb.dbWireDecoder.TECH_VIA
+        tchVia = decoder.getTechVia()
+        assert tchVia.getName() == self.v12.getName()
+
+        # Check tech via
+        nextOp = decoder.next()
+        assert nextOp == odb.dbWireDecoder.TECH_VIA
+        tchVia = decoder.getTechVia()
+        assert tchVia.getName() == self.v23.getName()
+
+        # Check next point
+        nextOp = decoder.next()
+        assert nextOp == odb.dbWireDecoder.POINT_EXT
+        point = decoder.getPoint_ext()
+        assert point == [3000, 10000, 4000]
+
+        # Check next point
+        nextOp = decoder.next()
+        assert nextOp == odb.dbWireDecoder.POINT_EXT
+        point = decoder.getPoint_ext()
+        assert point == [3000, 18000, 6000]
+
 
 
 if __name__=='__main__':

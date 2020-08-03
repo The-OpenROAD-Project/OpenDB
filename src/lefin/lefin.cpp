@@ -956,7 +956,10 @@ void lefin::macro(lefiMacro* macro)
 
   if (macro->hasLEQ()) {
     dbMaster* leq = _lib->findMaster(macro->LEQ());
-    _master->setLEQ(leq);
+    if (leq == NULL)
+      notice(0, "warning: cannot find LEQ for macro %s \n", macro->name());
+    else
+      _master->setLEQ(leq);
   }
 
   if (macro->hasSize()) {
@@ -1090,7 +1093,15 @@ void lefin::nonDefault(lefiNonDefault* rule)
   for (i = 0; i < rule->numSpacingRules(); ++i) {
     lefiSpacing*       spacing = rule->spacingRule(i);
     dbTechLayer*       l1      = _tech->findLayer(spacing->name1());
+    if (l1 == nullptr) {
+      notice(0, "Invalid layer name %s in NONDEFAULT SPACING\n", spacing->name1());
+      return;
+    }
     dbTechLayer*       l2      = _tech->findLayer(spacing->name2());
+    if (l2 == nullptr) {
+      notice(0, "Invalid layer name %s in NONDEFAULT SPACING\n", spacing->name2());
+      return;
+    }
     dbTechSameNetRule* srule   = dbTechSameNetRule::create(dbrule, l1, l2);
 
     if (spacing->hasStack())
@@ -1416,7 +1427,15 @@ void lefin::spacing(lefiSpacing* spacing)
     return;
 
   dbTechLayer*       l1   = _tech->findLayer(spacing->name1());
+  if (l1 == nullptr) {
+    notice(0, "Invalid layer name %s in SPACING\n", spacing->name1());
+    return;
+  }
   dbTechLayer*       l2   = _tech->findLayer(spacing->name2());
+  if (l2 == nullptr) {
+    notice(0, "Invalid layer name %s in SPACING\n", spacing->name2());
+    return;
+  }
   dbTechSameNetRule* rule = dbTechSameNetRule::create(l1, l2);
 
   if (rule == NULL)

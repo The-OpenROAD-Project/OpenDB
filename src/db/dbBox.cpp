@@ -632,7 +632,6 @@ dbBox* dbBox::create(dbBPin*      bpin_,
 {
   _dbBPin*  bpin  = (_dbBPin*) bpin_;
   _dbBlock* block = (_dbBlock*) bpin->getOwner();
-
   if (bpin->_bbox != 0)
     return NULL;
 

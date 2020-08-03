@@ -449,6 +449,7 @@ void dbInst::setOrigin(int x, int y)
   for (cbitr = block->_callbacks.begin(); cbitr != block->_callbacks.end();
        ++cbitr)
     (**cbitr)().inDbMoveInst(this);
+  block->_flags._valid_bbox=0;
 }
 
 void dbInst::setLocationOrient(dbOrientType orient)
@@ -476,6 +477,7 @@ void dbInst::setLocation(int x, int y)
   dbTransform t(getOrient());
   t.apply(bbox);
   setOrigin(x - bbox.xMin(), y - bbox.yMin());
+  
 }
 
 dbBox* dbInst::getBBox()
@@ -495,6 +497,7 @@ void dbInst::setOrient(dbOrientType orient)
 {
   _dbInst*  inst  = (_dbInst*) this;
   _dbBlock* block = (_dbBlock*) inst->getOwner();
+
 #ifdef FULL_ECO
   uint prev_flags = flagsToUInt(inst);
 #endif
@@ -512,6 +515,7 @@ void dbInst::setOrient(dbOrientType orient)
   for (cbitr = block->_callbacks.begin(); cbitr != block->_callbacks.end();
        ++cbitr)
     (**cbitr)().inDbMoveInst(this);
+  block->_flags._valid_bbox = 0;
 }
 
 dbPlacementStatus dbInst::getPlacementStatus()
@@ -526,7 +530,8 @@ void dbInst::setPlacementStatus(dbPlacementStatus status)
   //_dbBlock * block = (_dbBlock *) getOwner();
   // uint prev_flags = flagsToUInt(inst);
   inst->_flags._status = status.getValue();
-
+  _dbBlock*  block =(_dbBlock*) getBlock();
+  block->_flags._valid_bbox = 0;
 #ifdef FULL_ECO
   if (block->_journal) {
     debug("DB_ECO", "A", "ECO: setPlacementStatus %d\n", status.getValue());
@@ -1223,7 +1228,6 @@ dbInst* dbInst::create(dbBlock*    block_,
   _dbBlock*   block    = (_dbBlock*) block_;
   _dbMaster*  master   = (_dbMaster*) master_;
   _dbInstHdr* inst_hdr = block->_inst_hdr_hash.find(master->_id);
-
   if (inst_hdr == NULL) {
     inst_hdr
         = (_dbInstHdr*) dbInstHdr::create((dbBlock*) block, (dbMaster*) master);

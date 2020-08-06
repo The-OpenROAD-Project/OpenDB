@@ -53,6 +53,9 @@ core
 *.rej
 TAGS
 
+# Documentation
+doc
+
 src/defin/def_parser.output
 src/defin/def_parser.cpp
 src/defin/def_parser.hpp

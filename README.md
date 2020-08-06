@@ -46,6 +46,20 @@ src/defout - DEF writer
 We have over 1,800 objects and functions that we are still documenting (for both TCL and Python). 
 **Contributions are very welcome in this effort**. Find starting points below.
 
+### Generating Doxygen documentation
+
+Go to the top level OpenDB directory and run 
+
+```
+Doxygen Doxyfile
+```
+
+HTML documentation will be generated in the ./doc directory.
+Everything is still undocumentated, but at least you get class inheritance diagrams.
+Class starting with an underscore are private/internal classes.
+
+For this to work you need to install Doxygen and Graphviz.
+
 ### TCL
 After building successfully, run OpenDB tcl shell using `./build/src/swig/tcl/opendbtcl`. An example usage:
 

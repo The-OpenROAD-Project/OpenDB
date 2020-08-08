@@ -5,7 +5,6 @@
 # Setting CMake version properly to ensure correct policies behavior
 cmake_minimum_required(VERSION 3.14...3.16)
 set(CMAKE_CXX_STANDARD 11)
-
 # Setting up OpenDB project
 project(OpenDB VERSION 0.0.1
   LANGUAGES CXX)
@@ -34,7 +33,7 @@ add_subdirectory(src/def)
 add_subdirectory(src/zutil)
 add_subdirectory(src/zlib)
 add_subdirectory(src/tm)
-
+add_subdirectory(tests/cpp)
 ############################################################################
 ################################# SWIG #####################################
 ############################################################################

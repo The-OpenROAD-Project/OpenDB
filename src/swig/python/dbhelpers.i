@@ -74,6 +74,15 @@ write_db(odb::dbDatabase* db, const char* db_path)
   return 1;
 }
 
+int *new_int(int ivalue) {
+  int *i = (int *) malloc(sizeof(ivalue));
+  *i = ivalue;
+  return i;
+}
+int get_int(int *i) {
+  return *i;
+}
+
 %}
 
 odb::dbLib*
@@ -89,3 +98,5 @@ write_lef(odb::dbLib* lib, const char* path);
 
 odb::dbDatabase* read_db(odb::dbDatabase* db, const char* db_path);
 int write_db(odb::dbDatabase* db, const char* db_path);
+int *new_int(int ivalue);
+int get_int(int *i);

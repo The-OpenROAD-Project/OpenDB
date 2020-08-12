@@ -384,6 +384,13 @@ void dbRegion::destroy(dbRegion* region_)
   _dbRegion* region = (_dbRegion*) region_;
   _dbBlock*  block  = (_dbBlock*) region->getOwner();
 
+  dbSet<dbRegion>           children = region_->getChildren();
+  dbSet<dbRegion>::iterator childItr;
+  for (childItr = children.begin(); childItr != children.end(); childItr = children.begin()) {
+    dbRegion* child = *childItr;
+    child->destroy(child);
+  }
+
   dbSet<dbInst>           insts = region_->getRegionInsts();
   dbSet<dbInst>::iterator iitr;
 

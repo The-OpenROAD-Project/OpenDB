@@ -1370,8 +1370,8 @@ void dbBlock::ComputeBBox()
       }
     }
   }
-
-  dbSet<dbObstruction>           obstructions = getObstructions();
+  
+  dbSet<dbObstruction> obstructions = getObstructions();
   dbSet<dbObstruction>::iterator oitr;
 
   for (oitr = obstructions.begin(); oitr != obstructions.end(); ++oitr) {

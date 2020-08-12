@@ -35,6 +35,9 @@ using namespace odb;
    $1 = PyInt_Check($input) ? 1 : 0;
 }
 
+%rename(getPoint_ext) odb::dbWireDecoder::getPoint(int&, int&, int&) const; 
+%apply int &OUTPUT { int & x, int & y, int & ext };
+
 %ignore odb::dbTechLayerAntennaRule::pwl_pair;
 %ignore odb::dbTechLayerAntennaRule::getDiffPAR() const;
 %ignore odb::dbTechLayerAntennaRule::getDiffCAR() const;

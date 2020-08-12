@@ -38,7 +38,7 @@ template<typename T>
 inline uint flagsToUInt(T* obj)
 {
   // Safe type punning
-  static_assert(sizeof(obj->_flags) == 4);
+  static_assert(sizeof(obj->_flags) == 4, "flags size != 4");
   uint i;
   std::memcpy(&i, &obj->_flags, sizeof(obj->_flags));
   return i;

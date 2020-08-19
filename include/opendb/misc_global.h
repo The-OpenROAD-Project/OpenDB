@@ -46,14 +46,3 @@ void  ATH__deallocCharWord(const char* a);
 FILE* ATH__openFile(const char* name, const char* type);
 
 void ATH__closeFile(FILE* fp);
-
-#include "odb.h"
-namespace odb {
-void  start_timer();
-void  end_timer(char* msg);
-void  start_htimer();
-void  end_htimer(char* msg);
-char* replace_string(const char* start, char search, const char* replace);
-}  // namespace odb
-
-

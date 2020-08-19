@@ -6,7 +6,6 @@ link_libraries(opendb
         defin
         defout
         lefout
-        zutil
         lefin
         tcl
 )

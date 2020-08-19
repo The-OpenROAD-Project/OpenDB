@@ -330,13 +330,8 @@ int ZInterface::notice(int code, const char* msg, ...)
   return event("notice", notice_id, buffer, 0);
 }
 
-extern int verboseStatus;
-
 int ZInterface::verbose(int code, const char* msg, ...)
 {
-  if (verboseStatus != 1)
-    return TCL_OK;
-
   char    buffer[8192];
   va_list args;
   va_start(args, msg);

@@ -560,6 +560,7 @@ void Ath__wire::reset()
                // 0=wire, 1=obs, 2=pin, 3=power
   _dir = 0;
   _ext = 0;
+	_ouLen= 0;
 }
 bool Ath__wire::isTilePin()
 {
@@ -583,9 +584,44 @@ bool Ath__wire::isPower()
   else
     return false;
 }
+bool Ath__wire::isVia()
+{
+	uint via_wire_id = 5; // see db/dbSearch.cpp
+	if (_flags==via_wire_id)
+		return true;
+	else
+		return false;
+}
 void Ath__wire::setOtherId(uint id)
 {
   _otherId = id;
+}
+int Ath__wire::getRsegId()
+{
+	int wBoxId= _boxId;
+	if (!(_otherId>0))
+		return wBoxId;
+
+	if (isVia()) {
+		wBoxId= getShapeProperty(_otherId);
+	} else {
+		getNet()->getWire()->getProperty((int)_otherId, wBoxId);
+	}
+	return wBoxId;
+}
+int Ath__wire::getShapeProperty(int id)
+{
+	dbNet *net= getNet();
+	if (net==NULL)
+		return 0;
+	char buff[64];
+	sprintf(buff,"%d",id);
+	char const *pchar = strdup(buff);
+	dbIntProperty *p= dbIntProperty::find( net, pchar );
+  if (p==NULL)
+		return 0;
+	int rcid=p->getValue();
+	return rcid;
 }
 dbNet* Ath__wire::getNet()
 {
@@ -631,6 +667,9 @@ void Ath__wire::set(uint dir, int* ll, int* ur)
 
   _base  = yx1;  // small dimension
   _width = yx2 - yx1;
+  //OpenRCX
+	_visited=0;
+	_ouLen= 0;
 }
 Ath__wire* Ath__track::getTargetWire()
 {
@@ -2479,6 +2518,7 @@ uint Ath__grid::placeWire(Ath__searchBox* bb)
   for (uint ii = trackNum1 + 1; ii <= trackNum2; ii++) {
     Ath__wire* w1 = makeWire(w, wireType);
     w1->_srcId    = w->_id;
+		w1->_srcWire= w;
     _gridtable->incrMultiTrackWireCnt(w->isPower());
     Ath__track* track = getTrackPtr(ii, _markerCnt);
     // track->place2(w1, m1, m2);
@@ -3076,6 +3116,7 @@ Ath__wire* Ath__grid::makeWire(uint dir,
 {
   Ath__wire* w = getPoolWire();
   w->_srcId    = 0;
+	w->_srcWire= NULL;
 
   w->reset();
   w->set(dir, ll, ur);

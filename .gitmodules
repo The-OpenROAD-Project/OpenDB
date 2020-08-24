@@ -1,6 +1,6 @@
 [submodule "lef"]
 	path = src/lef
-	url = https://github.com/The-OpenROAD-Project/lef.git
+	url =../lef.git
 [submodule "src/def"]
 	path = src/def
-	url = https://github.com/The-OpenROAD-Project/def.git
+	url = ../def.git

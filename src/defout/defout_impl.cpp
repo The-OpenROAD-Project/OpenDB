@@ -149,7 +149,9 @@ bool defout_impl::writeBlock(dbBlock* block, const char* def_file)
   } else if (_version == defout::DEF_5_8) {
     fprintf(_out, "VERSION 5.8 ;\n");
   }
-  fprintf(_out, "NAMESCASESENSITIVE ON ;\n");
+  if (_version < defout::DEF_5_6) {
+    fprintf(_out, "NAMESCASESENSITIVE ON ;\n");
+  }
   char hd = block->getHierarchyDelimeter();
 
   if (hd == 0)

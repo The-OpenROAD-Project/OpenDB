@@ -57,7 +57,7 @@ endif()
 ############################################################################
 find_package(Doxygen)
 
-if (DOXYGEN)
+if (DOXYGEN_FOUND)
   set(DOXYGEN_EXTRACT_STATIC YES)
   set(DOXYGEN_REFERENCED_BY_RELATION YES)
   set(DOXYGEN_REFERENCES_RELATION YES)

@@ -154,12 +154,14 @@ class Ath__wire
   uint _srcId;  // TODO-OPTIMIZE
   uint _boxId;
   uint _otherId;
+	Ath__wire *_srcWire; // OpenRCX
 
   Ath__track* _track;
   Ath__wire*  _next;
 
   int _xy;  // TODO offset from track start in large dimension
   int _len;
+	int _ouLen; // OpenRCX
 
   int _base;
   int _width : 24;
@@ -169,8 +171,12 @@ class Ath__wire
 
   uint _dir : 1;
   uint _ext : 1;
+	uint _visited:1; // OpenRCX
 
  public:
+  int getShapeProperty(int id); // OpenRCX
+	int getRsegId(); // OpenRCX
+  
   void reset();
   // void set(int xy1, int xy2);
   void set(uint dir, int* ll, int* ur);
@@ -187,6 +193,7 @@ class Ath__wire
   void       setOtherId(uint id);
   uint       getOtherId();
   bool       isPower();
+  bool       isVia(); // OpenRCX
   bool       isTilePin();
   bool       isTileBus();
   uint       getOwnerId();

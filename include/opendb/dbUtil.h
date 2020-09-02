@@ -202,6 +202,8 @@ class dbCreateNetUtil
                   char*  name               = NULL,
                   bool   removeITermsBTerms = true);
   dbNet*  getCurrentNet();
+  // OpenRCX 7/27/20 
+  std::vector<dbTechLayer*> getRoutingLayer() { return _routingLayers; };
 };
 
 }  // namespace odb

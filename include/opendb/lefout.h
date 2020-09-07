@@ -33,6 +33,7 @@
 #pragma once
 
 #include "odb.h"
+#include <unordered_map>
 
 namespace odb {
 
@@ -49,6 +50,7 @@ class dbTechNonDefaultRule;
 class dbTechLayerRule;
 class dbTechViaRule;
 class dbTechViaGenerateRule;
+class dbProperty;
 
 class lefout
 {
@@ -73,6 +75,10 @@ class lefout
   void writeSameNetRule(dbTechSameNetRule* rule);
   void writeTechViaRule(dbTechViaRule* rule);
   void writeTechViaGenerateRule(dbTechViaGenerateRule* rule);
+  void writePropertyDefinition(dbProperty* prop);
+  void writePropertyDefinitions(dbLib* lib);
+  inline void writeObjectPropertyDefinitions(dbObject* obj,std::unordered_map<std::string,short>& propertiesMap);
+
 
  public:
   double lefdist(int value) { return ((double) value * _dist_factor); }

@@ -863,8 +863,11 @@ void lefout::writePropertyDefinition(dbProperty* prop)
     return;
   }
   fprintf(_out, "    %s %s %s ", objectType.c_str(),propName.c_str(),propType.c_str());
-  if(owner_type==dbLibObj)
+  if(owner_type==dbLibObj){
+    fprintf(_out,"\n        ");
     prop->writePropValue(prop,_out);
+    fprintf(_out,"\n    ");
+  }
   
   fprintf(_out, ";\n");
 }

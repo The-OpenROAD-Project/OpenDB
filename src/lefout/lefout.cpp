@@ -906,8 +906,6 @@ inline void lefout::writeObjectPropertyDefinitions(dbObject* obj,std::unordered_
   for (pitr = properties.begin(); pitr != properties.end(); ++pitr)
   {
     dbProperty* prop = *pitr;
-    if(propertiesMap.find(prop->getName())==propertiesMap.end())
-      propertiesMap[prop->getName()]=0;
     if(propertiesMap[prop->getName()]&0x1<<bitNumber)
       continue;
     propertiesMap[prop->getName()]|=0x1<<bitNumber;
@@ -919,63 +917,37 @@ void lefout::writePropertyDefinitions(dbLib* lib)
 {
   std::unordered_map<std::string,short> propertiesMap;
   dbTech* tech = lib->getDb()->getTech();
+  
   fprintf(_out, "\nPROPERTYDEFINITIONS\n");
-  //Layer is bit 0 in the short value of the map
-  dbSet<dbTechLayer> layers = tech->getLayers();
-  dbSet<dbTechLayer>::iterator litr;
-  for (litr = layers.begin(); litr != layers.end(); ++litr)
-  {
-    dbTechLayer* layer = *litr;
+
+  //writing property definitions of objectType LAYER
+  for(dbTechLayer* layer : tech->getLayers())
     writeObjectPropertyDefinitions(layer,propertiesMap);
-  }
-  //Lib is bit 1 in the short value of the map
+  
+  //writing property definitions of objectType LIBRARY
   writeObjectPropertyDefinitions(lib,propertiesMap);
-  //Macro is bit 2 in the short value of the map
-  dbSet<dbMaster> masters = lib->getMasters();
-  dbSet<dbMaster>::iterator mitr;
-  for (mitr = masters.begin(); mitr != masters.end(); ++mitr)
+  
+  //writing property definitions of objectType MACRO
+  for(dbMaster* master:lib->getMasters())
   {
-    dbMaster* master = *mitr;
     writeObjectPropertyDefinitions(master,propertiesMap);
-    //Pin is bit 3 in the short value of the map
-    dbSet<dbMTerm> terms = master->getMTerms();
-    dbSet<dbMTerm>::iterator titr;
-    for (titr = terms.begin(); titr != terms.end(); ++titr)
-    {
-      dbMTerm* term =*titr;
-      dbSet<dbMPin> pins = term->getMPins();
-      dbSet<dbMPin>::iterator pitr;
-      for (pitr = pins.begin(); pitr != pins.end(); ++pitr)
-      {
-        dbMPin* pin = *pitr;
+    for(dbMTerm* term:master->getMTerms())
+      for(dbMPin* pin:term->getMPins())
         writeObjectPropertyDefinitions(pin,propertiesMap);
-      }
-    }
   }
-  //Via is bit 4 in the short value of the map
-  dbSet<dbTechVia> vias = tech->getVias();
-  dbSet<dbTechVia>::iterator vitr;
-  for (vitr = vias.begin(); vitr != vias.end(); ++vitr)
-  {
-    dbTechVia* via = *vitr;
+  
+  //writing property definitions of objectType VIA
+  for(dbTechVia* via:tech->getVias())
     writeObjectPropertyDefinitions(via,propertiesMap);
-  }
-  //ViaRule is bit 5 in the short value of the map
-  dbSet<dbTechViaRule> vrules = tech->getViaRules();
-  dbSet<dbTechViaRule>::iterator vritr;
-  for (vritr = vrules.begin(); vritr != vrules.end(); ++vritr)
-  {
-    dbTechViaRule* vrule = *vritr;
+  
+  //writing property definitions of objectType VIARULE
+  for(dbTechViaRule* vrule:tech->getViaRules())
     writeObjectPropertyDefinitions(vrule,propertiesMap);
-  }
-  //NonDefaultRule is bit 6 in the short value of the map
-  dbSet<dbTechNonDefaultRule> nrules = tech->getNonDefaultRules();
-  dbSet<dbTechNonDefaultRule>::iterator nritr;
-  for (nritr = nrules.begin(); nritr != nrules.end(); ++nritr)
-  {
-    dbTechNonDefaultRule* nrule = *nritr;
+  
+  //writing property definitions of objectType NONDEFAULTRULE
+  for(dbTechNonDefaultRule* nrule:tech->getNonDefaultRules())
     writeObjectPropertyDefinitions(nrule,propertiesMap);
-  }
+
   fprintf(_out, "END PROPERTYDEFINITIONS\n\n");
 
 }

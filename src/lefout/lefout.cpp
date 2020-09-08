@@ -30,12 +30,15 @@
 // ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 // POSSIBILITY OF SUCH DAMAGE.
 
+#include "lefout.h"
+
 #include <stdio.h>
+
 #include <algorithm>
+#include <unordered_map>
+
 #include "db.h"
 #include "dbTransform.h"
-#include "lefout.h"
-#include <unordered_map>
 
 using namespace odb;
 
@@ -816,12 +819,11 @@ void lefout::writeMTerm(dbMTerm* mterm)
 
 void lefout::writePropertyDefinition(dbProperty* prop)
 {
-  std::string propName = prop->getName();
-  dbObjectType owner_type = prop->getPropOwner()->getObjectType();
-  dbProperty::Type prop_type = prop->getType();
-  std::string objectType,propType,value;
-  switch (owner_type)
-  {
+  std::string      propName   = prop->getName();
+  dbObjectType     owner_type = prop->getPropOwner()->getObjectType();
+  dbProperty::Type prop_type  = prop->getType();
+  std::string      objectType, propType, value;
+  switch (owner_type) {
     case dbTechLayerObj:
       objectType = "LAYER";
       break;
@@ -847,109 +849,110 @@ void lefout::writePropertyDefinition(dbProperty* prop)
       return;
   }
 
-  switch (prop_type)
-  {
-  case dbProperty::INT_PROP:
-  case dbProperty::BOOL_PROP:
-    propType = "INTEGER";
-    break;
-  case dbProperty::DOUBLE_PROP:
-    propType = "REAL";
-    break;
-  case dbProperty::STRING_PROP:
-    propType = "STRING";
-    break;
-  default:
-    return;
+  switch (prop_type) {
+    case dbProperty::INT_PROP:
+    case dbProperty::BOOL_PROP:
+      propType = "INTEGER";
+      break;
+    case dbProperty::DOUBLE_PROP:
+      propType = "REAL";
+      break;
+    case dbProperty::STRING_PROP:
+      propType = "STRING";
+      break;
+    default:
+      return;
   }
-  fprintf(_out, "    %s %s %s ", objectType.c_str(),propName.c_str(),propType.c_str());
-  if(owner_type==dbLibObj){
-    fprintf(_out,"\n        ");
-    prop->writePropValue(prop,_out);
-    fprintf(_out,"\n    ");
+  fprintf(_out,
+          "    %s %s %s ",
+          objectType.c_str(),
+          propName.c_str(),
+          propType.c_str());
+  if (owner_type == dbLibObj) {
+    fprintf(_out, "\n        ");
+    prop->writePropValue(prop, _out);
+    fprintf(_out, "\n    ");
   }
-  
+
   fprintf(_out, ";\n");
 }
 
-inline void lefout::writeObjectPropertyDefinitions(dbObject* obj,std::unordered_map<std::string,short>& propertiesMap)
+inline void lefout::writeObjectPropertyDefinitions(
+    dbObject*                               obj,
+    std::unordered_map<std::string, short>& propertiesMap)
 {
   int bitNumber;
-  switch (obj->getObjectType())
-  {
-  case dbTechLayerObj:
-    bitNumber = 0;
-    break;
-  case dbLibObj:
-    bitNumber = 1;
-    break;
-  case dbMasterObj:
-    bitNumber = 2;
-    break;
-  case dbMPinObj:
-    bitNumber = 3;
-    break;
-  case dbTechViaObj:
-    bitNumber = 4;
-    break;
-  case dbTechViaRuleObj:
-    bitNumber = 5;
-    break;
-  case dbTechNonDefaultRuleObj:
-    bitNumber = 6;
-    break;
-  default:
-    return;
+  switch (obj->getObjectType()) {
+    case dbTechLayerObj:
+      bitNumber = 0;
+      break;
+    case dbLibObj:
+      bitNumber = 1;
+      break;
+    case dbMasterObj:
+      bitNumber = 2;
+      break;
+    case dbMPinObj:
+      bitNumber = 3;
+      break;
+    case dbTechViaObj:
+      bitNumber = 4;
+      break;
+    case dbTechViaRuleObj:
+      bitNumber = 5;
+      break;
+    case dbTechNonDefaultRuleObj:
+      bitNumber = 6;
+      break;
+    default:
+      return;
   }
-  dbSet<dbProperty> properties = dbProperty::getProperties(obj); 
+  dbSet<dbProperty>           properties = dbProperty::getProperties(obj);
   dbSet<dbProperty>::iterator pitr;
-  for (pitr = properties.begin(); pitr != properties.end(); ++pitr)
-  {
+  for (pitr = properties.begin(); pitr != properties.end(); ++pitr) {
     dbProperty* prop = *pitr;
-    if(propertiesMap[prop->getName()]&0x1<<bitNumber)
+    if (propertiesMap[prop->getName()] & 0x1 << bitNumber)
       continue;
-    propertiesMap[prop->getName()]|=0x1<<bitNumber;
-    writePropertyDefinition(prop);      
+    propertiesMap[prop->getName()] |= 0x1 << bitNumber;
+    writePropertyDefinition(prop);
   }
 }
 
 void lefout::writePropertyDefinitions(dbLib* lib)
 {
-  std::unordered_map<std::string,short> propertiesMap;
-  dbTech* tech = lib->getDb()->getTech();
-  
+  std::unordered_map<std::string, short> propertiesMap;
+  dbTech*                                tech = lib->getDb()->getTech();
+
   fprintf(_out, "\nPROPERTYDEFINITIONS\n");
 
-  //writing property definitions of objectType LAYER
-  for(dbTechLayer* layer : tech->getLayers())
-    writeObjectPropertyDefinitions(layer,propertiesMap);
-  
-  //writing property definitions of objectType LIBRARY
-  writeObjectPropertyDefinitions(lib,propertiesMap);
-  
-  //writing property definitions of objectType MACRO
-  for(dbMaster* master:lib->getMasters())
-  {
-    writeObjectPropertyDefinitions(master,propertiesMap);
-    for(dbMTerm* term:master->getMTerms())
-      for(dbMPin* pin:term->getMPins())
-        writeObjectPropertyDefinitions(pin,propertiesMap);
+  // writing property definitions of objectType LAYER
+  for (dbTechLayer* layer : tech->getLayers())
+    writeObjectPropertyDefinitions(layer, propertiesMap);
+
+  // writing property definitions of objectType LIBRARY
+  writeObjectPropertyDefinitions(lib, propertiesMap);
+
+  // writing property definitions of objectType MACRO
+  for (dbMaster* master : lib->getMasters()) {
+    writeObjectPropertyDefinitions(master, propertiesMap);
+    for (dbMTerm* term : master->getMTerms())
+      for (dbMPin* pin : term->getMPins())
+        writeObjectPropertyDefinitions(pin, propertiesMap);
   }
-  
-  //writing property definitions of objectType VIA
-  for(dbTechVia* via:tech->getVias())
-    writeObjectPropertyDefinitions(via,propertiesMap);
-  
-  //writing property definitions of objectType VIARULE
-  for(dbTechViaRule* vrule:tech->getViaRules())
-    writeObjectPropertyDefinitions(vrule,propertiesMap);
-  
-  //writing property definitions of objectType NONDEFAULTRULE
-  for(dbTechNonDefaultRule* nrule:tech->getNonDefaultRules())
-    writeObjectPropertyDefinitions(nrule,propertiesMap);
+
+  // writing property definitions of objectType VIA
+  for (dbTechVia* via : tech->getVias())
+    writeObjectPropertyDefinitions(via, propertiesMap);
+
+  // writing property definitions of objectType VIARULE
+  for (dbTechViaRule* vrule : tech->getViaRules())
+    writeObjectPropertyDefinitions(vrule, propertiesMap);
+
+  // writing property definitions of objectType NONDEFAULTRULE
+  for (dbTechNonDefaultRule* nrule : tech->getNonDefaultRules())
+    writeObjectPropertyDefinitions(nrule, propertiesMap);
 
   fprintf(_out, "END PROPERTYDEFINITIONS\n\n");
-
 }
 
 bool lefout::writeTech(dbTech* tech, const char* lef_file)

@@ -32,8 +32,9 @@
 
 #pragma once
 
-#include "odb.h"
 #include <unordered_map>
+
+#include "odb.h"
 
 namespace odb {
 
@@ -61,24 +62,25 @@ class lefout
   double _dist_factor;
   double _area_factor;
 
-  void writeBoxes(void* boxes, const char* indent);
-  void writeTech(dbTech* tech);
-  void writeLayer(dbTechLayer* layer);
-  void writeVia(dbTechVia* via);
-  void writeHeader(dbLib* lib);
-  void writeLib(dbLib* lib);
-  void writeMaster(dbMaster* master);
-  void writeMTerm(dbMTerm* mterm);
-  void writeSite(dbSite* site);
-  void writeNonDefaultRule(dbTech* tech, dbTechNonDefaultRule* rule);
-  void writeLayerRule(dbTechLayerRule* rule);
-  void writeSameNetRule(dbTechSameNetRule* rule);
-  void writeTechViaRule(dbTechViaRule* rule);
-  void writeTechViaGenerateRule(dbTechViaGenerateRule* rule);
-  void writePropertyDefinition(dbProperty* prop);
-  void writePropertyDefinitions(dbLib* lib);
-  inline void writeObjectPropertyDefinitions(dbObject* obj,std::unordered_map<std::string,short>& propertiesMap);
-
+  void        writeBoxes(void* boxes, const char* indent);
+  void        writeTech(dbTech* tech);
+  void        writeLayer(dbTechLayer* layer);
+  void        writeVia(dbTechVia* via);
+  void        writeHeader(dbLib* lib);
+  void        writeLib(dbLib* lib);
+  void        writeMaster(dbMaster* master);
+  void        writeMTerm(dbMTerm* mterm);
+  void        writeSite(dbSite* site);
+  void        writeNonDefaultRule(dbTech* tech, dbTechNonDefaultRule* rule);
+  void        writeLayerRule(dbTechLayerRule* rule);
+  void        writeSameNetRule(dbTechSameNetRule* rule);
+  void        writeTechViaRule(dbTechViaRule* rule);
+  void        writeTechViaGenerateRule(dbTechViaGenerateRule* rule);
+  void        writePropertyDefinition(dbProperty* prop);
+  void        writePropertyDefinitions(dbLib* lib);
+  inline void writeObjectPropertyDefinitions(
+      dbObject*                               obj,
+      std::unordered_map<std::string, short>& propertiesMap);
 
  public:
   double lefdist(int value) { return ((double) value * _dist_factor); }
@@ -106,5 +108,3 @@ class lefout
 };
 
 }  // namespace odb
-
-

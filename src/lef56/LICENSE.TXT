@@ -93,7 +93,7 @@ the Contribution.
 2.3     Subject to the terms and conditions  of  this  Agreement,
 Cadence  hereby grants each Recipient a non-exclusive, worldwide,
 royalty-free trademark license, to  use  the  Cadence  trademarks
-"LEF",  or  "DEF", in accordance with Cadence’s marking policies,
+"LEF",  or  "DEF", in accordance with Cadence's marking policies,
 in connection with the license grants hereunder.
 
 2.4     Recipient  understands  that  although  each  Contributor

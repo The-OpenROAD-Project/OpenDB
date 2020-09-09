@@ -34,6 +34,7 @@
 
 #include <unordered_map>
 
+#include "dbObject.h"
 #include "odb.h"
 
 namespace odb {

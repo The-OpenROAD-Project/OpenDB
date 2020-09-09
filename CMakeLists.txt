@@ -51,3 +51,16 @@ option(BUILD_TCL "Build TCL SWIG module" ON)
 if(NOT OPENROAD_BUILD AND BUILD_TCL)
     add_subdirectory(src/swig/tcl)
 endif()
+
+############################################################################
+############################### DOXYGEN ####################################
+############################################################################
+find_package(Doxygen)
+
+if (DOXYGEN_FOUND)
+  set(DOXYGEN_EXTRACT_STATIC YES)
+  set(DOXYGEN_REFERENCED_BY_RELATION YES)
+  set(DOXYGEN_REFERENCES_RELATION YES)
+
+  doxygen_add_docs(docs include)
+endif()

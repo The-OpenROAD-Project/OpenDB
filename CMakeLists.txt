@@ -46,7 +46,7 @@ find_package(PythonInterp 3)
 find_package(PythonLibs 3)
 
 if (PythonLibs_FOUND)
-    message("-- Found python, enabling Python SWIG Module")
+    message(STATUS "Found python, enabling Python SWIG Module")
     option(BUILD_PYTHON "Build Python SWIG module" ON)
 endif()
 

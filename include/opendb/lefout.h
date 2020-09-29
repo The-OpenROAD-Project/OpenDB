@@ -36,7 +36,8 @@
 
 #include "dbObject.h"
 #include "odb.h"
-
+#include <string>
+#include <unordered_map>
 namespace odb {
 
 class dbTech;

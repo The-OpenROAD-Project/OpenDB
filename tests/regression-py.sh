@@ -78,6 +78,11 @@ python3 $BASE_DIR/python/15-row_settings_test.py
 echo "SUCCESS!"
 echo ""
 
+echo "[16] Database def octilinear read write test"
+python3 $BASE_DIR/python/16-db-read-write-octilinear-def_test.py
+echo "SUCCESS!"
+echo ""
+
 echo "[17] Database read/write test"
 python3 $BASE_DIR/python/17-db_read-write_test.py
 echo "SUCCESS!"

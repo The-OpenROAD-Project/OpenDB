@@ -252,9 +252,7 @@ dbSBox* dbSBox::create(dbSWire*        wire_,
   box->_next_box = (uint) wire->_wires;
   wire->_wires   = box->getOID();
 
-  //TODO: UPDATE dbBlock
-  // block->add_rect(box->_rect);
-  // block->add_geom_shape(_shape); 
+  block->add_geom_shape(_geomshape); 
   
   return (dbSBox*) box;
 }

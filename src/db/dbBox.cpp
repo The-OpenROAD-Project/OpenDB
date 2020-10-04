@@ -81,12 +81,11 @@ bool _dbBox::operator==(const _dbBox& rhs) const
 
   if (_flags._via_id != rhs._flags._via_id)
     return false;
-  if (isOct()){
-    if(!rhs.isOct())
-      return false;
-    else if(_shape._oct!=_shape._oct)
-      return false;
-  }else if(_shape._rect!=_shape._rect)
+  if (_octilinear !=rhs._octilinear)
+    return false;
+  if ( isOct() && _shape._oct!=_shape._oct)
+    return false;
+  else if(_shape._rect!=_shape._rect)
     return false;
 
   if (_owner != rhs._owner)
@@ -137,12 +136,11 @@ int _dbBox::equal(const _dbBox& rhs) const
   }
   if (_octilinear!= rhs._octilinear)
     return false;
-  if (isOct()){
-    if(!rhs.isOct())
-      return false;
-    else if(_shape._oct!=_shape._oct)
-      return false;
-  }else if(_shape._rect!=_shape._rect)
+  if (_octilinear !=rhs._octilinear)
+    return false;
+  if ( isOct() && _shape._oct!=_shape._oct)
+    return false;
+  else if(_shape._rect!=_shape._rect)
     return false;
 
   return true;
@@ -454,10 +452,7 @@ void _dbBox::getViaXY(int& x, int& y) const
 GeomShape* dbBox::getGeomShape()
 {
   _dbBox* box = (_dbBox*) this;
-  if(box->isOct())
-    return (GeomShape*) &box->_shape._oct;
-  else
-    return (GeomShape*) &box->_shape._rect;
+  return (GeomShape*) &box->_shape;
 }
 
 int dbBox::xMin()

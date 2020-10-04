@@ -269,7 +269,7 @@ void dbBPin::destroy(dbBPin* bpin_)
   if (bpin->_bbox) {
     _dbBox* b = block->_box_tbl->getPtr(bpin->_bbox);
     dbProperty::destroyProperties(b);
-    block->remove_rect(b->_rect);
+    block->remove_rect(b->_shape._rect);
     block->_box_tbl->destroy(b);
   }
 

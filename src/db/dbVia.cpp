@@ -451,7 +451,7 @@ dbVia* dbVia::create(dbBlock*     block,
   for (itr = boxes.begin(); itr != boxes.end(); ++itr) {
     _dbBox*      box = (_dbBox*) *itr;
     dbTechLayer* l   = (dbTechLayer*) box->getTechLayer();
-    Rect         r   = box->_rect;
+    Rect         r   = box->_shape._rect;
     t.apply(r);
     dbBox::create((dbVia*) via, l, r.xMin(), r.yMin(), r.xMax(), r.yMax());
   }
@@ -481,7 +481,7 @@ dbVia* dbVia::create(dbBlock*     block,
   for (itr = boxes.begin(); itr != boxes.end(); ++itr) {
     _dbBox*      box = (_dbBox*) *itr;
     dbTechLayer* l   = (dbTechLayer*) box->getTechLayer();
-    Rect         r   = box->_rect;
+    Rect         r   = box->_shape._rect;
     t.apply(r);
     dbBox::create((dbVia*) via, l, r.xMin(), r.yMin(), r.xMax(), r.yMax());
   }

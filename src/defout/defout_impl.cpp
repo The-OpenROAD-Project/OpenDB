@@ -1717,6 +1717,15 @@ void defout_impl::writeSpecialPath(dbSBox* box)
       assert(x1 == x2);
       break;
     }
+    case dbSBox::OCTILINEAR: {
+      Oct oct = box->getOct();
+      x1 = oct.getCenterLow().getX();
+      y1 = oct.getCenterLow().getY();
+      x2 = oct.getCenterHigh().getX();
+      y2 = oct.getCenterHigh().getY();
+      w = oct.getWidth();
+      break;
+    }
     default:
       throw ZException("unknown direction");
       break;

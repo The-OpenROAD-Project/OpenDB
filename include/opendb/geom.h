@@ -33,6 +33,7 @@
 #pragma once
 
 #include "odb.h"
+#include <vector>
 
 namespace odb {
 
@@ -124,7 +125,171 @@ class Point
   friend dbOStream& operator<<(dbOStream& stream, const Point& p);
 };
 
-class Rect
+
+class GeomShape
+{
+  public:
+  virtual uint dx() const{return 0;};
+  virtual uint dy() const{return 0;};
+  virtual int xMin() const{return 0;};
+  virtual int yMin() const{return 0;};
+  virtual int xMax() const{return 0;};
+  virtual int yMax() const{return 0;};
+  virtual std::vector<Point> getPoints() const{return std::vector<Point>();}; 
+  virtual ~GeomShape(){};
+};
+
+/*
+an Oct represents a 45-degree routing segment as 2 connected octagons
+
+DIR:RIGHT
+                       ---------
+                     /          \
+                   /             \ 
+                 /     high      |
+               /                 |
+             /                  /
+           /                  /
+         /                  /
+       /                  /
+     /                  /
+   /                  /
+  |                 /
+  |     low       / 
+  \             /
+   \          /
+    ---------
+
+DIR: LEFT
+   ---------                      
+  /         \                      
+ /            \                   
+|      high     \                 
+|                 \               
+ \                  \             
+   \                  \           
+     \                  \         
+       \                  \       
+         \                  \     
+           \                  \   
+             \                 |  
+               \       low     |  
+                 \             /  
+                   \          /   
+                     ---------   
+each octagon follows the model:
+      (-B,A) --------- (B,A)
+            /         \
+           /           \ (A,B)
+    (-A,B)|<---width--->|
+          |    center   |
+          |             |
+    (-A,-B)\           /(A,-B)
+            \         /
+      (-B,-A)---------(B,-A)
+
+A = W/2
+B = [ceiling(W/(sqrt(2) * M) ) * M] - A                  
+where W is wire width and M is the manufacturing grid
+*/
+class Oct : public GeomShape
+{
+  Point center_high;   //the center of the higher octagon
+  Point center_low;    //the center of the lower octagon
+  int A;              // A=W/2 (the x distance from the center to the right or left edge)
+  public:
+  enum OCT_DIR        //The direction of the higher octagon relative to the lower octagon ( / is right while  \ is left)
+  {
+    RIGHT,
+    LEFT,
+    UNKNOWN
+  };
+  Oct();
+  Oct(const Oct& r) = default;
+  Oct(const Point p1, const Point p2, int width);
+  Oct(int x1, int y1, int x2, int y2, int width);
+
+  Oct& operator=(const Oct& r) = default;
+  bool  operator==(const Oct& r) const;
+  bool  operator!=(const Oct& r) const{return !(r==*this);};
+  void init(const Point p1, const Point p2, int width);
+  OCT_DIR getDir() const;
+  Point getCenterHigh() const;
+  Point getCenterLow() const;
+  int getWidth() const;
+  
+  uint dx() const
+  {
+    OCT_DIR D = getDir();
+    if(D==RIGHT)
+      return abs(center_high.getX() + A - center_low.getX() + A) ; 
+    else if(D==LEFT)
+      return abs(center_low.getX() + A - center_high.getX() + A) ;
+    else
+      return 0;
+  };
+  uint dy() const
+  {
+    return abs(center_high.getY() + A -center_low.getY() + A);
+  };
+  int   xMin() const
+  {
+    OCT_DIR D = getDir();
+    if(D==RIGHT)
+      return center_low.getX()-A;
+    else if(D==LEFT)
+      return center_high.getX()-A;
+    else
+      return 0;
+  };
+  int   yMin() const
+  {
+    return center_low.getY()-A;
+  };
+  int   xMax() const
+  {
+    OCT_DIR D = getDir();
+    if(D==RIGHT)
+      return center_high.getX()+A;
+    else if(D==LEFT)
+      return center_low.getX()+A;
+    else
+      return 0;
+  };
+  int   yMax() const
+  {
+    return center_high.getY()+A;
+  };
+  std::vector<Point> getPoints() const
+  {
+    OCT_DIR dir = getDir();
+    int B = ceil( (A*2)/(sqrt(2)) ) - A;
+    std::vector<Point> points(9);
+    points[0] = points[8] = Point(center_low.getX()-B,center_low.getY()-A); //low oct (-B,-A)
+    points[1] = Point(center_low.getX()+B,center_low.getY()-A); //low oct (B,-A)
+    points[4] = Point(center_high.getX()+B,center_high.getY()+A); //high oct (B,A)
+    points[5] = Point(center_high.getX()-B,center_high.getY()+A); //high oct (-B,A)
+    if(dir==RIGHT)
+    {
+      points[2] = Point(center_high.getX()+A,center_high.getY()-B); //high oct (A,-B)
+      points[3] = Point(center_high.getX()+A,center_high.getY()+B); //high oct (A,B)
+      points[6] = Point(center_low.getX()-A,center_low.getY()+B); //low oct  (-A,B)
+      points[7] = Point(center_low.getX()-A,center_low.getY()-B); //low oct (-A,-B)
+    }else
+    {
+      points[2] = Point(center_low.getX()+A,center_low.getY()-B); //low oct (A,-B)
+      points[3] = Point(center_low.getX()+A,center_low.getY()+B); //low oct (A,B)
+      points[6] = Point(center_high.getX()-A,center_high.getY()+B); //high oct  (-A,B)
+      points[7] = Point(center_high.getX()-A,center_high.getY()-B); //high oct (-A,-B)
+    }
+    return points;
+    
+  };
+  friend dbIStream& operator>>(dbIStream& stream, Oct& o);
+  friend dbOStream& operator<<(dbOStream& stream, const Oct& o);
+};
+
+class Rect : public GeomShape
 {
   int _xlo;
   int _ylo;
@@ -169,12 +334,39 @@ class Rect
   void set_ylo(int x1);
   void set_yhi(int x1);
 
-  int   xMin() const;
-  int   yMin() const;
-  int   xMax() const;
-  int   yMax() const;
-  uint  dx() const;
-  uint  dy() const;
+  int xMin() const
+  {
+    return _xlo;
+  };
+  int yMin() const
+  {
+    return _ylo;
+  };
+  int xMax() const
+  {
+    return _xhi;
+  };
+  int yMax() const
+  {
+    return _yhi;
+  };
+  uint dx() const
+  {
+    return (uint)(_xhi - _xlo);
+  };
+  uint dy() const
+  {
+    return (uint)(_yhi - _ylo);
+  };
+  std::vector<Point> getPoints() const
+  {
+    std::vector<Point> points(5);
+    points[0]=points[4]=ll();
+    points[1]=lr();
+    points[2]=ur();
+    points[3]=ul();
+    return points;
+  };
   Point ll() const;
   Point ul() const;
   Point ur() const;
@@ -207,9 +399,13 @@ class Rect
   // Compute the union of these two rectangles.
   void merge(const Rect& r, Rect& result);
 
+  void merge(GeomShape* s, Rect& result);
+
   // Compute the union of these two rectangles. The result is stored in this
   // rectangle.
   void merge(const Rect& r);
+
+  void merge(GeomShape* s);
 
   // Compute the intersection of these two rectangles.
   void intersection(const Rect& r, Rect& result);
@@ -535,22 +731,6 @@ inline void Rect::moveDelta(int dx, int dy)
   _yhi += dy;
 }
 
-inline int Rect::xMin() const
-{
-  return _xlo;
-}
-inline int Rect::yMin() const
-{
-  return _ylo;
-}
-inline int Rect::xMax() const
-{
-  return _xhi;
-}
-inline int Rect::yMax() const
-{
-  return _yhi;
-}
 inline Point Rect::ll() const
 {
   return Point(_xlo, _ylo);
@@ -566,14 +746,6 @@ inline Point Rect::ur() const
 inline Point Rect::lr() const
 {
   return Point(_xhi, _ylo);
-}
-inline uint Rect::dx() const
-{
-  return (uint)(_xhi - _xlo);
-}
-inline uint Rect::dy() const
-{
-  return (uint)(_yhi - _ylo);
 }
 inline Point Rect::low() const
 {
@@ -628,6 +800,13 @@ inline void Rect::merge(const Rect& r, Rect& result)
   result._xhi = MAX(_xhi, r._xhi);
   result._yhi = MAX(_yhi, r._yhi);
 }
+inline void Rect::merge(GeomShape* s, Rect& result)
+{
+  result._xlo = MIN(_xlo, s->xMin());
+  result._ylo = MIN(_ylo, s->yMin());
+  result._xhi = MAX(_xhi, s->xMax());
+  result._yhi = MAX(_yhi, s->yMax());
+}
 
 // Compute the union of these two rectangles.
 inline void Rect::merge(const Rect& r)
@@ -636,6 +815,13 @@ inline void Rect::merge(const Rect& r)
   _ylo = MIN(_ylo, r._ylo);
   _xhi = MAX(_xhi, r._xhi);
   _yhi = MAX(_yhi, r._yhi);
+}
+inline void Rect::merge(GeomShape* s)
+{
+  _xlo = MIN(_xlo, s->xMin());
+  _ylo = MIN(_ylo, s->yMin());
+  _xhi = MAX(_xhi, s->xMax());
+  _yhi = MAX(_yhi, s->yMax());
 }
 
 // Compute the intersection of these two rectangles.
@@ -700,4 +886,67 @@ inline void Rect::print(const char* prefix)
   fprintf(stdout, "%s%12d %12d - %12d %12d\n", prefix, _xlo, _ylo, dx(), dy());
 }
 
+inline Oct::Oct()
+{
+  A  = 0;
+}
+
+inline Oct::Oct(const Point p1, const Point p2,int width)
+{
+  init(p1,p2,width);
+}
+
+inline Oct::Oct(int x1, int y1, int x2, int y2, int width)
+{
+  Point p1(x1,y1);
+  Point p2(x2,y2);
+  init(p1,p2,width);
+}
+
+inline bool  Oct::operator==(const Oct& r) const
+{
+  if(center_low!=r.center_low)
+    return false;
+  if(center_high!=r.center_high)
+    return false;
+  return true;
+  
+}
+
+inline void Oct::init(const Point p1, const Point p2, int width)
+{
+  if(p1.getY()>p2.getY())
+  {
+    center_high = p1;
+    center_low = p2;
+  }else
+  {
+    center_high = p2;
+    center_low = p1;
+  }
+  A = width/2;
+
+}
+
+inline Oct::OCT_DIR Oct::getDir() const
+{
+  if(center_low==center_high)
+    return UNKNOWN;
+  if(center_high.getX()>center_low.getX())
+    return RIGHT;
+  return LEFT;
+}
+
+inline Point Oct::getCenterHigh() const
+{
+  return center_high; 
+}
+inline Point Oct::getCenterLow() const
+{
+  return center_low; 
+}
+inline int Oct::getWidth() const
+{
+  return A*2; 
+}
 }  // namespace odb

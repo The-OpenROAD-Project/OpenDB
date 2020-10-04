@@ -49,7 +49,7 @@ class dbDiff;
 struct _dbSBoxFlags
 {
   dbWireShapeType::Value _wire_type : 6;
-  uint _direction : 2;  // 0 = undefiend, 1 = horizontal, 2 = vertical
+  uint _direction : 2;  // 0 = undefiend, 1 = horizontal, 2 = vertical, 3 = octilinear
   uint _spare_bits : 24;
 };
 

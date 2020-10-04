@@ -108,6 +108,9 @@ void create_box(dbSWire*        wire,
         x2 = prev_x;
     }
     dbSBox::create(wire, layer, x1, y1, x2, y2, type, dbSBox::HORIZONTAL);
+  }else if(abs(cur_x-prev_x)==abs(cur_y-prev_y)) {//45-degree path
+    assert(0 && "non-orthogonal path segment");  // illegal: non-orthogonal-path
+    dbSBox::create(wire, layer, prev_x, prev_y, cur_x, cur_y, type, dbSBox::OCTILINEAR,width);
   } else {
     assert(0 && "non-orthogonal path segment");  // illegal: non-orthogonal-path
   }

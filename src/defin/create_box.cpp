@@ -31,7 +31,7 @@
 // POSSIBILITY OF SUCH DAMAGE.
 
 #include "create_box.h"
-
+#include <stdio.h>
 namespace odb {
 
 void create_box(dbSWire*        wire,
@@ -52,6 +52,8 @@ void create_box(dbSWire*        wire,
 
   if ((cur_x == prev_x) && (cur_y == prev_y))  // single point
   {
+    printf("(%d,%d) (%d,%d)\n",prev_x,prev_y,cur_x,cur_y);
+    return;
     assert(0 && "ambiguous path segment");
   } else if (cur_x == prev_x)  // vert. path
   {
@@ -108,12 +110,10 @@ void create_box(dbSWire*        wire,
         x2 = prev_x;
     }
     dbSBox::create(wire, layer, x1, y1, x2, y2, type, dbSBox::HORIZONTAL);
-  }else if(abs(cur_x-prev_x)==abs(cur_y-prev_y)) 
-  {
-    //45-degree path
+  }else if(abs(cur_x-prev_x)==abs(cur_y-prev_y)) {//45-degree path
     dbSBox::create(wire, layer, prev_x, prev_y, cur_x, cur_y, type, dbSBox::OCTILINEAR,width);
-  } else {
-    assert(0 && "non-orthogonal path segment");  // illegal: non-orthogonal-path
+  }else {
+    assert(0 && "not orthogonal nor 45-degree path segment");  // illegal: non-orthogonal-path
   }
 }
 

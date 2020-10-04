@@ -241,6 +241,7 @@ dbSBox* dbSBox::create(dbSWire*        wire_,
   }else
   {
     box->_shape._rect.init(x1, y1, x2, y2);
+    box->_octilinear=false;
     _geomshape =(GeomShape*) &(box->_shape._rect);
   }
 
@@ -282,7 +283,7 @@ dbSBox* dbSBox::create(dbSWire*        wire_,
   box->_flags._is_block_via = 1;
   box->_flags._via_id       = via->getOID();
   box->_sflags._wire_type   = type.getValue();
-
+  box->_octilinear=false;
   // link box to wire
   box->_next_box = (uint) wire->_wires;
   wire->_wires   = box->getOID();
@@ -317,7 +318,7 @@ dbSBox* dbSBox::create(dbSWire*        wire_,
   box->_flags._is_tech_via = 1;
   box->_flags._via_id      = via->getOID();
   box->_sflags._wire_type  = type.getValue();
-
+  box->_octilinear=false;
   // link box to wire
   box->_next_box = (uint) wire->_wires;
   wire->_wires   = box->getOID();

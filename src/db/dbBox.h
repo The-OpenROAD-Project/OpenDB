@@ -80,7 +80,7 @@ class _dbBox : public _dbObject
   dbBoxShape   _shape = {Rect()};
   uint         _owner;
   dbId<_dbBox> _next_box;
-  bool _octilinear = false;
+  bool _octilinear;
 
   _dbBox(_dbDatabase*);
   _dbBox(_dbDatabase*, const _dbBox& b);
@@ -120,6 +120,7 @@ inline _dbBox::_dbBox(_dbDatabase*)
   _flags._via_id       = 0;
   _flags._visited      = 0;
   _flags._mark         = 0;
+  _octilinear          = false;
 }
 
 inline _dbBox::_dbBox(_dbDatabase*, const _dbBox& b)
@@ -149,7 +150,7 @@ inline dbOStream& operator<<(dbOStream& stream, const _dbBox& box)
   if(box.isOct())
     stream<<box._shape._oct;
   else
-    stream << box._shape._rect;
+    stream<<box._shape._rect;
   stream << box._owner;
   stream << box._next_box;
   return stream;
@@ -160,9 +161,10 @@ inline dbIStream& operator>>(dbIStream& stream, _dbBox& box)
   uint* bit_field = (uint*) &box._flags;
   stream >> *bit_field;
   stream >> box._octilinear;
-  if(box.isOct())
+  if(box.isOct()){
+    new (&box._shape._oct) Oct();
     stream >> box._shape._oct;
-  else
+  }else
     stream >> box._shape._rect;
   stream >> box._owner;
   stream >> box._next_box;

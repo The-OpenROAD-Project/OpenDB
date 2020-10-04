@@ -94,7 +94,8 @@ bool _dbBox::operator==(const _dbBox& rhs) const
 
   if (_next_box != rhs._next_box)
     return false;
-
+  if (_octilinear!= rhs._octilinear)
+    return false;
   return true;
 }
 
@@ -134,7 +135,8 @@ int _dbBox::equal(const _dbBox& rhs) const
       break;
     }
   }
-
+  if (_octilinear!= rhs._octilinear)
+    return false;
   if (isOct()){
     if(!rhs.isOct())
       return false;
@@ -223,6 +225,8 @@ void _dbBox::differences(dbDiff&       diff,
   DIFF_FIELD(_flags._is_block_via);
   DIFF_FIELD(_flags._layer_id);
   DIFF_FIELD(_flags._via_id);
+  DIFF_FIELD(_octilinear);
+
   if(isOct()){
     DIFF_FIELD(_shape._oct);
   }
@@ -243,6 +247,7 @@ void _dbBox::out(dbDiff& diff, char side, const char* field) const
     DIFF_OUT_FIELD(_flags._is_block_via);
     DIFF_OUT_FIELD(_flags._layer_id);
     DIFF_OUT_FIELD(_flags._via_id);
+    DIFF_OUT_FIELD(_octilinear);
     if(isOct()){
       DIFF_OUT_FIELD(_shape._oct);
     }
@@ -671,6 +676,7 @@ dbBox* dbBox::create(dbBPin*      bpin_,
     return NULL;
 
   _dbBox* box             = block->_box_tbl->create();
+  box->_octilinear=false;
   box->_flags._layer_id   = layer_->getImpl()->getOID();
   box->_flags._owner_type = dbBoxOwner::BPIN;
   box->_owner             = bpin->getOID();
@@ -690,6 +696,7 @@ dbBox* dbBox::create(dbVia*       via_,
   _dbVia*   via           = (_dbVia*) via_;
   _dbBlock* block         = (_dbBlock*) via->getOwner();
   _dbBox*   box           = block->_box_tbl->create();
+  box->_octilinear=false;
   box->_flags._layer_id   = layer_->getImpl()->getOID();
   box->_flags._owner_type = dbBoxOwner::VIA;
   box->_owner             = via->getOID();
@@ -739,6 +746,7 @@ dbBox* dbBox::create(dbMaster*    master_,
 {
   _dbMaster* master       = (_dbMaster*) master_;
   _dbBox*    box          = master->_box_tbl->create();
+  box->_octilinear=false;
   box->_flags._layer_id   = layer_->getImpl()->getOID();
   box->_flags._owner_type = dbBoxOwner::MASTER;
   box->_owner             = master->getOID();
@@ -765,6 +773,7 @@ dbBox* dbBox::create(dbMaster* master_, dbTechVia* via_, int x, int y)
   int      xmax           = vbbox->_shape._rect.xMax() + x;
   int      ymax           = vbbox->_shape._rect.yMax() + y;
   _dbBox*  box            = master->_box_tbl->create();
+  box->_octilinear=false;
   box->_flags._owner_type = dbBoxOwner::MASTER;
   box->_owner             = master->getOID();
   box->_shape._rect.init(xmin, ymin, xmax, ymax);
@@ -787,6 +796,7 @@ dbBox* dbBox::create(dbMPin*      pin_,
   _dbMPin*   pin          = (_dbMPin*) pin_;
   _dbMaster* master       = (_dbMaster*) pin->getOwner();
   _dbBox*    box          = master->_box_tbl->create();
+  box->_octilinear=false;
   box->_flags._layer_id   = layer_->getImpl()->getOID();
   box->_flags._owner_type = dbBoxOwner::MPIN;
   box->_owner             = pin->getOID();
@@ -814,6 +824,7 @@ dbBox* dbBox::create(dbMPin* pin_, dbTechVia* via_, int x, int y)
   int        xmax         = vbbox->_shape._rect.xMax() + x;
   int        ymax         = vbbox->_shape._rect.yMax() + y;
   _dbBox*    box          = master->_box_tbl->create();
+  box->_octilinear=false;
   box->_flags._owner_type = dbBoxOwner::MPIN;
   box->_owner             = pin->getOID();
   box->_shape._rect.init(xmin, ymin, xmax, ymax);
@@ -836,6 +847,7 @@ dbBox* dbBox::create(dbTechVia*   via_,
   _dbTechVia* via         = (_dbTechVia*) via_;
   _dbTech*    tech        = (_dbTech*) via->getOwner();
   _dbBox*     box         = tech->_box_tbl->create();
+  box->_octilinear=false;
   box->_flags._layer_id   = layer_->getImpl()->getOID();
   box->_flags._owner_type = dbBoxOwner::TECH_VIA;
   box->_owner             = via->getOID();
@@ -882,6 +894,7 @@ dbBox* dbBox::create(dbRegion* region_, int x1, int y1, int x2, int y2)
   _dbRegion* region       = (_dbRegion*) region_;
   _dbBlock*  block        = (_dbBlock*) region->getOwner();
   _dbBox*    box          = block->_box_tbl->create();
+  box->_octilinear=false;
   box->_flags._owner_type = dbBoxOwner::REGION;
   box->_owner             = region->getOID();
   box->_shape._rect.init(x1, y1, x2, y2);
@@ -901,6 +914,7 @@ dbBox* dbBox::create(dbInst* inst_, int x1, int y1, int x2, int y2)
     return NULL;
 
   _dbBox* box             = block->_box_tbl->create();
+  box->_octilinear=false;
   box->_flags._owner_type = dbBoxOwner::INST;
   box->_owner             = inst->getOID();
   box->_shape._rect.init(x1, y1, x2, y2);

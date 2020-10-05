@@ -427,6 +427,9 @@ void dbInst::setOrigin(int x, int y)
   _dbBlock* block  = (_dbBlock*) inst->getOwner();
   int       prev_x = inst->_x;
   int       prev_y = inst->_y;
+  //Do Nothin if same origin, But What if uninitialized and x=y=0
+  if(prev_x==x&&prev_y==y)
+    return;
 
   inst->_x = x;
   inst->_y = y;
@@ -495,6 +498,8 @@ dbOrientType dbInst::getOrient()
 
 void dbInst::setOrient(dbOrientType orient)
 {
+  if(orient==getOrient())
+    return;
   _dbInst*  inst  = (_dbInst*) this;
   _dbBlock* block = (_dbBlock*) inst->getOwner();
 

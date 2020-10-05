@@ -438,6 +438,11 @@ void dbITerm::connect(dbITerm* iterm_, dbNet* net_)
   _dbNet*   net   = (_dbNet*) net_;
   _dbBlock* block = (_dbBlock*) iterm->getOwner();
 
+  //Do Nothing if already connected
+  if (iterm->_net==net->getOID())
+    return;
+
+    
   if (iterm->_net != 0)
     disconnect(iterm_);
 

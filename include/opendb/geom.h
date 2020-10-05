@@ -129,14 +129,14 @@ class Point
 class GeomShape
 {
   public:
-  virtual uint dx() const{return 0;};
-  virtual uint dy() const{return 0;};
-  virtual int xMin() const{return 0;};
-  virtual int yMin() const{return 0;};
-  virtual int xMax() const{return 0;};
-  virtual int yMax() const{return 0;};
-  virtual std::vector<Point> getPoints() const{return std::vector<Point>();}; 
-  virtual ~GeomShape(){};
+  virtual uint dx() const = 0;
+  virtual uint dy() const = 0;
+  virtual int xMin() const = 0;
+  virtual int yMin() const = 0;
+  virtual int xMax() const = 0;
+  virtual int yMax() const = 0;
+  virtual std::vector<Point> getPoints() const = 0; 
+  virtual ~GeomShape() {};
 };
 
 /*
@@ -218,7 +218,7 @@ class Oct : public GeomShape
   Point getCenterLow() const;
   int getWidth() const;
   
-  uint dx() const
+  uint dx() const override
   {
     OCT_DIR D = getDir();
     if(D==RIGHT)
@@ -228,11 +228,11 @@ class Oct : public GeomShape
     else
       return 0;
   };
-  uint dy() const
+  uint dy() const override
   {
     return abs(center_high.getY() + A -center_low.getY() + A);
   };
-  int   xMin() const
+  int   xMin() const override
   {
     OCT_DIR D = getDir();
     if(D==RIGHT)
@@ -242,11 +242,11 @@ class Oct : public GeomShape
     else
       return 0;
   };
-  int   yMin() const
+  int   yMin() const override
   {
     return center_low.getY()-A;
   };
-  int   xMax() const
+  int   xMax() const override
   {
     OCT_DIR D = getDir();
     if(D==RIGHT)
@@ -256,11 +256,11 @@ class Oct : public GeomShape
     else
       return 0;
   };
-  int   yMax() const
+  int   yMax() const override
   {
     return center_high.getY()+A;
   };
-  std::vector<Point> getPoints() const
+  std::vector<Point> getPoints() const override
   {
     OCT_DIR dir = getDir();
     int B = ceil( (A*2)/(sqrt(2)) ) - A;
@@ -334,31 +334,31 @@ class Rect : public GeomShape
   void set_ylo(int x1);
   void set_yhi(int x1);
 
-  int xMin() const
+  int xMin() const override
   {
     return _xlo;
   };
-  int yMin() const
+  int yMin() const override
   {
     return _ylo;
   };
-  int xMax() const
+  int xMax() const override
   {
     return _xhi;
   };
-  int yMax() const
+  int yMax() const override
   {
     return _yhi;
   };
-  uint dx() const
+  uint dx() const override
   {
     return (uint)(_xhi - _xlo);
   };
-  uint dy() const
+  uint dy() const override
   {
     return (uint)(_yhi - _ylo);
   };
-  std::vector<Point> getPoints() const
+  std::vector<Point> getPoints() const override
   {
     std::vector<Point> points(5);
     points[0]=points[4]=ll();
@@ -629,6 +629,7 @@ inline Rect::Rect(const Point p1, const Point p2)
     _yhi = y1;
   }
 }
+
 inline void Rect::set_xlo(int x1)
 {
   _xlo = x1;
@@ -908,6 +909,8 @@ inline bool  Oct::operator==(const Oct& r) const
   if(center_low!=r.center_low)
     return false;
   if(center_high!=r.center_high)
+    return false;
+  if(A!=r.A)
     return false;
   return true;
   

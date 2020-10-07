@@ -48,6 +48,7 @@
 #include "dbTable.h"
 #include "dbTable.hpp"
 #include "dbTransform.h"
+#include "dbBlockCallBackObj.h"
 
 namespace odb {
 
@@ -523,7 +524,8 @@ dbBTerm* dbBTerm::create(dbNet* net_, const char* name)
   bterm->_name    = strdup(name);
   ZALLOCATED(bterm->_name);
   block->_bterm_hash.insert(bterm);
-
+  for(auto callback:block->_callbacks)
+    callback->inDbBTermCreate((dbBTerm*)bterm); 
   bterm->connectNet(net, block);
 
   return (dbBTerm*) bterm;
@@ -531,6 +533,8 @@ dbBTerm* dbBTerm::create(dbNet* net_, const char* name)
 
 void _dbBTerm::connectNet(_dbNet* net, _dbBlock* block)
 {
+  for(auto callback:block->_callbacks)
+    callback->inDbBTermPreConnect((dbBTerm*)this,(dbNet*)net); 
   _net = net->getOID();
   if (net->_bterms != 0) {
     _dbBTerm* tail    = block->_bterm_tbl->getPtr(net->_bterms);
@@ -539,13 +543,15 @@ void _dbBTerm::connectNet(_dbNet* net, _dbBlock* block)
     tail->_prev_bterm = getOID();
   }
   net->_bterms = getOID();
+  for(auto callback:block->_callbacks)
+    callback->inDbBTermPostConnect((dbBTerm*)this); 
 }
 
 void dbBTerm::destroy(dbBTerm* bterm_)
 {
   _dbBTerm* bterm = (_dbBTerm*) bterm_;
   _dbBlock* block = (_dbBlock*) bterm->getOwner();
-
+  
   // delete bpins
   dbSet<dbBPin>           bpins = bterm_->getBPins();
   dbSet<dbBPin>::iterator itr;
@@ -553,19 +559,21 @@ void dbBTerm::destroy(dbBTerm* bterm_)
   for (itr = bpins.begin(); itr != bpins.end();) {
     itr = dbBPin::destroy(itr);
   }
-
   // remove from hash-table
   block->_bterm_hash.remove(bterm);
-
-  bterm->disconnectNet(bterm, block);
-
+  if(bterm->_net)
+    bterm->disconnectNet(bterm, block);
   dbProperty::destroyProperties(bterm);
+  for(auto callback:block->_callbacks)
+    callback->inDbBTermDestroy(bterm_); 
   block->_bterm_tbl->destroy(bterm);
 }
 
 void _dbBTerm::disconnectNet(_dbBTerm* bterm, _dbBlock* block)
 {
   // unlink bterm from the net
+  for(auto callback:block->_callbacks)
+    callback->inDbBTermPreDisconnect((dbBTerm*)this); 
   _dbNet* net = block->_net_tbl->getPtr(bterm->_net);
   uint    id  = bterm->getOID();
 
@@ -588,6 +596,8 @@ void _dbBTerm::disconnectNet(_dbBTerm* bterm, _dbBlock* block)
     }
   }
   _net = 0;
+  for(auto callback:block->_callbacks)
+    callback->inDbBTermPostDisConnect((dbBTerm*)this, (dbNet*)net); 
 }
 
 dbSet<dbBTerm>::iterator dbBTerm::destroy(dbSet<dbBTerm>::iterator& itr)

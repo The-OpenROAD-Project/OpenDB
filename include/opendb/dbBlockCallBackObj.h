@@ -44,7 +44,7 @@ class dbNet;
 class dbITerm;
 class dbRegion;
 class dbWire;
-
+class dbBTerm;
 ///////////////////////////////////////////////////////////////////////////////
 ///
 /// dbBlockCallBackObj - An object comprising a list of stub routines
@@ -68,6 +68,17 @@ class dbBlockCallBackObj
   virtual void inDbITermDestroy(dbITerm*) {}  // Bugzilla #7 - payam
   virtual void inDbITermDisconnect(dbITerm*) {}
   virtual void inDbITermConnect(dbITerm*) {}
+  //Additional Callbacks Start
+  //dbBTerm Start
+  virtual void inDbBTermCreate(dbBTerm*) {}
+  virtual void inDbBTermDestroy(dbBTerm*) {}
+  virtual void inDbBTermPreConnect(dbBTerm*, dbNet*) {}
+  virtual void inDbBTermPostConnect(dbBTerm*) {}
+  virtual void inDbBTermPreDisconnect(dbBTerm*) {}
+  virtual void inDbBTermPostDisConnect(dbBTerm*, dbNet*) {}
+  //dbBTerm End
+
+  //Additional Callbacks End
   virtual void inDbBlockStreamOutBefore(dbBlock*) {}
   virtual void inDbBlockStreamOutAfter(dbBlock*) {}
   virtual void inDbBlockReadNetsBefore(dbBlock*) {}

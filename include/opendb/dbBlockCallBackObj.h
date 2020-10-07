@@ -45,6 +45,7 @@ class dbITerm;
 class dbRegion;
 class dbWire;
 class dbBTerm;
+class dbBPin;
 ///////////////////////////////////////////////////////////////////////////////
 ///
 /// dbBlockCallBackObj - An object comprising a list of stub routines
@@ -77,6 +78,10 @@ class dbBlockCallBackObj
   virtual void inDbBTermPreDisconnect(dbBTerm*) {}
   virtual void inDbBTermPostDisConnect(dbBTerm*, dbNet*) {}
   //dbBTerm End
+  //dbBPin Start
+  virtual void inDbBPinCreate(dbBPin*) {}
+  virtual void inDbBPinDestroy(dbBPin*) {}
+  //dbBPin End
 
   //Additional Callbacks End
   virtual void inDbBlockStreamOutBefore(dbBlock*) {}

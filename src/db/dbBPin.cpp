@@ -40,6 +40,7 @@
 #include "dbDatabase.h"
 #include "dbTable.h"
 #include "dbTable.hpp"
+#include "dbBlockCallBackObj.h"
 
 namespace odb {
 
@@ -234,11 +235,12 @@ dbBPin* dbBPin::create(dbBTerm* bterm_)
 {
   _dbBTerm* bterm = (_dbBTerm*) bterm_;
   _dbBlock* block = (_dbBlock*) bterm->getOwner();
-
   _dbBPin* bpin    = block->_bpin_tbl->create();
   bpin->_bterm     = bterm->getOID();
   bpin->_next_bpin = bterm->_bpins;
   bterm->_bpins    = bpin->getOID();
+  for(auto callback:block->_callbacks)
+    callback->inDbBPinCreate((dbBPin*) bpin);
   return (dbBPin*) bpin;
 }
 
@@ -274,6 +276,8 @@ void dbBPin::destroy(dbBPin* bpin_)
   }
 
   dbProperty::destroyProperties(bpin);
+  for(auto callback:block->_callbacks)
+    callback->inDbBPinDestroy(bpin_);
   block->_bpin_tbl->destroy(bpin);
 }
 

@@ -71,6 +71,7 @@ class _dbBox : public _dbObject
   union dbBoxShape{
     Rect _rect;
     Oct  _oct;
+    ~dbBoxShape(){};
   };
 
   // PERSISTANT-MEMBERS

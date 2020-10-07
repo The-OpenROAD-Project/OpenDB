@@ -136,7 +136,7 @@ class GeomShape
   virtual int xMax() const = 0;
   virtual int yMax() const = 0;
   virtual std::vector<Point> getPoints() const = 0; 
-  ~GeomShape() = default;
+  virtual ~GeomShape() = default;
 };
 
 /*

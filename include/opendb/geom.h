@@ -57,7 +57,7 @@ class Point
   Point();
   Point(const Point& p);
   Point(int x, int y);
-
+  ~Point() = default;
   Point& operator=(const Point& p);
   bool   operator==(const Point& p) const;
   bool   operator!=(const Point& p) const;
@@ -136,7 +136,7 @@ class GeomShape
   virtual int xMax() const = 0;
   virtual int yMax() const = 0;
   virtual std::vector<Point> getPoints() const = 0; 
-  virtual ~GeomShape() {};
+  ~GeomShape() = default;
 };
 
 /*
@@ -208,7 +208,7 @@ class Oct : public GeomShape
   Oct(const Oct& r) = default;
   Oct(const Point p1, const Point p2, int width);
   Oct(int x1, int y1, int x2, int y2, int width);
-
+  ~Oct() = default;
   Oct& operator=(const Oct& r) = default;
   bool  operator==(const Oct& r) const;
   bool  operator!=(const Oct& r) const{return !(r==*this);};
@@ -301,7 +301,7 @@ class Rect : public GeomShape
   Rect(const Rect& r) = default;
   Rect(const Point p1, const Point p2);
   Rect(int x1, int y1, int x2, int y2);
-
+  ~Rect() = default;
   Rect& operator=(const Rect& r) = default;
   bool  operator==(const Rect& r) const;
   bool  operator!=(const Rect& r) const;

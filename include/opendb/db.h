@@ -3622,10 +3622,6 @@ class dbWire : public dbObject
   ///
   void detach();
 
-  ///
-  /// Call this method to notify the eco engine that the wire has been changed
-  ///
-  void ecoUpdate();
 
   ///
   /// Copy the src wire to the desintation wire.
@@ -3740,6 +3736,7 @@ class dbSWire : public dbObject
   /// Translate a database-id back to a pointer.
   ///
   static dbSWire* getSWire(dbBlock* block, uint oid);
+
 };
 
 ///////////////////////////////////////////////////////////////////////////////

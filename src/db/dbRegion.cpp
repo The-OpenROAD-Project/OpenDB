@@ -43,6 +43,7 @@
 #include "dbRegionItr.h"
 #include "dbTable.h"
 #include "dbTable.hpp"
+#include "dbBlockCallBackObj.h"
 
 namespace odb {
 
@@ -358,7 +359,8 @@ dbRegion* dbRegion::create(dbBlock* block_, const char* name)
   _dbRegion* region = block->_region_tbl->create();
   region->_name     = strdup(name);
   ZALLOCATED(region->_name);
-
+  for(auto callback:block->_callbacks)
+    callback->inDbRegionCreate((dbRegion*) region);
   return (dbRegion*) region;
 }
 
@@ -376,6 +378,8 @@ dbRegion* dbRegion::create(dbRegion* parent_, const char* name)
   region->_parent     = parent->getOID();
   region->_next_child = parent->_children;
   parent->_children   = region->getOID();
+  for(auto callback:block->_callbacks)
+    callback->inDbRegionCreate((dbRegion*) region);
   return (dbRegion*) region;
 }
 
@@ -390,6 +394,8 @@ void dbRegion::destroy(dbRegion* region_)
     dbRegion* child = *childItr;
     child->destroy(child);
   }
+  for(auto callback:block->_callbacks)
+    callback->inDbRegionDestroy((dbRegion*) region);
 
   dbSet<dbInst>           insts = region_->getRegionInsts();
   dbSet<dbInst>::iterator iitr;
@@ -409,6 +415,7 @@ void dbRegion::destroy(dbRegion* region_)
     block->_box_tbl->destroy((_dbBox*) box);
     bitr = next;
   }
+
 
   if (region->_parent) {
     _dbRegion* parent = block->_region_tbl->getPtr(region->_parent);

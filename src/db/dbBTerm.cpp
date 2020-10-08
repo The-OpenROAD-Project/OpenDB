@@ -563,9 +563,10 @@ void dbBTerm::destroy(dbBTerm* bterm_)
   block->_bterm_hash.remove(bterm);
   if(bterm->_net)
     bterm->disconnectNet(bterm, block);
-  dbProperty::destroyProperties(bterm);
   for(auto callback:block->_callbacks)
     callback->inDbBTermDestroy(bterm_); 
+  dbProperty::destroyProperties(bterm);
+
   block->_bterm_tbl->destroy(bterm);
 }
 

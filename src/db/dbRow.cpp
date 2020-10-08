@@ -42,6 +42,7 @@
 #include "dbTable.h"
 #include "dbTable.hpp"
 #include "dbTransform.h"
+#include "dbBlockCallBackObj.h"
 
 namespace odb {
 
@@ -284,6 +285,8 @@ dbRow* dbRow::create(dbBlock*     block_,
   row->_y             = origin_y;
   row->_site_cnt      = num_sites;
   row->_spacing       = spacing;
+  for(auto callback : block->_callbacks)
+    callback->inDbRowCreate((dbRow*) row);
   return (dbRow*) row;
 }
 
@@ -291,6 +294,8 @@ void dbRow::destroy(dbRow* row_)
 {
   _dbRow*   row   = (_dbRow*) row_;
   _dbBlock* block = (_dbBlock*) row->getOwner();
+  for(auto callback : block->_callbacks)
+    callback->inDbRowDestroy((dbRow*) row);
   dbProperty::destroyProperties(row);
   block->_row_tbl->destroy(row);
 }

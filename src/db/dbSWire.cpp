@@ -41,6 +41,7 @@
 #include "dbSet.h"
 #include "dbTable.h"
 #include "dbTable.hpp"
+#include "dbBlockCallBackObj.h"
 
 namespace odb {
 
@@ -203,13 +204,16 @@ dbSWire* dbSWire::create(dbNet* net_, dbWireType type, dbNet* shield_)
 
   if (shield)
     wire->_shield = shield->getOID();
-
+  for(auto callback:block->_callbacks)
+    callback->inDbSWireCreate((dbSWire*) wire);
   return (dbSWire*) wire;
 }
 
 static void destroySBoxes(_dbSWire* wire)
 {
   _dbBlock*     block = (_dbBlock*) wire->getOwner();
+  for(auto callback:block->_callbacks)
+    callback->inDbSWirePreDestroySBoxes((dbSWire*) wire);
   dbId<_dbSBox> id    = wire->_wires;
 
   while (id != 0) {
@@ -219,6 +223,8 @@ static void destroySBoxes(_dbSWire* wire)
     block->_sbox_tbl->destroy(box);
     id = nid;
   }
+  for(auto callback:block->_callbacks)
+    callback->inDbSWirePostDestroySBoxes((dbSWire*) wire);
 }
 
 void dbSWire::destroy(dbSWire* wire_)
@@ -249,7 +255,8 @@ void dbSWire::destroy(dbSWire* wire_)
 
   // destroy the sboxes
   destroySBoxes(wire);
-
+  for(auto callback:block->_callbacks)
+    callback->inDbSWireDestroy(wire_);
   // destroy the wire
   dbProperty::destroyProperties(wire);
   block->_swire_tbl->destroy(wire);

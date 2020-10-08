@@ -274,10 +274,10 @@ void dbBPin::destroy(dbBPin* bpin_)
     block->remove_rect(b->_rect);
     block->_box_tbl->destroy(b);
   }
-
-  dbProperty::destroyProperties(bpin);
   for(auto callback:block->_callbacks)
     callback->inDbBPinDestroy(bpin_);
+  dbProperty::destroyProperties(bpin);
+
   block->_bpin_tbl->destroy(bpin);
 }
 

@@ -1606,7 +1606,7 @@ void dbWire::append(dbWire* src_, bool singleSegmentWire)
         return;
     }
   }
-  for(auto callback:dst_block->_callbacks)
+  for(auto callback:((_dbBlock*)getBlock())->_callbacks)
     callback->inDbWirePreAppend(src_,this);
   uint sz = dst->_opcodes.size();
   dst->_opcodes.insert(
@@ -1645,7 +1645,7 @@ void dbWire::append(dbWire* src_, bool singleSegmentWire)
         || (opcode == WOP_VWIRE))
       dst->_data[i] += sz;
   }
-  for(auto callback:dst_block->_callbacks)
+  for(auto callback:((_dbBlock*)getBlock())->_callbacks)
     callback->inDbWirePostAppend(src_,this);
 }
 

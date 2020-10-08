@@ -68,6 +68,8 @@ class dbBlockCallBackObj
   virtual void inDbInstDestroy(dbInst*) {}
   virtual void inDbInstSwapMasterBefore(dbInst*, dbMaster*) {}
   virtual void inDbInstSwapMasterAfter(dbInst*) {}
+  virtual void inDbPreMoveInst(dbInst*) {}
+  virtual void inDbPostMoveInst(dbInst*) {}
   //dbInst End
 
   //dbNet Start
@@ -78,8 +80,10 @@ class dbBlockCallBackObj
   //dbITerm Start
   virtual void inDbITermCreate(dbITerm*) {}
   virtual void inDbITermDestroy(dbITerm*) {}  // Bugzilla #7 - payam
-  virtual void inDbITermDisconnect(dbITerm*) {}
-  virtual void inDbITermConnect(dbITerm*) {}
+  virtual void inDbITermPreDisconnect(dbITerm*) {}
+  virtual void inDbITermPostDisconnect(dbITerm*,dbNet*) {}
+  virtual void inDbITermPreConnect(dbITerm*,dbNet*) {}
+  virtual void inDbITermPostConnect(dbITerm*) {}
   //dbITerm End
 
   //dbBTerm Start
@@ -138,7 +142,7 @@ class dbBlockCallBackObj
   virtual void inDbBlockStreamOutBefore(dbBlock*) {}
   virtual void inDbBlockStreamOutAfter(dbBlock*) {}
   virtual void inDbBlockReadNetsBefore(dbBlock*) {}
-  virtual void inDbMoveInst(dbInst*) {}
+
 
   // allow ECO client initialization - payam
   virtual dbBlockCallBackObj& operator()() { return *this; }

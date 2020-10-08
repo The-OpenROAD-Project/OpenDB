@@ -212,10 +212,11 @@ dbSWire* dbSWire::create(dbNet* net_, dbWireType type, dbNet* shield_)
 static void destroySBoxes(_dbSWire* wire)
 {
   _dbBlock*     block = (_dbBlock*) wire->getOwner();
+  dbId<_dbSBox> id    = wire->_wires;
+  if(id==0)
+    return;
   for(auto callback:block->_callbacks)
     callback->inDbSWirePreDestroySBoxes((dbSWire*) wire);
-  dbId<_dbSBox> id    = wire->_wires;
-
   while (id != 0) {
     _dbSBox* box = block->_sbox_tbl->getPtr(id);
     uint     nid = box->_next_box;

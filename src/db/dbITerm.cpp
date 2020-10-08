@@ -441,7 +441,8 @@ void dbITerm::connect(dbITerm* iterm_, dbNet* net_)
   //Do Nothing if already connected
   if (iterm->_net==net->getOID())
     return;
-
+  for(auto callback:block->_callbacks)
+    callback->inDbITermPreConnect(iterm_,net_);
     
   if (iterm->_net != 0)
     disconnect(iterm_);
@@ -473,10 +474,8 @@ void dbITerm::connect(dbITerm* iterm_, dbNet* net_)
 
   net->_iterms = iterm->getOID();
 
-  std::list<dbBlockCallBackObj*>::iterator cbitr;
-  for (cbitr = block->_callbacks.begin(); cbitr != block->_callbacks.end();
-       ++cbitr)
-    (**cbitr)().inDbITermConnect(iterm_);  // client ECO optimization - payam
+  for(auto callback:block->_callbacks)
+    callback->inDbITermPostConnect(iterm_);
 }
 
 void dbITerm::disconnect(dbITerm* iterm_)
@@ -488,7 +487,8 @@ void dbITerm::disconnect(dbITerm* iterm_)
 
   _dbBlock* block = (_dbBlock*) iterm->getOwner();
   _dbNet*   net   = block->_net_tbl->getPtr(iterm->_net);
-
+  for(auto callback:block->_callbacks)
+    callback->inDbITermPreDisconnect(iterm_);
   if (block->_journal) {
     debug("DB_ECO", "A", "ECO: disconnect Iterm %d\n", iterm_->getId());
     block->_journal->beginAction(dbJournal::DISCONNECT_OBJECT);
@@ -496,11 +496,6 @@ void dbITerm::disconnect(dbITerm* iterm_)
     block->_journal->pushParam(iterm_->getId());
     block->_journal->endAction();
   }
-
-  std::list<dbBlockCallBackObj*>::iterator cbitr;
-  for (cbitr = block->_callbacks.begin(); cbitr != block->_callbacks.end();
-       ++cbitr)
-    (**cbitr)().inDbITermDisconnect(iterm_);
 
   uint id = iterm->getOID();
 
@@ -524,6 +519,8 @@ void dbITerm::disconnect(dbITerm* iterm_)
   }
 
   iterm->_net = 0;
+  for(auto callback:block->_callbacks)
+    callback->inDbITermPostDisconnect(iterm_,(dbNet*)net);
 }
 
 dbSet<dbITerm>::iterator dbITerm::disconnect(dbSet<dbITerm>::iterator& itr)

@@ -57,7 +57,7 @@ struct _dbBoxFlags
   uint              _is_block_via : 1;
   uint              _layer_id : 8;
   uint              _via_id : 16;
-};
+  };
 
 class _dbBox : public _dbObject
 {
@@ -68,12 +68,19 @@ class _dbBox : public _dbObject
     TECH_VIA,
     BOX
   };
+  union dbBoxShape{
+    Rect _rect;
+    Oct  _oct;
+    ~dbBoxShape(){};
+  };
 
   // PERSISTANT-MEMBERS
   _dbBoxFlags  _flags;
-  Rect         _rect;
+  // Rect         _rect;
+  dbBoxShape   _shape = {Rect()};
   uint         _owner;
   dbId<_dbBox> _next_box;
+  bool _octilinear;
 
   _dbBox(_dbDatabase*);
   _dbBox(_dbDatabase*, const _dbBox& b);
@@ -84,6 +91,7 @@ class _dbBox : public _dbObject
   int  equal(const _dbBox& rhs) const;
   void differences(dbDiff& diff, const char* field, const _dbBox& rhs) const;
   void out(dbDiff& diff, char side, const char* field) const;
+  bool isOct() const;
 
   _dbTechLayer* getTechLayer() const;
   _dbTechVia*   getTechVia() const;
@@ -112,11 +120,22 @@ inline _dbBox::_dbBox(_dbDatabase*)
   _flags._via_id       = 0;
   _flags._visited      = 0;
   _flags._mark         = 0;
+  _octilinear          = false;
 }
 
 inline _dbBox::_dbBox(_dbDatabase*, const _dbBox& b)
-    : _flags(b._flags), _rect(b._rect), _owner(b._owner), _next_box(b._next_box)
+    : _flags(b._flags),  _owner(b._owner), _next_box(b._next_box),_octilinear(b._octilinear)
 {
+  if(b.isOct())
+  {
+    new (&_shape._oct) Oct();
+    _shape._oct=b._shape._oct;
+  }else{
+    new (&_shape._rect) Rect();
+    _shape._rect = b._shape._rect;
+  }
+  
+
 }
 
 inline _dbBox::~_dbBox()
@@ -127,7 +146,11 @@ inline dbOStream& operator<<(dbOStream& stream, const _dbBox& box)
 {
   uint* bit_field = (uint*) &box._flags;
   stream << *bit_field;
-  stream << box._rect;
+  stream << box._octilinear;
+  if(box.isOct())
+    stream<<box._shape._oct;
+  else
+    stream<<box._shape._rect;
   stream << box._owner;
   stream << box._next_box;
   return stream;
@@ -137,7 +160,12 @@ inline dbIStream& operator>>(dbIStream& stream, _dbBox& box)
 {
   uint* bit_field = (uint*) &box._flags;
   stream >> *bit_field;
-  stream >> box._rect;
+  stream >> box._octilinear;
+  if(box.isOct()){
+    new (&box._shape._oct) Oct();
+    stream >> box._shape._oct;
+  }else
+    stream >> box._shape._rect;
   stream >> box._owner;
   stream >> box._next_box;
   return stream;

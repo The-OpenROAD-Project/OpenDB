@@ -196,7 +196,7 @@ class dbShape
   ///
   /// Get the placed coordinate of this via
   ///
-  void getViaXY(int& x, int& y);
+  void getViaXY(int& x, int& y) const;
 
   ///
   /// Returns true if this object is a via
@@ -256,7 +256,7 @@ class dbShape
   //
   // WARNING: This method only works for shapes generated from a dbWire.
   //
-  static void getViaBoxes(dbShape& via, std::vector<dbShape>& boxes);
+  static void getViaBoxes(const dbShape& via, std::vector<dbShape>& boxes);
 };
 
 ///

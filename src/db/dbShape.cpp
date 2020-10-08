@@ -145,7 +145,7 @@ bool dbShape::operator<(const dbShape& rhs)
   return _rect < rhs._rect;
 }
 
-void dbShape::getViaXY(int& x, int& y)
+void dbShape::getViaXY(int& x, int& y) const
 {
   switch (_type) {
     case VIA: {
@@ -172,7 +172,7 @@ void dbShape::getViaXY(int& x, int& y)
   }
 }
 
-void dbShape::getViaBoxes(dbShape& via, std::vector<dbShape>& shapes)
+void dbShape::getViaBoxes(const dbShape& via, std::vector<dbShape>& shapes)
 {
   if (via.getTechVia()) {
     int x, y;

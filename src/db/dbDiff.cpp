@@ -298,6 +298,21 @@ dbDiff& dbDiff::operator<<(const Rect& r)
   return *this;
 }
 
+dbDiff& dbDiff::operator<<(const Oct& o)
+{
+  if (_f)
+    fprintf(_f,
+            "[( %d %d ) %d ( %d %d )]",
+            o.getCenterLow().getX(),
+            o.getCenterLow().getY(),
+            o.getWidth(),
+            o.getCenterHigh().getX(),
+            o.getCenterHigh().getY());
+
+  _has_differences = true;
+  return *this;
+}
+
 void dbDiff::diff(const char* field, bool lhs, bool rhs)
 {
   if (lhs != rhs) {
@@ -431,6 +446,17 @@ void dbDiff::diff(const char* field, Point lhs, Point rhs)
 }
 
 void dbDiff::diff(const char* field, Rect lhs, Rect rhs)
+{
+  if (lhs != rhs) {
+    report("< %s: ", field);
+    (*this) << lhs;
+    (*this) << "\n";
+    report("> %s: ", field);
+    (*this) << rhs;
+    (*this) << "\n";
+  }
+}
+void dbDiff::diff(const char* field, Oct lhs, Oct rhs)
 {
   if (lhs != rhs) {
     report("< %s: ", field);
@@ -774,6 +800,12 @@ void dbDiff::out(char side, const char* field, Point value)
 }
 
 void dbDiff::out(char side, const char* field, Rect value)
+{
+  report("%c %s: ", side, field);
+  (*this) << (value);
+  (*this) << "\n";
+}
+void dbDiff::out(char side, const char* field, Oct value)
 {
   report("%c %s: ", side, field);
   (*this) << (value);

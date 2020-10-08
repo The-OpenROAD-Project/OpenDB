@@ -508,6 +508,13 @@ class dbBox : public dbObject
   uint getWidth(uint dir = 1);
   uint getLength(uint dir = 1);
 
+
+  ///
+  /// Get GeomShape Interface
+  ///
+  GeomShape* getGeomShape();
+
+
   ///
   /// Set temporary flag visited
   ///
@@ -644,7 +651,8 @@ class dbSBox : public dbBox
   {
     UNDEFINED  = 0,
     HORIZONTAL = 1,
-    VERTICAL   = 2
+    VERTICAL   = 2,
+    OCTILINEAR = 3
   };
 
   ///
@@ -662,6 +670,11 @@ class dbSBox : public dbBox
   ///
   dbSWire* getSWire();
 
+  ///
+  /// Get Oct Wire Shape
+  ///
+  Oct getOct();
+  
   ///
   /// Add a rect to a dbSWire.
   ///
@@ -686,7 +699,8 @@ class dbSBox : public dbBox
                         int             x2,
                         int             y2,
                         dbWireShapeType type,
-                        Direction       dir = UNDEFINED);
+                        Direction       dir = UNDEFINED,
+                        int             width = 0);
 
   ///
   /// Add a block-via to a dbSWire

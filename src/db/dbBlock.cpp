@@ -671,7 +671,7 @@ void _dbBlock::initialize(_dbChip*    chip,
   _dbBox* box             = _box_tbl->create();
   box->_flags._owner_type = dbBoxOwner::BLOCK;
   box->_owner             = getOID();
-  box->_rect.reset(INT_MAX, INT_MAX, INT_MIN, INT_MIN);
+  box->_shape._rect.reset(INT_MAX, INT_MAX, INT_MIN, INT_MIN);
   _bbox           = box->getOID();
   _chip           = chip->getOID();
   _hier_delimeter = delimeter;
@@ -954,7 +954,14 @@ void _dbBlock::add_rect(const Rect& rect)
   _dbBox* box = _box_tbl->getPtr(_bbox);
 
   if (_flags._valid_bbox)
-    box->_rect.merge(rect);
+    box->_shape._rect.merge(rect);
+}
+void _dbBlock::add_geom_shape(GeomShape* shape)
+{
+ _dbBox* box = _box_tbl->getPtr(_bbox);
+
+  if (_flags._valid_bbox)
+    box->_shape._rect.merge(shape);
 }
 
 void _dbBlock::remove_rect(const Rect& rect)
@@ -962,7 +969,7 @@ void _dbBlock::remove_rect(const Rect& rect)
   _dbBox* box = _box_tbl->getPtr(_bbox);
 
   if (_flags._valid_bbox)
-    _flags._valid_bbox = box->_rect.inside(rect);
+    _flags._valid_bbox = box->_shape._rect.inside(rect);
 }
 
 bool _dbBlock::operator==(const _dbBlock& rhs) const
@@ -1339,7 +1346,7 @@ void dbBlock::ComputeBBox()
 {
   _dbBlock* block = (_dbBlock*) this;
   _dbBox*   bbox  = block->_box_tbl->getPtr(block->_bbox);
-  bbox->_rect.reset(INT_MAX, INT_MAX, INT_MIN, INT_MIN);
+  bbox->_shape._rect.reset(INT_MAX, INT_MAX, INT_MIN, INT_MIN);
 
   dbSet<dbInst>           insts = getInsts();
   dbSet<dbInst>::iterator iitr;
@@ -1348,7 +1355,7 @@ void dbBlock::ComputeBBox()
     dbInst* inst = *iitr;
     if (inst->isPlaced()) {
       _dbBox* box = (_dbBox*) inst->getBBox();
-      bbox->_rect.merge(box->_rect);
+      bbox->_shape._rect.merge(box->_shape._rect);
     }
   }
 
@@ -1366,7 +1373,7 @@ void dbBlock::ComputeBBox()
         dbBox* box = bp->getBox();
         Rect   r;
         box->getBox(r);
-        bbox->_rect.merge(r);
+        bbox->_shape._rect.merge(r);
       }
     }
   }
@@ -1377,15 +1384,15 @@ void dbBlock::ComputeBBox()
   for (oitr = obstructions.begin(); oitr != obstructions.end(); ++oitr) {
     dbObstruction* obs = *oitr;
     _dbBox*        box = (_dbBox*) obs->getBBox();
-    bbox->_rect.merge(box->_rect);
+    bbox->_shape._rect.merge(box->_shape._rect);
   }
 
   dbSet<dbSBox>           sboxes(block, block->_sbox_tbl);
   dbSet<dbSBox>::iterator sitr;
 
   for (sitr = sboxes.begin(); sitr != sboxes.end(); ++sitr) {
-    _dbBox* box = (_dbBox*) *sitr;
-    bbox->_rect.merge(box->_rect);
+    dbSBox* box = (dbSBox*) *sitr;
+    bbox->_shape._rect.merge(box->getGeomShape());
   }
 
   dbSet<dbWire>           wires(block, block->_wire_tbl);
@@ -1395,12 +1402,12 @@ void dbBlock::ComputeBBox()
     dbWire* wire = *witr;
     Rect    r;
     if (wire->getBBox(r)) {
-      bbox->_rect.merge(r);
+      bbox->_shape._rect.merge(r);
     }
   }
 
-  if (bbox->_rect.xMin() == INT_MAX) {  // empty block
-    bbox->_rect.reset(0, 0, 0, 0);
+  if (bbox->_shape._rect.xMin() == INT_MAX) {  // empty block
+    bbox->_shape._rect.reset(0, 0, 0, 0);
   }
 
   block->_flags._valid_bbox = 1;

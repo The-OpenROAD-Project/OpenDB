@@ -266,14 +266,14 @@ dbBlockage* dbBlockage::create(dbBlock* block_,
     bkg->_inst = inst->getOID();
 
   _dbBox* box = block->_box_tbl->create();
-  box->_rect.init(x1, y1, x2, y2);
+  box->_shape._rect.init(x1, y1, x2, y2);
   box->_flags._owner_type = dbBoxOwner::BLOCKAGE;
   box->_owner             = bkg->getOID();
   bkg->_bbox              = box->getOID();
 
   // Update bounding box of block
   _dbBox* bbox = (_dbBox*) block->_box_tbl->getPtr(block->_bbox);
-  bbox->_rect.merge(box->_rect);
+  bbox->_shape._rect.merge(box->_shape._rect);
   return (dbBlockage*) bkg;
 }
 

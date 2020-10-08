@@ -10,4 +10,4 @@ link_libraries(opendb
         tcl
 )
 include_directories(${PROJECT_SOURCE_DIR}/include/opendb)
-add_executable( test1 ${PROJECT_SOURCE_DIR}/tests/cpp/test.cpp )
+add_executable( TestGeom ${PROJECT_SOURCE_DIR}/tests/cpp/TestGeom.cpp )

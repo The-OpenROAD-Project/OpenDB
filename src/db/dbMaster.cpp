@@ -717,7 +717,7 @@ void dbMaster::transform(dbTransform& t)
 
   for (itr = obs.begin(); itr != obs.end(); ++itr) {
     _dbBox* box = (_dbBox*) *itr;
-    t.apply(box->_rect);
+    t.apply(box->_shape._rect);
   }
 
   dbSet<dbMTerm>           mterms = getMTerms();
@@ -736,7 +736,7 @@ void dbMaster::transform(dbTransform& t)
 
       for (gitr = geoms.begin(); gitr != geoms.end(); ++gitr) {
         _dbBox* box = (_dbBox*) *gitr;
-        t.apply(box->_rect);
+        t.apply(box->_shape._rect);
       }
     }
   }

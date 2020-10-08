@@ -68,6 +68,22 @@ dbIStream& operator>>(dbIStream& stream, Point& p)
   return stream;
 }
 
+dbOStream& operator<<(dbOStream& stream, const Oct& o)
+{
+  stream << o.center_high;
+  stream << o.center_low;
+  stream << o.A;
+  return stream;
+}
+
+dbIStream& operator>>(dbIStream& stream, Oct& o)
+{
+  stream >> o.center_high;
+  stream >> o.center_low;
+  stream >> o.A;
+  return stream;
+}
+
 dbOStream::dbOStream(_dbDatabase* db, FILE* f)
 {
   _db              = db;

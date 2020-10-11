@@ -249,12 +249,12 @@ void dbBPin::destroy(dbBPin* bpin_)
   _dbBPin*  bpin  = (_dbBPin*) bpin_;
   _dbBlock* block = (_dbBlock*) bpin->getOwner();
   _dbBTerm* bterm = (_dbBTerm*) bpin_->getBTerm();
-
+  for(auto callback:block->_callbacks)
+    callback->inDbBPinDestroy(bpin_);
   // unlink bpin from bterm
   uint     id   = bpin->getOID();
   _dbBPin* prev = NULL;
   uint     cur  = bterm->_bpins;
-
   while (cur) {
     _dbBPin* c = block->_bpin_tbl->getPtr(cur);
     if (cur == id) {
@@ -274,8 +274,6 @@ void dbBPin::destroy(dbBPin* bpin_)
     block->remove_rect(b->_shape._rect);
     block->_box_tbl->destroy(b);
   }
-  for(auto callback:block->_callbacks)
-    callback->inDbBPinDestroy(bpin_);
   dbProperty::destroyProperties(bpin);
 
   block->_bpin_tbl->destroy(bpin);

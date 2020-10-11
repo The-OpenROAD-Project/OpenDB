@@ -41,6 +41,7 @@
 #include "dbSet.h"
 #include "dbTable.h"
 #include "dbTable.hpp"
+#include "dbBlockCallBackObj.h"
 
 namespace odb {
 
@@ -274,6 +275,8 @@ dbBlockage* dbBlockage::create(dbBlock* block_,
   // Update bounding box of block
   _dbBox* bbox = (_dbBox*) block->_box_tbl->getPtr(block->_bbox);
   bbox->_shape._rect.merge(box->_shape._rect);
+  for(auto callback:block->_callbacks)
+    callback->inDbBlockageCreate((dbBlockage*) bkg);
   return (dbBlockage*) bkg;
 }
 

@@ -427,6 +427,11 @@ void dbInst::setOrigin(int x, int y)
   _dbBlock* block  = (_dbBlock*) inst->getOwner();
   int       prev_x = inst->_x;
   int       prev_y = inst->_y;
+  //Do Nothin if same origin, But What if uninitialized and x=y=0
+  if(prev_x==x&&prev_y==y)
+    return;
+  for(auto callback:block->_callbacks)
+    callback->inDbPreMoveInst(this);
 
   inst->_x = x;
   inst->_y = y;
@@ -444,12 +449,10 @@ void dbInst::setOrigin(int x, int y)
     block->_journal->pushParam(inst->_y);
     block->_journal->endAction();
   }
-
-  std::list<dbBlockCallBackObj*>::iterator cbitr;
-  for (cbitr = block->_callbacks.begin(); cbitr != block->_callbacks.end();
-       ++cbitr)
-    (**cbitr)().inDbMoveInst(this);
+  
   block->_flags._valid_bbox=0;
+  for(auto callback:block->_callbacks)
+    callback->inDbPostMoveInst(this);  
 }
 
 void dbInst::setLocationOrient(dbOrientType orient)
@@ -495,9 +498,12 @@ dbOrientType dbInst::getOrient()
 
 void dbInst::setOrient(dbOrientType orient)
 {
+  if(orient==getOrient())
+    return;
   _dbInst*  inst  = (_dbInst*) this;
   _dbBlock* block = (_dbBlock*) inst->getOwner();
-
+  for(auto callback:block->_callbacks)
+    callback->inDbPreMoveInst(this);  
 #ifdef FULL_ECO
   uint prev_flags = flagsToUInt(inst);
 #endif
@@ -510,12 +516,11 @@ void dbInst::setOrient(dbOrientType orient)
     block->_journal->updateField(this, _dbInst::FLAGS, prev_flags, flagsToUInt(inst));
   }
 #endif
-
-  std::list<dbBlockCallBackObj*>::iterator cbitr;
-  for (cbitr = block->_callbacks.begin(); cbitr != block->_callbacks.end();
-       ++cbitr)
-    (**cbitr)().inDbMoveInst(this);
+  
   block->_flags._valid_bbox = 0;
+  for(auto callback:block->_callbacks)
+    callback->inDbPostMoveInst(this); 
+
 }
 
 dbPlacementStatus dbInst::getPlacementStatus()

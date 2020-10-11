@@ -41,6 +41,7 @@
 #include "dbTable.h"
 #include "dbTable.hpp"
 #include "dbTechLayer.h"
+#include "dbBlockCallBackObj.h"
 
 namespace odb {
 
@@ -393,6 +394,8 @@ dbObstruction* dbObstruction::create(dbBlock*     block_,
 
   // Update bounding box of block
   block->add_rect(box->_shape._rect);
+  for(auto callback:block->_callbacks)
+    callback->inDbObstructionCreate((dbObstruction*) obs);
   return (dbObstruction*) obs;
 }
 
@@ -400,7 +403,8 @@ void dbObstruction::destroy(dbObstruction* obstruction)
 {
   _dbObstruction* obs   = (_dbObstruction*) obstruction;
   _dbBlock*       block = (_dbBlock*) obs->getOwner();
-
+  for(auto callback:block->_callbacks)
+    callback->inDbObstructionDestroy(obstruction);
   dbProperty::destroyProperties(obs);
   block->_obstruction_tbl->destroy(obs);
 }

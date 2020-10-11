@@ -10,4 +10,5 @@ link_libraries(opendb
         tcl
 )
 include_directories(${PROJECT_SOURCE_DIR}/include/opendb)
+add_executable( TestCallBacks ${PROJECT_SOURCE_DIR}/tests/cpp/TestCallBacks.cpp )
 add_executable( TestGeom ${PROJECT_SOURCE_DIR}/tests/cpp/TestGeom.cpp )

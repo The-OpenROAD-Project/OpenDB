@@ -559,14 +559,14 @@ void dbBTerm::destroy(dbBTerm* bterm_)
   for (itr = bpins.begin(); itr != bpins.end();) {
     itr = dbBPin::destroy(itr);
   }
-  // remove from hash-table
-  block->_bterm_hash.remove(bterm);
   if(bterm->_net)
     bterm->disconnectNet(bterm, block);
   for(auto callback:block->_callbacks)
     callback->inDbBTermDestroy(bterm_); 
+  // remove from hash-table
+  
+  block->_bterm_hash.remove(bterm);
   dbProperty::destroyProperties(bterm);
-
   block->_bterm_tbl->destroy(bterm);
 }
 

@@ -235,29 +235,23 @@ void dbSWire::destroy(dbSWire* wire_)
   _dbNet*        net   = block->_net_tbl->getPtr(wire->_net);
   _dbSWire*      prev  = NULL;
   dbId<_dbSWire> id;
-
+  // destroy the sboxes
+  destroySBoxes(wire);
+  for(auto callback:block->_callbacks)
+    callback->inDbSWireDestroy(wire_);
   // unlink the swire
   for (id = net->_swires; id != 0; id = prev->_next_swire) {
     _dbSWire* w = block->_swire_tbl->getPtr(id);
-
     if (w == wire) {
       if (prev == NULL)
         net->_swires = w->_next_swire;
       else
         prev->_next_swire = w->_next_swire;
-
       break;
     }
-
     prev = w;
   }
-
   ZASSERT(id != 0);
-
-  // destroy the sboxes
-  destroySBoxes(wire);
-  for(auto callback:block->_callbacks)
-    callback->inDbSWireDestroy(wire_);
   // destroy the wire
   dbProperty::destroyProperties(wire);
   block->_swire_tbl->destroy(wire);

@@ -81,8 +81,8 @@ class _dbBTerm : public _dbObject
   dbId<_dbBlock> _parent_block;  // Up hierarchy: TWG
   dbId<_dbITerm> _parent_iterm;  // Up hierarchy: TWG
   dbId<_dbBPin>  _bpins;         // Up hierarchy: TWG
-  dbId<_dbBPin>  _ground_pin;
-  dbId<_dbBPin>  _supply_pin;
+  dbId<_dbBTerm>  _ground_pin;
+  dbId<_dbBTerm>  _supply_pin;
   std::uint32_t  _sta_vertex_id;  // not saved
 
   _dbBTerm(_dbDatabase*);

@@ -40,6 +40,7 @@
 #include "dbDatabase.h"
 #include "dbTable.h"
 #include "dbTable.hpp"
+#include "dbBlockCallBackObj.h"
 
 namespace odb {
 
@@ -234,11 +235,12 @@ dbBPin* dbBPin::create(dbBTerm* bterm_)
 {
   _dbBTerm* bterm = (_dbBTerm*) bterm_;
   _dbBlock* block = (_dbBlock*) bterm->getOwner();
-
   _dbBPin* bpin    = block->_bpin_tbl->create();
   bpin->_bterm     = bterm->getOID();
   bpin->_next_bpin = bterm->_bpins;
   bterm->_bpins    = bpin->getOID();
+  for(auto callback:block->_callbacks)
+    callback->inDbBPinCreate((dbBPin*) bpin);
   return (dbBPin*) bpin;
 }
 
@@ -247,12 +249,12 @@ void dbBPin::destroy(dbBPin* bpin_)
   _dbBPin*  bpin  = (_dbBPin*) bpin_;
   _dbBlock* block = (_dbBlock*) bpin->getOwner();
   _dbBTerm* bterm = (_dbBTerm*) bpin_->getBTerm();
-
+  for(auto callback:block->_callbacks)
+    callback->inDbBPinDestroy(bpin_);
   // unlink bpin from bterm
   uint     id   = bpin->getOID();
   _dbBPin* prev = NULL;
   uint     cur  = bterm->_bpins;
-
   while (cur) {
     _dbBPin* c = block->_bpin_tbl->getPtr(cur);
     if (cur == id) {
@@ -269,11 +271,11 @@ void dbBPin::destroy(dbBPin* bpin_)
   if (bpin->_bbox) {
     _dbBox* b = block->_box_tbl->getPtr(bpin->_bbox);
     dbProperty::destroyProperties(b);
-    block->remove_rect(b->_rect);
+    block->remove_rect(b->_shape._rect);
     block->_box_tbl->destroy(b);
   }
-
   dbProperty::destroyProperties(bpin);
+
   block->_bpin_tbl->destroy(bpin);
 }
 

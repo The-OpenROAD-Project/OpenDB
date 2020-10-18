@@ -1606,7 +1606,8 @@ void dbWire::append(dbWire* src_, bool singleSegmentWire)
         return;
     }
   }
-
+  for(auto callback:((_dbBlock*)getBlock())->_callbacks)
+    callback->inDbWirePreAppend(src_,this);
   uint sz = dst->_opcodes.size();
   dst->_opcodes.insert(
       dst->_opcodes.end(), src->_opcodes.begin(), src->_opcodes.end());
@@ -1644,13 +1645,20 @@ void dbWire::append(dbWire* src_, bool singleSegmentWire)
         || (opcode == WOP_VWIRE))
       dst->_data[i] += sz;
   }
+  for(auto callback:((_dbBlock*)getBlock())->_callbacks)
+    callback->inDbWirePostAppend(src_,this);
 }
 
 void dbWire::attach(dbNet* net_)
 {
   _dbWire* wire = (_dbWire*) this;
   _dbNet*  net  = (_dbNet*) net_;
+  _dbBlock* block =(_dbBlock*) getBlock();
   assert(wire->_flags._is_global == 0);
+  if(wire->_net==net->getOID()&&net->_wire==wire->getOID())
+    return;
+  for(auto callback:block->_callbacks)
+    callback->inDbWirePreAttach(this,net_);
 
   // dbWire * prev = net_->getWire();
 
@@ -1662,28 +1670,25 @@ void dbWire::attach(dbNet* net_)
 
   wire->_net = net->getOID();
   net->_wire = wire->getOID();
+  for(auto callback:block->_callbacks)
+    callback->inDbWirePostAttach(this);
 }
 
 void dbWire::detach()
 {
   _dbWire* wire = (_dbWire*) this;
+  _dbBlock* block =(_dbBlock*) getBlock();
   assert(wire->_flags._is_global == 0);
-
   if (wire->_net == 0)
     return;
+  for(auto callback:block->_callbacks)
+    callback->inDbWirePreDetach(this);
 
   _dbNet* net = (_dbNet*) getNet();
   net->_wire  = 0;
   wire->_net  = 0;
-}
-
-void dbWire::ecoUpdate()
-{
-  _dbBlock* block = (_dbBlock*) getImpl()->getOwner();
-  std::list<dbBlockCallBackObj*>::iterator cbitr;
-  for (cbitr = block->_callbacks.begin(); cbitr != block->_callbacks.end();
-       ++cbitr)
-    (**cbitr)().inDbWireUpdate(this);  // client ECO optimization - payam
+  for(auto callback:block->_callbacks)
+    callback->inDbWirePostDetach(this,(dbNet*)net);
 }
 
 void dbWire::copy(dbWire* dst_,
@@ -1695,7 +1700,9 @@ void dbWire::copy(dbWire* dst_,
   _dbWire* src = (_dbWire*) src_;
 
   assert(dst->getDatabase() == src->getDatabase());
-
+  _dbBlock* block = (_dbBlock*)dst_->getBlock();
+  for(auto callback:block->_callbacks)
+    callback->inDbWirePreCopy(src_,dst_);
   uint n = src->_opcodes.size();
 
   // Free the old memory
@@ -1747,6 +1754,8 @@ void dbWire::copy(dbWire* dst_,
       }
     }
   }
+  for(auto callback:block->_callbacks)
+    callback->inDbWirePostCopy(src_,dst_);
 }
 
 void dbWire::copy(dbWire*     dst,
@@ -1755,6 +1764,9 @@ void dbWire::copy(dbWire*     dst,
                   bool        removeITermsBTerms,
                   bool        copyVias)
 {
+  _dbBlock* block = (_dbBlock*)dst->getBlock();
+  for(auto callback:block->_callbacks)
+    callback->inDbWirePreCopy(src,dst);
   dbRtTree tree;
   tree.decode(src, !removeITermsBTerms);
 
@@ -1795,6 +1807,8 @@ void dbWire::copy(dbWire*     dst,
   }
 
   tree.encode(dst, !removeITermsBTerms);
+  for(auto callback:block->_callbacks)
+    callback->inDbWirePostCopy(src,dst);
 }
 
 dbWire* dbWire::create(dbNet* net_, bool global_wire)
@@ -1821,6 +1835,8 @@ dbWire* dbWire::create(dbNet* net_, bool global_wire)
 
   net->_flags._wire_ordered = 0;
   net->_flags._disconnected = 0;
+  for(auto callback:block->_callbacks)
+    callback->inDbWireCreate((dbWire*)wire);
   return (dbWire*) wire;
 }
 
@@ -1828,6 +1844,8 @@ dbWire* dbWire::create(dbBlock* block_, bool /* unused: global_wire */)
 {
   _dbBlock* block = (_dbBlock*) block_;
   _dbWire*  wire  = block->_wire_tbl->create();
+  for(auto callback:block->_callbacks)
+    callback->inDbWireCreate((dbWire*)wire);
   return (dbWire*) wire;
 }
 
@@ -1842,7 +1860,8 @@ void dbWire::destroy(dbWire* wire_)
   _dbWire*  wire  = (_dbWire*) wire_;
   _dbBlock* block = (_dbBlock*) wire->getOwner();
   _dbNet*   net   = (_dbNet*) wire_->getNet();
-
+  for(auto callback:block->_callbacks)
+    callback->inDbWireDestroy(wire_);
   Rect bbox;
 
   if (wire_->getBBox(bbox))

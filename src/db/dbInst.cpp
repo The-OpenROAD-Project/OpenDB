@@ -92,13 +92,13 @@ static void setInstBBox(_dbInst* inst)
 {
   _dbBlock* block = (_dbBlock*) inst->getOwner();
   _dbBox*   box   = block->_box_tbl->getPtr(inst->_bbox);
-  block->remove_rect(box->_rect);
+  block->remove_rect(box->_shape._rect);
 
   dbMaster* master = ((dbInst*) inst)->getMaster();
-  master->getPlacementBoundary(box->_rect);
+  master->getPlacementBoundary(box->_shape._rect);
   dbTransform transform(inst->_flags._orient, Point(inst->_x, inst->_y));
-  transform.apply(box->_rect);
-  block->add_rect(box->_rect);
+  transform.apply(box->_shape._rect);
+  block->add_rect(box->_shape._rect);
 }
 
 _dbInst::_dbInst(_dbDatabase*)
@@ -427,6 +427,11 @@ void dbInst::setOrigin(int x, int y)
   _dbBlock* block  = (_dbBlock*) inst->getOwner();
   int       prev_x = inst->_x;
   int       prev_y = inst->_y;
+  //Do Nothin if same origin, But What if uninitialized and x=y=0
+  if(prev_x==x&&prev_y==y)
+    return;
+  for(auto callback:block->_callbacks)
+    callback->inDbPreMoveInst(this);
 
   inst->_x = x;
   inst->_y = y;
@@ -444,12 +449,10 @@ void dbInst::setOrigin(int x, int y)
     block->_journal->pushParam(inst->_y);
     block->_journal->endAction();
   }
-
-  std::list<dbBlockCallBackObj*>::iterator cbitr;
-  for (cbitr = block->_callbacks.begin(); cbitr != block->_callbacks.end();
-       ++cbitr)
-    (**cbitr)().inDbMoveInst(this);
+  
   block->_flags._valid_bbox=0;
+  for(auto callback:block->_callbacks)
+    callback->inDbPostMoveInst(this);  
 }
 
 void dbInst::setLocationOrient(dbOrientType orient)
@@ -465,8 +468,8 @@ void dbInst::getLocation(int& x, int& y) const
   const _dbInst* inst  = (const _dbInst*) this;
   _dbBlock*      block = (_dbBlock*) inst->getOwner();
   _dbBox*        bbox  = block->_box_tbl->getPtr(inst->_bbox);
-  x                    = bbox->_rect.xMin();
-  y                    = bbox->_rect.yMin();
+  x                    = bbox->_shape._rect.xMin();
+  y                    = bbox->_shape._rect.yMin();
 }
 
 void dbInst::setLocation(int x, int y)
@@ -495,9 +498,12 @@ dbOrientType dbInst::getOrient()
 
 void dbInst::setOrient(dbOrientType orient)
 {
+  if(orient==getOrient())
+    return;
   _dbInst*  inst  = (_dbInst*) this;
   _dbBlock* block = (_dbBlock*) inst->getOwner();
-
+  for(auto callback:block->_callbacks)
+    callback->inDbPreMoveInst(this);  
 #ifdef FULL_ECO
   uint prev_flags = flagsToUInt(inst);
 #endif
@@ -510,12 +516,11 @@ void dbInst::setOrient(dbOrientType orient)
     block->_journal->updateField(this, _dbInst::FLAGS, prev_flags, flagsToUInt(inst));
   }
 #endif
-
-  std::list<dbBlockCallBackObj*>::iterator cbitr;
-  for (cbitr = block->_callbacks.begin(); cbitr != block->_callbacks.end();
-       ++cbitr)
-    (**cbitr)().inDbMoveInst(this);
+  
   block->_flags._valid_bbox = 0;
+  for(auto callback:block->_callbacks)
+    callback->inDbPostMoveInst(this); 
+
 }
 
 dbPlacementStatus dbInst::getPlacementStatus()
@@ -1268,12 +1273,12 @@ dbInst* dbInst::create(dbBlock*    block_,
   }
 
   _dbBox* box = block->_box_tbl->create();
-  box->_rect.init(0, 0, master->_width, master->_height);
+  box->_shape._rect.init(0, 0, master->_width, master->_height);
   box->_flags._owner_type = dbBoxOwner::INST;
   box->_owner             = inst->getOID();
   inst->_bbox             = box->getOID();
 
-  block->add_rect(box->_rect);
+  block->add_rect(box->_shape._rect);
 
   if (region) {
     region->addInst((dbInst*) inst);
@@ -1372,7 +1377,7 @@ void dbInst::destroy(dbInst* inst_)
   }
 
   _dbBox* box = block->_box_tbl->getPtr(inst->_bbox);
-  block->remove_rect(box->_rect);
+  block->remove_rect(box->_shape._rect);
   block->_inst_hash.remove(inst);
   dbProperty::destroyProperties(inst);
   block->_inst_tbl->destroy(inst);

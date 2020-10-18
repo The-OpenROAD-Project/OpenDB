@@ -106,23 +106,23 @@ class dbTable : public dbObjectTable, public dbIterator
   uint page_size() const { return _page_mask + 1; }
 
   // Get the object of this id
-  T* getPtr(uint id) const
+  T* getPtr(dbId<T> id) const
   {
-    uint page   = id >> _page_shift;
-    uint offset = id & _page_mask;
+    uint page   = (uint)id >> _page_shift;
+    uint offset = (uint)id & _page_mask;
 
-    assert((id != 0) && (page < _page_cnt));
+    assert(((uint)id != 0) && (page < _page_cnt));
     T* p = (T*) &(_pages[page]->_objects[offset * sizeof(T)]);
     assert(p->_oid & DB_ALLOC_BIT);
     return p;
   }
 
-  bool validId(uint id) const
+  bool validId(dbId<T> id) const
   {
-    uint page   = id >> _page_shift;
-    uint offset = id & _page_mask;
+    uint page   = (uint)id >> _page_shift;
+    uint offset = (uint)id & _page_mask;
 
-    if ((id != 0) && (page < _page_cnt)) {
+    if (((uint)id != 0) && (page < _page_cnt)) {
       T* p = (T*) &(_pages[page]->_objects[offset * sizeof(T)]);
       return (p->_oid & DB_ALLOC_BIT) == DB_ALLOC_BIT;
     }
@@ -135,11 +135,11 @@ class dbTable : public dbObjectTable, public dbIterator
   // This method is the same as getPtr() but is is
   // use to get objects on the free-list.
   //
-  T* getFreeObj(uint id)
+  T* getFreeObj(dbId<T> id)
   {
-    uint page   = id >> _page_shift;
-    uint offset = id & _page_mask;
-    assert((id != 0) && (page < _page_cnt));
+    uint page   = (uint)id >> _page_shift;
+    uint offset = (uint)id & _page_mask;
+    assert(((uint)id != 0) && (page < _page_cnt));
     T* p = (T*) &(_pages[page]->_objects[offset * sizeof(T)]);
     assert((p->_oid & DB_ALLOC_BIT) == 0);
     return p;

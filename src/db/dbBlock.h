@@ -243,6 +243,7 @@ class _dbBlock : public _dbObject
   _dbBlock(_dbDatabase* db, const _dbBlock& block);
   ~_dbBlock();
   void add_rect(const Rect& rect);
+  void add_geom_shape(GeomShape* shape);
   void remove_rect(const Rect& rect);
   void invalidate_bbox() { _flags._valid_bbox = 0; }
   void initialize(_dbChip*    chip,

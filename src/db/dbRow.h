@@ -46,6 +46,8 @@ class dbOStream;
 class dbSite;
 class dbLib;
 class dbDiff;
+class _dbSite;
+class _dbLib;
 
 struct dbRowFlags
 {
@@ -60,8 +62,8 @@ class _dbRow : public _dbObject
   // PERSISTANT-MEMBERS
   dbRowFlags   _flags;
   char*        _name;
-  dbId<dbLib>  _lib;
-  dbId<dbSite> _site;
+  dbId<_dbLib>  _lib;
+  dbId<_dbSite> _site;
   int          _x;
   int          _y;
   int          _site_cnt;

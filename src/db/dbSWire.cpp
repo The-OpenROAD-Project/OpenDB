@@ -41,6 +41,7 @@
 #include "dbSet.h"
 #include "dbTable.h"
 #include "dbTable.hpp"
+#include "dbBlockCallBackObj.h"
 
 namespace odb {
 
@@ -203,7 +204,8 @@ dbSWire* dbSWire::create(dbNet* net_, dbWireType type, dbNet* shield_)
 
   if (shield)
     wire->_shield = shield->getOID();
-
+  for(auto callback:block->_callbacks)
+    callback->inDbSWireCreate((dbSWire*) wire);
   return (dbSWire*) wire;
 }
 
@@ -211,7 +213,10 @@ static void destroySBoxes(_dbSWire* wire)
 {
   _dbBlock*     block = (_dbBlock*) wire->getOwner();
   dbId<_dbSBox> id    = wire->_wires;
-
+  if(id==0)
+    return;
+  for(auto callback:block->_callbacks)
+    callback->inDbSWirePreDestroySBoxes((dbSWire*) wire);
   while (id != 0) {
     _dbSBox* box = block->_sbox_tbl->getPtr(id);
     uint     nid = box->_next_box;
@@ -219,6 +224,8 @@ static void destroySBoxes(_dbSWire* wire)
     block->_sbox_tbl->destroy(box);
     id = nid;
   }
+  for(auto callback:block->_callbacks)
+    callback->inDbSWirePostDestroySBoxes((dbSWire*) wire);
 }
 
 void dbSWire::destroy(dbSWire* wire_)
@@ -228,28 +235,23 @@ void dbSWire::destroy(dbSWire* wire_)
   _dbNet*        net   = block->_net_tbl->getPtr(wire->_net);
   _dbSWire*      prev  = NULL;
   dbId<_dbSWire> id;
-
+  // destroy the sboxes
+  destroySBoxes(wire);
+  for(auto callback:block->_callbacks)
+    callback->inDbSWireDestroy(wire_);
   // unlink the swire
   for (id = net->_swires; id != 0; id = prev->_next_swire) {
     _dbSWire* w = block->_swire_tbl->getPtr(id);
-
     if (w == wire) {
       if (prev == NULL)
         net->_swires = w->_next_swire;
       else
         prev->_next_swire = w->_next_swire;
-
       break;
     }
-
     prev = w;
   }
-
   ZASSERT(id != 0);
-
-  // destroy the sboxes
-  destroySBoxes(wire);
-
   // destroy the wire
   dbProperty::destroyProperties(wire);
   block->_swire_tbl->destroy(wire);

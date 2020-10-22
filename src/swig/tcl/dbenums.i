@@ -315,6 +315,9 @@
 	 	case odb::dbMasterType::Value::PAD_POWER:
 			obj = Tcl_NewStringObj("PAD_POWER", -1);
 			break;
+	 	case odb::dbMasterType::Value::PAD_GROUND:
+			obj = Tcl_NewStringObj("PAD_GROUND", -1);
+			break;
 	 	case odb::dbMasterType::Value::PAD_SPACER:
 			obj = Tcl_NewStringObj("PAD_SPACER", -1);
 			break;
@@ -392,6 +395,8 @@
 		$1 = odb::dbMasterType::Value::PAD_INOUT;
 	} else if (strcasecmp(str, "PAD_POWER") == 0) {
 		$1 = odb::dbMasterType::Value::PAD_POWER;
+	} else if (strcasecmp(str, "PAD_GROUND") == 0) {
+		$1 = odb::dbMasterType::Value::PAD_GROUND;
 	} else if (strcasecmp(str, "PAD_SPACER") == 0) {
 		$1 = odb::dbMasterType::Value::PAD_SPACER;
 	} else if (strcasecmp(str, "PAD_AREAIO") == 0) {
@@ -453,6 +458,8 @@
 		} 	else if (strcasecmp(str, "PAD_INOUT") == 0) {
 			found = true;
 		} 	else if (strcasecmp(str, "PAD_POWER") == 0) {
+			found = true;
+		} 	else if (strcasecmp(str, "PAD_GROUND") == 0) {
 			found = true;
 		} 	else if (strcasecmp(str, "PAD_SPACER") == 0) {
 			found = true;

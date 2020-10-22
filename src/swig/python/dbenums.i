@@ -271,6 +271,8 @@
 		obj = PyString_FromString("PAD_INOUT");
 	} else if ($1.getValue() == odb::dbMasterType::Value::PAD_POWER) {
 		obj = PyString_FromString("PAD_POWER");
+	} else if ($1.getValue() == odb::dbMasterType::Value::PAD_GROUND) {
+		obj = PyString_FromString("PAD_GROUND");
 	} else if ($1.getValue() == odb::dbMasterType::Value::PAD_SPACER) {
 		obj = PyString_FromString("PAD_SPACER");
 	} else if ($1.getValue() == odb::dbMasterType::Value::PAD_AREAIO) {
@@ -332,6 +334,8 @@
 		$1 = odb::dbMasterType::Value::PAD_INOUT;
 	} else if (strcasecmp(str, "PAD_POWER") == 0) {
 		$1 = odb::dbMasterType::Value::PAD_POWER;
+	} else if (strcasecmp(str, "PAD_GROUND") == 0) {
+		$1 = odb::dbMasterType::Value::PAD_GROUND;
 	} else if (strcasecmp(str, "PAD_SPACER") == 0) {
 		$1 = odb::dbMasterType::Value::PAD_SPACER;
 	} else if (strcasecmp(str, "PAD_AREAIO") == 0) {
@@ -392,7 +396,9 @@
 			found = true;
 		} 	else if (strcasecmp(str, "PAD_INOUT") == 0) {
 			found = true;
-		} 	else if (strcasecmp(str, "PAD_POWER") == 0) {
+                } 	else if (strcasecmp(str, "PAD_POWER") == 0) {
+			found = true;
+		} 	else if (strcasecmp(str, "PAD_GROUND") == 0) {
 			found = true;
 		} 	else if (strcasecmp(str, "PAD_SPACER") == 0) {
 			found = true;

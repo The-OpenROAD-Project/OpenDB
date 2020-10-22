@@ -306,6 +306,7 @@ class dbMasterType
     PAD_OUTPUT,        /** */
     PAD_INOUT,         /** */
     PAD_POWER,         /** */
+    PAD_GROUND,        /** */
     PAD_SPACER,        /** */
     PAD_AREAIO,        /** */
     CORE,              /** */

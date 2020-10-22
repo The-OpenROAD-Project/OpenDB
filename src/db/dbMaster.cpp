@@ -830,6 +830,7 @@ bool dbMaster::isCoreAutoPlaceable()
     case dbMasterType::PAD_OUTPUT:
     case dbMasterType::PAD_INOUT:
     case dbMasterType::PAD_POWER:
+    case dbMasterType::PAD_GROUND:
     case dbMasterType::PAD_SPACER:
     case dbMasterType::NONE:
       return false;

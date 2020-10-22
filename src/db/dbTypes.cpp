@@ -440,6 +440,9 @@ dbMasterType::dbMasterType(const char* value)
   else if (strcasecmp(value, "PAD POWER") == 0)
     _value = PAD_POWER;
 
+  else if (strcasecmp(value, "PAD GROUND") == 0)
+    _value = PAD_GROUND;
+
   else if (strcasecmp(value, "PAD SPACER") == 0)
     _value = PAD_SPACER;
 
@@ -557,6 +560,10 @@ const char* dbMasterType::getString() const
       value = "PAD POWER";
       break;
 
+    case PAD_GROUND:
+      value = "PAD GROUND";
+      break;
+
     case PAD_SPACER:
       value = "PAD SPACER";
       break;
@@ -641,6 +648,7 @@ bool dbMasterType::isBlock() const
     case PAD_OUTPUT:
     case PAD_INOUT:
     case PAD_POWER:
+    case PAD_GROUND:
     case PAD_SPACER:
     case PAD_AREAIO:
     case CORE:
@@ -686,6 +694,7 @@ bool dbMasterType::isCore() const
     case PAD_OUTPUT:
     case PAD_INOUT:
     case PAD_POWER:
+    case PAD_GROUND:
     case PAD_SPACER:
     case PAD_AREAIO:
     case ENDCAP:
@@ -709,6 +718,7 @@ bool dbMasterType::isPad() const
     case PAD_OUTPUT:
     case PAD_INOUT:
     case PAD_POWER:
+    case PAD_GROUND:
     case PAD_SPACER:
     case PAD_AREAIO:
       return true;
@@ -762,6 +772,7 @@ bool dbMasterType::isEndCap() const
     case PAD_OUTPUT:
     case PAD_INOUT:
     case PAD_POWER:
+    case PAD_GROUND:
     case PAD_SPACER:
     case PAD_AREAIO:
     case CORE:

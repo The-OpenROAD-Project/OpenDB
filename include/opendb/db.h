@@ -71,6 +71,10 @@ class dbStringProperty;
 class dbIntProperty;
 class dbDoubleProperty;
 
+//Generator Code Begin 1
+//Generator Code End 1
+
+
 // Design objects
 class dbChip;
 class dbBlock;
@@ -97,6 +101,9 @@ class dbBlockCallBackObj;
 class dbMetrics;
 class dbRegion;
 class dbBPin;
+//Generator Code Begin 2
+//Generator Code End 2
+
 
 // Lib objects
 class dbLib;
@@ -105,6 +112,8 @@ class dbMaster;
 class dbMTerm;
 class dbMPin;
 class dbTarget;
+//Generator Code Begin 3
+//Generator Code End 3
 
 // Tech objects
 class dbTech;
@@ -121,6 +130,8 @@ class dbTechMinCutRule;
 class dbTechMinEncRule;
 class dbTechV55InfluenceEntry;
 class dbTechSameNetRule;
+//Generator Code Begin 4
+//Generator Code End 4
 
 class dbViaParams;
 
@@ -7123,5 +7134,8 @@ class dbViaParams : private _dbViaParams
   void setCutLayer(dbTechLayer* layer);
   void setBottomLayer(dbTechLayer* layer);
 };
+
+//Generator Code Begin 5
+//Generator Code End 5
 
 }  // namespace odb

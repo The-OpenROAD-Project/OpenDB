@@ -39,6 +39,7 @@
 #include "dbTable.hpp"
 #include "dbTech.h"
 #include "dbTechLayer.h"
+#include "dbBlockCallBackObj.h"
 
 namespace odb {
 
@@ -158,11 +159,20 @@ dbFill* dbFill::create(dbBlock*     block,
                        int          x2,
                        int          y2)
 {
-  _dbFill*  fill         = ((_dbBlock*) block)->_fill_tbl->create();
-  fill->_flags._opc     = needs_opc;
+  _dbBlock* block_internal = (_dbBlock*) block;
+  _dbFill* fill          = block_internal->_fill_tbl->create();
+  fill->_flags._opc      = needs_opc;
   fill->_flags._mask_id  = mask_number;
   fill->_flags._layer_id = layer->getImpl()->getOID();
   fill->_rect.init(x1, y1, x2, y2);
+
+  std::list<dbBlockCallBackObj*>::iterator cbitr;
+  for (cbitr = block_internal->_callbacks.begin();
+       cbitr != block_internal->_callbacks.end();
+       ++cbitr) {
+    (*cbitr)->inDbFillCreate((dbFill*) fill);
+  }
+
   return (dbFill*) fill;
 }
 

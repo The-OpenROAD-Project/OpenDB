@@ -509,16 +509,18 @@ void dbBox::getViaBoxes(std::vector<dbShape>& shapes)
   _dbBox* box = (_dbBox*) this;
 
   int x = 0;
-  int y = 0;  // dimitris_fix: compiler warming
+  int y = 0;
   box->getViaXY(x, y);
 
   dbSet<dbBox> boxes;
 
-  if (box->_flags._is_tech_via)
+  if (box->_flags._is_tech_via) {
     boxes = getTechVia()->getBoxes();
-
-  else if (box->_flags._is_block_via)
+  } else if (box->_flags._is_block_via) {
     boxes = getBlockVia()->getBoxes();
+  } else {
+    throw ZException("getViaBoxes called with non-via")
+  }
 
   shapes.clear();
   dbSet<dbBox>::iterator itr;

@@ -575,26 +575,19 @@ _dbBlock::~_dbBlock()
   delete _r_seg_tbl;
   delete _cc_seg_tbl;
   delete _extControl;
-  /*
-          compilee warning
-  dbBlock.cpp:513:12: warning: deleting object of polymorphic class type
-  ‘dbNetBTermItr’ which has non-virtual destructor might cause undefined
-  behavior [-Wdelete-non-virtual-dtor] delete _net_bterm_itr;
-
-      delete _net_bterm_itr;
-      delete _net_iterm_itr;
-      delete _inst_iterm_itr;
-      delete _box_itr;
-      delete _swire_itr;
-      delete _sbox_itr;
-      delete _cap_node_itr;
-      delete _r_seg_itr;
-      delete _cc_seg_itr;
-      delete _region_inst_itr;
-      delete _bpin_itr;
-      delete _region_itr;
-      delete _prop_itr;
-  */
+  delete _net_bterm_itr;
+  delete _net_iterm_itr;
+  delete _inst_iterm_itr;
+  delete _box_itr;
+  delete _swire_itr;
+  delete _sbox_itr;
+  delete _cap_node_itr;
+  delete _r_seg_itr;
+  delete _cc_seg_itr;
+  delete _region_inst_itr;
+  delete _bpin_itr;
+  delete _region_itr;
+  delete _prop_itr;
 
   std::list<dbBlockCallBackObj*>::iterator _cbitr;
   while (_callbacks.begin() != _callbacks.end()) {

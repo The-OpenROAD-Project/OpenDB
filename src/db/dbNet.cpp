@@ -739,7 +739,6 @@ bool dbNet::hasFixedBump()
 void dbNet::setFixedBump(bool value)
 {
   _dbNet* net             = (_dbNet*) this;
-  net->_flags._fixed_bump = 1;
   net->_flags._fixed_bump = value;
 }
 

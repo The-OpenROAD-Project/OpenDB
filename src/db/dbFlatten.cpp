@@ -820,7 +820,7 @@ void dbFlatten::fixWire(dbVector<unsigned char>& opcodes,
       }
 
       case WOP_RULE: {
-        if (opcode & WOP_BLOCK_RULE) {
+        if (opcodes[i] & WOP_BLOCK_RULE) {
           dbTechLayerRule* rule
               = dbTechLayerRule::getTechLayerRule(src, data[i]);
           data[i] = _layer_rule_map[rule]->getImpl()->getOID();

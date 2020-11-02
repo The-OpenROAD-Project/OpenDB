@@ -519,7 +519,7 @@ void dbBox::getViaBoxes(std::vector<dbShape>& shapes)
   } else if (box->_flags._is_block_via) {
     boxes = getBlockVia()->getBoxes();
   } else {
-    throw ZException("getViaBoxes called with non-via")
+    throw ZException("getViaBoxes called with non-via");
   }
 
   shapes.clear();

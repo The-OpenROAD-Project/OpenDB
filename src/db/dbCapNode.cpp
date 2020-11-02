@@ -427,7 +427,7 @@ void dbCapNode::addCapacitance(double cap, int corner)
   if (block->_journal) {
     debug("DB_ECO",
           "A",
-          "ECO: AddCapacitance, corner %d, seg %d, prev: %d, new: %d\n",
+          "ECO: AddCapacitance, corner %d, seg %d, prev: %f, new: %f\n",
           corner,
           seg->getId(),
           prev_value,

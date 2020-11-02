@@ -1912,7 +1912,7 @@ void tmg_conn::treeReorder(bool verbose, bool quiet, bool no_convert)
     x            = _termV + j;
     x->_first_pt = NULL;
     if (verbose) {
-      notice(0, "j=%d pt=%d ", j, x->_pt ? (x->_pt - _ptV) : 0);
+      notice(0, "j=%d pt=%ld ", j, x->_pt ? (x->_pt - _ptV) : 0);
       print_rcterm(x);
       notice(0, "\n");
     }

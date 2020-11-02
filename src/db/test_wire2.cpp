@@ -157,7 +157,7 @@ void db_test_wires2(dbBlock* block)
     s.wire->getSegment(s.id, s.layer, shape);
   }
   t.stop();
-  notice(0, "get-segment-itr time (%d): %fs \n", shapes.size(), t.result_sec());
+  notice(0, "get-segment-itr time (%lu): %fs \n", shapes.size(), t.result_sec());
 
   t.start();
   for (witr = shapes.begin(); witr != shapes.end(); ++witr) {
@@ -165,7 +165,7 @@ void db_test_wires2(dbBlock* block)
     s.wire->getShape(s.id, shape);
   }
   t.stop();
-  notice(0, "get-shape-itr time (%d): %fs \n", shapes.size(), t.result_sec());
+  notice(0, "get-shape-itr time (%lu): %fs \n", shapes.size(), t.result_sec());
 
   notice(0, "done\n");
 

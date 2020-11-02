@@ -2711,7 +2711,7 @@ void dbBlock::restoreOldCornerParasitics(dbBlock*             pblock,
           ccSeg->Link_cc_seg(otherCapnode, otherid);
         else {
           notice(0,
-                 "net %d %s capNode %s ccseg %d has otherCapNode %d not from "
+                 "net %d %s capNode %d ccseg %d has otherCapNode %d not from "
                  "changed or halo nets",
                  net->getId(),
                  (char*) net->getConstName(),

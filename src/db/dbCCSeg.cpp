@@ -189,7 +189,7 @@ void dbCCSeg::setAllCcCap(double* ttcap)
       pos += sprintf(&ccCaps[pos], "%f ", ttcap[ii]);
     debug("DB_ECO",
           "A",
-          "ECO: dbCCSeg::setAllCcCap, ccseg: %d, caps: %s\n",
+          "ECO: dbCCSeg::setAllCcCap, ccseg: %d, caps: %p\n",
           seg->getId(),
           &ttcap[0]);
     block->_journal->beginAction(dbJournal::UPDATE_FIELD);

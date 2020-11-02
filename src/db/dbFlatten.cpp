@@ -535,8 +535,10 @@ FILE* dbFlatten::debugNetWires(FILE*       fp,
     sprintf(buf, "%d", dst->getId());
     fp = fopen(buf, "w");
 
-    if (fp == NULL)
+    if (fp == NULL) {
       error(0, "Cannot Open file %s to write\n", buf);
+      return nullptr;
+    }
   }
   fprintf(fp, "%s  -------------------------------\n", msg);
 

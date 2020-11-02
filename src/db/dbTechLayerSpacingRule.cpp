@@ -590,7 +590,6 @@ bool dbTechLayerSpacingRule::getEol(uint& width,
     return true;
   }
   parallelEdge   = true;
-  parallelSpace  = true;
   parallelSpace  = _lsp->_r2min;
   parallelWithin = _lsp->_r2max;
   twoEdges       = _lsp->_flags._rule == ENDOFLINE_PARALLEL_TWOEDGES;

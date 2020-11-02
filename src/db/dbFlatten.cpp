@@ -426,9 +426,6 @@ void dbFlatten::printShapes(FILE* fp, dbWire* wire, bool skip_rcSegs)
   dbSet<dbRSeg>           rSet  = wire->getNet()->getRSegs();
   dbSet<dbRSeg>::iterator rcitr;
 
-  if (skip_rcSegs)
-    return;
-
   fprintf(fp, "\nRSEGS\n");
   for (rcitr = rSet.begin(); rcitr != rSet.end(); ++rcitr) {
     dbRSeg*    rc      = *rcitr;

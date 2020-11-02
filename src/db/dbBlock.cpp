@@ -35,6 +35,7 @@
 #include <unistd.h>
 #endif
 #include <string>
+#include <memory>
 
 #include "ZComponents.h"
 #include "db.h"
@@ -1552,7 +1553,7 @@ bool dbBlock::findSomeMaster(const char* names, std::vector<dbMaster*>& masters)
 
   dbLib*       lib = getChip()->getDb()->findLib("lib");
   dbMaster*    master;
-  Ath__parser* parser = new Ath__parser();
+  auto parser = std::make_unique<Ath__parser>();
   parser->mkWords(names, NULL);
   // uint noid;
   char* masterName;

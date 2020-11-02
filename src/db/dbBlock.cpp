@@ -2872,7 +2872,7 @@ void dbBlock::keepOldCornerParasitics(dbBlock*             pblock,
           ccSeg->unLink_cc_seg(other);
         else
           error(0,
-                "ccseg %d has other capn not from changed or halo nets",
+                "ccseg %d has other capn %d not from changed or halo nets",
                 ccSeg->getId(),
                 other->getId());
       }

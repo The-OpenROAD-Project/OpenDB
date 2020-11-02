@@ -251,6 +251,10 @@ _dbMaster::_dbMaster(_dbDatabase* db)
   ZALLOCATED(_target_itr);
 
   _mterm_hash.setTable(_mterm_tbl);
+
+  _sta_cell = nullptr;
+  _clocked_mterm_index = 0;
+  _output_mterm_index = 0;
 }
 
 _dbMaster::_dbMaster(_dbDatabase* db, const _dbMaster& m)
@@ -268,7 +272,9 @@ _dbMaster::_dbMaster(_dbDatabase* db, const _dbMaster& m)
       _obstructions(m._obstructions),
       _site(m._site),
       _mterm_hash(m._mterm_hash),
-      _sta_cell(m._sta_cell)
+      _sta_cell(m._sta_cell),
+      _clocked_mterm_index(m._clocked_mterm_index),
+      _output_mterm_index(m._output_mterm_index)
 {
   if (m._name) {
     _name = strdup(m._name);

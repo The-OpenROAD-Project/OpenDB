@@ -50,6 +50,7 @@ dbFlatten::dbFlatten()
       _create_boundary_regions(false),
       _create_bterm_map(false),
       _copy_parasitics(false),
+      _hier_d(0),
       _next_bterm_map_id(0)
 {
 }

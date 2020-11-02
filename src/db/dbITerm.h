@@ -99,6 +99,7 @@ inline _dbITerm::_dbITerm(_dbDatabase*)
   _flags._special    = 0;
   _flags._connected  = 0;
   _ext_id            = 0;
+  _sta_vertex_id     = 0;
 }
 
 inline _dbITerm::_dbITerm(_dbDatabase*, const _dbITerm& i)
@@ -107,7 +108,8 @@ inline _dbITerm::_dbITerm(_dbDatabase*, const _dbITerm& i)
       _net(i._net),
       _inst(i._inst),
       _next_net_iterm(i._next_net_iterm),
-      _prev_net_iterm(i._prev_net_iterm)
+      _prev_net_iterm(i._prev_net_iterm),
+      _sta_vertex_id(0)
 {
 }
 

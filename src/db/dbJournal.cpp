@@ -30,14 +30,13 @@
 // ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 // POSSIBILITY OF SUCH DAMAGE.
 
-#include "dbJournal.h"
-
 #include "db.h"
 #include "dbBlock.h"
 #include "dbCCSeg.h"
 #include "dbCapNode.h"
 #include "dbITerm.h"
 #include "dbInst.h"
+#include "dbJournal.h"
 #include "dbNet.h"
 #include "dbRSeg.h"
 
@@ -47,7 +46,8 @@ void invalidateTiming(dbBlock* block);
 void invalidateTiming(dbInst* inst);
 void invalidateTiming(dbNet* net);
 
-dbJournal::dbJournal(dbBlock* block) : _block(block), _start_action(false)
+dbJournal::dbJournal(dbBlock* block)
+    : _block(block), _start_action(false), _action_idx(0), _cur_action(0)
 {
 }
 

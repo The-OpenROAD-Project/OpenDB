@@ -852,7 +852,7 @@ void tmg_conn::printDisconnect()
   notice(0, "smallest component:\n");
   for (unsigned long k = 0; k < _rcV.size(); k++) {
     if (pgV[_rcV[k]._ifr].visited) {
-      notice(0, "rcV[%d] ", k);
+      notice(0, "rcV[%ld] ", k);
       print_shape(_rcV[k]._shape);
       notice(0, "\n");
     }

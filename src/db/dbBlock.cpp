@@ -349,6 +349,8 @@ _dbBlock::_dbBlock(_dbDatabase* db)
   _journal_pending = NULL;
 
   _printControl = new dbPrintControl();
+
+  _bterm_pins = nullptr;
 }
 
 _dbBlock::_dbBlock(_dbDatabase* db, const _dbBlock& block)

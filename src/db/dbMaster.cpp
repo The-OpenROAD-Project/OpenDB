@@ -310,15 +310,9 @@ _dbMaster::~_dbMaster()
   delete _target_tbl;
   delete _box_tbl;
   delete _antenna_pin_model_tbl;
-  /************************************ dimitri_fix
-  ****************************** dbMaster.cpp:270:12: warning: deleting object
-  of polymorphic class type ‘dbBoxItr’ which has non-virtual destructor might
-  cause undefined behavior [-Wdelete-non-virtual-dtor] delete _box_itr;
-
-      delete _box_itr;
-      delete _mpin_itr;
-      delete _target_itr;
-  *********************************************************************************/
+  delete _box_itr;
+  delete _mpin_itr;
+  delete _target_itr;
 
   if (_name)
     free((void*) _name);

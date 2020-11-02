@@ -120,6 +120,7 @@ inline _dbBox::_dbBox(_dbDatabase*)
   _flags._via_id       = 0;
   _flags._visited      = 0;
   _flags._mark         = 0;
+  _owner               = 0;
   _octilinear          = false;
 }
 

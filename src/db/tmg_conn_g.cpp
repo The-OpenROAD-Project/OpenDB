@@ -443,13 +443,12 @@ void tmg_conn::removeShortLoops(int* loop_remaining)
     _graph = new tmg_conn_graph();
   _graph->init(_ptN, _shortN);
   tcg_pt*      pgV = _graph->_ptV;
-  int          j;
   tmg_rcshort* s;
   tcg_edge *   e, *e2;
 
   // setup paths
   int npath = -1;
-  for (j = 0; j < _rcN; j++) {
+  for (unsigned long j = 0; j < _rcV.size(); j++) {
     if (j == 0 || _rcV[j]._ifr != _rcV[j - 1]._ito) {
       ++npath;
     }
@@ -459,7 +458,7 @@ void tmg_conn::removeShortLoops(int* loop_remaining)
   npath++;
 
   // remove shorts to same path
-  for (j = 0; j < _shortN; j++) {
+  for (int j = 0; j < _shortN; j++) {
     s = _shortV + j;
     if (s->_skip)
       continue;
@@ -469,7 +468,7 @@ void tmg_conn::removeShortLoops(int* loop_remaining)
     }
   }
 
-  for (j = 0; j < _shortN; j++) {
+  for (int j = 0; j < _shortN; j++) {
     s = _shortV + j;
     if (s->_skip)
       continue;
@@ -497,13 +496,13 @@ void tmg_conn::removeShortLoops(int* loop_remaining)
   tcg_pt* pg;
   int*    path_vis = _graph->_path_vis;
   int     jstart;
-  for (j = 0; j < _ptN; j++) {
+  for (int j = 0; j < _ptN; j++) {
     pgV[j].visited = 0;
   }
 
   // remove all short loops
   _graph->clearVisited();
-  for (j = 0; j < npath; j++)
+  for (int j = 0; j < npath; j++)
     path_vis[j] = 0;
   for (jstart = 0; jstart < _ptN; jstart++) {
     e = _graph->getFirstEdge(jstart);
@@ -584,11 +583,10 @@ void tmg_conn::removeWireLoops(int* loop_remaining)
   }
 
   // loops involving only shorts have already been handled
-  if (!_rcN)
+  if (_rcV.empty())
     return;
-  int j;
   // add all path edges
-  for (j = 0; j < _rcN; j++) {
+  for (unsigned long j = 0; j < _rcV.size(); j++) {
     _graph->addEdges(this, _rcV[j]._ifr, _rcV[j]._ito, j);
   }
 
@@ -852,8 +850,7 @@ void tmg_conn::printDisconnect()
 
   notice(0, "net %d has %d components\n", _net->getId(), compn);
   notice(0, "smallest component:\n");
-  int k;
-  for (k = 0; k < _rcN; k++) {
+  for (unsigned long k = 0; k < _rcV.size(); k++) {
     if (pgV[_rcV[k]._ifr].visited) {
       notice(0, "rcV[%d] ", k);
       print_shape(_rcV[k]._shape);
@@ -954,7 +951,7 @@ void tmg_conn::adjustShapes()
       for (e = pgV[pS[k]].edges; e; e = e->next)
         if (!e->s) {
           spV[sN] = _ptV + pS[k];
-          rV[sN]  = _rcV + e->k;
+          rV[sN]  = &_rcV[e->k];
           s       = &(_rcV[e->k]._shape);
           sV[sN]  = s;
           sN++;

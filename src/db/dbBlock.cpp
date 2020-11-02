@@ -1581,7 +1581,7 @@ bool dbBlock::findSomeNet(const char* names, std::vector<dbNet*>& nets)
     return false;
   _dbBlock*    block = (_dbBlock*) this;
   dbNet*       net;
-  Ath__parser* parser = new Ath__parser();
+  auto parser = std::make_unique<Ath__parser>();
   parser->mkWords(names, NULL);
   uint  noid;
   char* netName;
@@ -1606,7 +1606,7 @@ bool dbBlock::findSomeInst(const char* names, std::vector<dbInst*>& insts)
     return false;
   _dbBlock*    block = (_dbBlock*) this;
   dbInst*      inst;
-  Ath__parser* parser = new Ath__parser();
+  auto parser = std::make_unique<Ath__parser>();
   parser->mkWords(names, NULL);
   uint  ioid;
   char* instName;

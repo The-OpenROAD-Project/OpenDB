@@ -263,5 +263,12 @@ dbTrackGrid* dbTrackGrid::getTrackGrid(dbBlock* block_, uint dbid_)
   _dbBlock* block = (_dbBlock*) block_;
   return (dbTrackGrid*) block->_track_grid_tbl->getPtr(dbid_);
 }
+void dbTrackGrid::destroy(dbTrackGrid* grid_)
+{
+  _dbTrackGrid* grid = (_dbTrackGrid*) grid_;
+  _dbBlock* block = (_dbBlock*) grid->getOwner();
+  dbProperty::destroyProperties(grid);
+  block->_track_grid_tbl->destroy(grid);
+}
 
 }  // namespace odb

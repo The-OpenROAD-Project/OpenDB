@@ -66,6 +66,7 @@ _dbBTerm::_dbBTerm(_dbDatabase*)
   _flags._spare_bits = 0;
   _ext_id            = 0;
   _name              = 0;
+  _sta_vertex_id     = 0;
 }
 
 _dbBTerm::_dbBTerm(_dbDatabase*, const _dbBTerm& b)
@@ -80,7 +81,8 @@ _dbBTerm::_dbBTerm(_dbDatabase*, const _dbBTerm& b)
       _parent_iterm(b._parent_iterm),
       _bpins(b._bpins),
       _ground_pin(b._ground_pin),
-      _supply_pin(b._supply_pin)
+      _supply_pin(b._supply_pin),
+      _sta_vertex_id(0)
 {
   if (b._name) {
     _name = strdup(b._name);

@@ -442,8 +442,8 @@ bool dbBTerm::getFirstPin(dbShape& shape)
 dbPlacementStatus dbBTerm::getFirstPinPlacementStatus()
 {
   dbSet<dbBPin>           bpins = getBPins();
-  dbSet<dbBPin>::iterator bpin_itr;
-  for (bpin_itr = bpins.begin(); bpin_itr != bpins.end(); ++bpin_itr) {
+  auto bpin_itr = bpins.begin();
+  if (bpin_itr != bpins.end()) {
     dbBPin* bpin = *bpin_itr;
     return bpin->getPlacementStatus();
   }

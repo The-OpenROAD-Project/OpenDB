@@ -165,7 +165,7 @@ class TestDestroy(odbUnitTest.TestCase):
         L1 = tech.findLayer("L1")
         grid = odb.dbTrackGrid_create(self.block,L1)
         self.assertIsNone(odb.dbTrackGrid_create(self.block,L1))
-        grid = grid.destroy(grid)
+        grid.destroy(grid)
         self.assertIsNotNone(odb.dbTrackGrid_create(self.block,L1))
 
 if __name__=='__main__':

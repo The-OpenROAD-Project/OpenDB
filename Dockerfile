@@ -48,6 +48,9 @@ RUN wget https://sourceforge.net/projects/boost/files/boost/1.72.0/boost_1_72_0.
     ./bootstrap.sh && \
     ./b2 install --with-iostreams --with-test -j $(nproc)
 
+#testtools for python unittests
+RUN pip3 install --user testtools
+
 FROM base-dependencies AS builder
 
 

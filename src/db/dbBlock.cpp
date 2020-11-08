@@ -36,6 +36,7 @@
 #endif
 #include <string>
 
+
 #include "ZComponents.h"
 #include "db.h"
 #include "dbArrayTable.h"
@@ -2376,16 +2377,12 @@ void dbBlock::destroy(dbBlock* block_)
 {
   _dbBlock* block = (_dbBlock*) block_;
   _dbChip*  chip  = (_dbChip*) block->getOwner();
-
   // delete the children of this block
-  dbVector<dbId<_dbBlock> >::iterator citr;
-
-  for (citr = block->_children.begin(); citr != block->_children.end();
-       ++citr) {
-    _dbBlock* child = chip->_block_tbl->getPtr(*citr);
+  for(dbId<_dbBlock> child_id : block->_children)
+  {
+    _dbBlock* child = chip->_block_tbl->getPtr(child_id);
     destroy((dbBlock*) child);
   }
-
   // Deleting top block
   if (block->_parent == 0)
     chip->_top = 0;

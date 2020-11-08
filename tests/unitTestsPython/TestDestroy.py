@@ -83,7 +83,9 @@ class TestDestroy(odbUnitTest.TestCase):
         self.assertEqual(len(self.parentBlock.getChildren()), 2)
         _block.destroy(_block)
         self.assertEqual(len(self.parentBlock.getChildren()), 1)
+        odb.dbBlock_destroy(self.parentBlock)
 
+        
     def test_destroy_bpin(self):
         IN1 = self.block.findBTerm('IN1')
         self.assertEqual(len(IN1.getBPins()), 1)

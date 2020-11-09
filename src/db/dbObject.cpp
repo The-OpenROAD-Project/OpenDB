@@ -180,11 +180,6 @@ void dbObject::getDbName(char name[max_name_length]) const
         id      = impl->getOID();
         break;
 
-      case dbMetricsObj:
-        *cptr++ = 'm';
-        id      = impl->getOID();
-        break;
-
       case dbRegionObj:
         *cptr++ = 'a';
         id      = impl->getOID();
@@ -524,11 +519,6 @@ dbObject* dbObject::resolveDbName(dbDatabase* db_, const char* name)
         obj = dbTechLayerRule::getTechLayerRule((dbTech*) obj, oid);
         break;
 
-      case 'm':  // metrics-object
-        oid = getOid(name);
-        obj = dbMetrics::getMetrics((dbBlock*) obj, oid);
-        break;
-
       case 'n':  // rcseg
         oid = getOid(name);
         obj = dbCapNode::getCapNode((dbBlock*) obj, oid);
@@ -634,7 +624,6 @@ static const char* name_tbl[] = {"dbDatabase",
                                  "dbCCSeg",
                                  "dbRow",
                                  "dbFill",
-                                 "dbMetrics",
                                  "dbRegion",
                                  "dbHier",
                                  "dbBPin",

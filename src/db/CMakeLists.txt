@@ -67,7 +67,6 @@ add_library(opendb
     dbJournal.cpp 
     dbJournalLog.cpp 
     dbBlockCallBackObj.cpp 
-    dbMetrics.cpp 
     dbRtTree.cpp 
     dbRegion.cpp 
     dbRegionInstItr.cpp 

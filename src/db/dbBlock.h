@@ -83,7 +83,6 @@ class _dbCCSeg;
 class _dbDatabase;
 class _dbRow;
 class _dbFill;
-class _dbMetrics;
 class _dbRegion;
 class _dbHier;
 class _dbBPin;
@@ -170,7 +169,6 @@ class _dbBlock : public _dbObject
   uint                        _maxCCSegId;
   int                         _minExtModelIndex;
   int                         _maxExtModelIndex;
-  dbVector<dbId<_dbMetrics> > _metrics;
   dbVector<dbId<_dbBlock> >   _children;
   uint                        _currentCcAdjOrder;
 
@@ -191,7 +189,6 @@ class _dbBlock : public _dbObject
   dbTable<_dbSBox>*               _sbox_tbl;
   dbTable<_dbRow>*                _row_tbl;
   dbTable<_dbFill>*               _fill_tbl;
-  dbTable<_dbMetrics>*            _metrics_tbl;
   dbTable<_dbRegion>*             _region_tbl;
   dbTable<_dbHier>*               _hier_tbl;
   dbTable<_dbBPin>*               _bpin_tbl;

@@ -98,7 +98,6 @@ class dbRow;
 class dbFill;
 class dbTechAntennaPinModel;
 class dbBlockCallBackObj;
-class dbMetrics;
 class dbRegion;
 class dbBPin;
 //Generator Code Begin 2
@@ -1517,25 +1516,6 @@ class dbBlock : public dbObject
 
  private:
   void ComputeBBox();
-};
-
-///////////////////////////////////////////////////////////////////////////////
-///
-///
-///////////////////////////////////////////////////////////////////////////////
-
-class dbMetrics : public dbObject
-{
- public:
-  int  getWorstSlack();
-  void setWorstSlack(int slack);
-  int  getTotalSlack();
-  void setTotalSlack(int slack);
-
-  ///
-  /// Translate a database-id back to a pointer.
-  ///
-  static dbMetrics* getMetrics(dbBlock* block, uint oid);
 };
 
 ///////////////////////////////////////////////////////////////////////////////

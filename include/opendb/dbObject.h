@@ -84,7 +84,6 @@ enum dbObjectType
   dbCCSegObj,
   dbRowObj,
   dbFillObj,
-  dbMetricsObj,
   dbRegionObj,
   dbHierObj,
   dbBPinObj,

@@ -69,7 +69,6 @@
 #include "dbInstHdr.h"
 #include "dbIntHashTable.hpp"
 #include "dbJournal.h"
-#include "dbMetrics.h"
 #include "dbNameCache.h"
 #include "dbNet.h"
 #include "dbObstruction.h"
@@ -218,10 +217,6 @@ _dbBlock::_dbBlock(_dbDatabase* db)
   _fill_tbl = new dbTable<_dbFill>(
       db, this, (GetObjTbl_t) &_dbBlock::getObjectTable, dbFillObj);
   ZALLOCATED(_fill_tbl);
-
-  _metrics_tbl = new dbTable<_dbMetrics>(
-      db, this, (GetObjTbl_t) &_dbBlock::getObjectTable, dbMetricsObj, 16, 4);
-  ZALLOCATED(_metrics_tbl);
 
   _region_tbl = new dbTable<_dbRegion>(
       db, this, (GetObjTbl_t) &_dbBlock::getObjectTable, dbRegionObj, 32, 5);
@@ -381,7 +376,6 @@ _dbBlock::_dbBlock(_dbDatabase* db, const _dbBlock& block)
       _maxCCSegId(block._maxCCSegId),
       _minExtModelIndex(block._minExtModelIndex),
       _maxExtModelIndex(block._maxExtModelIndex),
-      _metrics(block._metrics),
       _children(block._children),
       _currentCcAdjOrder(block._currentCcAdjOrder)
 {
@@ -438,9 +432,6 @@ _dbBlock::_dbBlock(_dbDatabase* db, const _dbBlock& block)
 
   _fill_tbl = new dbTable<_dbFill>(db, this, *block._fill_tbl);
   ZALLOCATED(_fill_tbl);
-
-  _metrics_tbl = new dbTable<_dbMetrics>(db, this, *block._metrics_tbl);
-  ZALLOCATED(_metrics_tbl);
 
   _region_tbl = new dbTable<_dbRegion>(db, this, *block._region_tbl);
   ZALLOCATED(_region_tbl);
@@ -563,7 +554,6 @@ _dbBlock::~_dbBlock()
   delete _sbox_tbl;
   delete _row_tbl;
   delete _fill_tbl;
-  delete _metrics_tbl;
   delete _region_tbl;
   delete _hier_tbl;
   delete _bpin_tbl;
@@ -742,9 +732,6 @@ dbObjectTable* _dbBlock::getObjectTable(dbObjectType type)
     case dbFillObj:
       return _fill_tbl;
 
-    case dbMetricsObj:
-      return _metrics_tbl;
-
     case dbRegionObj:
       return _region_tbl;
 
@@ -808,7 +795,6 @@ dbOStream& operator<<(dbOStream& stream, const _dbBlock& block)
   stream << block._maxCCSegId;
   stream << block._minExtModelIndex;
   stream << block._maxExtModelIndex;
-  stream << block._metrics;
   if (block._flags._skip_hier_stream) {
     notice(0, "\nHierarchical block information is lost\n");
     stream << 0;
@@ -832,7 +818,6 @@ dbOStream& operator<<(dbOStream& stream, const _dbBlock& block)
   stream << *block._sbox_tbl;
   stream << *block._row_tbl;
   stream << *block._fill_tbl;
-  stream << *block._metrics_tbl;
   stream << *block._region_tbl;
   stream << *block._hier_tbl;
   stream << *block._bpin_tbl;
@@ -892,7 +877,6 @@ dbIStream& operator>>(dbIStream& stream, _dbBlock& block)
   stream >> block._maxCCSegId;
   stream >> block._minExtModelIndex;
   stream >> block._maxExtModelIndex;
-  stream >> block._metrics;
   stream >> block._children;
   stream >> block._currentCcAdjOrder;
   stream >> *block._bterm_tbl;
@@ -911,7 +895,6 @@ dbIStream& operator>>(dbIStream& stream, _dbBlock& block)
   stream >> *block._sbox_tbl;
   stream >> *block._row_tbl;
   stream >> *block._fill_tbl;
-  stream >> *block._metrics_tbl;
   stream >> *block._region_tbl;
   stream >> *block._hier_tbl;
   stream >> *block._bpin_tbl;
@@ -1056,9 +1039,6 @@ bool _dbBlock::operator==(const _dbBlock& rhs) const
   if (_maxExtModelIndex != rhs._maxExtModelIndex)
     return false;
 
-  if (_metrics != rhs._metrics)
-    return false;
-
   if (_children != rhs._children)
     return false;
 
@@ -1111,9 +1091,6 @@ bool _dbBlock::operator==(const _dbBlock& rhs) const
     return false;
 
   if (*_fill_tbl != *rhs._fill_tbl)
-    return false;
-
-  if (*_metrics_tbl != *rhs._metrics_tbl)
     return false;
 
   if (*_region_tbl != *rhs._region_tbl)
@@ -1194,7 +1171,6 @@ void _dbBlock::differences(dbDiff&         diff,
   DIFF_FIELD(_maxCCSegId);
   DIFF_FIELD(_minExtModelIndex);
   DIFF_FIELD(_maxExtModelIndex);
-  DIFF_VECTOR(_metrics);
   DIFF_VECTOR(_children);
   DIFF_FIELD(_currentCcAdjOrder);
   DIFF_TABLE(_bterm_tbl);
@@ -1213,7 +1189,6 @@ void _dbBlock::differences(dbDiff&         diff,
   DIFF_TABLE_NO_DEEP(_sbox_tbl);
   DIFF_TABLE(_row_tbl);
   DIFF_TABLE(_fill_tbl);
-  DIFF_TABLE(_metrics_tbl);
   DIFF_TABLE(_region_tbl);
   DIFF_TABLE_NO_DEEP(_hier_tbl);
   DIFF_TABLE_NO_DEEP(_bpin_tbl);
@@ -1271,7 +1246,6 @@ void _dbBlock::out(dbDiff& diff, char side, const char* field) const
   DIFF_OUT_FIELD(_maxCCSegId);
   DIFF_OUT_FIELD(_minExtModelIndex);
   DIFF_OUT_FIELD(_maxExtModelIndex);
-  DIFF_OUT_VECTOR(_metrics);
   DIFF_OUT_VECTOR(_children);
   DIFF_OUT_FIELD(_currentCcAdjOrder);
   DIFF_OUT_TABLE(_bterm_tbl);
@@ -1290,7 +1264,6 @@ void _dbBlock::out(dbDiff& diff, char side, const char* field) const
   DIFF_OUT_TABLE_NO_DEEP(_sbox_tbl);
   DIFF_OUT_TABLE(_row_tbl);
   DIFF_OUT_TABLE(_fill_tbl);
-  DIFF_OUT_TABLE(_metrics_tbl);
   DIFF_OUT_TABLE(_region_tbl);
   DIFF_OUT_TABLE_NO_DEEP(_hier_tbl);
   DIFF_OUT_TABLE_NO_DEEP(_bpin_tbl);

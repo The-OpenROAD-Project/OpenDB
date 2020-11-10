@@ -1,5 +1,4 @@
 find_package(Boost COMPONENTS unit_test_framework REQUIRED)
-find_package(spdlog)
 
 set(TEST_LIBS
         opendb

@@ -34,6 +34,7 @@
 #include "spdlog/sinks/basic_file_sink.h"
 #include "spdlog/sinks/stdout_color_sinks.h"
 #include "spdlog/spdlog.h"
+#include "spdlog/sinks/dist_sink.h"
 #include "string"
 namespace ordlog {
 using std::string;
@@ -75,35 +76,62 @@ static const char* modules_name_tbl[] = {
 ///
 /// initializes {logger_name} in filename target location
 ///
-int init(const char* file_name, const char* logger_name = "ord_logger", bool make_default = true)
+int init(const char* file_name, const char* logger_name = "ord_logger")
 {
   if (spdlog::get(logger_name).get() != nullptr)
     return -1;  // already initialized
   auto logger = spdlog::basic_logger_mt(logger_name, file_name);
-  if(make_default)
-  {
-    spdlog::set_default_logger(logger);
-    spdlog::set_pattern("[%^%l%$] %v");
-  }else
-    logger.get()->set_pattern("[%^%l%$] %v");
+  logger.get()->set_pattern("[%^%l%$] %v");
   return 0;
 }
+
 
 ///
 /// initializes {logger_name} in stdout
 ///
-int initDefault(const char* logger_name = "ord_logger", bool make_default = true)
+int initDefault(const char* logger_name = "ord_logger")
 {
   if (spdlog::get(logger_name).get() != nullptr)
     return -1;  // already initialized
   auto logger = spdlog::stdout_color_mt(logger_name);
-  if(make_default)
-  {
-    spdlog::set_default_logger(logger);
-    spdlog::set_pattern("[%^%l%$] %v");
-  }else
-    logger.get()->set_pattern("[%^%l%$] %v");
+  logger.get()->set_pattern("[%^%l%$] %v");
   return 0;
+}
+
+int addSinkFile(const char* file_name)
+{
+  if(spdlog::default_logger().get()==nullptr)
+    return -1;
+  auto default_sinks = &spdlog::default_logger().get()->sinks();
+  for(auto sink = default_sinks->begin();sink!=default_sinks->end();++sink)
+  {
+    auto file_sink = dynamic_cast<spdlog::sinks::basic_file_sink<std::mutex>*>(sink->get());
+    if(file_sink==nullptr)
+      continue;
+    if(strcmp(file_sink->filename().c_str(),file_name)==0)
+      return -2;//sink already exists
+  } 
+  default_sinks->push_back(std::make_shared<spdlog::sinks::basic_file_sink<std::mutex>>(file_name));
+  return 0;
+}
+
+int removeSinkFile(const char* file_name)
+{
+  if(spdlog::default_logger().get()==nullptr)
+    return -1;
+  auto default_sinks = &spdlog::default_logger().get()->sinks();
+  for(auto sink = default_sinks->begin();sink!=default_sinks->end();++sink)
+  {
+    auto file_sink = dynamic_cast<spdlog::sinks::basic_file_sink<std::mutex>*>(sink->get());
+    if(file_sink==nullptr)
+      continue;
+    if(strcmp(file_sink->filename().c_str(),file_name)==0)
+    {
+      default_sinks->erase(sink);
+      return 0;
+    }
+  }
+  return -2;//sink not found
 }
 
 ///
@@ -198,9 +226,9 @@ int Log(ModuleType    _type,
 {
   if (id < 0 || id > 9999)
     return -1;  // invalid id
-  initDefault(); 
   message                = "[{}-{:04d}] " + message;
   const char* type       = modules_name_tbl[_type];
+  spdlog::set_pattern("[%^%l%$] %v");
   spdlog::log((spdlog::level::level_enum) _status, message, type, id, args...);
   return 0;
 }
@@ -215,7 +243,7 @@ int Log(const char*   logger_name,
 {
   if (id < 0 || id > 9999)
     return -1;  // invalid id
-  initDefault(logger_name,false);
+  initDefault(logger_name);
   auto logger = spdlog::get(logger_name).get();
   message                = "[{}-{:04d}] " + message;
   const char* type       = modules_name_tbl[_type];

@@ -11,6 +11,7 @@ BOOST_AUTO_TEST_CASE(test_default)
     BOOST_ASSERT(ordlog::crit(ordlog::OPENDB,12345,"Hello {}",1)==-1);
     BOOST_ASSERT(ordlog::drop()==0);
     BOOST_ASSERT(ordlog::drop()==-1);
+    BOOST_ASSERT(ordlog::crit(ordlog::OPENDB,1235,"After Dropped",1)==0);
 }
 BOOST_AUTO_TEST_CASE(test_special_log)
 {

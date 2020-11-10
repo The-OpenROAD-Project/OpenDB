@@ -75,25 +75,34 @@ static const char* modules_name_tbl[] = {
 ///
 /// initializes {logger_name} in filename target location
 ///
-int init(const char* file_name, const char* logger_name = "ord_logger")
+int init(const char* file_name, const char* logger_name = "ord_logger", bool make_default = true)
 {
   if (spdlog::get(logger_name).get() != nullptr)
     return -1;  // already initialized
-  spdlog::logger* logger
-      = spdlog::basic_logger_mt(logger_name, file_name).get();
-  logger->set_pattern("[%^%l%$] %v");
+  auto logger = spdlog::basic_logger_mt(logger_name, file_name);
+  if(make_default)
+  {
+    spdlog::set_default_logger(logger);
+    spdlog::set_pattern("[%^%l%$] %v");
+  }else
+    logger.get()->set_pattern("[%^%l%$] %v");
   return 0;
 }
 
 ///
 /// initializes {logger_name} in stdout
 ///
-int initDefault(const char* logger_name = "ord_logger")
+int initDefault(const char* logger_name = "ord_logger", bool make_default = true)
 {
   if (spdlog::get(logger_name).get() != nullptr)
     return -1;  // already initialized
-  spdlog::logger* logger = spdlog::stdout_color_mt(logger_name).get();
-  logger->set_pattern("[%^%l%$] %v");
+  auto logger = spdlog::stdout_color_mt(logger_name);
+  if(make_default)
+  {
+    spdlog::set_default_logger(logger);
+    spdlog::set_pattern("[%^%l%$] %v");
+  }else
+    logger.get()->set_pattern("[%^%l%$] %v");
   return 0;
 }
 
@@ -116,25 +125,25 @@ int drop(const char* logger_name = "ord_logger")
 template <typename... Args>
 int info(ModuleType _type, int id, string message, const Args&... args)
 {
-  return Log("ord_logger", _type, INFO, id, message, args...);
+  return Log(_type, INFO, id, message, args...);
 }
 
 template <typename... Args>
 int warn(ModuleType _type, int id, string message, const Args&... args)
 {
-  return Log("ord_logger", _type, WARN, id, message, args...);
+  return Log(_type, WARN, id, message, args...);
 }
 
 template <typename... Args>
 int error(ModuleType _type, int id, string message, const Args&... args)
 {
-  return Log("ord_logger", _type, ERROR, id, message, args...);
+  return Log(_type, ERROR, id, message, args...);
 }
 
 template <typename... Args>
 int crit(ModuleType _type, int id, string message, const Args&... args)
 {
-  return Log("ord_logger", _type, CRIT, id, message, args...);
+  return Log(_type, CRIT, id, message, args...);
 }
 
 ///
@@ -181,6 +190,22 @@ int crit(const char* logger_name,
 }
 
 template <typename... Args>
+int Log(ModuleType    _type,
+        MessageStatus _status,
+        int           id,
+        string        message,
+        const Args&... args)
+{
+  if (id < 0 || id > 9999)
+    return -1;  // invalid id
+  initDefault(); 
+  message                = "[{}-{:04d}] " + message;
+  const char* type       = modules_name_tbl[_type];
+  spdlog::log((spdlog::level::level_enum) _status, message, type, id, args...);
+  return 0;
+}
+
+template <typename... Args>
 int Log(const char*   logger_name,
         ModuleType    _type,
         MessageStatus _status,
@@ -190,8 +215,8 @@ int Log(const char*   logger_name,
 {
   if (id < 0 || id > 9999)
     return -1;  // invalid id
-  initDefault(logger_name);
-  spdlog::logger* logger = spdlog::get(logger_name).get();
+  initDefault(logger_name,false);
+  auto logger = spdlog::get(logger_name).get();
   message                = "[{}-{:04d}] " + message;
   const char* type       = modules_name_tbl[_type];
   logger->log((spdlog::level::level_enum) _status, message, type, id, args...);

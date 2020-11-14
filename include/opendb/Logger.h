@@ -228,7 +228,6 @@ int Log(ModuleType    _type,
     return -1;  // invalid id
   message                = "[{}-{:04d}] " + message;
   const char* type       = modules_name_tbl[_type];
-  spdlog::set_pattern("[%^%l%$] %v");
   spdlog::log((spdlog::level::level_enum) _status, message, type, id, args...);
   return 0;
 }

@@ -23,6 +23,11 @@ pipeline {
             sh './jenkins/test-tcl.sh'
           }
         }
+        stage('CPP Tests') {
+          steps {
+            sh './jenkins/test-cpp.sh'
+          }
+        }
       }
     }
   }

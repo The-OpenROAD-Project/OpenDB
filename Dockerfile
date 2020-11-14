@@ -50,6 +50,14 @@ RUN wget https://sourceforge.net/projects/boost/files/boost/1.72.0/boost_1_72_0.
     
 RUN pip3 install testtools
 
+# spdlog for logging
+RUN git clone -b v1.8.1 https://github.com/gabime/spdlog.git \
+    && cd spdlog \
+    && mkdir build \
+    && cd build \
+    && cmake .. \
+    && make install -j
+    
 FROM base-dependencies AS builder
 
 

@@ -10,7 +10,7 @@ set(TEST_LIBS
         defout
         lefout
         lefin
-        tcl
+        ${TCL_LIBRARY}
         Boost::boost
 )
 

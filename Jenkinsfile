@@ -13,6 +13,11 @@ pipeline {
             sh './jenkins/test-py.sh'
           }
         }
+        stage('Unit Tests') {
+          steps {
+            sh './jenkins/test-unittests.sh'
+          }
+        }
         stage('TCL Tests') {
           steps {
             sh './jenkins/test-tcl.sh'

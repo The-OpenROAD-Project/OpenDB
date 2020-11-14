@@ -3896,6 +3896,11 @@ class dbTrackGrid : public dbObject
   /// Translate a database-id back to a pointer.
   ///
   static dbTrackGrid* getTrackGrid(dbBlock* block, uint oid);
+  
+  ///
+  /// destroy a grid
+  ///
+  static void destroy(dbTrackGrid* grid_);
 };
 
 ///////////////////////////////////////////////////////////////////////////////

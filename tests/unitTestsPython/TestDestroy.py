@@ -83,10 +83,9 @@ class TestDestroy(odbUnitTest.TestCase):
         self.assertEqual(len(self.parentBlock.getChildren()), 2)
         _block.destroy(_block)
         self.assertEqual(len(self.parentBlock.getChildren()), 1)
-        #destroying parent block
-#         _block = helper.create1LevelBlock(self.db, self.db.getLibs()[0], self.parentBlock)
         odb.dbBlock_destroy(self.parentBlock)
-        self.assertIsNone(self.db.getChip().getBlock())
+
+        
     def test_destroy_bpin(self):
         IN1 = self.block.findBTerm('IN1')
         self.assertEqual(len(IN1.getBPins()), 1)
@@ -162,6 +161,15 @@ class TestDestroy(odbUnitTest.TestCase):
         parentRegion, childRegion = self.setup_regions()
         parentRegion.destroy(parentRegion)
         self.assertEqual(len(self.block.getRegions()), 0)
+    
+    def test_destroy_trackgrid(self):
+        tech = self.db.getLibs()[0].getTech()
+        L1 = tech.findLayer("L1")
+        grid = odb.dbTrackGrid_create(self.block,L1)
+        self.assertIsNone(odb.dbTrackGrid_create(self.block,L1))
+        grid.destroy(grid)
+        self.assertIsNotNone(odb.dbTrackGrid_create(self.block,L1))
+
 if __name__=='__main__':
     odbUnitTest.mainParallel(TestDestroy)
 #     odbUnitTest.main()

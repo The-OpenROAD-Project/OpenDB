@@ -32,20 +32,16 @@
 
 #pragma once
 #include "spdlog/sinks/basic_file_sink.h"
-#include "spdlog/sinks/stdout_color_sinks.h"
 #include "spdlog/spdlog.h"
-#include "spdlog/sinks/dist_sink.h"
 #include "string"
 namespace ordlog {
 using std::string;
 enum MessageStatus
 {
-  TRACE,
-  DEBUG,
-  INFO,
-  WARN,
-  ERROR,
-  CRIT
+  INFO = 2,
+  WARN = 3,
+  ERROR = 4,
+  CRIT = 5
 };
 enum ModuleType
 {
@@ -60,6 +56,7 @@ enum ModuleType
   GUI,
   FASTROUTE
 };
+
 static const char* modules_name_tbl[] = {
     "OPDB",
     "OPRD",
@@ -73,29 +70,9 @@ static const char* modules_name_tbl[] = {
     "FTRT",
 };
 
-///
-/// initializes {logger_name} in filename target location
-///
-int init(const char* file_name, const char* logger_name = "ord_logger")
+void init()
 {
-  if (spdlog::get(logger_name).get() != nullptr)
-    return -1;  // already initialized
-  auto logger = spdlog::basic_logger_mt(logger_name, file_name);
-  logger.get()->set_pattern("[%^%l%$] %v");
-  return 0;
-}
-
-
-///
-/// initializes {logger_name} in stdout
-///
-int initDefault(const char* logger_name = "ord_logger")
-{
-  if (spdlog::get(logger_name).get() != nullptr)
-    return -1;  // already initialized
-  auto logger = spdlog::stdout_color_mt(logger_name);
-  logger.get()->set_pattern("[%^%l%$] %v");
-  return 0;
+  spdlog::set_pattern("[%^%l%$] %v");
 }
 
 int addSinkFile(const char* file_name)
@@ -134,22 +111,6 @@ int removeSinkFile(const char* file_name)
   return -2;//sink not found
 }
 
-///
-/// drop {logger_name}
-///
-int drop(const char* logger_name = "ord_logger")
-{
-  spdlog::logger* logger = spdlog::get(logger_name).get();
-  if (logger == nullptr)
-    return -1;  // uninitialized
-  logger->flush();
-  spdlog::drop(logger_name);
-  return 0;
-}
-
-///
-/// logging to default ord_logger
-///
 template <typename... Args>
 int info(ModuleType _type, int id, string message, const Args&... args)
 {
@@ -174,49 +135,6 @@ int crit(ModuleType _type, int id, string message, const Args&... args)
   return Log(_type, CRIT, id, message, args...);
 }
 
-///
-/// logging to special logger {logger_name}
-///
-template <typename... Args>
-int info(const char* logger_name,
-         ModuleType  _type,
-         int         id,
-         string      message,
-         const Args&... args)
-{
-  return Log(logger_name, _type, INFO, id, message, args...);
-}
-
-template <typename... Args>
-int warn(const char* logger_name,
-         ModuleType  _type,
-         int         id,
-         string      message,
-         const Args&... args)
-{
-  return Log(logger_name, _type, WARN, id, message, args...);
-}
-
-template <typename... Args>
-int error(const char* logger_name,
-          ModuleType  _type,
-          int         id,
-          string      message,
-          const Args&... args)
-{
-  return Log(logger_name, _type, ERROR, id, message, args...);
-}
-
-template <typename... Args>
-int crit(const char* logger_name,
-         ModuleType  _type,
-         int         id,
-         string      message,
-         const Args&... args)
-{
-  return Log(logger_name, _type, CRIT, id, message, args...);
-}
-
 template <typename... Args>
 int Log(ModuleType    _type,
         MessageStatus _status,
@@ -232,21 +150,4 @@ int Log(ModuleType    _type,
   return 0;
 }
 
-template <typename... Args>
-int Log(const char*   logger_name,
-        ModuleType    _type,
-        MessageStatus _status,
-        int           id,
-        string        message,
-        const Args&... args)
-{
-  if (id < 0 || id > 9999)
-    return -1;  // invalid id
-  initDefault(logger_name);
-  auto logger = spdlog::get(logger_name).get();
-  message                = "[{}-{:04d}] " + message;
-  const char* type       = modules_name_tbl[_type];
-  logger->log((spdlog::level::level_enum) _status, message, type, id, args...);
-  return 0;
-}
 }  // namespace ordlog

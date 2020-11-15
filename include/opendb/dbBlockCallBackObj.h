@@ -82,8 +82,8 @@ class dbBlockCallBackObj
   virtual void inDbITermCreate(dbITerm*) {}
   virtual void inDbITermDestroy(dbITerm*) {}  // Bugzilla #7 - payam
   virtual void inDbITermPreDisconnect(dbITerm*) {}
-  virtual void inDbITermPostDisconnect(dbITerm*,dbNet*) {}
-  virtual void inDbITermPreConnect(dbITerm*,dbNet*) {}
+  virtual void inDbITermPostDisconnect(dbITerm*, dbNet*) {}
+  virtual void inDbITermPreConnect(dbITerm*, dbNet*) {}
   virtual void inDbITermPostConnect(dbITerm*) {}
   //dbITerm End
 
@@ -123,14 +123,14 @@ class dbBlockCallBackObj
   //dbWire Start
   virtual void inDbWireCreate(dbWire*) {}
   virtual void inDbWireDestroy(dbWire*) {}
-  virtual void inDbWirePreAttach(dbWire*,dbNet*) {}
+  virtual void inDbWirePreAttach(dbWire*, dbNet*) {}
   virtual void inDbWirePostAttach(dbWire*) {}
   virtual void inDbWirePreDetach(dbWire*) {}
-  virtual void inDbWirePostDetach(dbWire*,dbNet*) {}
-  virtual void inDbWirePreAppend(dbWire* src,dbWire* dst) {}
-  virtual void inDbWirePostAppend(dbWire* src,dbWire* dst) {}
-  virtual void inDbWirePreCopy(dbWire* src,dbWire* dst) {}
-  virtual void inDbWirePostCopy(dbWire* src,dbWire* dst) {}
+  virtual void inDbWirePostDetach(dbWire*, dbNet*) {}
+  virtual void inDbWirePreAppend(dbWire*, dbWire*) {} //first is src, second is dst
+  virtual void inDbWirePostAppend(dbWire*, dbWire*) {} //first is src, second is dst
+  virtual void inDbWirePreCopy(dbWire*, dbWire*) {} //first is src, second is dst
+  virtual void inDbWirePostCopy(dbWire*, dbWire*) {} //first is src, second is dst
   //dbWire End
 
   //dbSWire Start

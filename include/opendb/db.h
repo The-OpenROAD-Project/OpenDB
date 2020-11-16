@@ -71,9 +71,8 @@ class dbStringProperty;
 class dbIntProperty;
 class dbDoubleProperty;
 
-//Generator Code Begin 1
-//Generator Code End 1
-
+// Generator Code Begin 1
+// Generator Code End 1
 
 // Design objects
 class dbChip;
@@ -100,9 +99,9 @@ class dbTechAntennaPinModel;
 class dbBlockCallBackObj;
 class dbRegion;
 class dbBPin;
-//Generator Code Begin 2
-//Generator Code End 2
-
+// Generator Code Begin 2
+class dbTechLayerSpacingEolRule;
+// Generator Code End 2
 
 // Lib objects
 class dbLib;
@@ -111,8 +110,8 @@ class dbMaster;
 class dbMTerm;
 class dbMPin;
 class dbTarget;
-//Generator Code Begin 3
-//Generator Code End 3
+// Generator Code Begin 3
+// Generator Code End 3
 
 // Tech objects
 class dbTech;
@@ -129,8 +128,8 @@ class dbTechMinCutRule;
 class dbTechMinEncRule;
 class dbTechV55InfluenceEntry;
 class dbTechSameNetRule;
-//Generator Code Begin 4
-//Generator Code End 4
+// Generator Code Begin 4
+// Generator Code End 4
 
 class dbViaParams;
 
@@ -518,12 +517,10 @@ class dbBox : public dbObject
   uint getWidth(uint dir = 1);
   uint getLength(uint dir = 1);
 
-
   ///
   /// Get GeomShape Interface
   ///
   GeomShape* getGeomShape();
-
 
   ///
   /// Set temporary flag visited
@@ -684,7 +681,7 @@ class dbSBox : public dbBox
   /// Get Oct Wire Shape
   ///
   Oct getOct();
-  
+
   ///
   /// Add a rect to a dbSWire.
   ///
@@ -709,7 +706,7 @@ class dbSBox : public dbBox
                         int             x2,
                         int             y2,
                         dbWireShapeType type,
-                        Direction       dir = UNDEFINED,
+                        Direction       dir   = UNDEFINED,
                         int             width = 0);
 
   ///
@@ -3627,7 +3624,6 @@ class dbWire : public dbObject
   ///
   void detach();
 
-
   ///
   /// Copy the src wire to the desintation wire.
   ///
@@ -3741,7 +3737,6 @@ class dbSWire : public dbObject
   /// Translate a database-id back to a pointer.
   ///
   static dbSWire* getSWire(dbBlock* block, uint oid);
-
 };
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -3876,7 +3871,7 @@ class dbTrackGrid : public dbObject
   /// Translate a database-id back to a pointer.
   ///
   static dbTrackGrid* getTrackGrid(dbBlock* block, uint oid);
-  
+
   ///
   /// destroy a grid
   ///
@@ -7120,7 +7115,314 @@ class dbViaParams : private _dbViaParams
   void setBottomLayer(dbTechLayer* layer);
 };
 
-//Generator Code Begin 5
-//Generator Code End 5
+// Generator Code Begin 5
+
+class dbTechLayerSpacingEolRule : public dbObject
+{
+ public:
+  void seteolSpace(double eolSpace);
+
+  double geteolSpace() const;
+
+  void setEolwidth(double eolwidth);
+
+  double getEolwidth() const;
+
+  void setwrongDirSpace(double wrongDirSpace);
+
+  double getwrongDirSpace() const;
+
+  void setoppositeWidth(double oppositeWidth);
+
+  double getoppositeWidth() const;
+
+  void seteolWithin(double eolWithin);
+
+  double geteolWithin() const;
+
+  void setwrongDirWithin(double wrongDirWithin);
+
+  double getwrongDirWithin() const;
+
+  void setexactWidth(double exactWidth);
+
+  double getexactWidth() const;
+
+  void setotherWidth(double otherWidth);
+
+  double getotherWidth() const;
+
+  void setfillTriangle(double fillTriangle);
+
+  double getfillTriangle() const;
+
+  void setcutClass(double cutClass);
+
+  double getcutClass() const;
+
+  void setwithCutSpace(double withCutSpace);
+
+  double getwithCutSpace() const;
+
+  void setenclosureEndWidth(double enclosureEndWidth);
+
+  double getenclosureEndWidth() const;
+
+  void setenclosureEndWithin(double enclosureEndWithin);
+
+  double getenclosureEndWithin() const;
+
+  void setendPrlSpace(double endPrlSpace);
+
+  double getendPrlSpace() const;
+
+  void setendPrl(double endPrl);
+
+  double getendPrl() const;
+
+  void setendToEndSpace(double endToEndSpace);
+
+  double getendToEndSpace() const;
+
+  void setoneCutSpace(double oneCutSpace);
+
+  double getoneCutSpace() const;
+
+  void settwoCutSpace(double twoCutSpace);
+
+  double gettwoCutSpace() const;
+
+  void setExtension(double extension);
+
+  double getExtension() const;
+
+  void setwrongDirExtension(double wrongDirExtension);
+
+  double getwrongDirExtension() const;
+
+  void setotherEndWidth(double otherEndWidth);
+
+  double getotherEndWidth() const;
+
+  void setmaxLength(double maxLength);
+
+  double getmaxLength() const;
+
+  void setminLength(double minLength);
+
+  double getminLength() const;
+
+  void setparSpace(double parSpace);
+
+  double getparSpace() const;
+
+  void setparWithin(double parWithin);
+
+  double getparWithin() const;
+
+  void setparPrl(double parPrl);
+
+  double getparPrl() const;
+
+  void setparMinLength(double parMinLength);
+
+  double getparMinLength() const;
+
+  void setencloseDist(double encloseDist);
+
+  double getencloseDist() const;
+
+  void setcutToMetalSpace(double cutToMetalSpace);
+
+  double getcutToMetalSpace() const;
+
+  void setminAdjLength(double minAdjLength);
+
+  double getminAdjLength() const;
+
+  void setminAdjLength1(double minAdjLength1);
+
+  double getminAdjLength1() const;
+
+  void setminAdjLength2(double minAdjLength2);
+
+  double getminAdjLength2() const;
+
+  void setnotchLength(double notchLength);
+
+  double getnotchLength() const;
+
+  void setEXACTWIDTH(bool EXACTWIDTH);
+
+  bool isEXACTWIDTH() const;
+
+  void setWRONGDIRSPACING(bool WRONGDIRSPACING);
+
+  bool isWRONGDIRSPACING() const;
+
+  void setOPPOSITEWIDTH(bool OPPOSITEWIDTH);
+
+  bool isOPPOSITEWIDTH() const;
+
+  void setWITHIN(bool WITHIN);
+
+  bool isWITHIN() const;
+
+  void setWRONGDIRWITHIN(bool WRONGDIRWITHIN);
+
+  bool isWRONGDIRWITHIN() const;
+
+  void setSAMEMASK(bool SAMEMASK);
+
+  bool isSAMEMASK() const;
+
+  void setEXCEPTEXACTWIDTH(bool EXCEPTEXACTWIDTH);
+
+  bool isEXCEPTEXACTWIDTH() const;
+
+  void setFILLCONCAVECORNER(bool FILLCONCAVECORNER);
+
+  bool isFILLCONCAVECORNER() const;
+
+  void setWITHCUT(bool WITHCUT);
+
+  bool isWITHCUT() const;
+
+  void setCUTCLASS(bool CUTCLASS);
+
+  bool isCUTCLASS() const;
+
+  void setwithCutABOVE(bool withCutABOVE);
+
+  bool iswithCutABOVE() const;
+
+  void setENCLOSUREEND(bool ENCLOSUREEND);
+
+  bool isENCLOSUREEND() const;
+
+  void setENCLOSUREENDWITHIN(bool ENCLOSUREENDWITHIN);
+
+  bool isENCLOSUREENDWITHIN() const;
+
+  void setENDPRLSPACING(bool ENDPRLSPACING);
+
+  bool isENDPRLSPACING() const;
+
+  void setPRL(bool PRL);
+
+  bool isPRL() const;
+
+  void setENDTOEND(bool ENDTOEND);
+
+  bool isENDTOEND() const;
+
+  void sethasCutSpaces(bool hasCutSpaces);
+
+  bool ishasCutSpaces() const;
+
+  void setEXTENSION(bool EXTENSION);
+
+  bool isEXTENSION() const;
+
+  void sethasWrongDirExtension(bool hasWrongDirExtension);
+
+  bool ishasWrongDirExtension() const;
+
+  void setOTHERENDWIDTH(bool OTHERENDWIDTH);
+
+  bool isOTHERENDWIDTH() const;
+
+  void setMAXLENGTH(bool MAXLENGTH);
+
+  bool isMAXLENGTH() const;
+
+  void setMINLENGTH(bool MINLENGTH);
+
+  bool isMINLENGTH() const;
+
+  void setTWOSIDES(bool TWOSIDES);
+
+  bool isTWOSIDES() const;
+
+  void setEQUALRECTWIDTH(bool EQUALRECTWIDTH);
+
+  bool isEQUALRECTWIDTH() const;
+
+  void setPARALLELEDGE(bool PARALLELEDGE);
+
+  bool isPARALLELEDGE() const;
+
+  void setSUBTRACTEOLWIDTH(bool SUBTRACTEOLWIDTH);
+
+  bool isSUBTRACTEOLWIDTH() const;
+
+  void setPARPRL(bool PARPRL);
+
+  bool isPARPRL() const;
+
+  void setPARMINLENGTH(bool PARMINLENGTH);
+
+  bool isPARMINLENGTH() const;
+
+  void setTWOEDGES(bool TWOEDGES);
+
+  bool isTWOEDGES() const;
+
+  void setSAMEMETAL(bool SAMEMETAL);
+
+  bool isSAMEMETAL() const;
+
+  void setNONEOLCORNERONLY(bool NONEOLCORNERONLY);
+
+  bool isNONEOLCORNERONLY() const;
+
+  void setPARALLELSAMEMASK(bool PARALLELSAMEMASK);
+
+  bool isPARALLELSAMEMASK() const;
+
+  void setENCLOSECUT(bool ENCLOSECUT);
+
+  bool isENCLOSECUT() const;
+
+  void setBELOW(bool BELOW);
+
+  bool isBELOW() const;
+
+  void setABOVE(bool ABOVE);
+
+  bool isABOVE() const;
+
+  void setCUTSPACING(bool CUTSPACING);
+
+  bool isCUTSPACING() const;
+
+  void setALLCUTS(bool ALLCUTS);
+
+  bool isALLCUTS() const;
+
+  void setTOCONCAVECORNER(bool TOCONCAVECORNER);
+
+  bool isTOCONCAVECORNER() const;
+
+  void setMINADJACENTLENGTH(bool MINADJACENTLENGTH);
+
+  bool isMINADJACENTLENGTH() const;
+
+  void sethasTwoMinAdjLength(bool hasTwoMinAdjLength);
+
+  bool ishasTwoMinAdjLength() const;
+
+  void setTONOTCHLENGTH(bool TONOTCHLENGTH);
+
+  bool isTONOTCHLENGTH() const;
+
+  // User Code Begin dbTechLayerSpacingEolRule
+  static dbTechLayerSpacingEolRule* create(dbTechLayer* inly);
+  static dbTechLayerSpacingEolRule* getTechLayerSpacingEolRule(dbTechLayer* inly,
+                                                         uint         dbid);
+  // User Code End dbTechLayerSpacingEolRule
+};
+
+// Generator Code End 5
 
 }  // namespace odb

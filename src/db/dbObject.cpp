@@ -266,6 +266,11 @@ void dbObject::getDbName(char name[max_name_length]) const
         id      = impl->getOID();
         break;
 
+      case dbTechLayerSpacingEolRuleObj:
+        *cptr++ = 'k';
+        id      = impl->getOID();
+        break;
+      
       case dbTechMinCutRuleObj:
         *cptr++ = 'e';
         id      = impl->getOID();
@@ -548,6 +553,12 @@ dbObject* dbObject::resolveDbName(dbDatabase* db_, const char* name)
             (dbTechLayer*) obj, oid);
         break;
 
+      case 'k': // spacing eol rule
+        oid = getOid(name);
+        obj = dbTechLayerSpacingEolRule::getTechLayerSpacingEolRule(
+          (dbTechLayer*) obj, oid);
+        break;
+
       case 's':  // rseg
         oid = getOid(name);
         obj = dbRSeg::getRSeg((dbBlock*) obj, oid);
@@ -627,8 +638,9 @@ static const char* name_tbl[] = {"dbDatabase",
                                  "dbRegion",
                                  "dbHier",
                                  "dbBPin",
-                                 //Generator Code Begin 1
-                                 //Generator Code End 1
+                                 // Generator Code Begin 1
+                                 "dbTechLayerSpacingEolRule",
+                                 // Generator Code End 1
 
                                  // Lib Objects
                                  "dbLib",

@@ -39,6 +39,7 @@
 #include "dbTech.h"
 #include "dbTechLayerAntennaRule.h"
 #include "dbTechLayerSpacingRule.h"
+#include "dbTechLayerSpacingEolRule.h"
 #include "dbTechMinCutOrAreaRule.h"
 #include "lefout.h"
 
@@ -165,6 +166,9 @@ bool _dbTechLayer::operator==(const _dbTechLayer& rhs) const
   if (*_spacing_rules_tbl != *rhs._spacing_rules_tbl)
     return false;
 
+  if (*_spacing_eol_rules_tbl != *rhs._spacing_eol_rules_tbl)
+    return false;
+
   if (*_min_cut_rules_tbl != *rhs._min_cut_rules_tbl)
     return false;
 
@@ -242,6 +246,7 @@ void _dbTechLayer::differences(dbDiff&             diff,
   DIFF_FIELD(_upper);
   DIFF_FIELD(_lower);
   DIFF_TABLE_NO_DEEP(_spacing_rules_tbl);
+  DIFF_TABLE_NO_DEEP(_spacing_eol_rules_tbl);
   DIFF_TABLE_NO_DEEP(_min_cut_rules_tbl);
   DIFF_TABLE_NO_DEEP(_min_enc_rules_tbl);
   DIFF_TABLE_NO_DEEP(_v55inf_tbl);
@@ -295,6 +300,7 @@ void _dbTechLayer::out(dbDiff& diff, char side, const char* field) const
   DIFF_OUT_FIELD(_upper);
   DIFF_OUT_FIELD(_lower);
   DIFF_OUT_TABLE_NO_DEEP(_spacing_rules_tbl);
+  DIFF_OUT_TABLE_NO_DEEP(_spacing_eol_rules_tbl);
   DIFF_OUT_TABLE_NO_DEEP(_min_cut_rules_tbl);
   DIFF_OUT_TABLE_NO_DEEP(_min_enc_rules_tbl);
   DIFF_OUT_TABLE_NO_DEEP(_v55inf_tbl);
@@ -362,6 +368,13 @@ _dbTechLayer::_dbTechLayer(_dbDatabase* db)
       (GetObjTbl_t) &_dbTechLayer::getObjectTable,
       dbTechLayerSpacingRuleObj);
   ZALLOCATED(_spacing_rules_tbl);
+
+  _spacing_eol_rules_tbl = new dbTable<_dbTechLayerSpacingEolRule>(
+      db,
+      this,
+      (GetObjTbl_t) &_dbTechLayer::getObjectTable,
+      dbTechLayerSpacingEolRuleObj);
+  ZALLOCATED(_spacing_eol_rules_tbl);
 
   _min_cut_rules_tbl = new dbTable<_dbTechMinCutRule>(
       db,
@@ -440,6 +453,11 @@ _dbTechLayer::_dbTechLayer(_dbDatabase* db, const _dbTechLayer& l)
       = new dbTable<_dbTechLayerSpacingRule>(db, this, *l._spacing_rules_tbl);
   ZALLOCATED(_spacing_rules_tbl);
 
+  _spacing_eol_rules_tbl
+      = new dbTable<_dbTechLayerSpacingEolRule>(db, this, *l._spacing_eol_rules_tbl);
+  ZALLOCATED(_spacing_eol_rules_tbl);
+
+
   _min_cut_rules_tbl
       = new dbTable<_dbTechMinCutRule>(db, this, *l._min_cut_rules_tbl);
   ZALLOCATED(_min_cut_rules_tbl);
@@ -459,6 +477,9 @@ _dbTechLayer::~_dbTechLayer()
 
   if (_spacing_rules_tbl)
     delete _spacing_rules_tbl;
+
+  if (_spacing_eol_rules_tbl)
+    delete _spacing_eol_rules_tbl;
 
   if (_min_cut_rules_tbl)
     delete _min_cut_rules_tbl;
@@ -501,6 +522,7 @@ dbOStream& operator<<(dbOStream& stream, const _dbTechLayer& layer)
   stream << layer._lower;
   stream << layer._upper;
   stream << *layer._spacing_rules_tbl;
+  stream << *layer._spacing_eol_rules_tbl;
   stream << *layer._min_cut_rules_tbl;
   stream << *layer._min_enc_rules_tbl;
   stream << *layer._v55inf_tbl;
@@ -551,6 +573,7 @@ dbIStream& operator>>(dbIStream& stream, _dbTechLayer& layer)
   stream >> layer._lower;
   stream >> layer._upper;
   stream >> *layer._spacing_rules_tbl;
+  stream >> *layer._spacing_eol_rules_tbl;
   stream >> *layer._min_cut_rules_tbl;
   stream >> *layer._min_enc_rules_tbl;
   stream >> *layer._v55inf_tbl;
@@ -570,6 +593,10 @@ dbObjectTable* _dbTechLayer::getObjectTable(dbObjectType type)
   switch (type) {
     case dbTechLayerSpacingRuleObj:
       return _spacing_rules_tbl;
+
+    case dbTechLayerSpacingEolRuleObj:
+      return _spacing_eol_rules_tbl;
+
 
     case dbTechMinCutRuleObj:
       return _min_cut_rules_tbl;

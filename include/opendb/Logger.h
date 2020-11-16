@@ -32,8 +32,11 @@
 
 #pragma once
 #include "spdlog/sinks/basic_file_sink.h"
+#include "spdlog/sinks/stdout_color_sinks.h"
+#include "spdlog/details/console_globals.h"
 #include "spdlog/spdlog.h"
 #include "string"
+#include <mutex>
 namespace ordlog {
 using std::string;
 enum MessageStatus
@@ -70,9 +73,42 @@ static const char* modules_name_tbl[] = {
     "FTRT",
 };
 
-void init()
+int removeSinkStdout()
 {
-  spdlog::set_pattern("[%^%l%$] %v");
+  if(spdlog::default_logger().get()==nullptr)
+    return -1;
+  auto default_sinks = &spdlog::default_logger().get()->sinks();
+  for(auto sink = default_sinks->begin();sink!=default_sinks->end();++sink)
+  {
+    auto stdout_sink = dynamic_cast<spdlog::sinks::stdout_color_sink_mt*>(sink->get());
+    if(stdout_sink==nullptr)
+      continue;
+    else
+    {
+      default_sinks->erase(sink);
+      return 0;
+    }
+  }
+  return -2;
+}
+
+int addSinkStdout()
+{
+  if(spdlog::default_logger().get()==nullptr)
+    return -1;
+  auto default_sinks = &spdlog::default_logger().get()->sinks();
+  for(auto sink = default_sinks->begin();sink!=default_sinks->end();++sink)
+  {
+    auto stdout_sink = dynamic_cast<spdlog::sinks::stdout_color_sink_mt*>(sink->get());
+    if(stdout_sink==nullptr)
+      continue;
+    else
+      return -2;
+  }
+  auto new_sink = std::make_shared<spdlog::sinks::stdout_color_sink_mt>();
+  new_sink.get()->set_pattern("[%^%l%$] %v");
+  default_sinks->push_back(new_sink);
+  return 0;
 }
 
 int addSinkFile(const char* file_name)
@@ -87,8 +123,10 @@ int addSinkFile(const char* file_name)
       continue;
     if(strcmp(file_sink->filename().c_str(),file_name)==0)
       return -2;//sink already exists
-  } 
-  default_sinks->push_back(std::make_shared<spdlog::sinks::basic_file_sink<std::mutex>>(file_name));
+  }
+  auto new_sink = std::make_shared<spdlog::sinks::basic_file_sink<std::mutex>>(file_name);
+  new_sink.get()->set_pattern("[%^%l%$] %v");
+  default_sinks->push_back(new_sink);
   return 0;
 }
 
@@ -108,7 +146,20 @@ int removeSinkFile(const char* file_name)
       return 0;
     }
   }
-  return -2;//sink not found
+  return -2;
+}
+
+void init()
+{
+  spdlog::set_pattern("[%^%l%$] %v");
+  addSinkStdout();
+}
+
+void init(const char* file_name)
+{
+  spdlog::set_pattern("[%^%l%$] %v");
+  removeSinkStdout();
+  addSinkFile(file_name);
 }
 
 template <typename... Args>

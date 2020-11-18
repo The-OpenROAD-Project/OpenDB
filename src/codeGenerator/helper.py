@@ -15,7 +15,9 @@ comparable = [
     'long',
     'long long',
     'long double',
-    'char*'
+    'char *',
+    'char*',
+    'char'
 ]
 
 removable = [
@@ -39,7 +41,7 @@ def getStruct(name, structs):
     return None
 
 def components(structs, name, _type):
-    if(stem(_type) in comparable):
+    if(stem(_type) in comparable or isRef(_type)):
         return [name]
     idx = 0;
     absType = _type.rstrip(' *')
@@ -124,8 +126,6 @@ def isTemplateType(type_name):
 def getTemplateType(type_name):
     if isTemplateType(type_name) == False:
         return None 
-
-
     numBrackets = 1
     
     openBracket = type_name.find("<")

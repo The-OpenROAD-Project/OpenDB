@@ -88,6 +88,8 @@
 #include "dbSWireItr.h"
 #include "dbSearch.h"
 #include "dbShape.h"
+#include "dbModule.h"
+#include "dbModInst.h"
 #include "dbTable.h"
 #include "dbTable.hpp"
 #include "dbTech.h"
@@ -174,6 +176,10 @@ _dbBlock::_dbBlock(_dbDatabase* db)
   _inst_tbl = new dbTable<_dbInst>(
       db, this, (GetObjTbl_t) &_dbBlock::getObjectTable, dbInstObj);
   ZALLOCATED(_inst_tbl);
+
+  _module_tbl = new dbTable<_dbModule>(
+      db, this, (GetObjTbl_t) &_dbBlock::getObjectTable, dbModuleObj);
+  ZALLOCATED(_module_tbl);
 
   _box_tbl = new dbTable<_dbBox>(
       db, this, (GetObjTbl_t) &_dbBlock::getObjectTable, dbBoxObj, 1024, 10);
@@ -295,6 +301,7 @@ _dbBlock::_dbBlock(_dbDatabase* db)
 
   _net_hash.setTable(_net_tbl);
   _inst_hash.setTable(_inst_tbl);
+  _module_hash.setTable(_module_tbl);
   _inst_hdr_hash.setTable(_inst_hdr_tbl);
   _bterm_hash.setTable(_bterm_tbl);
 
@@ -370,6 +377,7 @@ _dbBlock::_dbBlock(_dbDatabase* db, const _dbBlock& block)
       _parent_inst(block._parent_inst),
       _net_hash(block._net_hash),
       _inst_hash(block._inst_hash),
+      _module_hash(block._module_hash),
       _inst_hdr_hash(block._inst_hdr_hash),
       _bterm_hash(block._bterm_hash),
       _maxCapNodeId(block._maxCapNodeId),
@@ -399,6 +407,9 @@ _dbBlock::_dbBlock(_dbDatabase* db, const _dbBlock& block)
 
   _inst_tbl = new dbTable<_dbInst>(db, this, *block._inst_tbl);
   ZALLOCATED(_inst_tbl);
+
+  _module_tbl = new dbTable<_dbModule>(db, this, *block._module_tbl);
+  ZALLOCATED(_module_tbl);
 
   _box_tbl = new dbTable<_dbBox>(db, this, *block._box_tbl);
   ZALLOCATED(_box_tbl);
@@ -480,6 +491,7 @@ _dbBlock::_dbBlock(_dbDatabase* db, const _dbBlock& block)
 
   _net_hash.setTable(_net_tbl);
   _inst_hash.setTable(_inst_tbl);
+  _module_hash.setTable(_module_tbl);
   _inst_hdr_hash.setTable(_inst_hdr_tbl);
   _bterm_hash.setTable(_bterm_tbl);
 
@@ -544,6 +556,7 @@ _dbBlock::~_dbBlock()
   delete _net_tbl;
   delete _inst_hdr_tbl;
   delete _inst_tbl;
+  delete _module_tbl;
   delete _box_tbl;
   delete _via_tbl;
   delete _gcell_grid_tbl;
@@ -681,6 +694,9 @@ dbObjectTable* _dbBlock::getObjectTable(dbObjectType type)
 
     case dbInstObj:
       return _inst_tbl;
+    
+    case dbModuleObj:
+      return _module_tbl;
 
     case dbNetObj:
       return _net_tbl;
@@ -789,6 +805,7 @@ dbOStream& operator<<(dbOStream& stream, const _dbBlock& block)
   }
   stream << block._net_hash;
   stream << block._inst_hash;
+  stream << block._module_hash;
   stream << block._inst_hdr_hash;
   stream << block._bterm_hash;
   stream << block._maxCapNodeId;
@@ -808,6 +825,7 @@ dbOStream& operator<<(dbOStream& stream, const _dbBlock& block)
   stream << *block._net_tbl;
   stream << *block._inst_hdr_tbl;
   stream << *block._inst_tbl;
+  stream << *block._module_tbl;
   stream << *block._box_tbl;
   stream << *block._via_tbl;
   stream << *block._gcell_grid_tbl;
@@ -871,6 +889,7 @@ dbIStream& operator>>(dbIStream& stream, _dbBlock& block)
   stream >> block._parent_inst;
   stream >> block._net_hash;
   stream >> block._inst_hash;
+  stream >> block._module_hash;
   stream >> block._inst_hdr_hash;
   stream >> block._bterm_hash;
   stream >> block._maxCapNodeId;
@@ -885,6 +904,7 @@ dbIStream& operator>>(dbIStream& stream, _dbBlock& block)
   stream >> *block._net_tbl;
   stream >> *block._inst_hdr_tbl;
   stream >> *block._inst_tbl;
+  stream >> *block._module_tbl;
   stream >> *block._box_tbl;
   stream >> *block._via_tbl;
   stream >> *block._gcell_grid_tbl;
@@ -1019,6 +1039,9 @@ bool _dbBlock::operator==(const _dbBlock& rhs) const
   if (_inst_hash != rhs._inst_hash)
     return false;
 
+  if (_module_hash != rhs._module_hash)
+    return false;
+
   if (_inst_hdr_hash != rhs._inst_hdr_hash)
     return false;
 
@@ -1059,6 +1082,9 @@ bool _dbBlock::operator==(const _dbBlock& rhs) const
     return false;
 
   if (*_inst_tbl != *rhs._inst_tbl)
+    return false;
+  
+  if (*_module_tbl != *rhs._module_tbl)
     return false;
 
   if (*_box_tbl != *rhs._box_tbl)
@@ -1163,6 +1189,7 @@ void _dbBlock::differences(dbDiff&         diff,
   if (!diff.deepDiff()) {
     DIFF_HASH_TABLE(_net_hash);
     DIFF_HASH_TABLE(_inst_hash);
+    DIFF_HASH_TABLE(_module_hash);
     DIFF_HASH_TABLE(_inst_hdr_hash);
     DIFF_HASH_TABLE(_bterm_hash);
   }
@@ -1179,6 +1206,7 @@ void _dbBlock::differences(dbDiff&         diff,
   DIFF_TABLE(_net_tbl);
   DIFF_TABLE_NO_DEEP(_inst_hdr_tbl);
   DIFF_TABLE(_inst_tbl);
+  DIFF_TABLE(_module_tbl);
   DIFF_TABLE_NO_DEEP(_box_tbl);
   DIFF_TABLE(_via_tbl);
   DIFF_TABLE_NO_DEEP(_gcell_grid_tbl);
@@ -1238,6 +1266,7 @@ void _dbBlock::out(dbDiff& diff, char side, const char* field) const
   if (!diff.deepDiff()) {
     DIFF_OUT_HASH_TABLE(_net_hash);
     DIFF_OUT_HASH_TABLE(_inst_hash);
+    DIFF_OUT_HASH_TABLE(_module_hash);
     DIFF_OUT_HASH_TABLE(_inst_hdr_hash);
     DIFF_OUT_HASH_TABLE(_bterm_hash);
   }
@@ -1254,6 +1283,7 @@ void _dbBlock::out(dbDiff& diff, char side, const char* field) const
   DIFF_OUT_TABLE(_net_tbl);
   DIFF_OUT_TABLE_NO_DEEP(_inst_hdr_tbl);
   DIFF_OUT_TABLE(_inst_tbl);
+  DIFF_OUT_TABLE(_module_tbl);
   DIFF_OUT_TABLE_NO_DEEP(_box_tbl);
   DIFF_OUT_TABLE(_via_tbl);
   DIFF_OUT_TABLE_NO_DEEP(_gcell_grid_tbl);
@@ -1464,10 +1494,23 @@ dbSet<dbInst> dbBlock::getInsts()
   _dbBlock* block = (_dbBlock*) this;
   return dbSet<dbInst>(block, block->_inst_tbl);
 }
+
+dbSet<dbModule> dbBlock::getModules()
+{
+  _dbBlock* block = (_dbBlock*) this;
+  return dbSet<dbModule>(block, block->_module_tbl);
+}
+
 dbInst* dbBlock::findInst(const char* name)
 {
   _dbBlock* block = (_dbBlock*) this;
   return (dbInst*) block->_inst_hash.find(name);
+}
+
+dbModule* dbBlock::findModule(const char* name)
+{
+  _dbBlock* block = (_dbBlock*) this;
+  return (dbModule*) block->_module_hash.find(name);
 }
 
 dbITerm* dbBlock::findITerm(const char* name)

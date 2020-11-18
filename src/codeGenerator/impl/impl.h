@@ -50,6 +50,9 @@ namespace odb {
   class dbDiff;
   class _dbDatabase;
   {% for _class in klass.classes %}
+  {%if _class=="dbTable"%}
+  template <class T>
+  {%endif%}
   class {{ _class }};
   {% endfor %}
   //User Code Begin Classes

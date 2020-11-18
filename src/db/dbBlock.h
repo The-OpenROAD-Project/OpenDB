@@ -88,6 +88,7 @@ class _dbHier;
 class _dbBPin;
 class _dbTechLayerRule;
 class _dbTechNonDefaultRule;
+class _dbModule;
 class dbJournal;
 
 class dbNetBTermItr;
@@ -162,6 +163,7 @@ class _dbBlock : public _dbObject
   dbId<_dbInst>               _parent_inst;   // Up hierarchy: TWG
   dbHashTable<_dbNet>         _net_hash;
   dbHashTable<_dbInst>        _inst_hash;
+  dbHashTable<_dbModule>      _module_hash;
   dbIntHashTable<_dbInstHdr>  _inst_hdr_hash;
   dbHashTable<_dbBTerm>       _bterm_hash;
   uint                        _maxCapNodeId;
@@ -195,6 +197,7 @@ class _dbBlock : public _dbObject
   dbTable<_dbTechNonDefaultRule>* _non_default_rule_tbl;
   dbTable<_dbTechLayerRule>*      _layer_rule_tbl;
   dbTable<_dbProperty>*           _prop_tbl;
+  dbTable<_dbModule>*             _module_tbl;
   _dbNameCache*                   _name_cache;
 
   dbPagedVector<float, 4096, 12>* _r_val_tbl;

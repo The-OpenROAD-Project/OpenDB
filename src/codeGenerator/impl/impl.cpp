@@ -327,16 +327,23 @@ namespace odb {
   {%endif%}
 
   {%if 'no-get' not in field.flags%}
+  {%if field.dbSetGetter%}
+  dbSet<{{field.type}}> {{klass.name}}::get{{field.functional_name}}() const
+  {
+    _{{klass.name}}* obj = (_{{klass.name}}*)this;
+    return dbSet<{{field.type}}>(obj, obj->{{field.name}});
+  }
+  {%else%}
   {{field.getterReturnType}} {{klass.name}}::{{field.getterFunctionName}}({%if field.isHashTable%}const char* name{%endif%}) const
   {
     _{{klass.name}}* obj = (_{{klass.name}}*)this;
 
     {%if field.isRef%}
 
-    _{{field.parent}} par = (_{{field.parent}}*) obj->getOwner();
+    _{{field.parent}}* par = (_{{field.parent}}*) obj->getOwner();
     if(obj->{{field.name}} == 0)
       return NULL;
-    return ({{field.refType}}) par->_{{field.refType[2:-1].lower()}}_tbl->getPtr(obj->{{field.name}})
+    return ({{field.refType}}) par->_{{field.refType[2:-1].lower()}}_tbl->getPtr(obj->{{field.name}});
 
 
     {%elif field.isHashTable%}
@@ -353,14 +360,9 @@ namespace odb {
     {%endif%}
   }
   {%endif%}
-
-  {%if field.dbSetGetter%}
-  dbSet<{{field.type}}> {{klass.name}}::get{{field.functional_name}}() const
-  {
-    _{{klass.name}}* obj = (_{{klass.name}}*)this;
-    return dbSet<{{field.type}}>(obj, obj->{{field.name}});
-  }
   {%endif%}
+
+  
   {%endfor%}
 
 

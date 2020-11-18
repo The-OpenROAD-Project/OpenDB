@@ -95,6 +95,8 @@ add_library(opendb
     tmg_conn_w.cpp
     wOrder.cpp
     # Generator Code Begin cpp
+    dbModule.cpp
+    dbModInst.cpp
     # Generator Code End cpp
 )
 

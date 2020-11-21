@@ -223,7 +223,7 @@ dbModInst* dbModInst::create(dbModule*   parentModule,
 void dbModInst::destroy(dbModInst* modinst)
 {
   _dbModInst* _modinst = (_dbModInst*) modinst;
-  _dbModule* module = (_dbModule*) _modinst->getOwner();
+  _dbModule*  module   = (_dbModule*) _modinst->getOwner();
   dbProperty::destroyProperties(_modinst);
   module->_modinst_hash.remove(_modinst);
   module->_modinst_tbl->destroy(_modinst);

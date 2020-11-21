@@ -43,6 +43,8 @@
 #include "dbTable.h"
 #include "dbTable.hpp"
 // User Code Begin includes
+#include "dbInst.h"
+#include "dbModuleInstItr.h"
 // User Code End includes
 namespace odb {
 
@@ -56,6 +58,9 @@ bool _dbModule::operator==(const _dbModule& rhs) const
     return false;
 
   if (_next_entry != rhs._next_entry)
+    return false;
+
+  if (_insts != rhs._insts)
     return false;
 
   if (*_modinst_tbl != *rhs._modinst_tbl)
@@ -83,6 +88,8 @@ void _dbModule::differences(dbDiff&          diff,
 
   DIFF_FIELD(_next_entry);
 
+  DIFF_FIELD(_insts);
+
   DIFF_TABLE(_modinst_tbl);
 
   // User Code Begin differences
@@ -98,6 +105,8 @@ void _dbModule::out(dbDiff& diff, char side, const char* field) const
   DIFF_OUT_FIELD(_name);
 
   DIFF_OUT_FIELD(_next_entry);
+
+  DIFF_OUT_FIELD(_insts);
 
   DIFF_OUT_TABLE(_modinst_tbl);
 
@@ -120,6 +129,7 @@ _dbModule::_dbModule(_dbDatabase* db, const _dbModule& r)
 {
   _name        = r._name;
   _next_entry  = r._next_entry;
+  _insts       = r._insts;
   _modinst_tbl = new dbTable<_dbModInst>(db, this, *r._modinst_tbl);
   ZALLOCATED(_modinst_tbl);
   // User Code Begin CopyConstructor
@@ -132,6 +142,7 @@ dbIStream& operator>>(dbIStream& stream, _dbModule& obj)
   stream >> obj._name;
   stream >> obj._next_entry;
   stream >> obj._modinst_hash;
+  stream >> obj._insts;
   stream >> *obj._modinst_tbl;
   // User Code Begin >>
   // User Code End >>
@@ -142,6 +153,7 @@ dbOStream& operator<<(dbOStream& stream, const _dbModule& obj)
   stream << obj._name;
   stream << obj._next_entry;
   stream << obj._modinst_hash;
+  stream << obj._insts;
   stream << *obj._modinst_tbl;
   // User Code Begin <<
   // User Code End <<
@@ -183,6 +195,56 @@ dbSet<dbModInst> dbModule::getModInsts() const
 }
 
 // User Code Begin dbModulePublicMethods
+void dbModule::addInst(dbInst* inst_)
+{
+  _dbModule* module = (_dbModule*) this;
+  _dbInst*   inst   = (_dbInst*) inst_;
+  _dbBlock*  block  = (_dbBlock*) module->getOwner();
+
+  if (inst->_module != 0) {
+    dbModule* mod = dbModule::getModule((dbBlock*) block, inst->_module);
+    mod->removeInst(inst_);
+  }
+
+  inst->_module = module->getOID();
+  inst->_module_next = module->_insts;
+  module->_insts = inst->getOID();
+}
+
+void dbModule::removeInst(dbInst* inst_)
+{
+  _dbModule* module = (_dbModule*) this;
+  _dbInst*   inst   = (_dbInst*) inst_;
+  _dbBlock*  block  = (_dbBlock*) module->getOwner();
+  if(inst->_module!=module->getOID())
+    return;
+  uint id = inst->getOID();
+
+  _dbInst* prev = NULL;
+  uint     cur  = module->_insts;
+  while (cur) {
+    _dbInst* c = block->_inst_tbl->getPtr(cur);
+    if (cur == id) {
+      if (prev == NULL)
+        module->_insts = inst->_module_next;
+      else
+        prev->_module_next = inst->_module_next;
+      break;
+    }
+    prev = c;
+    cur  = c->_module_next;
+  }
+  inst->_module = 0;
+  inst->_module_next = 0;
+}
+
+dbSet<dbInst> dbModule::getModuleInsts()
+{
+  _dbModule* module = (_dbModule*) this;
+  _dbBlock*  block  = (_dbBlock*) module->getOwner();
+  return dbSet<dbInst>(module, block->_module_inst_itr);
+}
+
 dbModInst* dbModule::findModInst(const char* name)
 {
   _dbModule* module = (_dbModule*) this;
@@ -204,12 +266,23 @@ dbModule* dbModule::create(dbBlock* block, const char* name)
 void dbModule::destroy(dbModule* module)
 {
   _dbModule* _module = (_dbModule*) module;
-  _dbBlock* block = (_dbBlock*) _module->getOwner();
-  for(auto modinst : module->getModInsts())
+  _dbBlock*  block   = (_dbBlock*) _module->getOwner();
+  for (auto modinst : module->getModInsts())
     modinst->destroy(modinst);
+  for (auto inst : module->getModuleInsts())
+  {
+    _dbInst* _inst = (_dbInst*)inst;
+    _inst->_module = 0;
+    _inst->_module_next = 0;
+  }
   dbProperty::destroyProperties(_module);
   block->_module_hash.remove(_module);
   block->_module_tbl->destroy(_module);
+}
+dbModule* dbModule::getModule(dbBlock* block_, uint dbid_)
+{
+  _dbBlock* block = (_dbBlock*) block_;
+  return (dbModule*) block->_module_tbl->getPtr(dbid_);
 }
 // User Code End dbModulePublicMethods
 }  // namespace odb

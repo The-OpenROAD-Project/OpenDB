@@ -33,61 +33,38 @@
 // Generator Code Begin 1
 #pragma once
 
-#include "dbCore.h"
+#include "dbIterator.h"
 #include "odb.h"
-
 // User Code Begin includes
-#include "dbHashTable.h"
 // User Code End includes
 
 namespace odb {
 
-class dbIStream;
-class dbOStream;
-class dbDiff;
-class _dbDatabase;
-class _dbModInst;
+class _dbInst;
 template <class T>
 class dbTable;
-class _dbInst;
-// User Code Begin Classes
-// User Code End Classes
-
-// User Code Begin structs
-// User Code End structs
-
-class _dbModule : public _dbObject
+// User Code Begin classes
+// User Code End classes
+class dbModuleInstItr : public dbIterator
 {
- public:
-  // User Code Begin enums
-  // User Code End enums
-  char* _name;
-
-  dbId<_dbModule> _next_entry;
-
-  dbHashTable<_dbModInst> _modinst_hash;
-
-  dbId<_dbInst> _insts;
-
-  dbTable<_dbModInst>* _modinst_tbl;
-
+  dbTable<_dbInst>* _inst_tbl;
   // User Code Begin fields
   // User Code End fields
-  _dbModule(_dbDatabase*, const _dbModule& r);
-  _dbModule(_dbDatabase*);
-  ~_dbModule();
-  bool operator==(const _dbModule& rhs) const;
-  bool operator!=(const _dbModule& rhs) const { return !operator==(rhs); }
-  bool operator<(const _dbModule& rhs) const;
-  void differences(dbDiff& diff, const char* field, const _dbModule& rhs) const;
-  void out(dbDiff& diff, char side, const char* field) const;
-  dbObjectTable* getObjectTable(dbObjectType type);
+ public:
+  dbModuleInstItr(dbTable<_dbInst>* inst_tbl) { _inst_tbl = inst_tbl; }
+
+  bool      reversible();
+  bool      orderReversed();
+  void      reverse(dbObject* parent);
+  uint      sequential();
+  uint      size(dbObject* parent);
+  uint      begin(dbObject* parent);
+  uint      end(dbObject* parent);
+  uint      next(uint id, ...);
+  dbObject* getObject(uint id, ...);
   // User Code Begin methods
   // User Code End methods
 };
-dbIStream& operator>>(dbIStream& stream, _dbModule& obj);
-dbOStream& operator<<(dbOStream& stream, const _dbModule& obj);
-// User Code Begin general
-// User Code End general
+
 }  // namespace odb
-   // Generator Code End 1
+   // GeneratorCodeEnd 1

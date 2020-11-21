@@ -18,6 +18,12 @@
           "name":"_modinst_hash",
           "type":"dbHashTable<_dbModInst>",
           "flags":["no-set","no-get"]
+        },
+        {
+          "name":"_insts",
+          "type":"dbId<_dbInst>",
+          "flags":["no-set","no-get"],
+          "parent":"dbBlock"
         }
       ],
       "constructors":[],
@@ -52,6 +58,17 @@
       ],
       "constructors":[],
       "cpp_includes":["dbBlock.h","dbModule.h","dbHashTable.hpp"]
+    }
+  ],
+  "iterators":[
+    {
+      "name": "dbModuleInstItr",
+      "parentObject": "dbInst",
+      "tableName": "inst_tbl",
+      "reversible": "true",
+      "orderReversed": "true",
+      "sequential": 0,
+      "includes": ["dbModule.h", "dbInst.h", "dbTable.h"]
     }
   ],
   "relations":[

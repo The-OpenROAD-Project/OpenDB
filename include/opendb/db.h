@@ -2930,6 +2930,12 @@ class dbInst : public dbObject
   /// assigned region.
   ///
   dbRegion* getRegion();
+  
+  ///
+  /// Get the module this instance belongs to. Returns NULL if instance has no
+  /// assigned module.
+  ///
+  dbModule* getModule();
 
   ///
   /// Find the iterm of the given terminal name.
@@ -7137,11 +7143,19 @@ class dbModule : public dbObject
   dbSet<dbModInst> getModInsts() const;
 
   // User Code Begin dbModule
+  void addInst(dbInst* inst_);
+
+  void removeInst(dbInst* inst_);
+
+  dbSet<dbInst> getModuleInsts();
+
   dbModInst* findModInst(const char* name);
 
   static dbModule* create(dbBlock* block, const char* name);
 
   static void destroy(dbModule* module);
+
+  dbModule* getModule(dbBlock* block_, uint dbid_);
   // User Code End dbModule
 };
 
@@ -7162,7 +7176,7 @@ class dbModInst : public dbObject
   static dbModInst* create(dbModule*   parentModule,
                            dbModule*   masterModule,
                            const char* name);
-  
+
   static void destroy(dbModInst* modinst);
   // User Code End dbModInst
 };

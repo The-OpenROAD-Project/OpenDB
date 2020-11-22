@@ -5924,6 +5924,9 @@ class dbTechLayer : public dbObject
   ///
   bool getV54SpacingRules(dbSet<dbTechLayerSpacingRule>& sp_rules) const;
 
+  // Get the collection of Eol Spacing Rules for the object
+  bool getEolSpacingRules(dbSet<dbTechLayerSpacingEolRule>& eol_sp_rules) const;
+
   ///
   /// API for version 5.5 spacing rules, expressed as a 2D matrix with
   /// index tables  LEF 5.4 and 5.5 rules should not co-exist -- although

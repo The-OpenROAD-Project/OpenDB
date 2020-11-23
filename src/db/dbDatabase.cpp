@@ -59,7 +59,7 @@
 #include "dbTech.h"
 #include "dbWire.h"
 #include "logger.h"
-#include "Logger.h"
+
 namespace odb {
 
 //
@@ -431,7 +431,6 @@ dbTech* dbDatabase::getTech()
 
 void dbDatabase::read(FILE* file)
 {
-  ordlog::info(ordlog::OPENDB,1,"reading db");
   _dbDatabase* db = (_dbDatabase*) this;
   dbIStream    stream(db, file);
   stream >> *db;

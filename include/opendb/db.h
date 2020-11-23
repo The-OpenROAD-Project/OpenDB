@@ -5925,7 +5925,7 @@ class dbTechLayer : public dbObject
   bool getV54SpacingRules(dbSet<dbTechLayerSpacingRule>& sp_rules) const;
 
   // Get the collection of Eol Spacing Rules for the object
-  bool getEolSpacingRules(dbSet<dbTechLayerSpacingEolRule>& eol_sp_rules) const;
+  dbSet<dbTechLayerSpacingEolRule> getEolSpacingRules() const;
 
   ///
   /// API for version 5.5 spacing rules, expressed as a 2D matrix with
@@ -7421,8 +7421,9 @@ class dbTechLayerSpacingEolRule : public dbObject
 
   // User Code Begin dbTechLayerSpacingEolRule
   static dbTechLayerSpacingEolRule* create(dbTechLayer* inly);
-  static dbTechLayerSpacingEolRule* getTechLayerSpacingEolRule(dbTechLayer* inly,
-                                                         uint         dbid);
+  static dbTechLayerSpacingEolRule* getTechLayerSpacingEolRule(
+      dbTechLayer* inly,
+      uint         dbid);
   // User Code End dbTechLayerSpacingEolRule
 };
 

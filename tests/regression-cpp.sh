@@ -9,6 +9,6 @@ do
     name=$(echo $file | awk -F"/" '{print $NF}')
     echo "$name"
     echo ""
-    $BASE_DIR/../build/tests/cpp/$name
+    BASE_DIR=$PWD $BASE_DIR/../build/tests/cpp/$name
     echo ""
 done

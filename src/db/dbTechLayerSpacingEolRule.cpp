@@ -1906,19 +1906,20 @@ bool dbTechLayerSpacingEolRule::isTONOTCHLENGTH() const
 // User Code Begin dbTechLayerSpacingEolRulePublicMethods
 dbTechLayerSpacingEolRule* dbTechLayerSpacingEolRule::create(dbTechLayer* inly)
 {
-  _dbTechLayer*            layer   = (_dbTechLayer*) inly;
+  _dbTechLayer*               layer   = (_dbTechLayer*) inly;
   _dbTechLayerSpacingEolRule* newrule = layer->_spacing_eol_rules_tbl->create();
-  newrule->_layer                  = inly->getImpl()->getOID();
+  newrule->_layer                     = inly->getImpl()->getOID();
 
   return ((dbTechLayerSpacingEolRule*) newrule);
 }
 
-dbTechLayerSpacingEolRule* dbTechLayerSpacingEolRule::getTechLayerSpacingEolRule(
-    dbTechLayer* inly,
-    uint         dbid)
+dbTechLayerSpacingEolRule*
+dbTechLayerSpacingEolRule::getTechLayerSpacingEolRule(dbTechLayer* inly,
+                                                      uint         dbid)
 {
   _dbTechLayer* layer = (_dbTechLayer*) inly;
-  return (dbTechLayerSpacingEolRule*) layer->_spacing_eol_rules_tbl->getPtr(dbid);
+  return (dbTechLayerSpacingEolRule*) layer->_spacing_eol_rules_tbl->getPtr(
+      dbid);
 }
 
 // User Code End dbTechLayerSpacingEolRulePublicMethods

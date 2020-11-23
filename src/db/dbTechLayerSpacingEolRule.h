@@ -171,7 +171,7 @@ class _dbTechLayerSpacingEolRule : public _dbObject
   double notchLength;
 
   // User Code Begin fields
-  dbId<_dbTechLayer>            _layer;
+  dbId<_dbTechLayer> _layer;
   // User Code End fields
   _dbTechLayerSpacingEolRule(_dbDatabase*, const _dbTechLayerSpacingEolRule& r);
   _dbTechLayerSpacingEolRule(_dbDatabase*);

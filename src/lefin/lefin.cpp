@@ -574,7 +574,7 @@ void lefin::layer(lefiLayer* layer)
   }
   for (int iii = 0; iii < layer->numProps(); iii++) {
     dbStringProperty::create(l, layer->propName(iii), layer->propValue(iii));
-    if(strcmp(layer->propName(iii), "LEF58_SPACING") == 0){
+    if(strcmp(layer->propName(iii), "LEF58_SPACING") == 0 && type.getValue() == dbTechLayerType::ROUTING){
       dbTechLayerSpacingEolRule* eolrule = lefTechLayerSpacingEolParser::parse(layer->propValue(iii), l);
     }
   }

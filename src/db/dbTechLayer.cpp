@@ -837,13 +837,11 @@ bool dbTechLayer::getV54SpacingRules(
 }
 
 
-bool dbTechLayer::getEolSpacingRules(
-    dbSet<dbTechLayerSpacingEolRule>& sp_rules) const
+dbSet<dbTechLayerSpacingEolRule> dbTechLayer::getEolSpacingRules() const
 {
   _dbTechLayer* layer = (_dbTechLayer*) this;
 
-  sp_rules = dbSet<dbTechLayerSpacingEolRule>(layer, layer->_spacing_eol_rules_tbl);
-  return true;
+  return dbSet<dbTechLayerSpacingEolRule>(layer, layer->_spacing_eol_rules_tbl);
 }
 
 bool dbTechLayer::hasV55SpacingRules() const

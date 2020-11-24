@@ -55,7 +55,7 @@ RUN git clone -b v1.8.1 https://github.com/gabime/spdlog.git \
     && cd spdlog \
     && mkdir build \
     && cd build \
-    && cmake -DCMAKE_POSITION_INDEPENDENT_CODE=ON .. \
+    && cmake .. \
     && make install -j
     
 FROM base-dependencies AS builder

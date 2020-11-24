@@ -38,7 +38,14 @@ namespace odb {
 
 dbInstShapeItr::dbInstShapeItr(bool expand_vias)
 {
+  _state       = 0;
   _inst        = NULL;
+  _master      = NULL;
+  _mpin        = NULL;
+  _type        = ALL;
+  _via         = NULL;
+  _via_x       = 0;
+  _via_y       = 0;
   _expand_vias = expand_vias;
 }
 

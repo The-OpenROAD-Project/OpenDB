@@ -95,6 +95,7 @@ inline _dbMTerm::_dbMTerm(_dbDatabase*)
 {
   _flags._io_type    = dbIoType::INPUT;
   _flags._sig_type   = dbSigType::SIGNAL;
+  _flags._mark       = 0;
   _flags._spare_bits = 0;
   _order_id          = 0;
   _name              = 0;

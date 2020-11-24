@@ -90,6 +90,7 @@ class lefout
 
   lefout()
   {
+    _out                  = nullptr;
     _write_marked_masters = _use_alias = _use_master_ids = false;
     _dist_factor                                         = 0.001;
     _area_factor                                         = 0.000001;

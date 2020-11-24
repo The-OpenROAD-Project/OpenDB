@@ -217,13 +217,7 @@ _dbLib::~_dbLib()
   delete _site_tbl;
   delete _prop_tbl;
   delete _name_cache;
-  /******************************** dimitri_fix : cooment out delete
-  ************************* dbLib.cpp:184:12: warning: deleting object of
-  polymorphic class type ‘dbPropertyItr’ which has non-virtual destructor might
-  cause undefined behavior [-Wdelete-non-virtual-dtor] delete _prop_itr;
-
-      delete _prop_itr;
-  ************************************************************************************************/
+  delete _prop_itr;
 
   if (_name)
     free((void*) _name);

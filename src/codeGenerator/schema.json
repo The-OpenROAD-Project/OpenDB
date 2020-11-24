@@ -1,0 +1,52 @@
+{
+  "classes": [{
+    "name": "dbFillRegion",
+    "type": "dbObject",
+    "fields": [{
+        "name": "width",
+        "type": "unsigned int",
+        "flags": [],
+        "bits": "4"
+      },
+      {
+        "name": "_fields",
+        "type": "FillRegionFields",
+        "flags": ["no-set", "no-get"]
+      },
+      {
+        "name": "_block",
+        "type": "dbBlock *",
+        "flags": []
+      },
+      {
+        "name": "_valid",
+        "type": "bool",
+        "flags": [],
+        "default": "false"
+      }
+    ],
+    "constructors": [{
+      "args": [{
+        "name": "width",
+        "type": "uint_32t",
+        "field": "width"
+      }]
+    }],
+    "enums": [{
+      "name": "dbType",
+      "values": ["VALUE1", "VALUE2", "VALUE3"]
+    }],
+    "includes": ["dbException.h",
+      "dbObject.h"
+    ]
+  }],
+  "iterators": [{
+    "name": "dbCapNodeItr",
+    "parentObject": "dbCapNode",
+    "tableName": "seg_tbl",
+    "reversible": "true",
+    "orderReversed": "true",
+    "sequential": 0,
+    "includes": ["dbTable.h", "dbBlock.h", "dbBTerm.h", "dbBPin.h"]
+  }]
+}

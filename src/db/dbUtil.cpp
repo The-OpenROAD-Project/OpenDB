@@ -77,7 +77,7 @@ void dbCreateNetUtil::checkAndSet(uint id)
 
     _mapArray = (dbNet**) realloc(_mapArray, n * sizeof(dbNet*));
     if (_mapArray == NULL) {
-      error(0, "Cannot allocate %d MBytes for mapArray\n", n * sizeof(dbNet*));
+      error(0, "Cannot allocate %lu MBytes for mapArray\n", n * sizeof(dbNet*));
     } else {
       for (uint ii = _mapCnt; ii < n; ii++)
         _mapArray[ii] = NULL;
@@ -1125,7 +1125,7 @@ dbNet* dbCreateNetUtil::createNetSingleWire(const char*    netName,
 
     if ((blutrms.first == NULL) || (blutrms.second == NULL)) {
       dbNet::destroy(net);
-      warning(0, "Cannot create net %s, because failed to create bterms\n");
+      warning(0, "Cannot create net %s, because failed to create bterms\n", netName);
       return NULL;
     }
   }
@@ -1443,7 +1443,7 @@ dbNet* dbCreateNetUtil::createNetSingleWire(const char* netName,
 
     if ((blutrms.first == NULL) || (blutrms.second == NULL)) {
       dbNet::destroy(net);
-      warning(0, "Cannot create net %s, because failed to create bterms\n");
+      warning(0, "Cannot create net %s, because failed to create bterms\n", netName);
       return NULL;
     }
   }

@@ -1,7 +1,7 @@
 ///////////////////////////////////////////////////////////////////////////////
 // BSD 3-Clause License
 //
-// Copyright (c) 2019, Nefelus Inc
+// Copyright (c) 2020, OpenRoad Project
 // All rights reserved.
 //
 // Redistribution and use in source and binary forms, with or without
@@ -30,37 +30,42 @@
 // ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 // POSSIBILITY OF SUCH DAMAGE.
 
+//Generator Code Begin 1
 #pragma once
 
-#include <stdarg.h>
-#include <stdio.h>
-#ifndef _WIN32
-#include <sys/times.h>
-#endif
-
+#include "dbIterator.h"
 #include "odb.h"
-#include "ZInterface.h"
+//User Code Begin includes
+//User Code End includes
 
 namespace odb {
 
-int idle(int = 0);
+  class _{{itr.parentObject}};
+  template <class T>
+  class dbTable;
+  //User Code Begin classes
+  //User Code End classes
+  class {{itr.name}} : public dbIterator
+  {
+    dbTable<_{{itr.parentObject}}>* _{{itr.tableName}};
+    //User Code Begin fields
+    //User Code End fields
+  public:
+    {{itr.name}}(dbTable<_{{itr.parentObject}}>* {{itr.tableName}}) { _{{itr.tableName}} = {{itr.tableName}}; }
 
-int notice(int code, const char* msg, ...) ADS_FORMAT_PRINTF(2, 3);
-int verbose(int code, const char* msg, ...) ADS_FORMAT_PRINTF(2, 3);
+    bool      reversible();
+    bool      orderReversed();
+    void      reverse(dbObject* parent);
+    uint      sequential();
+    uint      size(dbObject* parent);
+    uint      begin(dbObject* parent);
+    uint      end(dbObject* parent);
+    uint      next(uint id, ...);
+    dbObject* getObject(uint id, ...);
+    //User Code Begin methods
+    //User Code End methods
+  };
 
-int info(int code, const char* msg, ...) ADS_FORMAT_PRINTF(2, 3);
-
-void dumpWarn();
-int  checkWarning(const char* msg);
-void resetWarningCount(const char* msg, int max, int cnt);
-
-int warning(int code, const char* msg, ...) ADS_FORMAT_PRINTF(2, 3);
-
-void error(int code, const char* msg, ...) ADS_FORMAT_PRINTF(2, 3);
-
-int debug(const char* mod, const char* tag, const char* msg, ...) ADS_FORMAT_PRINTF(3, 4);
-int isDebug(const char* mod, const char* tag);
-
-}  // namespace odb
-
-
+  
+}
+//GeneratorCodeEnd 1

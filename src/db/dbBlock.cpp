@@ -35,6 +35,7 @@
 #include <unistd.h>
 #endif
 #include <string>
+#include <memory>
 
 #include "ZComponents.h"
 #include "db.h"
@@ -348,6 +349,8 @@ _dbBlock::_dbBlock(_dbDatabase* db)
   _journal_pending = NULL;
 
   _printControl = new dbPrintControl();
+
+  _bterm_pins = nullptr;
 }
 
 _dbBlock::_dbBlock(_dbDatabase* db, const _dbBlock& block)
@@ -575,26 +578,19 @@ _dbBlock::~_dbBlock()
   delete _r_seg_tbl;
   delete _cc_seg_tbl;
   delete _extControl;
-  /*
-          compilee warning
-  dbBlock.cpp:513:12: warning: deleting object of polymorphic class type
-  ‘dbNetBTermItr’ which has non-virtual destructor might cause undefined
-  behavior [-Wdelete-non-virtual-dtor] delete _net_bterm_itr;
-
-      delete _net_bterm_itr;
-      delete _net_iterm_itr;
-      delete _inst_iterm_itr;
-      delete _box_itr;
-      delete _swire_itr;
-      delete _sbox_itr;
-      delete _cap_node_itr;
-      delete _r_seg_itr;
-      delete _cc_seg_itr;
-      delete _region_inst_itr;
-      delete _bpin_itr;
-      delete _region_itr;
-      delete _prop_itr;
-  */
+  delete _net_bterm_itr;
+  delete _net_iterm_itr;
+  delete _inst_iterm_itr;
+  delete _box_itr;
+  delete _swire_itr;
+  delete _sbox_itr;
+  delete _cap_node_itr;
+  delete _r_seg_itr;
+  delete _cc_seg_itr;
+  delete _region_inst_itr;
+  delete _bpin_itr;
+  delete _region_itr;
+  delete _prop_itr;
 
   std::list<dbBlockCallBackObj*>::iterator _cbitr;
   while (_callbacks.begin() != _callbacks.end()) {
@@ -1559,7 +1555,7 @@ bool dbBlock::findSomeMaster(const char* names, std::vector<dbMaster*>& masters)
 
   dbLib*       lib = getChip()->getDb()->findLib("lib");
   dbMaster*    master;
-  Ath__parser* parser = new Ath__parser();
+  auto parser = std::make_unique<Ath__parser>();
   parser->mkWords(names, NULL);
   // uint noid;
   char* masterName;
@@ -1587,7 +1583,7 @@ bool dbBlock::findSomeNet(const char* names, std::vector<dbNet*>& nets)
     return false;
   _dbBlock*    block = (_dbBlock*) this;
   dbNet*       net;
-  Ath__parser* parser = new Ath__parser();
+  auto parser = std::make_unique<Ath__parser>();
   parser->mkWords(names, NULL);
   uint  noid;
   char* netName;
@@ -1612,7 +1608,7 @@ bool dbBlock::findSomeInst(const char* names, std::vector<dbInst*>& insts)
     return false;
   _dbBlock*    block = (_dbBlock*) this;
   dbInst*      inst;
-  Ath__parser* parser = new Ath__parser();
+  auto parser = std::make_unique<Ath__parser>();
   parser->mkWords(names, NULL);
   uint  ioid;
   char* instName;
@@ -2717,7 +2713,7 @@ void dbBlock::restoreOldCornerParasitics(dbBlock*             pblock,
           ccSeg->Link_cc_seg(otherCapnode, otherid);
         else {
           notice(0,
-                 "net %d %s capNode %s ccseg %d has otherCapNode %d not from "
+                 "net %d %s capNode %d ccseg %d has otherCapNode %d not from "
                  "changed or halo nets",
                  net->getId(),
                  (char*) net->getConstName(),
@@ -2878,7 +2874,7 @@ void dbBlock::keepOldCornerParasitics(dbBlock*             pblock,
           ccSeg->unLink_cc_seg(other);
         else
           error(0,
-                "ccseg %d has other capn not from changed or halo nets",
+                "ccseg %d has other capn %d not from changed or halo nets",
                 ccSeg->getId(),
                 other->getId());
       }

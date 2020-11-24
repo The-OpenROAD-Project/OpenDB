@@ -866,7 +866,6 @@ void dbRSeg::destroy(dbRSeg* seg_, dbNet* net_)
           seg->getId(),
           net->getId(),
           block->_journal->size(),
-          block->_journal->size(),
           block,
           block->_journal);
   }

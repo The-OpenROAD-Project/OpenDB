@@ -30,37 +30,86 @@
 // ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 // POSSIBILITY OF SUCH DAMAGE.
 
-#pragma once
-
-#include <stdarg.h>
-#include <stdio.h>
-#ifndef _WIN32
-#include <sys/times.h>
-#endif
-
-#include "odb.h"
-#include "ZInterface.h"
+//Generator Code Begin 1
+#include "{{itr.name}}.h"
+#include "{{itr.parentObject}}.h"
+#include "dbTable.h"
+{% for include in itr.includes %}
+#include "{{ include }}"
+{% endfor %}
+//User Code Begin includes
+//User Code End includes
 
 namespace odb {
 
-int idle(int = 0);
+////////////////////////////////////////////////////////////////////
+//
+// {{itr.name}} - Methods
+//
+////////////////////////////////////////////////////////////////////
 
-int notice(int code, const char* msg, ...) ADS_FORMAT_PRINTF(2, 3);
-int verbose(int code, const char* msg, ...) ADS_FORMAT_PRINTF(2, 3);
 
-int info(int code, const char* msg, ...) ADS_FORMAT_PRINTF(2, 3);
+bool {{itr.name}}::reversible()
+{
+  return {{itr.reversible}};
+}
 
-void dumpWarn();
-int  checkWarning(const char* msg);
-void resetWarningCount(const char* msg, int max, int cnt);
+bool {{itr.name}}::orderReversed()
+{
+  return {{itr.orderReversed}};
+}
 
-int warning(int code, const char* msg, ...) ADS_FORMAT_PRINTF(2, 3);
+void {{itr.name}}::reverse(dbObject* parent)
+{
 
-void error(int code, const char* msg, ...) ADS_FORMAT_PRINTF(2, 3);
+  //User Code Begin reverse
+  //User Code End reverse
 
-int debug(const char* mod, const char* tag, const char* msg, ...) ADS_FORMAT_PRINTF(3, 4);
-int isDebug(const char* mod, const char* tag);
+}
 
+uint {{itr.name}}::sequential()
+{
+  return {{itr.sequential}};
+}
+
+uint {{itr.name}}::size(dbObject* parent)
+{
+  uint id;
+  uint cnt = 0;
+
+  for (id = {{itr.name}}::begin(parent); id != {{itr.name}}::end(parent);
+       id = {{itr.name}}::next(id))
+    ++cnt;
+
+  return cnt;
+}
+
+uint {{itr.name}}::begin(dbObject* parent)
+{
+
+
+  //User Code Begin begin
+  //User Code End begin
+
+}
+
+uint {{itr.name}}::end(dbObject* /* unused: parent */)
+{
+  return 0;
+}
+
+uint {{itr.name}}::next(uint id, ...)
+{
+
+  //User Code Begin next
+  //User Code End next
+}
+
+dbObject* {{itr.name}}::getObject(uint id, ...)
+{
+  return _{{itr.tableName}}->getPtr(id);
+}
+//User Code Begin methods
+//User Code End methods
 }  // namespace odb
-
-
+//Generator Code End 1

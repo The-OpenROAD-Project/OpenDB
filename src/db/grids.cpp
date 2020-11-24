@@ -1245,13 +1245,11 @@ bool Ath__track::checkAndplace(Ath__wire* w, int markIndex1)
     }
     prev = e;
   }
-  if (e == NULL) {
-    if (prev->_xy + prev->_len > w->_xy)
-      return false;
-    prev->setNext(w);
-    return true;
-  }
-  return false;
+
+  if (prev->_xy + prev->_len > w->_xy)
+    return false;
+  prev->setNext(w);
+  return true;
 }
 void Ath__track::insertWire(Ath__wire* w, int mark1, int mark2)
 {

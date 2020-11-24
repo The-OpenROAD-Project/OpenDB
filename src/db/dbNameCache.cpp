@@ -61,6 +61,7 @@ _dbName::_dbName(_dbDatabase*, const _dbName& n)
 _dbName::_dbName(_dbDatabase*)
 {
   _name = NULL;
+  _ref_cnt = 0;
 }
 
 _dbName::~_dbName()

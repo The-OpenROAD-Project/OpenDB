@@ -38,6 +38,7 @@
 namespace odb {
 
 class dbBlock;
+class dbFill;
 class dbInst;
 class dbMaster;
 class dbNet;
@@ -138,6 +139,10 @@ class dbBlockCallBackObj
   virtual void inDbSWirePreDestroySBoxes(dbSWire*) {}
   virtual void inDbSWirePostDestroySBoxes(dbSWire*) {}
   //dbSWire End
+
+  //dbFill Start
+  virtual void inDbFillCreate(dbFill*) {}
+  //dbFill End
 
   virtual void inDbBlockStreamOutBefore(dbBlock*) {}
   virtual void inDbBlockStreamOutAfter(dbBlock*) {}

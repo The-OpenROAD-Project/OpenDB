@@ -46,6 +46,7 @@ template <class T>
 class DListEntry
 {
  public:
+  DListEntry() : _next(nullptr), _prev(nullptr) {}
   T* _next;
   T* _prev;
 };
@@ -320,7 +321,7 @@ class DList
     if ((_head != NULL) && (NEXT(_head) != NULL)) {
       DList<T, ENTRY> carry;
       DList<T, ENTRY> counter[64];
-      int                fill = 0;
+      int             fill = 0;
 
       while (!empty()) {
         T* head = NEXT(_head);
@@ -350,7 +351,7 @@ class DList
     if ((_head != NULL) && (NEXT(_head) != NULL)) {
       DList<T, ENTRY> carry;
       DList<T, ENTRY> counter[64];
-      int                fill = 0;
+      int             fill = 0;
 
       while (!empty()) {
         T* head = NEXT(_head);
@@ -380,6 +381,7 @@ class DList
 #if 0
 #include <assert.h>
 #include <stdio.h>
+
 #include <vector>
 
 using namespace odb;
@@ -466,5 +468,3 @@ main()
     
 }
 #endif
-
-

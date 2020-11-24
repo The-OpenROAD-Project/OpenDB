@@ -1,0 +1,999 @@
+{
+  "classes": [
+    {
+      "name": "dbMaster",
+      "type": "dbObject",
+      "fields": [
+        {
+          "name": "_frozen",
+          "type": "uint",
+          "flags": [],
+          "bits": 1
+        }, {
+          "name": "_x_symmetry",
+          "flags": [],
+          "type": "uint",
+          "bits": 1
+        }, {
+          "name": "_y_symmetry",
+          "flags": [],
+          "type": "uint",
+          "bits": 1
+        }, {
+          "name": "_R90_symmetry",
+          "flags": [],
+          "type": "uint",
+          "bits": 1
+        }, {
+          "name": "_type",
+          "flags": [],
+          "type": "dbMasterType::Value",
+          "bits": 6
+        }, {
+          "name": "_mark",
+          "flags": [],
+          "type": "uint",
+          "bits": 1
+        }, {
+          "name": "_sequential",
+          "flags": [],
+          "type": "uint",
+          "bits": 1
+        }, {
+          "name": "_special_power",
+          "flags": [],
+          "type": "uint",
+          "bits": 1
+        },
+        {
+          "name": "_x",
+          "flags": [],
+          "type": "int"
+        },
+        {
+          "name": "_y",
+          "flags": [],
+          "type": "int"
+        },
+        {
+          "name": "_height",
+          "flags": [],
+          "type": "uint"
+        },
+        {
+          "name": "_width",
+          "flags": [],
+          "type": "uint"
+        },
+        {
+          "name": "_mterm_cnt",
+          "flags": [],
+          "type": "uint"
+        },
+        {
+          "name": "_id",
+          "flags": ["cmpgt"],
+          "type": "uint"
+        },
+        {
+          "name": "_name",
+          "flags": [],
+          "type": "char*"
+        },
+        {
+          "name": "_next_entry",
+          "flags": ["no-set", "no-get"],
+          "type": "dbId<_dbMaster>",
+          "parent": "dbLib"
+        },
+        {
+          "name": "_leq",
+          "flags": [],
+          "type": "dbId<_dbMaster>",
+          "parent": "dbLib"
+        },
+        {
+          "name": "_eeq",
+          "flags": [],
+          "type": "dbId<_dbMaster>",
+          "parent": "dbLib"
+        },
+        {
+          "name": "_obstructions",
+          "flags": ["no-set", "no-get"],
+          "type": "dbId<_dbBox>",
+          "parent": "dbMaster"
+        },
+        {
+          "name": "_site",
+          "flags": [],
+          "type": "dbId<_dbSite>",
+          "parent": "dbMaster"
+
+        },
+        {
+          "name": "_mterm_hash",
+          "flags": ["no-set", "no-cmp", "no-diff", "no-serial"],
+          "type": "dbHashTable<_dbMTerm>"
+        },
+        {
+          "name": "_target_tbl",
+          "flags": ["no-set", "no-get", "no-cmp", "no-diff", "no-serial"],
+          "type": "dbTable<_dbTarget>*",
+          "relation": "1_n"
+        },
+        {
+          "name": "_box_tbl",
+          "flags": ["no-set", "no-get", "no-cmp", "no-diff", "no-serial"],
+          "type": "dbTable<_dbBox>*",
+          "relation": "1_n"
+        },
+        {
+          "name": "_antenna_pin_model_tbl",
+          "flags": ["no-set", "no-get", "no-cmp", "no-diff", "no-serial"],
+          "type": "dbTable<_dbTechAntennaPinModel>*",
+          "relation": "1_n"
+        },
+        {
+          "name": "_mpin_itr",
+          "flags": ["no-set", "no-get", "no-cmp", "no-diff", "no-serial"],
+          "type": "dbMPinItr*"
+        }
+
+      ],
+      "classes": [
+        "dbBoxItr",
+        "dbMPinItr",
+        "dbTargetItr"
+      ],
+      "includes": ["dbException.h",
+        "dbObject.h",
+        "db.h",
+        "dbBox.h",
+        "dbBoxItr.h",
+        "dbDatabase.h",
+        "dbHashTable.hpp",
+        "dbLib.h",
+        "dbMPin.h",
+        "dbMPinItr.h",
+        "dbMTerm.h",
+        "dbSite.h",
+        "dbTable.h",
+        "dbTable.hpp",
+        "dbTarget.h",
+        "dbTargetItr.h",
+        "dbTechLayerAntennaRule.h",
+        "dbTransform.h"
+      ]
+    },
+    {
+      "name": "dbMTerm",
+      "type": "dbObject",
+      "fields": [{
+          "name": "_io_type",
+          "flags": [],
+          "type": "dbIoType::Value",
+          "bits": 4
+        }, {
+          "name": "_sig_type",
+          "flags": [],
+          "type": "dbSigType::Value",
+          "bits": 4
+        }, {
+          "name": "_mark",
+          "flags": [],
+          "type": "uint",
+          "bits": 1
+        },
+        {
+          "name": "_order_id",
+          "flags": ["no-set"],
+          "type": "uint"
+        },
+        {
+          "name": "_name",
+          "flags": ["cmpgt"],
+          "type": "char*"
+        },
+        {
+          "name": "_next_entry",
+          "flags": ["no-set", "no-get"],
+          "type": "dbId<_dbMTerm>"
+        },
+        {
+          "name": "_next_mterm",
+          "flags": ["no-set", "no-get"],
+          "type": "dbId<_dbMTerm>"
+        },
+        {
+          "name": "_pins",
+          "flags": ["no-set", "no-get"],
+          "type": "dbId<_dbMPin>"
+        },
+        {
+          "name": "_targets",
+          "flags": ["no-set", "no-get"],
+          "type": "dbId<_dbTarget>"
+        },
+        {
+          "name": "_oxide1",
+          "flags": ["no-set", "no-get"],
+          "type": "dbId<_dbTechAntennaPinModel>"
+        },
+        {
+          "name": "_oxide2",
+          "flags": ["no-set", "no-get"],
+          "type": "dbId<_dbTechAntennaPinModel>"
+        },
+        {
+          "name": "_par_met_area",
+          "flags": ["no-set", "no-get"],
+          "type": "dbVector<_dbTechAntennaAreaElement*>"
+        },
+        {
+          "name": "_par_met_sidearea",
+          "flags": ["no-set", "no-get"],
+          "type": "dbVector<_dbTechAntennaAreaElement*>"
+        },
+        {
+          "name": "_diffarea",
+          "flags": ["no-set", "no-get"],
+          "type": "dbVector<_dbTechAntennaAreaElement*>"
+        },
+        {
+          "name": "_sta_port",
+          "flags": [],
+          "type": "void*"
+        }
+      ],
+
+      "includes": ["dbException.h",
+        "dbObject.h",
+        "db.h",
+        "dbDatabase.h",
+        "dbLib.h",
+        "dbMPinItr.h",
+        "dbMaster.h",
+        "dbTable.h",
+        "dbTable.hpp",
+        "dbTargetItr.h",
+        "dbTechLayerAntennaRule.h",
+        "lefout.h"
+      ],
+
+      "classes": [
+        "_dbMPin",
+        "_dbTarget",
+        "_dbTechAntennaAreaElement",
+        "_dbTechAntennaPinModel"
+
+      ]
+    },
+    {
+      "name": "dbBTerm",
+      "type": "dbObject",
+      "fields": [{
+          "name": "_io_type",
+          "flags": ["no-set", "no-get"],
+          "type": "dbIoType::Value",
+          "bits": 4
+        }, {
+          "name": "_sig_type",
+          "flags": ["no-set", "no-get"],
+          "type": "dbSigType::Value",
+          "bits": 4
+        }, {
+          "name": "_orient",
+          "flags": [],
+          "type": "uint",
+          "bits": 4
+        }, {
+          "name": "_status",
+          "flags": [],
+          "type": "uint",
+          "bits": 4
+        }, {
+          "name": "_spef",
+          "flags": [],
+          "type": "uint",
+          "bits": 1
+        }, {
+          "name": "_special",
+          "flags": [],
+          "type": "uint",
+          "bits": 1
+        }, {
+          "name": "_mark",
+          "flags": [],
+          "type": "uint",
+          "bits": 1
+        },
+        {
+          "name": "_ext_id",
+          "flags": ["no-set"],
+          "type": "uint"
+        },
+        {
+          "name": "_name",
+          "flags": ["cmpgt"],
+          "type": "char*"
+        },
+        {
+          "name": "_next_entry",
+          "flags": ["no-set", "no-get"],
+          "type": "dbId<_dbBTerm>"
+        },
+        {
+          "name": "_net",
+          "flags": ["no-set", "no-get"],
+          "type": "dbId<_dbNet>"
+        },
+        {
+          "name": "_next_bterm",
+          "flags": ["no-set", "no-get"],
+          "type": "dbId<_dbBTerm>"
+        },
+        {
+          "name": "_prev_bterm",
+          "flags": ["no-set", "no-get"],
+          "type": "dbId<_dbBTerm>"
+        },
+        {
+          "name": "_parent_block",
+          "flags": ["no-set", "no-get"],
+          "type": "dbId<_dbBlock>"
+        },
+        {
+          "name": "_parent_iterm",
+          "flags": ["no-set", "no-get"],
+          "type": "dbId<_dbITerm>"
+        },
+        {
+          "name": "_bpins",
+          "flags": ["no-set", "no-get"],
+          "type": "dbId<_dbBPin>"
+        },
+        {
+          "name": "_ground_pin",
+          "flags": [],
+          "type": "dbId<_dbBPin>",
+          "parent": "dbBlock"
+        },
+        {
+          "name": "_supply_pin",
+          "flags": [],
+          "type": "dbId<_dbBPin>",
+          "parent": "dbBlock"
+        },
+        {
+          "name": "_sta_vertex_id",
+          "flags": [],
+          "type": "std::uint32_t"
+        }
+      ],
+
+      "includes": [
+        "db.h",
+        "dbArrayTable.h",
+        "dbBPinItr.h",
+        "dbBlock.h",
+        "dbBox.h",
+        "dbBoxItr.h",
+        "dbChip.h",
+        "dbDatabase.h",
+        "dbDiff.h",
+        "dbDiff.hpp",
+        "dbITerm.h",
+        "dbNet.h",
+        "dbShape.h",
+        "dbTable.h",
+        "dbTable.hpp",
+        "dbTransform.h"
+      ],
+
+      "classes": [
+        "_dbMPin",
+        "_dbTarget",
+        "_dbTechAntennaAreaElement",
+        "_dbTechAntennaPinModel"
+
+      ]
+    },
+    {
+      "name": "dbMPin",
+      "type": "dbObject",
+      "fields": [{
+          "name": "_mterm",
+          "flags": [],
+          "type": "dbId<_dbMTerm>",
+          "parent": "dbMaster"
+        },
+        {
+          "name": "_geoms",
+          "flags": ["no-set", "no-get"],
+          "type": "dbId<_dbBox>"
+        },
+        {
+          "name": "_next_mpin",
+          "flags": ["no-set", "no-get"],
+          "type": "dbId<_dbMPin>"
+        }
+      ],
+
+      "includes": [
+        "db.h",
+        "dbBoxItr.h",
+        "dbMPinItr.h",
+        "dbMTerm.h",
+        "dbMaster.h",
+        "dbTable.h",
+        "dbTable.hpp"
+      ],
+
+      "classes": [
+        "_dbMTerm",
+        "_dbBox"
+
+      ]
+    },
+    {
+      "name": "dbBPin",
+      "type": "dbObject",
+      "fields": [
+        {
+          "name": "_status",
+          "flags": ["no-set","no-get"],
+          "type": "dbPlacementStatus::Value",
+          "bits": 4
+        },{
+          "name": "_has_min_spacing",
+          "flags": [],
+          "type": "uint",
+          "bits": 1
+        },{
+          "name": "_has_effective_width",
+          "flags": [],
+          "type": "uint",
+          "bits": 1
+        },
+        {
+          "name": "_bterm",
+          "flags": ["no-set"],
+          "type": "dbId<_dbBTerm>",
+          "parent": "dbBlock"
+        },
+        {
+          "name": "_bbox",
+          "flags": ["no-set"],
+          "type": "dbId<_dbBox>",
+          "parent": "dbBlock"
+        },
+        {
+          "name": "_next_bpin",
+          "flags": ["no-set", "no-get"],
+          "type": "dbId<_dbBPin>"
+        },
+        {
+          "name": "_min_spacing",
+          "flags": [],
+          "type": "uint"
+        },
+        {
+          "name": "_effective_width",
+          "flags": [],
+          "type": "uint"
+        }
+      ],
+
+      "includes": [
+        "db.h",
+        "dbBTerm.h",
+        "dbBlock.h",
+        "dbBox.h",
+        "dbBoxItr.h",
+        "dbDatabase.h",
+        "dbTable.h",
+        "dbTable.hpp"
+      ],
+
+      "classes": [
+        "_dbMTerm",
+        "_dbBox"
+
+      ]
+    },
+    {
+      "name": "dbInst",
+      "type": "dbObject",
+      "fields": [
+
+        {
+          "type": "dbOrientType::Value",
+          "name": "_orient",
+          "bits": 4,
+          "flags": ["no-set", "no-get"]
+        },
+        {
+          "type": "dbPlacementStatus::Value",
+          "name": "_status",
+          "bits": 4,
+          "flags": ["no-set", "no-get"]
+        },
+        {
+          "type": "dbSourceType::Value",
+          "name": "_source",
+          "bits": 4,
+          "flags": ["no-set", "no-get"]
+        },
+        {
+          "type": "uint",
+          "name": "_user_flag_1",
+          "bits": 1,
+          "flags": []
+        },
+        {
+          "type": "uint",
+          "name": "_user_flag_2",
+          "bits": 1,
+          "flags": []
+        },
+        {
+          "type": "uint",
+          "name": "_user_flag_3",
+          "bits": 1,
+          "flags": []
+        },
+        {
+          "type": "uint",
+          "name": "_size_only",
+          "bits": 1,
+          "flags": []
+        },
+        {
+          "type": "uint",
+          "name": "_dont_touch",
+          "bits": 1,
+          "flags": []
+        },
+        {
+          "type": "uint",
+          "name": "_dont_size",
+          "bits": 1,
+          "flags": []
+        },
+        {
+          "type": "uint",
+          "name": "_eco_create",
+          "bits": 1,
+          "flags": []
+        },
+        {
+          "type": "uint",
+          "name": "_eco_destroy",
+          "bits": 1,
+          "flags": []
+        },
+        {
+          "type": "uint",
+          "name": "_eco_modify",
+          "bits": 1,
+          "flags": []
+        },
+        {
+          "type": "uint",
+          "name": "_input_cone",
+          "bits": 1,
+          "flags": []
+        },
+        {
+          "type": "uint",
+          "name": "_inside_cone",
+          "bits": 1,
+          "flags": []
+        },
+        {
+          "type": "uint",
+          "name": "_level",
+          "bits": 9,
+          "flags": ["no-set", "no-get"]
+        },
+        {
+          "type": "char*",
+          "name": "name",
+          "flags": []
+        },
+        {
+          "type": "int",
+          "name": "_x",
+          "flags": []
+        },
+        {
+          "type": "int",
+          "name": "_y",
+          "flags": []
+        },
+        {
+          "type": "int",
+          "name": "_weight",
+          "flags": []
+        },
+        {
+          "type": "dbId<_dbInst>",
+          "name": "_next_entry",
+          "flags": ["no-set", "no-get"]
+        },
+        {
+          "type": "dbId<_dbInstHdr>",
+          "name": "_inst_hdr",
+          "flags": ["no-set", "no-get"]
+        },
+        {
+          "type": "dbId<_dbBox>",
+          "name": "_bbox",
+          "flags": [],
+          "parent": "dbBlock"
+        },
+        {
+          "type": "dbId<_dbRegion>",
+          "name": "_region",
+          "flags": [],
+          "parent": "dbBlock"
+        },
+        {
+          "type": "dbId<_dbInst>",
+          "name": "_region_next",
+          "flags": ["no-set", "no-get"]
+        },
+        {
+          "type": "dbId<_dbInst>",
+          "name": "_region_prev",
+          "flags": ["no-set", "no-get"]
+        },
+        {
+          "type": "dbId<_dbHier>",
+          "name": "_hierarchy",
+          "flags": ["no-set", "no-get"]
+        },
+        {
+          "type": "dbVector<uint>",
+          "name": "_iterms",
+          "flags": ["no-set", "no-get"]
+        },
+        {
+          "type": "dbId<_dbBox>",
+          "name": "_halo",
+          "flags": ["no-set", "no-get"]
+        } 
+      ],
+
+      "includes": [
+        "db.h",
+        "dbArrayTable.h",
+        "dbArrayTable.hpp",
+        "dbBTerm.h",
+        "dbBlock.h",
+        "dbBlockCallBackObj.h",
+        "dbBox.h",
+        "dbChip.h",
+        "dbCommon.h",
+        "dbDatabase.h",
+        "dbDiff.hpp",
+        "dbHier.h",
+        "dbITerm.h",
+        "dbITermItr.h",
+        "dbInst.h",
+        "dbInstHdr.h",
+        "dbJournal.h",
+        "dbLib.h",
+        "dbMTerm.h",
+        "dbMaster.h",
+        "dbNet.h",
+        "dbNullIterator.h",
+        "dbRegion.h",
+        "dbSet.h",
+        "dbTable.h",
+        "dbTable.hpp",
+        "dbTransform.h"
+      ],
+
+      "classes": [
+        "_dbRegion",
+        "_dbBox",
+        "_dbInstHdr",
+        "_dbHier",
+        "_dbITerm",
+        "_dbRegion"
+
+      ]
+    },
+    {
+      "name": "dbSite",
+      "type": "dbObject",
+      "fields": [
+
+        {
+          "type": "uint",
+          "name": "_x_symmetry",
+          "bits": 1,
+          "flags": []
+        },
+        {
+          "type": "uint",
+          "name": "_y_symmetry",
+          "bits": 1,
+          "flags": []
+        },
+        {
+          "type": "uint",
+          "name": "_R90_symmetry",
+          "bits": 1,
+          "flags": []
+        },
+        {
+          "type": "dbSiteClass::Value",
+          "name": "_class",
+          "bits": 4,
+          "flags": ["no-set", "no-get"]
+        },
+        {
+          "type": "char*",
+          "name": "_name",
+          "flags": []
+        },
+        {
+          "type": "uint",
+          "name": "_height",
+          "flags": []
+        },
+        {
+          "type": "uint",
+          "name": "_width",
+          "flags": []
+        },
+        {
+          "type": "dbId<_dbSite>",
+          "name": "_next_entry",
+          "flags": ["no-set", "no-get"]
+        }
+      ],
+
+      "includes": [
+        "db.h",
+        "dbDatabase.h",
+        "dbLib.h",
+        "dbTable.h",
+        "dbTable.hpp"
+      ],
+
+      "classes": [
+      ]
+    },
+    {
+      "name": "dbRow",
+      "type": "dbObject",
+      "fields": [
+
+        {
+          "type": "dbOrientType::Value",
+          "name": "_orient",
+          "bits": 4,
+          "flags": ["no-set", "no-get"]
+        },
+        {
+          "type": "dbRowDir::Value",
+          "name": "_dir",
+          "bits": 2,
+          "flags": ["no-set", "no-get"]
+        },
+        {
+          "type": "char*",
+          "name": "_name",
+          "flags": []
+        },
+        {
+          "type": "int",
+          "name": "_x",
+          "flags": []
+        },
+        {
+          "type": "int",
+          "name": "_y",
+          "flags": []
+        },
+        {
+          "type": "int",
+          "name": "_site_cnt",
+          "flags": []
+        },
+        {
+          "type": "int",
+          "name": "_spacing",
+          "flags": []
+        },
+        {
+          "type": "dbId<dbLib>",
+          "name": "_lib",
+          "flags": ["no-set", "no-get"]
+        },
+        {
+          "type": "dbId<dbSite>",
+          "name": "_site",
+          "flags": ["no-set", "no-get"]
+        }
+      ],
+
+      "includes": [
+        "db.h",
+        "dbBlock.h",
+        "dbDatabase.h",
+        "dbDiff.hpp",
+        "dbLib.h",
+        "dbSet.h",
+        "dbSite.h",
+        "dbTable.h",
+        "dbTable.hpp",
+        "dbTransform.h"
+      ],
+
+      "classes": [
+      ]
+    },
+    {
+      "name": "dbInstHdr",
+      "type": "dbObject",
+      "fields": [
+        {
+          "type": "int",
+          "name": "_mterm_cnt",
+          "flags": ["no-set", "no-get"]
+        },
+        {
+          "type": "uint",
+          "name": "_id",
+          "flags": ["no-set", "no-get"]
+        },
+        {
+          "type": "dbId<_dbInstHdr>",
+          "name": "_next_entry",
+          "flags": ["no-set", "no-get"]
+        },
+        {
+          "type": "dbId<_dbLib>",
+          "name": "_lib",
+          "flags": ["no-set", "no-get"]
+        },
+        {
+          "type": "dbId<_dbMaster>",
+          "name": "_master",
+          "flags": ["no-set", "no-get"]
+        },
+        {
+          "type": "dbVector<dbId<_dbMTerm>>",
+          "name": "_mterms",
+          "flags": ["no-set", "no-get"]
+        },
+        {
+          "type": "int",
+          "name": "_inst_cnt",
+          "flags": ["no-set", "no-get"]
+        }
+      ],
+
+      "includes": [
+        "db.h",
+        "dbBlock.h",
+        "dbDatabase.h",
+        "dbDiff.hpp",
+        "dbLib.h",
+        "dbSet.h",
+        "dbSite.h",
+        "dbTable.h",
+        "dbTable.hpp",
+        "dbTransform.h"
+      ],
+
+      "classes": [
+      ]
+    },
+    {
+      "name": "dbChip",
+      "type": "dbObject",
+      "fields": [
+        {
+          "type": "dbId<_dbBlock>",
+          "name": "_top",
+          "flags": ["no-set", "no-get"]
+        },
+        {
+          "type": "dbTable<_dbBlock>*",
+          "name": "_block_tbl",
+          "flags": ["no-set", "no-get"]
+        },
+        {
+          "type": "dbTable<_dbProperty>*",
+          "name": "_prop_tbl",
+          "flags": ["no-set", "no-get"]
+        },
+        {
+          "type": "_dbNameCache*",
+          "name": "_name_cache",
+          "flags": ["no-set", "no-get"]
+        },
+        {
+          "type": "dbBlockItr*",
+          "name": "_block_itr",
+          "flags": ["no-set", "no-get"]
+        },
+        {
+          "type": "dbPropertyItr*",
+          "name": "_prop_itr",
+          "flags": ["no-set", "no-get"]
+        }
+      ],
+
+      "includes": [
+        "db.h",
+        "dbBlock.h",
+        "dbBlockItr.h",
+        "dbDatabase.h",
+        "dbNameCache.h",
+        "dbProperty.h",
+        "dbPropertyItr.h",
+        "dbTable.h",
+        "dbTable.hpp",
+        "dbTech.h"
+      ],
+
+      "classes": [
+        "dbBlockItr",
+        "_dbTech",
+        "_dbNameCache",
+        "dbPropertyItr"
+      ]
+    }
+  ],
+
+  "relations": [{
+    "first": "dbMaster",
+    "second": "dbMTerm",
+    "type": "1_n"
+  }, {
+    "first": "dbMaster",
+    "second": "dbMPin",
+    "type": "1_n"
+  }],
+
+  "iterators": [
+    {
+    "name": "dbMPinItr",
+    "parentObject": "dbMPin",
+    "tableName": "mpin_tbl",
+    "reversible": "true",
+    "orderReversed": "true",
+    "sequential": 0,
+    "includes": ["dbMPin.h", "dbMTerm.h", "dbMaster.h", "dbTable.h"]
+  },
+  {
+    "name": "dbNetBTermItr",
+    "parentObject": "dbBTerm",
+    "tableName": "_bterm_tbl",
+    "reversible": "true",
+    "orderReversed": "true",
+    "sequential": 0,
+    "includes": ["dbBTerm.h","dbBlock.h","dbNet.h","dbTable.h"]
+  },
+  {
+    "name": "dbBPinItr",
+    "parentObject": "_dbBPin",
+    "tableName": "_bpin_tbl",
+    "reversible": "true",
+    "orderReversed": "true",
+    "sequential": 0,
+    "includes": ["dbBPin.h","dbBTerm.h","dbBlock.h","dbTable.h"]
+  }
+]
+
+
+
+
+}

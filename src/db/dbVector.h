@@ -231,7 +231,7 @@ inline void dbVector<T*>::differences(dbDiff&             diff,
 
   for (; i2 != rhs.end(); ++i2, ++i) {
     diff.report("> %s[%d]:\n", field, i);
-    (*i1)->out(diff, dbDiff::RIGHT, NULL);
+    (*i2)->out(diff, dbDiff::RIGHT, NULL);
   }
 }
 

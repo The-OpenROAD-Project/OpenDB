@@ -140,8 +140,7 @@ class tmg_conn
   dbBTerm*              _slicedTileBTerm[200];
   tmg_conn_search*      _search;
   tmg_conn_graph*       _graph;
-  tmg_rc*               _rcV;
-  int                   _rcN;
+  std::vector<tmg_rc>   _rcV;
   tmg_rcpt*             _ptV;
   int                   _ptN;
   tmg_rcterm*           _termV;
@@ -172,7 +171,6 @@ class tmg_conn
   tmg_rcpt*             _first_for_clear;
 
  private:
-  int _rcNmax;
   int _ptNmax;
   int _termNmax;
   int _shortNmax;

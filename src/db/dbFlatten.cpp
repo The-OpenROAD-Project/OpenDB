@@ -50,6 +50,7 @@ dbFlatten::dbFlatten()
       _create_boundary_regions(false),
       _create_bterm_map(false),
       _copy_parasitics(false),
+      _hier_d(0),
       _next_bterm_map_id(0)
 {
 }
@@ -426,9 +427,6 @@ void dbFlatten::printShapes(FILE* fp, dbWire* wire, bool skip_rcSegs)
   dbSet<dbRSeg>           rSet  = wire->getNet()->getRSegs();
   dbSet<dbRSeg>::iterator rcitr;
 
-  if (skip_rcSegs)
-    return;
-
   fprintf(fp, "\nRSEGS\n");
   for (rcitr = rSet.begin(); rcitr != rSet.end(); ++rcitr) {
     dbRSeg*    rc      = *rcitr;
@@ -537,8 +535,10 @@ FILE* dbFlatten::debugNetWires(FILE*       fp,
     sprintf(buf, "%d", dst->getId());
     fp = fopen(buf, "w");
 
-    if (fp == NULL)
+    if (fp == NULL) {
       error(0, "Cannot Open file %s to write\n", buf);
+      return nullptr;
+    }
   }
   fprintf(fp, "%s  -------------------------------\n", msg);
 
@@ -820,7 +820,7 @@ void dbFlatten::fixWire(dbVector<unsigned char>& opcodes,
       }
 
       case WOP_RULE: {
-        if (opcode & WOP_BLOCK_RULE) {
+        if (opcodes[i] & WOP_BLOCK_RULE) {
           dbTechLayerRule* rule
               = dbTechLayerRule::getTechLayerRule(src, data[i]);
           data[i] = _layer_rule_map[rule]->getImpl()->getOID();

@@ -98,6 +98,7 @@ add_library(opendb
     dbModule.cpp
     dbModInst.cpp
     dbModuleInstItr.cpp
+    dbModuleModInstItr.cpp
     # Generator Code End cpp
 )
 

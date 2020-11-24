@@ -61,7 +61,7 @@ void dbModuleInstItr::reverse(dbObject* parent)
 {
   // User Code Begin reverse
   _dbModule* module = (_dbModule*) parent;
-  uint       id     = module ->_insts;
+  uint       id     = module->_insts;
   uint       list   = 0;
 
   while (id != 0) {

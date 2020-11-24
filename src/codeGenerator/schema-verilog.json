@@ -7,6 +7,11 @@
         {
           "name":"_name",
           "type":"char *",
+          "flags":["no-set","no-get"]
+        },
+        {
+          "name":"_module_name",
+          "type":"char *",
           "flags":["no-set"]
         },
         {
@@ -15,13 +20,19 @@
           "flags":["no-set","no-get"]
         },
         {
-          "name":"_modinst_hash",
-          "type":"dbHashTable<_dbModInst>",
-          "flags":["no-set","no-get"]
+          "name":"_parent_module",
+          "type":"dbId<_dbModule>",
+          "flags":["no-get","no-set"]
         },
         {
           "name":"_insts",
           "type":"dbId<_dbInst>",
+          "flags":["no-set","no-get"],
+          "parent":"dbBlock"
+        },
+        {
+          "name":"_modinsts",
+          "type":"dbId<_dbModInst>",
           "flags":["no-set","no-get"],
           "parent":"dbBlock"
         }
@@ -36,6 +47,11 @@
         {
           "name":"_name",
           "type":"char *",
+          "flags":["no-set","no-get"]
+        },
+        {
+          "name":"_modinst_name",
+          "type":"char *",
           "flags":["no-set"]
         },
         {
@@ -47,6 +63,12 @@
           "name":"parentMod",
           "type":"dbId<_dbModule>",
           "flags":[],
+          "parent":"dbBlock"
+        },
+        {
+          "name":"_module_next",
+          "type":"dbId<_dbModInst>",
+          "flags":["no-get","no-set"],
           "parent":"dbBlock"
         },
         {
@@ -69,13 +91,17 @@
       "orderReversed": "true",
       "sequential": 0,
       "includes": ["dbModule.h", "dbInst.h", "dbTable.h"]
+    },
+    {
+      "name": "dbModuleModInstItr",
+      "parentObject": "dbModInst",
+      "tableName": "modinst_tbl",
+      "reversible": "true",
+      "orderReversed": "true",
+      "sequential": 0,
+      "includes": ["dbModule.h", "dbModInst.h", "dbTable.h"]
     }
   ],
   "relations":[
-    {
-      "first":"dbModule",
-      "second":"dbModInst",
-      "type":"1_n"
-    }
   ]
 }

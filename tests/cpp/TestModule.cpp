@@ -17,7 +17,8 @@ BOOST_AUTO_TEST_CASE(test_mod_create_find)
   block     = db->getChip()->getBlock();
   BOOST_ASSERT(dbModule::create(block,"mod1")!=nullptr);
   BOOST_ASSERT(dbModule::create(block,"mod1")==nullptr);
-  BOOST_ASSERT(string(block->findModule("mod1")->getName())=="mod1");
+  BOOST_ASSERT(string(block->findModule("mod1")->getModuleName())=="mod1");
+  dbModule::destroy(block->findModule("mod1"));
 }
 BOOST_AUTO_TEST_CASE(test_modinst_create_find)
 {
@@ -68,35 +69,35 @@ BOOST_AUTO_TEST_CASE(test_module_insts)
   mod2->addInst(i3);
   mod1->addInst(i2);
   mod2->addInst(i4);
-  BOOST_ASSERT(mod1->getModuleInsts().size()==2);
-  BOOST_ASSERT(mod2->getModuleInsts().size()==2);
+  BOOST_ASSERT(mod1->getInsts().size()==2);
+  BOOST_ASSERT(mod2->getInsts().size()==2);
   int i = 0;
-  for(auto inst : mod1->getModuleInsts())
+  for(auto inst : mod1->getInsts())
   {
     BOOST_ASSERT( i++==0 ? string(inst->getName())=="i2" :  string(inst->getName())=="i1");
-    BOOST_ASSERT( string(inst->getModule()->getName())=="mod1");
+    BOOST_ASSERT( string(inst->getModule()->getModuleName())=="mod1");
   }
   i = 0;
-  for(auto inst : mod2->getModuleInsts())
+  for(auto inst : mod2->getInsts())
   {
     BOOST_ASSERT( i++==0 ? string(inst->getName())=="i4" :  string(inst->getName())=="i3");
-    BOOST_ASSERT( string(inst->getModule()->getName())=="mod2");
+    BOOST_ASSERT( string(inst->getModule()->getModuleName())=="mod2");
   }
   
   mod1->addInst(i3);
-  BOOST_ASSERT(mod1->getModuleInsts().size()==3);
-  BOOST_ASSERT(mod2->getModuleInsts().size()==1);
-  BOOST_ASSERT( string(i3->getModule()->getName())=="mod1");
-  dbInst* inst = *(mod1->getModuleInsts().begin());
+  BOOST_ASSERT(mod1->getInsts().size()==3);
+  BOOST_ASSERT(mod2->getInsts().size()==1);
+  BOOST_ASSERT( string(i3->getModule()->getModuleName())=="mod1");
+  dbInst* inst = *(mod1->getInsts().begin());
   BOOST_ASSERT( string(inst->getName())=="i3");
   
   mod2->removeInst(i4);
-  BOOST_ASSERT(mod2->getModuleInsts().size()==0);
+  BOOST_ASSERT(mod2->getInsts().size()==0);
   BOOST_ASSERT(i4->getModule()==nullptr);
   
   dbInst::destroy(i3);
-  BOOST_ASSERT(mod1->getModuleInsts().size()==2);
-  inst = *(mod1->getModuleInsts().begin());
+  BOOST_ASSERT(mod1->getInsts().size()==2);
+  inst = *(mod1->getInsts().begin());
   BOOST_ASSERT( string(inst->getName())=="i2");
 
   dbModule::destroy(mod1);

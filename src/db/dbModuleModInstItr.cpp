@@ -1,7 +1,7 @@
 ///////////////////////////////////////////////////////////////////////////////
 // BSD 3-Clause License
 //
-// Copyright (c) 2020, OpenRoad Project
+// Copyright (c) 2019, Nefelus Inc
 // All rights reserved.
 //
 // Redistribution and use in source and binary forms, with or without
@@ -31,63 +31,94 @@
 // POSSIBILITY OF SUCH DAMAGE.
 
 // Generator Code Begin 1
-#pragma once
+#include "dbModuleModInstItr.h"
 
-#include "dbCore.h"
-#include "odb.h"
-
+#include "dbModInst.h"
+#include "dbModule.h"
+#include "dbTable.h"
 // User Code Begin includes
-#include "dbHashTable.h"
 // User Code End includes
 
 namespace odb {
 
-class dbIStream;
-class dbOStream;
-class dbDiff;
-class _dbDatabase;
-class _dbInst;
-class _dbModInst;
-// User Code Begin Classes
-// User Code End Classes
+////////////////////////////////////////////////////////////////////
+//
+// dbModuleModInstItr - Methods
+//
+////////////////////////////////////////////////////////////////////
 
-// User Code Begin structs
-// User Code End structs
-
-class _dbModule : public _dbObject
+bool dbModuleModInstItr::reversible()
 {
- public:
-  // User Code Begin enums
-  // User Code End enums
-  char* _name;
+  return true;
+}
 
-  char* _module_name;
+bool dbModuleModInstItr::orderReversed()
+{
+  return true;
+}
 
-  dbId<_dbModule> _next_entry;
+void dbModuleModInstItr::reverse(dbObject* parent)
+{
+  // User Code Begin reverse
+  _dbModule* module = (_dbModule*) parent;
+  uint       id     = module->_modinsts;
+  uint       list   = 0;
 
-  dbId<_dbModule> _parent_module;
+  while (id != 0) {
+    _dbModInst* modinst   = _modinst_tbl->getPtr(id);
+    uint        n         = modinst->_module_next;
+    modinst->_module_next = list;
+    list                  = id;
+    id                    = n;
+  }
+  module->_modinsts = list;
+  // User Code End reverse
+}
 
-  dbId<_dbInst> _insts;
+uint dbModuleModInstItr::sequential()
+{
+  return 0;
+}
 
-  dbId<_dbModInst> _modinsts;
+uint dbModuleModInstItr::size(dbObject* parent)
+{
+  uint id;
+  uint cnt = 0;
 
-  // User Code Begin fields
-  // User Code End fields
-  _dbModule(_dbDatabase*, const _dbModule& r);
-  _dbModule(_dbDatabase*);
-  ~_dbModule();
-  bool operator==(const _dbModule& rhs) const;
-  bool operator!=(const _dbModule& rhs) const { return !operator==(rhs); }
-  bool operator<(const _dbModule& rhs) const;
-  void differences(dbDiff& diff, const char* field, const _dbModule& rhs) const;
-  void out(dbDiff& diff, char side, const char* field) const;
-  dbObjectTable* getObjectTable(dbObjectType type);
-  // User Code Begin methods
-  // User Code End methods
-};
-dbIStream& operator>>(dbIStream& stream, _dbModule& obj);
-dbOStream& operator<<(dbOStream& stream, const _dbModule& obj);
-// User Code Begin general
-// User Code End general
+  for (id = dbModuleModInstItr::begin(parent);
+       id != dbModuleModInstItr::end(parent);
+       id = dbModuleModInstItr::next(id))
+    ++cnt;
+
+  return cnt;
+}
+
+uint dbModuleModInstItr::begin(dbObject* parent)
+{
+  // User Code Begin begin
+  _dbModule* module = (_dbModule*) parent;
+  return module->_modinsts;
+  // User Code End begin
+}
+
+uint dbModuleModInstItr::end(dbObject* /* unused: parent */)
+{
+  return 0;
+}
+
+uint dbModuleModInstItr::next(uint id, ...)
+{
+  // User Code Begin next
+  _dbModInst* modinst = _modinst_tbl->getPtr(id);
+  return modinst->_module_next;
+  // User Code End next
+}
+
+dbObject* dbModuleModInstItr::getObject(uint id, ...)
+{
+  return _modinst_tbl->getPtr(id);
+}
+// User Code Begin methods
+// User Code End methods
 }  // namespace odb
    // Generator Code End 1

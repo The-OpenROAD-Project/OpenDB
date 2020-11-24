@@ -59,9 +59,13 @@ class _dbModInst : public _dbObject
   // User Code End enums
   char* _name;
 
+  char* _modinst_name;
+
   dbId<_dbModInst> _next_entry;
 
   dbId<_dbModule> parentMod;
+
+  dbId<_dbModInst> _module_next;
 
   dbId<_dbModule> masterMod;
 

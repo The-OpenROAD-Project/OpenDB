@@ -853,6 +853,11 @@ class dbBlock : public dbObject
   dbSet<dbModule> getModules();
 
   ///
+  /// Get the modinsts of this block.
+  ///
+  dbSet<dbModInst> getModInsts();
+
+  ///
   /// Find a specific instance of this block.
   /// Returns NULL if the object was not found.
   ///
@@ -2930,7 +2935,7 @@ class dbInst : public dbObject
   /// assigned region.
   ///
   dbRegion* getRegion();
-  
+
   ///
   /// Get the module this instance belongs to. Returns NULL if instance has no
   /// assigned module.
@@ -7138,31 +7143,40 @@ class dbViaParams : private _dbViaParams
 class dbModule : public dbObject
 {
  public:
-  char* getName() const;
-
-  dbSet<dbModInst> getModInsts() const;
+  char* getModuleName() const;
 
   // User Code Begin dbModule
   void addInst(dbInst* inst_);
 
   void removeInst(dbInst* inst_);
 
-  dbSet<dbInst> getModuleInsts();
+  dbSet<dbInst> getInsts();
+
+  dbSet<dbModInst> getModInsts();
 
   dbModInst* findModInst(const char* name);
 
   static dbModule* create(dbBlock* block, const char* name);
 
+  static dbModule* create(dbModule* parent, const char* name);
+
   static void destroy(dbModule* module);
 
   dbModule* getModule(dbBlock* block_, uint dbid_);
+
+  dbModule* getParentModule() const;
+
+  std::string getHierarchalName() const;
+
+  dbModule* findModule(const char* name);
+
   // User Code End dbModule
 };
 
 class dbModInst : public dbObject
 {
  public:
-  char* getName() const;
+  char* getModinstName() const;
 
   void setparentMod(dbModule* parentMod);
 
@@ -7178,6 +7192,10 @@ class dbModInst : public dbObject
                            const char* name);
 
   static void destroy(dbModInst* modinst);
+
+  static dbSet<dbModInst>::iterator destroy(dbSet<dbModInst>::iterator& itr);
+
+  char* getName() const;
   // User Code End dbModInst
 };
 

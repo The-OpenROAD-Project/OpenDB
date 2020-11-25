@@ -11,96 +11,90 @@ BOOST_AUTO_TEST_SUITE(test_suite)
 dbDatabase* db;
 dbLib*      lib;
 dbBlock*    block;
-BOOST_AUTO_TEST_CASE(test_mod_create_find)
-{
-  db        = createSimpleDB();
-  block     = db->getChip()->getBlock();
-  BOOST_ASSERT(dbModule::create(block,"mod1")!=nullptr);
-  BOOST_ASSERT(dbModule::create(block,"mod1")==nullptr);
-  BOOST_ASSERT(string(block->findModule("mod1")->getModuleName())=="mod1");
-  dbModule::destroy(block->findModule("mod1"));
-}
-BOOST_AUTO_TEST_CASE(test_modinst_create_find)
-{
-  db        = createSimpleDB();
-  block     = db->getChip()->getBlock();
-  auto master_mod = dbModule::create(block,"master_mod");
-  auto parent_mod = dbModule::create(block,"parent_mod");
-  BOOST_ASSERT(dbModInst::create(parent_mod,master_mod,"i1")!=nullptr);
-  BOOST_ASSERT(dbModInst::create(parent_mod,master_mod,"i1")==nullptr);
-  auto modInst = parent_mod->findModInst("i1");
-  BOOST_ASSERT(string(modInst->getName())=="i1");
-  BOOST_ASSERT(parent_mod->getModInsts().size()==1);
-}
-BOOST_AUTO_TEST_CASE(test_modinst_destroy)
-{
-  db        = createSimpleDB();
-  block     = db->getChip()->getBlock();
-  auto master_mod = dbModule::create(block,"master_mod");
-  auto parent_mod = dbModule::create(block,"parent_mod");
-  auto i1 = dbModInst::create(parent_mod,master_mod,"i1");
-  dbModInst::destroy(i1);
-  BOOST_ASSERT(parent_mod->getModInsts().size()==0);
-  BOOST_ASSERT(parent_mod->findModInst("i1")==nullptr);
-}
-BOOST_AUTO_TEST_CASE(test_module_destroy)
-{
-  db        = createSimpleDB();
-  block     = db->getChip()->getBlock();
-  auto master_mod = dbModule::create(block,"master_mod");
-  auto parent_mod = dbModule::create(block,"parent_mod");
-  auto i1 = dbModInst::create(parent_mod,master_mod,"i1");
-  dbModule::destroy(parent_mod);
-  BOOST_ASSERT(block->findModule("parent_mod")==nullptr);
-  BOOST_ASSERT(block->getModules().size()==1);
-}
-BOOST_AUTO_TEST_CASE(test_module_insts)
+BOOST_AUTO_TEST_CASE(test_default)
 {
   db        = createSimpleDB();
   block     = db->getChip()->getBlock();
   lib       = db->findLib("lib1");
-  auto mod1 = dbModule::create(block,"mod1");
-  auto mod2 = dbModule::create(block,"mod2");
-  auto i1 = dbInst::create(block,lib->findMaster("and2"),"i1");
-  auto i2 = dbInst::create(block,lib->findMaster("or2"),"i2");
-  auto i3 = dbInst::create(block,lib->findMaster("and2"),"i3");
-  auto i4 = dbInst::create(block,lib->findMaster("or2"),"i4");
-  mod1->addInst(i1);
-  mod2->addInst(i3);
-  mod1->addInst(i2);
-  mod2->addInst(i4);
-  BOOST_ASSERT(mod1->getInsts().size()==2);
-  BOOST_ASSERT(mod2->getInsts().size()==2);
-  int i = 0;
-  for(auto inst : mod1->getInsts())
-  {
-    BOOST_ASSERT( i++==0 ? string(inst->getName())=="i2" :  string(inst->getName())=="i1");
-    BOOST_ASSERT( string(inst->getModule()->getModuleName())=="mod1");
-  }
-  i = 0;
-  for(auto inst : mod2->getInsts())
-  {
-    BOOST_ASSERT( i++==0 ? string(inst->getName())=="i4" :  string(inst->getName())=="i3");
-    BOOST_ASSERT( string(inst->getModule()->getModuleName())=="mod2");
-  }
-  
-  mod1->addInst(i3);
-  BOOST_ASSERT(mod1->getInsts().size()==3);
-  BOOST_ASSERT(mod2->getInsts().size()==1);
-  BOOST_ASSERT( string(i3->getModule()->getModuleName())=="mod1");
-  dbInst* inst = *(mod1->getInsts().begin());
-  BOOST_ASSERT( string(inst->getName())=="i3");
-  
-  mod2->removeInst(i4);
-  BOOST_ASSERT(mod2->getInsts().size()==0);
-  BOOST_ASSERT(i4->getModule()==nullptr);
-  
-  dbInst::destroy(i3);
-  BOOST_ASSERT(mod1->getInsts().size()==2);
-  inst = *(mod1->getInsts().begin());
-  BOOST_ASSERT( string(inst->getName())=="i2");
-
-  dbModule::destroy(mod1);
-  BOOST_ASSERT(i2->getModule()==nullptr);
+  //dbModule::create() Succeed
+  BOOST_ASSERT(dbModule::create(block,"parent_mod")!=nullptr);
+  dbModule* master_mod = dbModule::create(block,"master_mod");
+  //dbModule::create() rejected
+  BOOST_ASSERT(dbModule::create(block,"parent_mod")==nullptr);
+  //dbBlock::findModule()
+  dbModule* parent_mod = block->findModule("parent_mod");
+  BOOST_ASSERT(parent_mod!=nullptr);
+  //dbModule::getName()
+  BOOST_ASSERT(string(parent_mod->getName())=="parent_mod");
+  //dbModInst::create() Succeed
+  BOOST_ASSERT(dbModInst::create(parent_mod,master_mod,"i1")!=nullptr);
+  //dbModInst::create() rejected
+  BOOST_ASSERT(dbModInst::create(parent_mod,master_mod,"i1")==nullptr);
+  //dbModule::findModInst()
+  dbModInst* modInst = parent_mod->findModInst("i1");
+  //dbModInst::getName()
+  BOOST_ASSERT(string(modInst->getName())=="i1");
+  //dbModule::getModInsts()
+  BOOST_ASSERT(parent_mod->getModInsts().size()==1);
+  //dbBlock::getModInsts()
+  BOOST_ASSERT(block->getModInsts().size()==1);
+  //dbInst <--> dbModule
+  auto inst1 = dbInst::create(block,lib->findMaster("and2"),"inst1");
+  auto inst2 = dbInst::create(block,lib->findMaster("and2"),"inst2");
+  //dbModule::addInst()
+  parent_mod->addInst(inst1);
+  parent_mod->addInst(inst2);
+  //dbModule::getInsts()
+  BOOST_ASSERT(parent_mod->getInsts().size()==2);
+  //dbInst::getModule()
+  BOOST_ASSERT(std::string(inst1->getModule()->getName())=="parent_mod");
+  //dbModule::removeInst()
+  parent_mod->removeInst(inst2);
+  BOOST_ASSERT(parent_mod->getInsts().size()==1);
+  BOOST_ASSERT(inst2->getModule()==nullptr);
+  //dbInst::destroy -> dbModule insts
+  dbInst::destroy(inst1);
+  BOOST_ASSERT(parent_mod->getInsts().size()==0);
 }
+BOOST_AUTO_TEST_CASE(test_destroy)
+{
+  db        = createSimpleDB();
+  block     = db->getChip()->getBlock();
+  lib       = db->findLib("lib1");
+  auto master_mod = dbModule::create(block,"master_mod");
+  auto parent_mod = dbModule::create(block,"parent_mod");
+  auto i1 = dbModInst::create(parent_mod,master_mod,"i1");
+  auto i2 = dbModInst::create(parent_mod,master_mod,"i2");
+  BOOST_ASSERT(block->getModInsts().size()==2);
+  //dbModInst::destroy()
+  dbModInst::destroy(i1);
+  BOOST_ASSERT(parent_mod->findModInst("i1")==nullptr);
+  //dbModule::destroy()
+  dbModule::destroy(parent_mod);
+  BOOST_ASSERT(block->findModule("parent_mod")==nullptr);
+  BOOST_ASSERT(block->getModInsts().size()==0);
+}
+
+BOOST_AUTO_TEST_CASE(test_heirarchy)
+{
+  db        = createSimpleDB();
+  block     = db->getChip()->getBlock();
+  lib       = db->findLib("lib1");
+  auto master_mod = dbModule::create(block,"master_mod");
+  auto parent_mod = dbModule::create(block,"parent_mod");
+  auto child_mod1 = dbModule::create(parent_mod,"child_mod1");
+
+  BOOST_ASSERT(parent_mod->getChildren().size()==1);
+  BOOST_ASSERT(parent_mod->findModule("child_mod1")!=nullptr);
+  BOOST_ASSERT(dbModule::create(parent_mod,"child_mod1")==nullptr);
+  BOOST_ASSERT(dbModule::create(block,"child_mod1")!=nullptr);
+  
+  dbModule::destroy(child_mod1);
+  
+  BOOST_ASSERT(parent_mod->getChildren().size()==0);
+  BOOST_ASSERT(parent_mod->findModule("child_mod1")==nullptr);
+  
+}
+
+
 BOOST_AUTO_TEST_SUITE_END()

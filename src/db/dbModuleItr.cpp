@@ -1,7 +1,7 @@
 ///////////////////////////////////////////////////////////////////////////////
 // BSD 3-Clause License
 //
-// Copyright (c) 2020, OpenRoad Project
+// Copyright (c) 2019, Nefelus Inc
 // All rights reserved.
 //
 // Redistribution and use in source and binary forms, with or without
@@ -31,67 +31,92 @@
 // POSSIBILITY OF SUCH DAMAGE.
 
 // Generator Code Begin 1
-#pragma once
+#include "dbModuleItr.h"
 
-#include "dbCore.h"
-#include "odb.h"
-
+#include "dbModule.h"
+#include "dbTable.h"
 // User Code Begin includes
-#include "dbHashTable.h"
 // User Code End includes
 
 namespace odb {
 
-class dbIStream;
-class dbOStream;
-class dbDiff;
-class _dbDatabase;
-class _dbInst;
-class _dbModInst;
-// User Code Begin Classes
-// User Code End Classes
+////////////////////////////////////////////////////////////////////
+//
+// dbModuleItr - Methods
+//
+////////////////////////////////////////////////////////////////////
 
-// User Code Begin structs
-// User Code End structs
-
-class _dbModule : public _dbObject
+bool dbModuleItr::reversible()
 {
- public:
-  // User Code Begin enums
-  // User Code End enums
-  char* _name;
+  return true;
+}
 
-  char* _module_name;
+bool dbModuleItr::orderReversed()
+{
+  return true;
+}
 
-  dbId<_dbModule> _next_entry;
+void dbModuleItr::reverse(dbObject* parent)
+{
+  // User Code Begin reverse
+  _dbModule* module = (_dbModule*) parent;
+  uint       id     = module->_children;
+  uint       list   = 0;
 
-  dbId<_dbModule> _parent_module;
+  while (id != 0) {
+    _dbModule* child      = _module_tbl->getPtr(id);
+    uint        n         = child->_next_child;
+    child->_next_child    = list;
+    list                  = id;
+    id                    = n;
+  }
+  module->_children = list;
+  // User Code End reverse
+}
 
-  dbId<_dbModule> _next_child;
+uint dbModuleItr::sequential()
+{
+  return 0;
+}
 
-  dbId<_dbModule> _children;
+uint dbModuleItr::size(dbObject* parent)
+{
+  uint id;
+  uint cnt = 0;
 
-  dbId<_dbInst> _insts;
+  for (id = dbModuleItr::begin(parent); id != dbModuleItr::end(parent);
+       id = dbModuleItr::next(id))
+    ++cnt;
 
-  dbId<_dbModInst> _modinsts;
+  return cnt;
+}
 
-  // User Code Begin fields
-  // User Code End fields
-  _dbModule(_dbDatabase*, const _dbModule& r);
-  _dbModule(_dbDatabase*);
-  ~_dbModule();
-  bool operator==(const _dbModule& rhs) const;
-  bool operator!=(const _dbModule& rhs) const { return !operator==(rhs); }
-  bool operator<(const _dbModule& rhs) const;
-  void differences(dbDiff& diff, const char* field, const _dbModule& rhs) const;
-  void out(dbDiff& diff, char side, const char* field) const;
-  dbObjectTable* getObjectTable(dbObjectType type);
-  // User Code Begin methods
-  // User Code End methods
-};
-dbIStream& operator>>(dbIStream& stream, _dbModule& obj);
-dbOStream& operator<<(dbOStream& stream, const _dbModule& obj);
-// User Code Begin general
-// User Code End general
+uint dbModuleItr::begin(dbObject* parent)
+{
+  // User Code Begin begin
+  _dbModule* module = (_dbModule*) parent;
+  return module->_children;
+  // User Code End begin
+}
+
+uint dbModuleItr::end(dbObject* /* unused: parent */)
+{
+  return 0;
+}
+
+uint dbModuleItr::next(uint id, ...)
+{
+  // User Code Begin next
+  _dbModule* module = _module_tbl->getPtr(id);
+  return module->_next_child;
+  // User Code End next
+}
+
+dbObject* dbModuleItr::getObject(uint id, ...)
+{
+  return _module_tbl->getPtr(id);
+}
+// User Code Begin methods
+// User Code End methods
 }  // namespace odb
    // Generator Code End 1

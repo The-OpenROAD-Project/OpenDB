@@ -229,8 +229,7 @@ dbModInst* dbModInst::create(dbModule*   parentModule,
 {
   _dbModule*  parent = (_dbModule*) parentModule;
   _dbBlock*   block  = (_dbBlock*) parent->getOwner();
-  std::string h_name
-      = parentModule->getHierarchalName() + "->" + std::string(name);
+  std::string h_name = std::string(parent->_name) + "->" + std::string(name);
   if (block->_modinst_hash.hasMember(h_name.c_str()))
     return nullptr;
   _dbModule*  master     = (_dbModule*) masterModule;
@@ -252,7 +251,7 @@ void dbModInst::destroy(dbModInst* modinst)
   _dbBlock*   block    = (_dbBlock*) _modinst->getOwner();
   _dbModule*  module   = (_dbModule*) modinst->getparentMod();
 
-  //unlink from parent start
+  // unlink from parent start
   uint        id   = _modinst->getOID();
   _dbModInst* prev = NULL;
   uint        cur  = module->_modinsts;
@@ -260,7 +259,7 @@ void dbModInst::destroy(dbModInst* modinst)
     _dbModInst* c = block->_modinst_tbl->getPtr(cur);
     if (cur == id) {
       if (prev == NULL)
-        module->_modinsts  = _modinst->_module_next;
+        module->_modinsts = _modinst->_module_next;
       else
         prev->_module_next = _modinst->_module_next;
       break;
@@ -268,14 +267,14 @@ void dbModInst::destroy(dbModInst* modinst)
     prev = c;
     cur  = c->_module_next;
   }
-  //unlink from parent end
+  // unlink from parent end
   dbProperty::destroyProperties(_modinst);
   block->_modinst_hash.remove(_modinst);
   block->_modinst_tbl->destroy(_modinst);
 }
 dbSet<dbModInst>::iterator dbModInst::destroy(dbSet<dbModInst>::iterator& itr)
 {
-  dbModInst*              modinst = *itr;
+  dbModInst*                 modinst = *itr;
   dbSet<dbModInst>::iterator next    = ++itr;
   destroy(modinst);
   return next;

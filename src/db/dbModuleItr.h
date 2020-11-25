@@ -33,65 +33,38 @@
 // Generator Code Begin 1
 #pragma once
 
-#include "dbCore.h"
+#include "dbIterator.h"
 #include "odb.h"
-
 // User Code Begin includes
-#include "dbHashTable.h"
 // User Code End includes
 
 namespace odb {
 
-class dbIStream;
-class dbOStream;
-class dbDiff;
-class _dbDatabase;
-class _dbInst;
-class _dbModInst;
-// User Code Begin Classes
-// User Code End Classes
-
-// User Code Begin structs
-// User Code End structs
-
-class _dbModule : public _dbObject
+class _dbModule;
+template <class T>
+class dbTable;
+// User Code Begin classes
+// User Code End classes
+class dbModuleItr : public dbIterator
 {
- public:
-  // User Code Begin enums
-  // User Code End enums
-  char* _name;
-
-  char* _module_name;
-
-  dbId<_dbModule> _next_entry;
-
-  dbId<_dbModule> _parent_module;
-
-  dbId<_dbModule> _next_child;
-
-  dbId<_dbModule> _children;
-
-  dbId<_dbInst> _insts;
-
-  dbId<_dbModInst> _modinsts;
-
+  dbTable<_dbModule>* _module_tbl;
   // User Code Begin fields
   // User Code End fields
-  _dbModule(_dbDatabase*, const _dbModule& r);
-  _dbModule(_dbDatabase*);
-  ~_dbModule();
-  bool operator==(const _dbModule& rhs) const;
-  bool operator!=(const _dbModule& rhs) const { return !operator==(rhs); }
-  bool operator<(const _dbModule& rhs) const;
-  void differences(dbDiff& diff, const char* field, const _dbModule& rhs) const;
-  void out(dbDiff& diff, char side, const char* field) const;
-  dbObjectTable* getObjectTable(dbObjectType type);
+ public:
+  dbModuleItr(dbTable<_dbModule>* module_tbl) { _module_tbl = module_tbl; }
+
+  bool      reversible();
+  bool      orderReversed();
+  void      reverse(dbObject* parent);
+  uint      sequential();
+  uint      size(dbObject* parent);
+  uint      begin(dbObject* parent);
+  uint      end(dbObject* parent);
+  uint      next(uint id, ...);
+  dbObject* getObject(uint id, ...);
   // User Code Begin methods
   // User Code End methods
 };
-dbIStream& operator>>(dbIStream& stream, _dbModule& obj);
-dbOStream& operator<<(dbOStream& stream, const _dbModule& obj);
-// User Code Begin general
-// User Code End general
+
 }  // namespace odb
-   // Generator Code End 1
+   // GeneratorCodeEnd 1

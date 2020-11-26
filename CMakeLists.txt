@@ -15,6 +15,7 @@ configure_file (
     "${PROJECT_BINARY_DIR}/include/opendb/version.hh"
 )
 
+find_package(spdlog REQUIRED)
 find_package(TCL)
 
 find_package(Boost)

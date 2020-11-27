@@ -7170,11 +7170,7 @@ class dbModInst : public dbObject
  public:
   char* getModinstName() const;
 
-  void setparentMod(dbModule* parentMod);
-
   dbModule* getparentMod() const;
-
-  void setmasterMod(dbModule* masterMod);
 
   dbModule* getmasterMod() const;
 

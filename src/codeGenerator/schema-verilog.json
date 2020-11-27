@@ -52,7 +52,7 @@
         {
           "name":"parentMod",
           "type":"dbId<_dbModule>",
-          "flags":[],
+          "flags":["no-set"],
           "parent":"dbBlock"
         },
         {
@@ -64,7 +64,7 @@
         {
           "name":"masterMod",
           "type":"dbId<_dbModule>",
-          "flags":[],
+          "flags":["no-set"],
           "parent":"dbBlock"
         }
       ],

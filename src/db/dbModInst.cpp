@@ -188,13 +188,6 @@ char* dbModInst::getModinstName() const
   return obj->_modinst_name;
 }
 
-void dbModInst::setparentMod(dbModule* parentMod)
-{
-  _dbModInst* obj = (_dbModInst*) this;
-
-  obj->parentMod = parentMod->getImpl()->getOID();
-}
-
 dbModule* dbModInst::getparentMod() const
 {
   _dbModInst* obj = (_dbModInst*) this;
@@ -203,13 +196,6 @@ dbModule* dbModInst::getparentMod() const
   if (obj->parentMod == 0)
     return NULL;
   return (dbModule*) par->_module_tbl->getPtr(obj->parentMod);
-}
-
-void dbModInst::setmasterMod(dbModule* masterMod)
-{
-  _dbModInst* obj = (_dbModInst*) this;
-
-  obj->masterMod = masterMod->getImpl()->getOID();
 }
 
 dbModule* dbModInst::getmasterMod() const

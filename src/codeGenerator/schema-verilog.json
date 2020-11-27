@@ -7,32 +7,12 @@
         {
           "name":"_name",
           "type":"char *",
-          "flags":["no-set","no-get"]
-        },
-        {
-          "name":"_module_name",
-          "type":"char *",
-          "flags":["no-set","no-get"]
+          "flags":["no-set"]
         },
         {
           "name":"_next_entry",
           "type":"dbId<_dbModule>",
           "flags":["no-set","no-get"]
-        },
-        {
-          "name":"_parent_module",
-          "type":"dbId<_dbModule>",
-          "flags":["no-get","no-set"]
-        },
-        {
-          "name":"_next_child",
-          "type":"dbId<_dbModule>",
-          "flags":["no-get","no-set"]
-        },
-        {
-          "name":"_children",
-          "type":"dbId<_dbModule>",
-          "flags":["no-get","no-set"]
         },
         {
           "name":"_insts",
@@ -110,15 +90,6 @@
       "orderReversed": "true",
       "sequential": 0,
       "includes": ["dbModule.h", "dbModInst.h", "dbTable.h"]
-    },
-    {
-      "name": "dbModuleItr",
-      "parentObject": "dbModule",
-      "tableName": "module_tbl",
-      "reversible": "true",
-      "orderReversed": "true",
-      "sequential": 0,
-      "includes": ["dbModule.h", "dbTable.h"]
     }
   ],
   "relations":[

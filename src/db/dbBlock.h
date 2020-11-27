@@ -99,7 +99,6 @@ class dbInstITermItr;
 class dbRegionInstItr;
 class dbModuleInstItr;
 class dbModuleModInstItr;
-class dbModuleItr;
 class dbRegionItr;
 class dbSWireItr;
 class dbNameServer;
@@ -228,7 +227,6 @@ class _dbBlock : public _dbObject
   dbRegionInstItr* _region_inst_itr;
   dbModuleInstItr* _module_inst_itr;
   dbModuleModInstItr* _module_modinst_itr;
-  dbModuleItr*     _module_itr;
   dbBPinItr*       _bpin_itr;
   dbRegionItr*     _region_itr;
   dbPropertyItr*   _prop_itr;

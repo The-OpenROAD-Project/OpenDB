@@ -7143,34 +7143,24 @@ class dbViaParams : private _dbViaParams
 class dbModule : public dbObject
 {
  public:
-  // User Code Begin dbModule
   char* getName() const;
 
+  // User Code Begin dbModule
   void addInst(dbInst* inst_);
 
   void removeInst(dbInst* inst_);
 
   dbSet<dbInst> getInsts();
 
-  dbSet<dbModInst> getModInsts();
-  
-  dbSet<dbModule> getChildren();
+  dbSet<dbModInst> getChildren();
 
   dbModInst* findModInst(const char* name);
 
   static dbModule* create(dbBlock* block, const char* name);
 
-  static dbModule* create(dbModule* parent, const char* name);
-
   static void destroy(dbModule* module);
 
-  static dbSet<dbModule>::iterator destroy(dbSet<dbModule>::iterator& itr);
-
   dbModule* getModule(dbBlock* block_, uint dbid_);
-
-  dbModule* getParentModule() const;
-
-  dbModule* findModule(const char* name);
 
   // User Code End dbModule
 };

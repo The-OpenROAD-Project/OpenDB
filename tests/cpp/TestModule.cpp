@@ -34,8 +34,8 @@ BOOST_AUTO_TEST_CASE(test_default)
   dbModInst* modInst = parent_mod->findModInst("i1");
   //dbModInst::getName()
   BOOST_ASSERT(string(modInst->getName())=="i1");
-  //dbModule::getModInsts()
-  BOOST_ASSERT(parent_mod->getModInsts().size()==1);
+  //dbModule::getChildren()
+  BOOST_ASSERT(parent_mod->getChildren().size()==1);
   //dbBlock::getModInsts()
   BOOST_ASSERT(block->getModInsts().size()==1);
   //dbInst <--> dbModule
@@ -73,27 +73,6 @@ BOOST_AUTO_TEST_CASE(test_destroy)
   dbModule::destroy(parent_mod);
   BOOST_ASSERT(block->findModule("parent_mod")==nullptr);
   BOOST_ASSERT(block->getModInsts().size()==0);
-}
-
-BOOST_AUTO_TEST_CASE(test_heirarchy)
-{
-  db        = createSimpleDB();
-  block     = db->getChip()->getBlock();
-  lib       = db->findLib("lib1");
-  auto master_mod = dbModule::create(block,"master_mod");
-  auto parent_mod = dbModule::create(block,"parent_mod");
-  auto child_mod1 = dbModule::create(parent_mod,"child_mod1");
-
-  BOOST_ASSERT(parent_mod->getChildren().size()==1);
-  BOOST_ASSERT(parent_mod->findModule("child_mod1")!=nullptr);
-  BOOST_ASSERT(dbModule::create(parent_mod,"child_mod1")==nullptr);
-  BOOST_ASSERT(dbModule::create(block,"child_mod1")!=nullptr);
-  
-  dbModule::destroy(child_mod1);
-  
-  BOOST_ASSERT(parent_mod->getChildren().size()==0);
-  BOOST_ASSERT(parent_mod->findModule("child_mod1")==nullptr);
-  
 }
 
 

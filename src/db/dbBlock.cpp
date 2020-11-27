@@ -91,7 +91,6 @@
 #include "dbModule.h"
 #include "dbModuleInstItr.h"
 #include "dbModuleModInstItr.h"
-#include "dbModuleItr.h"
 #include "dbModInst.h"
 #include "dbTable.h"
 #include "dbTable.hpp"
@@ -349,9 +348,6 @@ _dbBlock::_dbBlock(_dbDatabase* db)
   _module_modinst_itr = new dbModuleModInstItr(_modinst_tbl);
   ZALLOCATED(_module_modinst_itr);
 
-  _module_itr = new dbModuleItr(_module_tbl);
-  ZALLOCATED(_module_itr);
-
   _bpin_itr = new dbBPinItr(_bpin_tbl);
   ZALLOCATED(_bpin_itr);
 
@@ -553,9 +549,6 @@ _dbBlock::_dbBlock(_dbDatabase* db, const _dbBlock& block)
   _module_modinst_itr = new dbModuleModInstItr(_modinst_tbl);
   ZALLOCATED(_module_modinst_itr);
 
-  _module_itr = new dbModuleItr(_module_tbl);
-  ZALLOCATED(_module_itr);
-
   _bpin_itr = new dbBPinItr(_bpin_tbl);
   ZALLOCATED(_bpin_itr);
 
@@ -626,7 +619,6 @@ _dbBlock::~_dbBlock()
   delete _region_inst_itr;
   delete _module_inst_itr;
   delete _module_modinst_itr;
-  delete _module_itr;
   delete _bpin_itr;
   delete _region_itr;
   delete _prop_itr;

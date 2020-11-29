@@ -102,6 +102,7 @@ class dbBPin;
 // Generator Code Begin 2
 class dbModule;
 class dbModInst;
+class dbTechLayerSpacingEolRule;
 // Generator Code End 2
 
 // Lib objects
@@ -5947,6 +5948,9 @@ class dbTechLayer : public dbObject
   ///
   bool getV54SpacingRules(dbSet<dbTechLayerSpacingRule>& sp_rules) const;
 
+  // Get the collection of Eol Spacing Rules for the object
+  dbSet<dbTechLayerSpacingEolRule> getEolSpacingRules() const;
+
   ///
   /// API for version 5.5 spacing rules, expressed as a 2D matrix with
   /// index tables  LEF 5.4 and 5.5 rules should not co-exist -- although
@@ -7183,6 +7187,313 @@ class dbModInst : public dbObject
 
   char* getName() const;
   // User Code End dbModInst
+};
+
+class dbTechLayerSpacingEolRule : public dbObject
+{
+ public:
+  void seteolSpace(double eolSpace);
+
+  double geteolSpace() const;
+
+  void setEolwidth(double eolwidth);
+
+  double getEolwidth() const;
+
+  void setwrongDirSpace(double wrongDirSpace);
+
+  double getwrongDirSpace() const;
+
+  void setoppositeWidth(double oppositeWidth);
+
+  double getoppositeWidth() const;
+
+  void seteolWithin(double eolWithin);
+
+  double geteolWithin() const;
+
+  void setwrongDirWithin(double wrongDirWithin);
+
+  double getwrongDirWithin() const;
+
+  void setexactWidth(double exactWidth);
+
+  double getexactWidth() const;
+
+  void setotherWidth(double otherWidth);
+
+  double getotherWidth() const;
+
+  void setfillTriangle(double fillTriangle);
+
+  double getfillTriangle() const;
+
+  void setcutClass(double cutClass);
+
+  double getcutClass() const;
+
+  void setwithCutSpace(double withCutSpace);
+
+  double getwithCutSpace() const;
+
+  void setenclosureEndWidth(double enclosureEndWidth);
+
+  double getenclosureEndWidth() const;
+
+  void setenclosureEndWithin(double enclosureEndWithin);
+
+  double getenclosureEndWithin() const;
+
+  void setendPrlSpace(double endPrlSpace);
+
+  double getendPrlSpace() const;
+
+  void setendPrl(double endPrl);
+
+  double getendPrl() const;
+
+  void setendToEndSpace(double endToEndSpace);
+
+  double getendToEndSpace() const;
+
+  void setoneCutSpace(double oneCutSpace);
+
+  double getoneCutSpace() const;
+
+  void settwoCutSpace(double twoCutSpace);
+
+  double gettwoCutSpace() const;
+
+  void setExtension(double extension);
+
+  double getExtension() const;
+
+  void setwrongDirExtension(double wrongDirExtension);
+
+  double getwrongDirExtension() const;
+
+  void setotherEndWidth(double otherEndWidth);
+
+  double getotherEndWidth() const;
+
+  void setmaxLength(double maxLength);
+
+  double getmaxLength() const;
+
+  void setminLength(double minLength);
+
+  double getminLength() const;
+
+  void setparSpace(double parSpace);
+
+  double getparSpace() const;
+
+  void setparWithin(double parWithin);
+
+  double getparWithin() const;
+
+  void setparPrl(double parPrl);
+
+  double getparPrl() const;
+
+  void setparMinLength(double parMinLength);
+
+  double getparMinLength() const;
+
+  void setencloseDist(double encloseDist);
+
+  double getencloseDist() const;
+
+  void setcutToMetalSpace(double cutToMetalSpace);
+
+  double getcutToMetalSpace() const;
+
+  void setminAdjLength(double minAdjLength);
+
+  double getminAdjLength() const;
+
+  void setminAdjLength1(double minAdjLength1);
+
+  double getminAdjLength1() const;
+
+  void setminAdjLength2(double minAdjLength2);
+
+  double getminAdjLength2() const;
+
+  void setnotchLength(double notchLength);
+
+  double getnotchLength() const;
+
+  void setEXACTWIDTH(bool EXACTWIDTH);
+
+  bool isEXACTWIDTH() const;
+
+  void setWRONGDIRSPACING(bool WRONGDIRSPACING);
+
+  bool isWRONGDIRSPACING() const;
+
+  void setOPPOSITEWIDTH(bool OPPOSITEWIDTH);
+
+  bool isOPPOSITEWIDTH() const;
+
+  void setWITHIN(bool WITHIN);
+
+  bool isWITHIN() const;
+
+  void setWRONGDIRWITHIN(bool WRONGDIRWITHIN);
+
+  bool isWRONGDIRWITHIN() const;
+
+  void setSAMEMASK(bool SAMEMASK);
+
+  bool isSAMEMASK() const;
+
+  void setEXCEPTEXACTWIDTH(bool EXCEPTEXACTWIDTH);
+
+  bool isEXCEPTEXACTWIDTH() const;
+
+  void setFILLCONCAVECORNER(bool FILLCONCAVECORNER);
+
+  bool isFILLCONCAVECORNER() const;
+
+  void setWITHCUT(bool WITHCUT);
+
+  bool isWITHCUT() const;
+
+  void setCUTCLASS(bool CUTCLASS);
+
+  bool isCUTCLASS() const;
+
+  void setwithCutABOVE(bool withCutABOVE);
+
+  bool iswithCutABOVE() const;
+
+  void setENCLOSUREEND(bool ENCLOSUREEND);
+
+  bool isENCLOSUREEND() const;
+
+  void setENCLOSUREENDWITHIN(bool ENCLOSUREENDWITHIN);
+
+  bool isENCLOSUREENDWITHIN() const;
+
+  void setENDPRLSPACING(bool ENDPRLSPACING);
+
+  bool isENDPRLSPACING() const;
+
+  void setPRL(bool PRL);
+
+  bool isPRL() const;
+
+  void setENDTOEND(bool ENDTOEND);
+
+  bool isENDTOEND() const;
+
+  void sethasCutSpaces(bool hasCutSpaces);
+
+  bool ishasCutSpaces() const;
+
+  void setEXTENSION(bool EXTENSION);
+
+  bool isEXTENSION() const;
+
+  void sethasWrongDirExtension(bool hasWrongDirExtension);
+
+  bool ishasWrongDirExtension() const;
+
+  void setOTHERENDWIDTH(bool OTHERENDWIDTH);
+
+  bool isOTHERENDWIDTH() const;
+
+  void setMAXLENGTH(bool MAXLENGTH);
+
+  bool isMAXLENGTH() const;
+
+  void setMINLENGTH(bool MINLENGTH);
+
+  bool isMINLENGTH() const;
+
+  void setTWOSIDES(bool TWOSIDES);
+
+  bool isTWOSIDES() const;
+
+  void setEQUALRECTWIDTH(bool EQUALRECTWIDTH);
+
+  bool isEQUALRECTWIDTH() const;
+
+  void setPARALLELEDGE(bool PARALLELEDGE);
+
+  bool isPARALLELEDGE() const;
+
+  void setSUBTRACTEOLWIDTH(bool SUBTRACTEOLWIDTH);
+
+  bool isSUBTRACTEOLWIDTH() const;
+
+  void setPARPRL(bool PARPRL);
+
+  bool isPARPRL() const;
+
+  void setPARMINLENGTH(bool PARMINLENGTH);
+
+  bool isPARMINLENGTH() const;
+
+  void setTWOEDGES(bool TWOEDGES);
+
+  bool isTWOEDGES() const;
+
+  void setSAMEMETAL(bool SAMEMETAL);
+
+  bool isSAMEMETAL() const;
+
+  void setNONEOLCORNERONLY(bool NONEOLCORNERONLY);
+
+  bool isNONEOLCORNERONLY() const;
+
+  void setPARALLELSAMEMASK(bool PARALLELSAMEMASK);
+
+  bool isPARALLELSAMEMASK() const;
+
+  void setENCLOSECUT(bool ENCLOSECUT);
+
+  bool isENCLOSECUT() const;
+
+  void setBELOW(bool BELOW);
+
+  bool isBELOW() const;
+
+  void setABOVE(bool ABOVE);
+
+  bool isABOVE() const;
+
+  void setCUTSPACING(bool CUTSPACING);
+
+  bool isCUTSPACING() const;
+
+  void setALLCUTS(bool ALLCUTS);
+
+  bool isALLCUTS() const;
+
+  void setTOCONCAVECORNER(bool TOCONCAVECORNER);
+
+  bool isTOCONCAVECORNER() const;
+
+  void setMINADJACENTLENGTH(bool MINADJACENTLENGTH);
+
+  bool isMINADJACENTLENGTH() const;
+
+  void sethasTwoMinAdjLength(bool hasTwoMinAdjLength);
+
+  bool ishasTwoMinAdjLength() const;
+
+  void setTONOTCHLENGTH(bool TONOTCHLENGTH);
+
+  bool isTONOTCHLENGTH() const;
+
+  // User Code Begin dbTechLayerSpacingEolRule
+  static dbTechLayerSpacingEolRule* create(dbTechLayer* inly);
+  static dbTechLayerSpacingEolRule* getTechLayerSpacingEolRule(
+      dbTechLayer* inly,
+      uint         dbid);
+  // User Code End dbTechLayerSpacingEolRule
 };
 
 // Generator Code End 5

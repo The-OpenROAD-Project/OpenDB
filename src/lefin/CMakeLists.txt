@@ -1,6 +1,7 @@
 add_library(lefin
     lefin.cpp
     reader.cpp
+    lefTechLayerSpacingEolParser.cpp
 )
 
 target_include_directories(lefin

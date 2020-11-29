@@ -99,6 +99,7 @@ add_library(opendb
     dbModInst.cpp
     dbModuleInstItr.cpp
     dbModuleModInstItr.cpp
+    dbTechLayerSpacingEolRule.cpp
     # Generator Code End cpp
 )
 

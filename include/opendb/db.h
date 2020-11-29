@@ -102,6 +102,7 @@ class dbBPin;
 // Generator Code Begin 2
 class dbModule;
 class dbModInst;
+class dbGroup;
 // Generator Code End 2
 
 // Lib objects
@@ -7185,6 +7186,48 @@ class dbModInst : public dbObject
 
   char* getName() const;
   // User Code End dbModInst
+};
+
+class dbGroup : public dbObject
+{
+ public:
+  void setParentGroup(dbGroup* _parent_group);
+
+  dbGroup* getParentGroup() const;
+
+  void setBox(dbBox* _box);
+
+  dbBox* getBox() const;
+
+  void setType(uint _type);
+
+  uint getType() const;
+
+  // User Code Begin dbGroup
+  void addModInst(dbModInst* modinst);
+
+  void removeModInst(dbModInst* modinst);
+
+  dbSet<dbModInst> getModInsts();
+
+  void addInst(dbInst* inst);
+
+  void removeInst(dbInst* inst);
+
+  dbSet<dbInst> getInsts();
+
+  void addGroup(dbGroup* group);
+
+  void removeGroup(dbGroup* group);
+
+  dbSet<dbGroup> getGroups();
+
+  static dbGroup* create(dbBlock* block, const char* name, uint _type = 1);
+
+  static dbGroup* create(dbGroup* parent, const char* name, uint _type = 1);
+
+  static void destroy(dbGroup* group);
+  // User Code End dbGroup
 };
 
 // Generator Code End 5

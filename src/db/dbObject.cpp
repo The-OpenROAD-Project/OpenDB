@@ -630,6 +630,7 @@ static const char* name_tbl[] = {"dbDatabase",
                                  // Generator Code Begin 1
                                  "dbModule",
                                  "dbModInst",
+                                 "dbGroup",
                                  // Generator Code End 1
 
                                  // Lib Objects

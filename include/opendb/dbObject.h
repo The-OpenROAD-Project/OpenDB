@@ -90,6 +90,7 @@ enum dbObjectType
   // Generator Code Begin 1
   dbModuleObj,
   dbModInstObj,
+  dbGroupObj,
   // Generator Code End 1
 
   // Lib Objects

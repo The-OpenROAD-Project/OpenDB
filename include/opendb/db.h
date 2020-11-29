@@ -7147,9 +7147,9 @@ class dbModule : public dbObject
   char* getName() const;
 
   // User Code Begin dbModule
-  void addInst(dbInst* inst_);
+  void addInst(dbInst* inst);
 
-  void removeInst(dbInst* inst_);
+  void removeInst(dbInst* inst);
 
   dbSet<dbInst> getInsts();
 
@@ -7169,11 +7169,9 @@ class dbModule : public dbObject
 class dbModInst : public dbObject
 {
  public:
-  char* getModinstName() const;
+  dbModule* getParent() const;
 
-  dbModule* getparentMod() const;
-
-  dbModule* getmasterMod() const;
+  dbModule* getMaster() const;
 
   // User Code Begin dbModInst
   static dbModInst* create(dbModule*   parentModule,

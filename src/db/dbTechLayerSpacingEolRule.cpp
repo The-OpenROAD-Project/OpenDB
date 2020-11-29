@@ -876,7 +876,6 @@ void dbTechLayerSpacingEolRule::seteolSpace(double eolSpace)
 double dbTechLayerSpacingEolRule::geteolSpace() const
 {
   _dbTechLayerSpacingEolRule* obj = (_dbTechLayerSpacingEolRule*) this;
-
   return obj->eolSpace;
 }
 
@@ -890,7 +889,6 @@ void dbTechLayerSpacingEolRule::setEolwidth(double eolwidth)
 double dbTechLayerSpacingEolRule::getEolwidth() const
 {
   _dbTechLayerSpacingEolRule* obj = (_dbTechLayerSpacingEolRule*) this;
-
   return obj->eolwidth;
 }
 
@@ -904,7 +902,6 @@ void dbTechLayerSpacingEolRule::setwrongDirSpace(double wrongDirSpace)
 double dbTechLayerSpacingEolRule::getwrongDirSpace() const
 {
   _dbTechLayerSpacingEolRule* obj = (_dbTechLayerSpacingEolRule*) this;
-
   return obj->wrongDirSpace;
 }
 
@@ -918,7 +915,6 @@ void dbTechLayerSpacingEolRule::setoppositeWidth(double oppositeWidth)
 double dbTechLayerSpacingEolRule::getoppositeWidth() const
 {
   _dbTechLayerSpacingEolRule* obj = (_dbTechLayerSpacingEolRule*) this;
-
   return obj->oppositeWidth;
 }
 
@@ -932,7 +928,6 @@ void dbTechLayerSpacingEolRule::seteolWithin(double eolWithin)
 double dbTechLayerSpacingEolRule::geteolWithin() const
 {
   _dbTechLayerSpacingEolRule* obj = (_dbTechLayerSpacingEolRule*) this;
-
   return obj->eolWithin;
 }
 
@@ -946,7 +941,6 @@ void dbTechLayerSpacingEolRule::setwrongDirWithin(double wrongDirWithin)
 double dbTechLayerSpacingEolRule::getwrongDirWithin() const
 {
   _dbTechLayerSpacingEolRule* obj = (_dbTechLayerSpacingEolRule*) this;
-
   return obj->wrongDirWithin;
 }
 
@@ -960,7 +954,6 @@ void dbTechLayerSpacingEolRule::setexactWidth(double exactWidth)
 double dbTechLayerSpacingEolRule::getexactWidth() const
 {
   _dbTechLayerSpacingEolRule* obj = (_dbTechLayerSpacingEolRule*) this;
-
   return obj->exactWidth;
 }
 
@@ -974,7 +967,6 @@ void dbTechLayerSpacingEolRule::setotherWidth(double otherWidth)
 double dbTechLayerSpacingEolRule::getotherWidth() const
 {
   _dbTechLayerSpacingEolRule* obj = (_dbTechLayerSpacingEolRule*) this;
-
   return obj->otherWidth;
 }
 
@@ -988,7 +980,6 @@ void dbTechLayerSpacingEolRule::setfillTriangle(double fillTriangle)
 double dbTechLayerSpacingEolRule::getfillTriangle() const
 {
   _dbTechLayerSpacingEolRule* obj = (_dbTechLayerSpacingEolRule*) this;
-
   return obj->fillTriangle;
 }
 
@@ -1002,7 +993,6 @@ void dbTechLayerSpacingEolRule::setcutClass(double cutClass)
 double dbTechLayerSpacingEolRule::getcutClass() const
 {
   _dbTechLayerSpacingEolRule* obj = (_dbTechLayerSpacingEolRule*) this;
-
   return obj->cutClass;
 }
 
@@ -1016,7 +1006,6 @@ void dbTechLayerSpacingEolRule::setwithCutSpace(double withCutSpace)
 double dbTechLayerSpacingEolRule::getwithCutSpace() const
 {
   _dbTechLayerSpacingEolRule* obj = (_dbTechLayerSpacingEolRule*) this;
-
   return obj->withCutSpace;
 }
 
@@ -1030,7 +1019,6 @@ void dbTechLayerSpacingEolRule::setenclosureEndWidth(double enclosureEndWidth)
 double dbTechLayerSpacingEolRule::getenclosureEndWidth() const
 {
   _dbTechLayerSpacingEolRule* obj = (_dbTechLayerSpacingEolRule*) this;
-
   return obj->enclosureEndWidth;
 }
 
@@ -1044,7 +1032,6 @@ void dbTechLayerSpacingEolRule::setenclosureEndWithin(double enclosureEndWithin)
 double dbTechLayerSpacingEolRule::getenclosureEndWithin() const
 {
   _dbTechLayerSpacingEolRule* obj = (_dbTechLayerSpacingEolRule*) this;
-
   return obj->enclosureEndWithin;
 }
 
@@ -1058,7 +1045,6 @@ void dbTechLayerSpacingEolRule::setendPrlSpace(double endPrlSpace)
 double dbTechLayerSpacingEolRule::getendPrlSpace() const
 {
   _dbTechLayerSpacingEolRule* obj = (_dbTechLayerSpacingEolRule*) this;
-
   return obj->endPrlSpace;
 }
 
@@ -1072,7 +1058,6 @@ void dbTechLayerSpacingEolRule::setendPrl(double endPrl)
 double dbTechLayerSpacingEolRule::getendPrl() const
 {
   _dbTechLayerSpacingEolRule* obj = (_dbTechLayerSpacingEolRule*) this;
-
   return obj->endPrl;
 }
 
@@ -1086,7 +1071,6 @@ void dbTechLayerSpacingEolRule::setendToEndSpace(double endToEndSpace)
 double dbTechLayerSpacingEolRule::getendToEndSpace() const
 {
   _dbTechLayerSpacingEolRule* obj = (_dbTechLayerSpacingEolRule*) this;
-
   return obj->endToEndSpace;
 }
 
@@ -1100,7 +1084,6 @@ void dbTechLayerSpacingEolRule::setoneCutSpace(double oneCutSpace)
 double dbTechLayerSpacingEolRule::getoneCutSpace() const
 {
   _dbTechLayerSpacingEolRule* obj = (_dbTechLayerSpacingEolRule*) this;
-
   return obj->oneCutSpace;
 }
 
@@ -1114,7 +1097,6 @@ void dbTechLayerSpacingEolRule::settwoCutSpace(double twoCutSpace)
 double dbTechLayerSpacingEolRule::gettwoCutSpace() const
 {
   _dbTechLayerSpacingEolRule* obj = (_dbTechLayerSpacingEolRule*) this;
-
   return obj->twoCutSpace;
 }
 
@@ -1128,7 +1110,6 @@ void dbTechLayerSpacingEolRule::setExtension(double extension)
 double dbTechLayerSpacingEolRule::getExtension() const
 {
   _dbTechLayerSpacingEolRule* obj = (_dbTechLayerSpacingEolRule*) this;
-
   return obj->extension;
 }
 
@@ -1142,7 +1123,6 @@ void dbTechLayerSpacingEolRule::setwrongDirExtension(double wrongDirExtension)
 double dbTechLayerSpacingEolRule::getwrongDirExtension() const
 {
   _dbTechLayerSpacingEolRule* obj = (_dbTechLayerSpacingEolRule*) this;
-
   return obj->wrongDirExtension;
 }
 
@@ -1156,7 +1136,6 @@ void dbTechLayerSpacingEolRule::setotherEndWidth(double otherEndWidth)
 double dbTechLayerSpacingEolRule::getotherEndWidth() const
 {
   _dbTechLayerSpacingEolRule* obj = (_dbTechLayerSpacingEolRule*) this;
-
   return obj->otherEndWidth;
 }
 
@@ -1170,7 +1149,6 @@ void dbTechLayerSpacingEolRule::setmaxLength(double maxLength)
 double dbTechLayerSpacingEolRule::getmaxLength() const
 {
   _dbTechLayerSpacingEolRule* obj = (_dbTechLayerSpacingEolRule*) this;
-
   return obj->maxLength;
 }
 
@@ -1184,7 +1162,6 @@ void dbTechLayerSpacingEolRule::setminLength(double minLength)
 double dbTechLayerSpacingEolRule::getminLength() const
 {
   _dbTechLayerSpacingEolRule* obj = (_dbTechLayerSpacingEolRule*) this;
-
   return obj->minLength;
 }
 
@@ -1198,7 +1175,6 @@ void dbTechLayerSpacingEolRule::setparSpace(double parSpace)
 double dbTechLayerSpacingEolRule::getparSpace() const
 {
   _dbTechLayerSpacingEolRule* obj = (_dbTechLayerSpacingEolRule*) this;
-
   return obj->parSpace;
 }
 
@@ -1212,7 +1188,6 @@ void dbTechLayerSpacingEolRule::setparWithin(double parWithin)
 double dbTechLayerSpacingEolRule::getparWithin() const
 {
   _dbTechLayerSpacingEolRule* obj = (_dbTechLayerSpacingEolRule*) this;
-
   return obj->parWithin;
 }
 
@@ -1226,7 +1201,6 @@ void dbTechLayerSpacingEolRule::setparPrl(double parPrl)
 double dbTechLayerSpacingEolRule::getparPrl() const
 {
   _dbTechLayerSpacingEolRule* obj = (_dbTechLayerSpacingEolRule*) this;
-
   return obj->parPrl;
 }
 
@@ -1240,7 +1214,6 @@ void dbTechLayerSpacingEolRule::setparMinLength(double parMinLength)
 double dbTechLayerSpacingEolRule::getparMinLength() const
 {
   _dbTechLayerSpacingEolRule* obj = (_dbTechLayerSpacingEolRule*) this;
-
   return obj->parMinLength;
 }
 
@@ -1254,7 +1227,6 @@ void dbTechLayerSpacingEolRule::setencloseDist(double encloseDist)
 double dbTechLayerSpacingEolRule::getencloseDist() const
 {
   _dbTechLayerSpacingEolRule* obj = (_dbTechLayerSpacingEolRule*) this;
-
   return obj->encloseDist;
 }
 
@@ -1268,7 +1240,6 @@ void dbTechLayerSpacingEolRule::setcutToMetalSpace(double cutToMetalSpace)
 double dbTechLayerSpacingEolRule::getcutToMetalSpace() const
 {
   _dbTechLayerSpacingEolRule* obj = (_dbTechLayerSpacingEolRule*) this;
-
   return obj->cutToMetalSpace;
 }
 
@@ -1282,7 +1253,6 @@ void dbTechLayerSpacingEolRule::setminAdjLength(double minAdjLength)
 double dbTechLayerSpacingEolRule::getminAdjLength() const
 {
   _dbTechLayerSpacingEolRule* obj = (_dbTechLayerSpacingEolRule*) this;
-
   return obj->minAdjLength;
 }
 
@@ -1296,7 +1266,6 @@ void dbTechLayerSpacingEolRule::setminAdjLength1(double minAdjLength1)
 double dbTechLayerSpacingEolRule::getminAdjLength1() const
 {
   _dbTechLayerSpacingEolRule* obj = (_dbTechLayerSpacingEolRule*) this;
-
   return obj->minAdjLength1;
 }
 
@@ -1310,7 +1279,6 @@ void dbTechLayerSpacingEolRule::setminAdjLength2(double minAdjLength2)
 double dbTechLayerSpacingEolRule::getminAdjLength2() const
 {
   _dbTechLayerSpacingEolRule* obj = (_dbTechLayerSpacingEolRule*) this;
-
   return obj->minAdjLength2;
 }
 
@@ -1324,7 +1292,6 @@ void dbTechLayerSpacingEolRule::setnotchLength(double notchLength)
 double dbTechLayerSpacingEolRule::getnotchLength() const
 {
   _dbTechLayerSpacingEolRule* obj = (_dbTechLayerSpacingEolRule*) this;
-
   return obj->notchLength;
 }
 

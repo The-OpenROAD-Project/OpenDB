@@ -100,9 +100,9 @@ class dbBlockCallBackObj;
 class dbRegion;
 class dbBPin;
 // Generator Code Begin 2
+class dbTechLayerSpacingEolRule;
 class dbModule;
 class dbModInst;
-class dbTechLayerSpacingEolRule;
 // Generator Code End 2
 
 // Lib objects
@@ -7144,51 +7144,6 @@ class dbViaParams : private _dbViaParams
 
 // Generator Code Begin 5
 
-class dbModule : public dbObject
-{
- public:
-  char* getName() const;
-
-  // User Code Begin dbModule
-  void addInst(dbInst* inst);
-
-  void removeInst(dbInst* inst);
-
-  dbSet<dbInst> getInsts();
-
-  dbSet<dbModInst> getChildren();
-
-  dbModInst* findModInst(const char* name);
-
-  static dbModule* create(dbBlock* block, const char* name);
-
-  static void destroy(dbModule* module);
-
-  dbModule* getModule(dbBlock* block_, uint dbid_);
-
-  // User Code End dbModule
-};
-
-class dbModInst : public dbObject
-{
- public:
-  dbModule* getParent() const;
-
-  dbModule* getMaster() const;
-
-  // User Code Begin dbModInst
-  static dbModInst* create(dbModule*   parentModule,
-                           dbModule*   masterModule,
-                           const char* name);
-
-  static void destroy(dbModInst* modinst);
-
-  static dbSet<dbModInst>::iterator destroy(dbSet<dbModInst>::iterator& itr);
-
-  char* getName() const;
-  // User Code End dbModInst
-};
-
 class dbTechLayerSpacingEolRule : public dbObject
 {
  public:
@@ -7494,6 +7449,51 @@ class dbTechLayerSpacingEolRule : public dbObject
       dbTechLayer* inly,
       uint         dbid);
   // User Code End dbTechLayerSpacingEolRule
+};
+
+class dbModule : public dbObject
+{
+ public:
+  char* getName() const;
+
+  // User Code Begin dbModule
+  void addInst(dbInst* inst);
+
+  void removeInst(dbInst* inst);
+
+  dbSet<dbInst> getInsts();
+
+  dbSet<dbModInst> getChildren();
+
+  dbModInst* findModInst(const char* name);
+
+  static dbModule* create(dbBlock* block, const char* name);
+
+  static void destroy(dbModule* module);
+
+  dbModule* getModule(dbBlock* block_, uint dbid_);
+
+  // User Code End dbModule
+};
+
+class dbModInst : public dbObject
+{
+ public:
+  dbModule* getParent() const;
+
+  dbModule* getMaster() const;
+
+  // User Code Begin dbModInst
+  static dbModInst* create(dbModule*   parentModule,
+                           dbModule*   masterModule,
+                           const char* name);
+
+  static void destroy(dbModInst* modinst);
+
+  static dbSet<dbModInst>::iterator destroy(dbSet<dbModInst>::iterator& itr);
+
+  char* getName() const;
+  // User Code End dbModInst
 };
 
 // Generator Code End 5

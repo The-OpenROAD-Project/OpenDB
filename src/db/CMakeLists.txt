@@ -95,11 +95,11 @@ add_library(opendb
     tmg_conn_w.cpp
     wOrder.cpp
     # Generator Code Begin cpp
+    dbTechLayerSpacingEolRule.cpp
     dbModule.cpp
     dbModInst.cpp
     dbModuleInstItr.cpp
     dbModuleModInstItr.cpp
-    dbTechLayerSpacingEolRule.cpp
     # Generator Code End cpp
 )
 

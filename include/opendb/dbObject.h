@@ -88,9 +88,9 @@ enum dbObjectType
   dbHierObj,
   dbBPinObj,
   // Generator Code Begin 1
+  dbTechLayerSpacingEolRuleObj,
   dbModuleObj,
   dbModInstObj,
-  dbTechLayerSpacingEolRuleObj,
   // Generator Code End 1
 
   // Lib Objects

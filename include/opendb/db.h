@@ -859,6 +859,11 @@ class dbBlock : public dbObject
   dbSet<dbModInst> getModInsts();
 
   ///
+  /// Get the groups of this block.
+  ///
+  dbSet<dbGroup> getGroups();
+
+  ///
   /// Find a specific instance of this block.
   /// Returns NULL if the object was not found.
   ///

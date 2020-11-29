@@ -44,6 +44,7 @@
 #include "dbTable.h"
 #include "dbTable.hpp"
 // User Code Begin includes
+#include "dbBox.h"
 // User Code End includes
 namespace odb {
 

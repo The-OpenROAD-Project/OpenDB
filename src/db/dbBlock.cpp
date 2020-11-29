@@ -62,6 +62,7 @@
 #include "dbDiff.hpp"
 #include "dbExtControl.h"
 #include "dbGCellGrid.h"
+#include "dbGroup.h"
 #include "dbHashTable.hpp"
 #include "dbHier.h"
 #include "dbITerm.h"
@@ -70,6 +71,10 @@
 #include "dbInstHdr.h"
 #include "dbIntHashTable.hpp"
 #include "dbJournal.h"
+#include "dbModule.h"
+#include "dbModuleInstItr.h"
+#include "dbModuleModInstItr.h"
+#include "dbModInst.h"
 #include "dbNameCache.h"
 #include "dbNet.h"
 #include "dbObstruction.h"
@@ -88,10 +93,6 @@
 #include "dbSWireItr.h"
 #include "dbSearch.h"
 #include "dbShape.h"
-#include "dbModule.h"
-#include "dbModuleInstItr.h"
-#include "dbModuleModInstItr.h"
-#include "dbModInst.h"
 #include "dbTable.h"
 #include "dbTable.hpp"
 #include "dbTech.h"
@@ -186,6 +187,10 @@ _dbBlock::_dbBlock(_dbDatabase* db)
   _modinst_tbl = new dbTable<_dbModInst>(
       db, this, (GetObjTbl_t) &_dbBlock::getObjectTable, dbModInstObj);
   ZALLOCATED(_modinst_tbl);
+
+  _group_tbl = new dbTable<_dbGroup>(
+      db, this, (GetObjTbl_t) &_dbBlock::getObjectTable, dbGroupObj);
+  ZALLOCATED(_group_tbl);
 
   _box_tbl = new dbTable<_dbBox>(
       db, this, (GetObjTbl_t) &_dbBlock::getObjectTable, dbBoxObj, 1024, 10);
@@ -309,6 +314,7 @@ _dbBlock::_dbBlock(_dbDatabase* db)
   _inst_hash.setTable(_inst_tbl);
   _module_hash.setTable(_module_tbl);
   _modinst_hash.setTable(_modinst_tbl);
+  _group_hash.setTable(_group_tbl);
   _inst_hdr_hash.setTable(_inst_hdr_tbl);
   _bterm_hash.setTable(_bterm_tbl);
 
@@ -392,6 +398,7 @@ _dbBlock::_dbBlock(_dbDatabase* db, const _dbBlock& block)
       _inst_hash(block._inst_hash),
       _module_hash(block._module_hash),
       _modinst_hash(block._modinst_hash),
+      _group_hash(block._group_hash),
       _inst_hdr_hash(block._inst_hdr_hash),
       _bterm_hash(block._bterm_hash),
       _maxCapNodeId(block._maxCapNodeId),
@@ -427,6 +434,9 @@ _dbBlock::_dbBlock(_dbDatabase* db, const _dbBlock& block)
 
   _modinst_tbl = new dbTable<_dbModInst>(db, this, *block._modinst_tbl);
   ZALLOCATED(_modinst_tbl);
+
+  _group_tbl = new dbTable<_dbGroup>(db, this, *block._group_tbl);
+  ZALLOCATED(_group_tbl);
 
   _box_tbl = new dbTable<_dbBox>(db, this, *block._box_tbl);
   ZALLOCATED(_box_tbl);
@@ -510,6 +520,7 @@ _dbBlock::_dbBlock(_dbDatabase* db, const _dbBlock& block)
   _inst_hash.setTable(_inst_tbl);
   _module_hash.setTable(_module_tbl);
   _modinst_hash.setTable(_modinst_tbl);
+  _group_hash.setTable(_group_tbl);
   _inst_hdr_hash.setTable(_inst_hdr_tbl);
   _bterm_hash.setTable(_bterm_tbl);
 
@@ -582,6 +593,7 @@ _dbBlock::~_dbBlock()
   delete _inst_tbl;
   delete _module_tbl;
   delete _modinst_tbl;
+  delete _group_tbl;
   delete _box_tbl;
   delete _via_tbl;
   delete _gcell_grid_tbl;
@@ -727,6 +739,9 @@ dbObjectTable* _dbBlock::getObjectTable(dbObjectType type)
     
     case dbModInstObj:
       return _modinst_tbl;
+    
+    case dbGroupObj:
+      return _group_tbl;
 
     case dbNetObj:
       return _net_tbl;
@@ -837,6 +852,7 @@ dbOStream& operator<<(dbOStream& stream, const _dbBlock& block)
   stream << block._inst_hash;
   stream << block._module_hash;
   stream << block._modinst_hash;
+  stream << block._group_hash;
   stream << block._inst_hdr_hash;
   stream << block._bterm_hash;
   stream << block._maxCapNodeId;
@@ -858,6 +874,7 @@ dbOStream& operator<<(dbOStream& stream, const _dbBlock& block)
   stream << *block._inst_tbl;
   stream << *block._module_tbl;
   stream << *block._modinst_tbl;
+  stream << *block._group_tbl;
   stream << *block._box_tbl;
   stream << *block._via_tbl;
   stream << *block._gcell_grid_tbl;
@@ -923,6 +940,7 @@ dbIStream& operator>>(dbIStream& stream, _dbBlock& block)
   stream >> block._inst_hash;
   stream >> block._module_hash;
   stream >> block._modinst_hash;
+  stream >> block._group_hash;
   stream >> block._inst_hdr_hash;
   stream >> block._bterm_hash;
   stream >> block._maxCapNodeId;
@@ -939,6 +957,7 @@ dbIStream& operator>>(dbIStream& stream, _dbBlock& block)
   stream >> *block._inst_tbl;
   stream >> *block._module_tbl;
   stream >> *block._modinst_tbl;
+  stream >> *block._group_tbl;
   stream >> *block._box_tbl;
   stream >> *block._via_tbl;
   stream >> *block._gcell_grid_tbl;
@@ -1079,6 +1098,9 @@ bool _dbBlock::operator==(const _dbBlock& rhs) const
   if (_modinst_hash != rhs._modinst_hash)
     return false;
 
+  if (_group_hash != rhs._group_hash)
+    return false;
+
   if (_inst_hdr_hash != rhs._inst_hdr_hash)
     return false;
 
@@ -1125,6 +1147,9 @@ bool _dbBlock::operator==(const _dbBlock& rhs) const
     return false;
   
   if (*_modinst_tbl != *rhs._modinst_tbl)
+    return false;
+  
+  if (*_group_tbl != *rhs._group_tbl)
     return false;
 
   if (*_box_tbl != *rhs._box_tbl)
@@ -1231,6 +1256,7 @@ void _dbBlock::differences(dbDiff&         diff,
     DIFF_HASH_TABLE(_inst_hash);
     DIFF_HASH_TABLE(_module_hash);
     DIFF_HASH_TABLE(_modinst_hash);
+    DIFF_HASH_TABLE(_group_hash);
     DIFF_HASH_TABLE(_inst_hdr_hash);
     DIFF_HASH_TABLE(_bterm_hash);
   }
@@ -1249,6 +1275,7 @@ void _dbBlock::differences(dbDiff&         diff,
   DIFF_TABLE(_inst_tbl);
   DIFF_TABLE(_module_tbl);
   DIFF_TABLE(_modinst_tbl);
+  DIFF_TABLE(_group_tbl);
   DIFF_TABLE_NO_DEEP(_box_tbl);
   DIFF_TABLE(_via_tbl);
   DIFF_TABLE_NO_DEEP(_gcell_grid_tbl);
@@ -1310,6 +1337,7 @@ void _dbBlock::out(dbDiff& diff, char side, const char* field) const
     DIFF_OUT_HASH_TABLE(_inst_hash);
     DIFF_OUT_HASH_TABLE(_module_hash);
     DIFF_OUT_HASH_TABLE(_modinst_hash);
+    DIFF_OUT_HASH_TABLE(_group_hash);
     DIFF_OUT_HASH_TABLE(_inst_hdr_hash);
     DIFF_OUT_HASH_TABLE(_bterm_hash);
   }
@@ -1328,6 +1356,7 @@ void _dbBlock::out(dbDiff& diff, char side, const char* field) const
   DIFF_OUT_TABLE(_inst_tbl);
   DIFF_OUT_TABLE(_module_tbl);
   DIFF_OUT_TABLE(_modinst_tbl);
+  DIFF_OUT_TABLE(_group_tbl);
   DIFF_OUT_TABLE_NO_DEEP(_box_tbl);
   DIFF_OUT_TABLE(_via_tbl);
   DIFF_OUT_TABLE_NO_DEEP(_gcell_grid_tbl);
@@ -1549,6 +1578,12 @@ dbSet<dbModInst> dbBlock::getModInsts()
 {
   _dbBlock* block = (_dbBlock*) this;
   return dbSet<dbModInst>(block, block->_modinst_tbl);
+}
+
+dbSet<dbGroup> dbBlock::getGroups()
+{
+  _dbBlock* block = (_dbBlock*) this;
+  return dbSet<dbGroup>(block, block->_group_tbl);
 }
 
 dbInst* dbBlock::findInst(const char* name)

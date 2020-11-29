@@ -115,6 +115,9 @@ void _dbModule::out(dbDiff& diff, char side, const char* field) const
 _dbModule::_dbModule(_dbDatabase* db)
 {
   // User Code Begin constructor
+  _name     = 0;
+  _insts    = 0;
+  _modinsts = 0;
   // User Code End constructor
 }
 _dbModule::_dbModule(_dbDatabase* db, const _dbModule& r)

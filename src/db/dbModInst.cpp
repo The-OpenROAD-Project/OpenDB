@@ -117,6 +117,10 @@ void _dbModInst::out(dbDiff& diff, char side, const char* field) const
 _dbModInst::_dbModInst(_dbDatabase* db)
 {
   // User Code Begin constructor
+  _name        = 0;
+  _parent      = 0;
+  _module_next = 0;
+  _master      = 0;
   // User Code End constructor
 }
 _dbModInst::_dbModInst(_dbDatabase* db, const _dbModInst& r)

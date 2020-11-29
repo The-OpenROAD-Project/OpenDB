@@ -64,12 +64,12 @@
         },
         {
           "name":"_group_next",
-          "type":"dbId<_dbGroup>",
+          "type":"dbId<_dbModInst>",
           "flags":["no-get","no-set"],
           "parent":"dbBlock"
         },
         {
-          "name":"_parent_group",
+          "name":"_group",
           "type":"dbId<_dbGroup>",
           "flags":["no-set"],
           "parent":"dbBlock"
@@ -85,7 +85,7 @@
         {
           "name":"_name",
           "type":"char *",
-          "flags":["no-set","no-get"]
+          "flags":["no-set"]
         },
         {
           "name":"_type",
@@ -135,7 +135,7 @@
           "parent":"dbBlock"
         }
       ],
-      "cpp_includes":["dbBlock.h","dbBox.h","dbInst.h","dbModInst.h","dbHashTable.hpp","dbGroupItr.h","dbGroupInstItr.h","dbGroupInstModItr.h"]
+      "cpp_includes":["dbBlock.h","dbBox.h","dbInst.h","dbModInst.h","dbHashTable.hpp","dbGroupItr.h","dbGroupInstItr.h","dbGroupModInstItr.h"]
     }
   ],
   "iterators":[

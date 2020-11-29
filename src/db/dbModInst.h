@@ -68,9 +68,9 @@ class _dbModInst : public _dbObject
 
   dbId<_dbModule> _master;
 
-  dbId<_dbGroup> _group_next;
+  dbId<_dbModInst> _group_next;
 
-  dbId<_dbGroup> _parent_group;
+  dbId<_dbGroup> _group;
 
   // User Code Begin fields
   // User Code End fields

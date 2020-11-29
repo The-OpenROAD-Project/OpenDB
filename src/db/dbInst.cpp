@@ -1378,6 +1378,9 @@ void dbInst::destroy(dbInst* inst_)
   dbModule* module = inst_->getModule();
   if (module)
     module->removeInst(inst_);
+  
+  if(inst->_group)
+    inst_->getGroup()->removeInst(inst_);
 
   uint i;
   uint n = inst->_iterms.size();

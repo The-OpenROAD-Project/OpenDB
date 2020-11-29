@@ -36,6 +36,7 @@
 #include "dbGroup.h"
 #include "dbTable.h"
 // User Code Begin includes
+#include "dbModule.h"
 // User Code End includes
 
 namespace odb {
@@ -94,7 +95,7 @@ uint dbGroupItr::size(dbObject* parent)
 uint dbGroupItr::begin(dbObject* parent)
 {
   // User Code Begin begin
-  _dbGroup* _parent = (_dbModule*) parent;
+  _dbGroup* _parent = (_dbGroup*) parent;
   return _parent->_groups;
   // User Code End begin
 }

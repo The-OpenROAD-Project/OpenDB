@@ -876,6 +876,12 @@ class dbBlock : public dbObject
   dbModule* findModule(const char* name);
 
   ///
+  /// Find a specific group in this block.
+  /// Returns NULL if the object was not found.
+  ///
+  dbGroup* findGroup(const char* name);
+
+  ///
   /// Find a set of insts. Each name can be real name, or Ixxx, or xxx,
   /// where xxx is the inst oid.
   ///
@@ -2925,7 +2931,7 @@ class dbInst : public dbObject
   /// Get the Master of this instance.
   ///
   dbMaster* getMaster() const;
- 
+
   ///
   /// Get the group of this instance.
   ///
@@ -7183,7 +7189,7 @@ class dbModInst : public dbObject
 
   dbModule* getMaster() const;
 
-  dbGroup* getParentGroup() const;
+  dbGroup* getGroup() const;
 
   // User Code Begin dbModInst
   static dbModInst* create(dbModule*   parentModule,
@@ -7201,6 +7207,8 @@ class dbModInst : public dbObject
 class dbGroup : public dbObject
 {
  public:
+  char* getName() const;
+
   void setParentGroup(dbGroup* _parent_group);
 
   dbGroup* getParentGroup() const;

@@ -1621,6 +1621,12 @@ dbModule* dbBlock::findModule(const char* name)
   return (dbModule*) block->_module_hash.find(name);
 }
 
+dbGroup* dbBlock::findGroup(const char* name)
+{
+  _dbBlock* block = (_dbBlock*) this;
+  return (dbGroup*) block->_group_hash.find(name);
+}
+
 dbITerm* dbBlock::findITerm(const char* name)
 {
   _dbBlock* block = (_dbBlock*) this;

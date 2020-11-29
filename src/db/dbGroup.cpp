@@ -35,16 +35,18 @@
 
 #include "db.h"
 #include "dbBlock.h"
+#include "dbBox.h"
 #include "dbDatabase.h"
 #include "dbDiff.hpp"
+#include "dbGroupInstItr.h"
+#include "dbGroupModInstItr.h"
+#include "dbGroupItr.h"
 #include "dbHashTable.hpp"
 #include "dbInst.h"
 #include "dbModInst.h"
-#include "dbModule.h"
 #include "dbTable.h"
 #include "dbTable.hpp"
 // User Code Begin includes
-#include "dbBox.h"
 // User Code End includes
 namespace odb {
 
@@ -227,10 +229,9 @@ void dbGroup::setParentGroup(dbGroup* _parent_group)
 dbGroup* dbGroup::getParentGroup() const
 {
   _dbGroup* obj = (_dbGroup*) this;
-
-  _dbBlock* par = (_dbBlock*) obj->getOwner();
   if (obj->_parent_group == 0)
     return NULL;
+  _dbBlock* par = (_dbBlock*) obj->getOwner();
   return (dbGroup*) par->_group_tbl->getPtr(obj->_parent_group);
 }
 
@@ -244,10 +245,9 @@ void dbGroup::setBox(dbBox* _box)
 dbBox* dbGroup::getBox() const
 {
   _dbGroup* obj = (_dbGroup*) this;
-
-  _dbBlock* par = (_dbBlock*) obj->getOwner();
   if (obj->_box == 0)
     return NULL;
+  _dbBlock* par = (_dbBlock*) obj->getOwner();
   return (dbBox*) par->_box_tbl->getPtr(obj->_box);
 }
 
@@ -268,22 +268,182 @@ uint dbGroup::getType() const
 // User Code Begin dbGroupPublicMethods
 void dbGroup::addModInst(dbModInst* modinst)
 {
-
+  _dbGroup*   _group   = (_dbGroup*) this;
+  _dbModInst* _modinst = (_dbModInst*) modinst;
+  if (_modinst->_parent_group == 0)
+    modinst->getParentGroup()->removeModInst(modinst);
+  _modinst->_parent_group = _group->getOID();
+  _modinst->_group_next   = _group->_modinsts;
+  _group->_modinsts       = _modinst->getOID();
 }
 
 void dbGroup::removeModInst(dbModInst* modinst)
 {
-
+  _dbGroup*   _group   = (_dbGroup*) this;
+  _dbModInst* _modinst = (_dbModInst*) modinst;
+  if (_modinst->_parent_group != _group->getOID())
+    return;
+  _dbBlock*   _block = (_dbBlock*) _group->getOwner();
+  uint        id     = _modinst->getOID();
+  _dbModInst* prev   = NULL;
+  uint        cur    = _group->_modinsts;
+  while (cur) {
+    _dbModInst* c = _block->_modinst_tbl->getPtr(cur);
+    if (cur == id) {
+      if (prev == NULL)
+        _group->_modinsts = _modinst->_group_next;
+      else
+        prev->_group_next = _modinst->_group_next;
+      break;
+    }
+    prev = c;
+    cur  = c->_group_next;
+  }
+  _modinst->_parent_group = 0;
+  _modinst->_group_next   = 0;
 }
 
 dbSet<dbModInst> dbGroup::getModInsts()
 {
-
+  _dbGroup* _group = (_dbGroup*) this;
+  _dbBlock* block  = (_dbBlock*) _group->getOwner();
+  return dbSet<dbModInst>(_group, block->_group_modinst_itr);
 }
 
 void dbGroup::addInst(dbInst* inst)
 {
-  
+  _dbGroup* _group = (_dbGroup*) this;
+  _dbInst*  _inst  = (_dbInst*) inst;
+  if (_inst->_parent_group == 0)
+    inst->getParentGroup()->removeInst(inst);
+  _inst->_parent_group = _group->getOID();
+  _inst->_group_next   = _group->_insts;
+  _group->_insts       = _inst->getOID();
+}
+
+void dbGroup::removeInst(dbInst* inst)
+{
+  _dbGroup* _group = (_dbGroup*) this;
+  _dbInst*  _inst  = (_dbInst*) inst;
+  if (_inst->_parent_group != _group->getOID())
+    return;
+  _dbBlock* _block = (_dbBlock*) _group->getOwner();
+  uint      id     = _inst->getOID();
+  _dbInst*  prev   = NULL;
+  uint      cur    = _group->_insts;
+  while (cur) {
+    _dbInst* c = _block->_inst_tbl->getPtr(cur);
+    if (cur == id) {
+      if (prev == NULL)
+        _group->_insts = _inst->_group_next;
+      else
+        prev->_group_next = _inst->_group_next;
+      break;
+    }
+    prev = c;
+    cur  = c->_group_next;
+  }
+  _inst->_parent_group = 0;
+  _inst->_group_next   = 0;
+}
+
+dbSet<dbInst> dbGroup::getInsts()
+{
+  _dbGroup* _group = (_dbGroup*) this;
+  _dbBlock* block  = (_dbBlock*) _group->getOwner();
+  return dbSet<dbInst>(_group, block->_group_inst_itr);
+}
+
+void dbGroup::addGroup(dbGroup* child)
+{
+  _dbGroup* _group = (_dbGroup*) this;
+  _dbGroup* _child = (_dbGroup*) child;
+  if (_child->_parent_group == 0)
+    _child->getParentGroup()->removeGroup(group);
+  _child->_parent_group = _group->getOID();
+  _child->_group_next   = _group->_groups;
+  _group->_group        = _child->getOID();
+}
+
+void dbGroup::removeGroup(dbGroup* child)
+{
+  _dbGroup* _group = (_dbGroup*) this;
+  _dbGroup* _child = (_dbGroup*) child;
+  if (_child->_parent_group != _group->getOID())
+    return;
+  _dbBlock* _block = (_dbBlock*) _group->getOwner();
+  uint      id     = _child->getOID();
+  _dbGroup* prev   = NULL;
+  uint      cur    = _group->_groups;
+  while (cur) {
+    _dbGroup* c = _block->_group_tbl->getPtr(cur);
+    if (cur == id) {
+      if (prev == NULL)
+        _group->_groups = _child->_group_next;
+      else
+        prev->_group_next = _child->_group_next;
+      break;
+    }
+    prev = c;
+    cur  = c->_group_next;
+  }
+  _child->_parent_group = 0;
+  _child->_group_next   = 0;
+}
+
+dbSet<dbGroup> dbGroup::getGroups()
+{
+  _dbGroup* _group = (_dbGroup*) this;
+  _dbBlock* block  = (_dbBlock*) _group->getOwner();
+  return dbSet<dbGroup>(_group, block->_group_itr);
+}
+
+dbGroup* dbGroup::create(dbBlock* block, const char* name, uint _type)
+{
+  _dbBlock* _block = (_dbBlock*) block;
+  if (_block->_group_hash.hasMember(name))
+    return nullptr;
+  _dbGroup* _group = _block->_group_tbl->create();
+  _group->_name    = strdup(name);
+  ZALLOCATED(_group->_name);
+  _group->flags._type = _type;
+  _block->_group_hash.insert(_group);
+  return (dbGroup*) _group;
+}
+
+dbGroup* dbGroup::create(dbGroup* parent, const char* name, uint _type)
+{
+  _dbGroup* _parent = (_dbGroup*) parent;
+  _dbBlock* _block  = (_dbBlock*) _parent->getOwner();
+  if (_block->_group_hash.hasMember(name))
+    return nullptr;
+  _dbGroup* _group = _block->_group_tbl->create();
+  _group->_name    = strdup(name);
+  ZALLOCATED(_group->_name);
+  _group->flags._type = _type;
+  _block->_group_hash.insert(_group);
+  parent->addGroup((dbGroup*) _group);
+  return (dbGroup*) _group;
+}
+
+void dbGroup::destroy(dbGroup* group)
+{
+  _dbGroup* _group = (_dbGroup*) group;
+  _dbBlock* block  = (_dbBlock*) _group->getOwner();
+  for (auto inst : group->getInsts()) {
+    group->removeInst(inst);
+  }
+  for (auto modinst : group->getModInsts()) {
+    group->removeModInst(modinst);
+  }
+  for (auto child : group->getGroups()) {
+    group->removeGroup(child);
+  }
+  if (_group->_parent_group != 0)
+    group->getParentGroup()->removeGroup(group);
+  dbProperty::destroyProperties(_group);
+  block->_group_hash.remove(_group);
+  block->_group_tbl->destroy(_group);
 }
 // User Code End dbGroupPublicMethods
 }  // namespace odb

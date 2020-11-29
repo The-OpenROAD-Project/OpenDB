@@ -100,6 +100,9 @@ class dbInstITermItr;
 class dbRegionInstItr;
 class dbModuleInstItr;
 class dbModuleModInstItr;
+class dbGroupItr;
+class dbGroupInstItr;
+class dbGroupModInstItr;
 class dbRegionItr;
 class dbSWireItr;
 class dbNameServer;
@@ -147,38 +150,38 @@ class _dbBlock : public _dbObject
   };
 
   // PERSISTANT-MEMBERS
-  _dbBlockFlags               _flags;
-  int                         _def_units;
-  int                         _dbu_per_micron;  // cached value from dbTech
-  char                        _hier_delimeter;
-  char                        _left_bus_delimeter;
-  char                        _right_bus_delimeter;
-  unsigned char               _num_ext_corners;
-  uint                        _corners_per_block;
-  char*                       _corner_name_list;
-  char*                       _name;
-  Rect                        _die_area;
-  dbId<_dbChip>               _chip;
-  dbId<_dbBox>                _bbox;
-  dbId<_dbBlock>              _parent;
-  dbId<_dbBlock>              _next_block;
-  dbId<_dbGCellGrid>          _gcell_grid;
-  dbId<_dbBlock>              _parent_block;  // Up hierarchy: TWG
-  dbId<_dbInst>               _parent_inst;   // Up hierarchy: TWG
-  dbHashTable<_dbNet>         _net_hash;
-  dbHashTable<_dbInst>        _inst_hash;
-  dbHashTable<_dbModule>      _module_hash;
-  dbHashTable<_dbModInst>     _modinst_hash;
-  dbHashTable<_dbGroup>       _group_hash;
-  dbIntHashTable<_dbInstHdr>  _inst_hdr_hash;
-  dbHashTable<_dbBTerm>       _bterm_hash;
-  uint                        _maxCapNodeId;
-  uint                        _maxRSegId;
-  uint                        _maxCCSegId;
-  int                         _minExtModelIndex;
-  int                         _maxExtModelIndex;
-  dbVector<dbId<_dbBlock> >   _children;
-  uint                        _currentCcAdjOrder;
+  _dbBlockFlags              _flags;
+  int                        _def_units;
+  int                        _dbu_per_micron;  // cached value from dbTech
+  char                       _hier_delimeter;
+  char                       _left_bus_delimeter;
+  char                       _right_bus_delimeter;
+  unsigned char              _num_ext_corners;
+  uint                       _corners_per_block;
+  char*                      _corner_name_list;
+  char*                      _name;
+  Rect                       _die_area;
+  dbId<_dbChip>              _chip;
+  dbId<_dbBox>               _bbox;
+  dbId<_dbBlock>             _parent;
+  dbId<_dbBlock>             _next_block;
+  dbId<_dbGCellGrid>         _gcell_grid;
+  dbId<_dbBlock>             _parent_block;  // Up hierarchy: TWG
+  dbId<_dbInst>              _parent_inst;   // Up hierarchy: TWG
+  dbHashTable<_dbNet>        _net_hash;
+  dbHashTable<_dbInst>       _inst_hash;
+  dbHashTable<_dbModule>     _module_hash;
+  dbHashTable<_dbModInst>    _modinst_hash;
+  dbHashTable<_dbGroup>      _group_hash;
+  dbIntHashTable<_dbInstHdr> _inst_hdr_hash;
+  dbHashTable<_dbBTerm>      _bterm_hash;
+  uint                       _maxCapNodeId;
+  uint                       _maxRSegId;
+  uint                       _maxCCSegId;
+  int                        _minExtModelIndex;
+  int                        _maxExtModelIndex;
+  dbVector<dbId<_dbBlock> >  _children;
+  uint                       _currentCcAdjOrder;
 
   // NON-PERSISTANT-STREAMED-MEMBERS
   dbTable<_dbBTerm>*              _bterm_tbl;
@@ -217,23 +220,26 @@ class _dbBlock : public _dbObject
   dbExtControl*                   _extControl;
 
   // NON-PERSISTANT-NON-STREAMED-MEMBERS
-  dbPrintControl*  _printControl;
-  dbNetBTermItr*   _net_bterm_itr;
-  dbNetITermItr*   _net_iterm_itr;
-  dbInstITermItr*  _inst_iterm_itr;
-  dbBoxItr*        _box_itr;
-  dbSWireItr*      _swire_itr;
-  dbSBoxItr*       _sbox_itr;
-  dbCapNodeItr*    _cap_node_itr;
-  dbRSegItr*       _r_seg_itr;
-  dbCCSegItr*      _cc_seg_itr;
-  dbRegionInstItr* _region_inst_itr;
-  dbModuleInstItr* _module_inst_itr;
+  dbPrintControl*     _printControl;
+  dbNetBTermItr*      _net_bterm_itr;
+  dbNetITermItr*      _net_iterm_itr;
+  dbInstITermItr*     _inst_iterm_itr;
+  dbBoxItr*           _box_itr;
+  dbSWireItr*         _swire_itr;
+  dbSBoxItr*          _sbox_itr;
+  dbCapNodeItr*       _cap_node_itr;
+  dbRSegItr*          _r_seg_itr;
+  dbCCSegItr*         _cc_seg_itr;
+  dbRegionInstItr*    _region_inst_itr;
+  dbModuleInstItr*    _module_inst_itr;
   dbModuleModInstItr* _module_modinst_itr;
-  dbBPinItr*       _bpin_itr;
-  dbRegionItr*     _region_itr;
-  dbPropertyItr*   _prop_itr;
-  dbBlockSearch*   _searchDb;
+  dbGroupItr*         _group_itr;
+  dbGroupInstItr*     _group_inst_itr;
+  dbGroupModInstItr*  _group_modinst_itr;
+  dbBPinItr*          _bpin_itr;
+  dbRegionItr*        _region_itr;
+  dbPropertyItr*      _prop_itr;
+  dbBlockSearch*      _searchDb;
 
   float         _WNS[2];
   float         _TNS[2];

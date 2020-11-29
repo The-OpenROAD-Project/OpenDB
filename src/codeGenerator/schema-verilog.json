@@ -61,6 +61,18 @@
           "type":"dbId<_dbModule>",
           "flags":["no-set"],
           "parent":"dbBlock"
+        },
+        {
+          "name":"_group_next",
+          "type":"dbId<_dbGroup>",
+          "flags":["no-get","no-set"],
+          "parent":"dbBlock"
+        },
+        {
+          "name":"_parent_group",
+          "type":"dbId<_dbGroup>",
+          "flags":["no-set"],
+          "parent":"dbBlock"
         }
       ],
       "constructors":[],
@@ -123,7 +135,7 @@
           "parent":"dbBlock"
         }
       ],
-      "cpp_includes":["dbBlock.h","dbModule.h","dbInst.h","dbModInst.h","dbHashTable.hpp"]
+      "cpp_includes":["dbBlock.h","dbBox.h","dbInst.h","dbModInst.h","dbHashTable.hpp","dbGroupItr.h","dbGroupInstItr.h","dbGroupInstModItr.h"]
     }
   ],
   "iterators":[

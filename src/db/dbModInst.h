@@ -46,6 +46,7 @@ class dbOStream;
 class dbDiff;
 class _dbDatabase;
 class _dbModule;
+class _dbGroup;
 // User Code Begin Classes
 // User Code End Classes
 
@@ -66,6 +67,10 @@ class _dbModInst : public _dbObject
   dbId<_dbModInst> _module_next;
 
   dbId<_dbModule> _master;
+
+  dbId<_dbGroup> _group_next;
+
+  dbId<_dbGroup> _parent_group;
 
   // User Code Begin fields
   // User Code End fields

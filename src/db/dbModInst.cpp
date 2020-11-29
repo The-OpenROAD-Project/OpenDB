@@ -66,6 +66,12 @@ bool _dbModInst::operator==(const _dbModInst& rhs) const
   if (_master != rhs._master)
     return false;
 
+  if (_group_next != rhs._group_next)
+    return false;
+
+  if (_parent_group != rhs._parent_group)
+    return false;
+
   // User Code Begin ==
   // User Code End ==
   return true;
@@ -92,6 +98,10 @@ void _dbModInst::differences(dbDiff&           diff,
 
   DIFF_FIELD(_master);
 
+  DIFF_FIELD(_group_next);
+
+  DIFF_FIELD(_parent_group);
+
   // User Code Begin differences
   // User Code End differences
   DIFF_END
@@ -110,6 +120,10 @@ void _dbModInst::out(dbDiff& diff, char side, const char* field) const
 
   DIFF_OUT_FIELD(_master);
 
+  DIFF_OUT_FIELD(_group_next);
+
+  DIFF_OUT_FIELD(_parent_group);
+
   // User Code Begin out
   // User Code End out
   DIFF_END
@@ -117,19 +131,23 @@ void _dbModInst::out(dbDiff& diff, char side, const char* field) const
 _dbModInst::_dbModInst(_dbDatabase* db)
 {
   // User Code Begin constructor
-  _name        = 0;
-  _parent      = 0;
-  _module_next = 0;
-  _master      = 0;
+  _name         = 0;
+  _parent       = 0;
+  _module_next  = 0;
+  _master       = 0;
+  _parent_group = 0;
+  _group_next   = 0;
   // User Code End constructor
 }
 _dbModInst::_dbModInst(_dbDatabase* db, const _dbModInst& r)
 {
-  _name        = r._name;
-  _next_entry  = r._next_entry;
-  _parent      = r._parent;
-  _module_next = r._module_next;
-  _master      = r._master;
+  _name         = r._name;
+  _next_entry   = r._next_entry;
+  _parent       = r._parent;
+  _module_next  = r._module_next;
+  _master       = r._master;
+  _group_next   = r._group_next;
+  _parent_group = r._parent_group;
   // User Code Begin CopyConstructor
   // User Code End CopyConstructor
 }
@@ -141,6 +159,8 @@ dbIStream& operator>>(dbIStream& stream, _dbModInst& obj)
   stream >> obj._parent;
   stream >> obj._module_next;
   stream >> obj._master;
+  stream >> obj._group_next;
+  stream >> obj._parent_group;
   // User Code Begin >>
   // User Code End >>
   return stream;
@@ -152,6 +172,8 @@ dbOStream& operator<<(dbOStream& stream, const _dbModInst& obj)
   stream << obj._parent;
   stream << obj._module_next;
   stream << obj._master;
+  stream << obj._group_next;
+  stream << obj._parent_group;
   // User Code Begin <<
   // User Code End <<
   return stream;
@@ -191,6 +213,15 @@ dbModule* dbModInst::getMaster() const
     return NULL;
   _dbBlock* par = (_dbBlock*) obj->getOwner();
   return (dbModule*) par->_module_tbl->getPtr(obj->_master);
+}
+
+dbGroup* dbModInst::getParentGroup() const
+{
+  _dbModInst* obj = (_dbModInst*) this;
+  if (obj->_parent_group == 0)
+    return NULL;
+  _dbBlock* par = (_dbBlock*) obj->getOwner();
+  return (dbGroup*) par->_group_tbl->getPtr(obj->_parent_group);
 }
 
 // User Code Begin dbModInstPublicMethods

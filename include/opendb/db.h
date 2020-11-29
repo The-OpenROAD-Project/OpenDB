@@ -2925,6 +2925,11 @@ class dbInst : public dbObject
   /// Get the Master of this instance.
   ///
   dbMaster* getMaster() const;
+ 
+  ///
+  /// Get the group of this instance.
+  ///
+  dbGroup* getGroup();
 
   ///
   /// Get the instance-terminals of this instance.
@@ -7177,6 +7182,8 @@ class dbModInst : public dbObject
   dbModule* getParent() const;
 
   dbModule* getMaster() const;
+
+  dbGroup* getParentGroup() const;
 
   // User Code Begin dbModInst
   static dbModInst* create(dbModule*   parentModule,

@@ -34,9 +34,8 @@
 #ifndef _WIN32
 #include <unistd.h>
 #endif
-#include <string>
 #include <memory>
-
+#include <string>
 
 #include "ZComponents.h"
 #include "db.h"
@@ -61,8 +60,12 @@
 #include "dbDiff.h"
 #include "dbDiff.hpp"
 #include "dbExtControl.h"
+#include "dbFill.h"
 #include "dbGCellGrid.h"
 #include "dbGroup.h"
+#include "dbGroupInstItr.h"
+#include "dbGroupItr.h"
+#include "dbGroupModInstItr.h"
 #include "dbHashTable.hpp"
 #include "dbHier.h"
 #include "dbITerm.h"
@@ -71,10 +74,10 @@
 #include "dbInstHdr.h"
 #include "dbIntHashTable.hpp"
 #include "dbJournal.h"
+#include "dbModInst.h"
 #include "dbModule.h"
 #include "dbModuleInstItr.h"
 #include "dbModuleModInstItr.h"
-#include "dbModInst.h"
 #include "dbNameCache.h"
 #include "dbNet.h"
 #include "dbObstruction.h"
@@ -86,7 +89,6 @@
 #include "dbRegionInstItr.h"
 #include "dbRegionItr.h"
 #include "dbRow.h"
-#include "dbFill.h"
 #include "dbSBox.h"
 #include "dbSBoxItr.h"
 #include "dbSWire.h"
@@ -354,6 +356,15 @@ _dbBlock::_dbBlock(_dbDatabase* db)
   _module_modinst_itr = new dbModuleModInstItr(_modinst_tbl);
   ZALLOCATED(_module_modinst_itr);
 
+  _group_itr = new dbGroupItr(_group_tbl);
+  ZALLOCATED(_group_itr);
+
+  _group_inst_itr = new dbGroupInstItr(_inst_tbl);
+  ZALLOCATED(_group_inst_itr);
+
+  _group_modinst_itr = new dbGroupModInstItr(_modinst_tbl);
+  ZALLOCATED(_group_modinst_itr);
+
   _bpin_itr = new dbBPinItr(_bpin_tbl);
   ZALLOCATED(_bpin_itr);
 
@@ -560,6 +571,15 @@ _dbBlock::_dbBlock(_dbDatabase* db, const _dbBlock& block)
   _module_modinst_itr = new dbModuleModInstItr(_modinst_tbl);
   ZALLOCATED(_module_modinst_itr);
 
+  _group_itr = new dbGroupItr(_group_tbl);
+  ZALLOCATED(_group_itr);
+
+  _group_inst_itr = new dbGroupInstItr(_inst_tbl);
+  ZALLOCATED(_group_inst_itr);
+
+  _group_modinst_itr = new dbGroupModInstItr(_modinst_tbl);
+  ZALLOCATED(_group_modinst_itr);
+
   _bpin_itr = new dbBPinItr(_bpin_tbl);
   ZALLOCATED(_bpin_itr);
 
@@ -631,6 +651,9 @@ _dbBlock::~_dbBlock()
   delete _region_inst_itr;
   delete _module_inst_itr;
   delete _module_modinst_itr;
+  delete _group_itr;
+  delete _group_inst_itr;
+  delete _group_modinst_itr;
   delete _bpin_itr;
   delete _region_itr;
   delete _prop_itr;
@@ -733,13 +756,13 @@ dbObjectTable* _dbBlock::getObjectTable(dbObjectType type)
 
     case dbInstObj:
       return _inst_tbl;
-    
+
     case dbModuleObj:
       return _module_tbl;
-    
+
     case dbModInstObj:
       return _modinst_tbl;
-    
+
     case dbGroupObj:
       return _group_tbl;
 
@@ -1011,7 +1034,7 @@ void _dbBlock::add_rect(const Rect& rect)
 }
 void _dbBlock::add_geom_shape(GeomShape* shape)
 {
- _dbBox* box = _box_tbl->getPtr(_bbox);
+  _dbBox* box = _box_tbl->getPtr(_bbox);
 
   if (_flags._valid_bbox)
     box->_shape._rect.merge(shape);
@@ -1142,13 +1165,13 @@ bool _dbBlock::operator==(const _dbBlock& rhs) const
 
   if (*_inst_tbl != *rhs._inst_tbl)
     return false;
-  
+
   if (*_module_tbl != *rhs._module_tbl)
     return false;
-  
+
   if (*_modinst_tbl != *rhs._modinst_tbl)
     return false;
-  
+
   if (*_group_tbl != *rhs._group_tbl)
     return false;
 
@@ -1450,8 +1473,8 @@ void dbBlock::ComputeBBox()
       }
     }
   }
-  
-  dbSet<dbObstruction> obstructions = getObstructions();
+
+  dbSet<dbObstruction>           obstructions = getObstructions();
   dbSet<dbObstruction>::iterator oitr;
 
   for (oitr = obstructions.begin(); oitr != obstructions.end(); ++oitr) {
@@ -1655,9 +1678,9 @@ bool dbBlock::findSomeMaster(const char* names, std::vector<dbMaster*>& masters)
   if (!names || names[0] == '\0')
     return false;
 
-  dbLib*       lib = getChip()->getDb()->findLib("lib");
-  dbMaster*    master;
-  auto parser = std::make_unique<Ath__parser>();
+  dbLib*    lib = getChip()->getDb()->findLib("lib");
+  dbMaster* master;
+  auto      parser = std::make_unique<Ath__parser>();
   parser->mkWords(names, NULL);
   // uint noid;
   char* masterName;
@@ -1683,9 +1706,9 @@ bool dbBlock::findSomeNet(const char* names, std::vector<dbNet*>& nets)
 {
   if (!names || names[0] == '\0')
     return false;
-  _dbBlock*    block = (_dbBlock*) this;
-  dbNet*       net;
-  auto parser = std::make_unique<Ath__parser>();
+  _dbBlock* block = (_dbBlock*) this;
+  dbNet*    net;
+  auto      parser = std::make_unique<Ath__parser>();
   parser->mkWords(names, NULL);
   uint  noid;
   char* netName;
@@ -1708,9 +1731,9 @@ bool dbBlock::findSomeInst(const char* names, std::vector<dbInst*>& insts)
 {
   if (!names || names[0] == '\0')
     return false;
-  _dbBlock*    block = (_dbBlock*) this;
-  dbInst*      inst;
-  auto parser = std::make_unique<Ath__parser>();
+  _dbBlock* block = (_dbBlock*) this;
+  dbInst*   inst;
+  auto      parser = std::make_unique<Ath__parser>();
   parser->mkWords(names, NULL);
   uint  ioid;
   char* instName;
@@ -2475,8 +2498,7 @@ void dbBlock::destroy(dbBlock* block_)
   _dbBlock* block = (_dbBlock*) block_;
   _dbChip*  chip  = (_dbChip*) block->getOwner();
   // delete the children of this block
-  for(dbId<_dbBlock> child_id : block->_children)
-  {
+  for (dbId<_dbBlock> child_id : block->_children) {
     _dbBlock* child = chip->_block_tbl->getPtr(child_id);
     destroy((dbBlock*) child);
   }

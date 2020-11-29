@@ -197,10 +197,10 @@ void dbModule::removeInst(dbInst* inst)
 {
   _dbModule* module = (_dbModule*) this;
   _dbInst*   _inst  = (_dbInst*) inst;
-  _dbBlock*  block  = (_dbBlock*) module->getOwner();
   if (_inst->_module != module->getOID())
     return;
-  uint id = _inst->getOID();
+  _dbBlock* block = (_dbBlock*) module->getOwner();
+  uint      id    = _inst->getOID();
 
   _dbInst* prev = NULL;
   uint     cur  = module->_insts;

@@ -83,7 +83,7 @@ class _dbGroup : public _dbObject
   dbId<_dbGroup> _groups;
 
   // User Code Begin fields
-  
+
   // User Code End fields
   _dbGroup(_dbDatabase*, const _dbGroup& r);
   _dbGroup(_dbDatabase*);

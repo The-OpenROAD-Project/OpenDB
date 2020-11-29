@@ -40,17 +40,12 @@
           "flags":["no-set","no-get"]
         },
         {
-          "name":"_modinst_name",
-          "type":"char *",
-          "flags":["no-set"]
-        },
-        {
           "name":"_next_entry",
           "type":"dbId<_dbModInst>",
           "flags":["no-set","no-get"]
         },
         {
-          "name":"parentMod",
+          "name":"_parent",
           "type":"dbId<_dbModule>",
           "flags":["no-set"],
           "parent":"dbBlock"
@@ -62,7 +57,7 @@
           "parent":"dbBlock"
         },
         {
-          "name":"masterMod",
+          "name":"_master",
           "type":"dbId<_dbModule>",
           "flags":["no-set"],
           "parent":"dbBlock"

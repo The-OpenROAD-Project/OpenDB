@@ -169,36 +169,35 @@ _dbModule::~_dbModule()
 char* dbModule::getName() const
 {
   _dbModule* obj = (_dbModule*) this;
-
   return obj->_name;
 }
 
 // User Code Begin dbModulePublicMethods
 
-void dbModule::addInst(dbInst* inst_)
+void dbModule::addInst(dbInst* inst)
 {
   _dbModule* module = (_dbModule*) this;
-  _dbInst*   inst   = (_dbInst*) inst_;
+  _dbInst*   _inst  = (_dbInst*) inst;
   _dbBlock*  block  = (_dbBlock*) module->getOwner();
 
-  if (inst->_module != 0) {
-    dbModule* mod = dbModule::getModule((dbBlock*) block, inst->_module);
-    mod->removeInst(inst_);
+  if (_inst->_module != 0) {
+    dbModule* mod = dbModule::getModule((dbBlock*) block, _inst->_module);
+    mod->removeInst(inst);
   }
 
-  inst->_module      = module->getOID();
-  inst->_module_next = module->_insts;
-  module->_insts     = inst->getOID();
+  _inst->_module      = module->getOID();
+  _inst->_module_next = module->_insts;
+  module->_insts      = _inst->getOID();
 }
 
-void dbModule::removeInst(dbInst* inst_)
+void dbModule::removeInst(dbInst* inst)
 {
   _dbModule* module = (_dbModule*) this;
-  _dbInst*   inst   = (_dbInst*) inst_;
+  _dbInst*   _inst  = (_dbInst*) inst;
   _dbBlock*  block  = (_dbBlock*) module->getOwner();
-  if (inst->_module != module->getOID())
+  if (_inst->_module != module->getOID())
     return;
-  uint id = inst->getOID();
+  uint id = _inst->getOID();
 
   _dbInst* prev = NULL;
   uint     cur  = module->_insts;
@@ -206,16 +205,16 @@ void dbModule::removeInst(dbInst* inst_)
     _dbInst* c = block->_inst_tbl->getPtr(cur);
     if (cur == id) {
       if (prev == NULL)
-        module->_insts = inst->_module_next;
+        module->_insts = _inst->_module_next;
       else
-        prev->_module_next = inst->_module_next;
+        prev->_module_next = _inst->_module_next;
       break;
     }
     prev = c;
     cur  = c->_module_next;
   }
-  inst->_module      = 0;
-  inst->_module_next = 0;
+  _inst->_module      = 0;
+  _inst->_module_next = 0;
 }
 
 dbSet<dbModInst> dbModule::getChildren()
@@ -276,7 +275,7 @@ dbModInst* dbModule::findModInst(const char* name)
 {
   _dbModule*  obj    = (_dbModule*) this;
   _dbBlock*   par    = (_dbBlock*) obj->getOwner();
-  std::string h_name = std::string(obj->_name) + "->" + std::string(name);
+  std::string h_name = std::string(obj->_name) + "/" + std::string(name);
   return (dbModInst*) par->_modinst_hash.find(h_name.c_str());
 }
 // User Code End dbModulePublicMethods

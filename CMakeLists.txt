@@ -50,6 +50,7 @@ if (PythonLibs_FOUND)
     option(BUILD_PYTHON "Build Python SWIG module" ON)
 endif()
 
+#To enable python binding of openDB for Python GUI
 if(BUILD_PYTHON)
     add_subdirectory(src/swig/python)
 endif()

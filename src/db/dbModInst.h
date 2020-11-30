@@ -57,15 +57,12 @@ class _dbModInst : public _dbObject
  public:
   // User Code Begin enums
   // User Code End enums
-  char* _name;
 
+  char*            _name;
   dbId<_dbModInst> _next_entry;
-
-  dbId<_dbModule> _parent;
-
+  dbId<_dbModule>  _parent;
   dbId<_dbModInst> _module_next;
-
-  dbId<_dbModule> _master;
+  dbId<_dbModule>  _master;
 
   // User Code Begin fields
   // User Code End fields
@@ -79,7 +76,6 @@ class _dbModInst : public _dbObject
                    const char*       field,
                    const _dbModInst& rhs) const;
   void out(dbDiff& diff, char side, const char* field) const;
-  dbObjectTable* getObjectTable(dbObjectType type);
   // User Code Begin methods
   // User Code End methods
 };

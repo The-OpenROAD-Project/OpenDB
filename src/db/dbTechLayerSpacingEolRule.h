@@ -102,73 +102,41 @@ class _dbTechLayerSpacingEolRule : public _dbObject
  public:
   // User Code Begin enums
   // User Code End enums
+
   dbTechLayerSpacingEolRuleFlags _flags;
-
-  double eolSpace;
-
-  double eolwidth;
-
-  double wrongDirSpace;
-
-  double oppositeWidth;
-
-  double eolWithin;
-
-  double wrongDirWithin;
-
-  double exactWidth;
-
-  double otherWidth;
-
-  double fillTriangle;
-
-  double cutClass;
-
-  double withCutSpace;
-
-  double enclosureEndWidth;
-
-  double enclosureEndWithin;
-
-  double endPrlSpace;
-
-  double endPrl;
-
-  double endToEndSpace;
-
-  double oneCutSpace;
-
-  double twoCutSpace;
-
-  double extension;
-
-  double wrongDirExtension;
-
-  double otherEndWidth;
-
-  double maxLength;
-
-  double minLength;
-
-  double parSpace;
-
-  double parWithin;
-
-  double parPrl;
-
-  double parMinLength;
-
-  double encloseDist;
-
-  double cutToMetalSpace;
-
-  double minAdjLength;
-
-  double minAdjLength1;
-
-  double minAdjLength2;
-
-  double notchLength;
+  double                         eolSpace;
+  double                         eolwidth;
+  double                         wrongDirSpace;
+  double                         oppositeWidth;
+  double                         eolWithin;
+  double                         wrongDirWithin;
+  double                         exactWidth;
+  double                         otherWidth;
+  double                         fillTriangle;
+  double                         cutClass;
+  double                         withCutSpace;
+  double                         enclosureEndWidth;
+  double                         enclosureEndWithin;
+  double                         endPrlSpace;
+  double                         endPrl;
+  double                         endToEndSpace;
+  double                         oneCutSpace;
+  double                         twoCutSpace;
+  double                         extension;
+  double                         wrongDirExtension;
+  double                         otherEndWidth;
+  double                         maxLength;
+  double                         minLength;
+  double                         parSpace;
+  double                         parWithin;
+  double                         parPrl;
+  double                         parMinLength;
+  double                         encloseDist;
+  double                         cutToMetalSpace;
+  double                         minAdjLength;
+  double                         minAdjLength1;
+  double                         minAdjLength2;
+  double                         notchLength;
 
   // User Code Begin fields
   dbId<_dbTechLayer> _layer;
@@ -181,12 +149,11 @@ class _dbTechLayerSpacingEolRule : public _dbObject
   {
     return !operator==(rhs);
   }
-  bool           operator<(const _dbTechLayerSpacingEolRule& rhs) const;
-  void           differences(dbDiff&                           diff,
-                             const char*                       field,
-                             const _dbTechLayerSpacingEolRule& rhs) const;
-  void           out(dbDiff& diff, char side, const char* field) const;
-  dbObjectTable* getObjectTable(dbObjectType type);
+  bool operator<(const _dbTechLayerSpacingEolRule& rhs) const;
+  void differences(dbDiff&                           diff,
+                   const char*                       field,
+                   const _dbTechLayerSpacingEolRule& rhs) const;
+  void out(dbDiff& diff, char side, const char* field) const;
   // User Code Begin methods
   // User Code End methods
 };

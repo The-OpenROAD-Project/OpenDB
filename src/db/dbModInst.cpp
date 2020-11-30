@@ -83,15 +83,10 @@ void _dbModInst::differences(dbDiff&           diff,
   DIFF_BEGIN
 
   DIFF_FIELD(_name);
-
   DIFF_FIELD(_next_entry);
-
   DIFF_FIELD(_parent);
-
   DIFF_FIELD(_module_next);
-
   DIFF_FIELD(_master);
-
   // User Code Begin differences
   // User Code End differences
   DIFF_END
@@ -99,15 +94,10 @@ void _dbModInst::differences(dbDiff&           diff,
 void _dbModInst::out(dbDiff& diff, char side, const char* field) const
 {
   DIFF_OUT_BEGIN
-
   DIFF_OUT_FIELD(_name);
-
   DIFF_OUT_FIELD(_next_entry);
-
   DIFF_OUT_FIELD(_parent);
-
   DIFF_OUT_FIELD(_module_next);
-
   DIFF_OUT_FIELD(_master);
 
   // User Code Begin out
@@ -156,18 +146,11 @@ dbOStream& operator<<(dbOStream& stream, const _dbModInst& obj)
   // User Code End <<
   return stream;
 }
-dbObjectTable* _dbModInst::getObjectTable(dbObjectType type)
-{
-  switch (type) {
-      // User Code Begin getObjectTable
-    // User Code End getObjectTable
-    default:
-      break;
-  }
-  return getTable()->getObjectTable(type);
-}
+
 _dbModInst::~_dbModInst()
 {
+  if (_name)
+    free((void*) _name);
 }
 ////////////////////////////////////////////////////////////////////
 //

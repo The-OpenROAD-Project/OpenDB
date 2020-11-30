@@ -59,12 +59,10 @@ class _dbModule : public _dbObject
  public:
   // User Code Begin enums
   // User Code End enums
-  char* _name;
 
-  dbId<_dbModule> _next_entry;
-
-  dbId<_dbInst> _insts;
-
+  char*            _name;
+  dbId<_dbModule>  _next_entry;
+  dbId<_dbInst>    _insts;
   dbId<_dbModInst> _modinsts;
 
   // User Code Begin fields
@@ -77,7 +75,6 @@ class _dbModule : public _dbObject
   bool operator<(const _dbModule& rhs) const;
   void differences(dbDiff& diff, const char* field, const _dbModule& rhs) const;
   void out(dbDiff& diff, char side, const char* field) const;
-  dbObjectTable* getObjectTable(dbObjectType type);
   // User Code Begin methods
   // User Code End methods
 };

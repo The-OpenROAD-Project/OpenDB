@@ -204,6 +204,8 @@ dbModInst* dbModInst::create(dbModule*   parentModule,
   if (block->_modinst_hash.hasMember(h_name.c_str()))
     return nullptr;
   _dbModule*  master  = (_dbModule*) masterModule;
+  if(master->_modinst!=0)
+    return nullptr;
   _dbModInst* modinst = block->_modinst_tbl->create();
   modinst->_name      = strdup(h_name.c_str());
   ZALLOCATED(modinst->_name);
@@ -211,6 +213,7 @@ dbModInst* dbModInst::create(dbModule*   parentModule,
   modinst->_parent      = parent->getOID();
   modinst->_module_next = parent->_modinsts;
   parent->_modinsts     = modinst->getOID();
+  master->_modinst      = modinst->getOID();
   block->_modinst_hash.insert(modinst);
   return (dbModInst*) modinst;
 }

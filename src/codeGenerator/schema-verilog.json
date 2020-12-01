@@ -25,6 +25,12 @@
           "type":"dbId<_dbModInst>",
           "flags":["no-set","no-get"],
           "parent":"dbBlock"
+        },
+        {
+          "name":"_modinst",
+          "type":"dbId<_dbModInst>",
+          "flags":["no-set"],
+          "parent":"dbBlock"
         }
       ],
       "constructors":[],

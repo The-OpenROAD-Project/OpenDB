@@ -7145,6 +7145,8 @@ class dbModule : public dbObject
  public:
   char* getName() const;
 
+  dbModInst* getModinst() const;
+
   // User Code Begin dbModule
   void addInst(dbInst* inst);
 

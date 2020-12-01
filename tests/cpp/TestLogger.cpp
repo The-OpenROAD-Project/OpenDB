@@ -14,7 +14,7 @@ BOOST_AUTO_TEST_CASE(test_default)
         if(string(cwd)=="/")
             sink_path = "/OpenDB/build/"+sink_path;//in Docker
     }
-    ordlog::init();
+    ord::init();
     BOOST_ASSERT(ordlog::info(ordlog::OPENDB,1,"Fresh start")==0);
     BOOST_ASSERT(ordlog::addSinkFile(sink_path.c_str())==0);
     BOOST_ASSERT(ordlog::warn(ordlog::OPENDB,2,"Added Sink")==0);
@@ -33,7 +33,7 @@ BOOST_AUTO_TEST_CASE(test_init_file)
         if(string(cwd)=="/")
             sink_path = "/OpenDB/build/"+sink_path;//in Docker
     }
-    ordlog::init(sink_path.c_str());
+    ord::init(sink_path.c_str());
     BOOST_ASSERT(ordlog::info(ordlog::OPENDB,1,"Fresh start in file")==0);
     BOOST_ASSERT(ordlog::addSinkStdout()==0);
     BOOST_ASSERT(ordlog::info(ordlog::OPENDB,2,"Added stdout")==0);

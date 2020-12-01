@@ -1,7 +1,7 @@
 ///////////////////////////////////////////////////////////////////////////////
 // BSD 3-Clause License
 //
-// Copyright (c) 2019, Nefelus Inc
+// Copyright (c) 2020, OpenROAD
 // All rights reserved.
 //
 // Redistribution and use in source and binary forms, with or without
@@ -31,18 +31,21 @@
 // POSSIBILITY OF SUCH DAMAGE.
 
 #pragma once
-#include "spdlog/spdlog.h"
-#include "string"
 
-namespace ordlog {
-using std::string;
+#include <string>
+
+#include "spdlog/spdlog.h"
+
+namespace ord {
+
 enum MessageStatus
 {
-  INFO = 2,
-  WARN = 3,
-  ERROR = 4,
-  CRIT = 5
+  INFO  = spdlog::level::info,
+  WARN  = spdlog::level::warn,
+  ERROR = spdlog::level::err,
+  CRIT  = spdlog::level::critical
 };
+
 enum ModuleType
 {
   OPENDB,
@@ -70,50 +73,65 @@ static const char* modules_name_tbl[] = {
     "FTRT",
 };
 
-int removeSinkStdout();
-
 int addSinkStdout();
+int removeSinkStdout();
 
 int addSinkFile(const char* file_name);
 int removeSinkFile(const char* file_name);
-void init();
 
+void init();
 void init(const char* file_name);
 
 template <typename... Args>
-inline int info(ModuleType _type, int id, string message, const Args&... args)
+inline int info(ModuleType         type,
+                int                id,
+                const std::string& message,
+                const Args&... args)
 {
-  return Log(_type, INFO, id, message, args...);
+  return Log(type, INFO, id, message, args...);
 }
 
 template <typename... Args>
-inline int warn(ModuleType _type, int id, string message, const Args&... args)
+inline int warn(ModuleType         type,
+                int                id,
+                const std::string& message,
+                const Args&... args)
 {
-  return Log(_type, WARN, id, message, args...);
+  return Log(type, WARN, id, message, args...);
 }
 
 template <typename... Args>
-inline int error(ModuleType _type, int id, string message, const Args&... args)
+inline int error(ModuleType         type,
+                 int                id,
+                 const std::string& message,
+                 const Args&... args)
 {
-  return Log(_type, ERROR, id, message, args...);
+  return Log(type, ERROR, id, message, args...);
 }
 
 template <typename... Args>
-inline int crit(ModuleType _type, int id, string message, const Args&... args)
+inline int crit(ModuleType         type,
+                int                id,
+                const std::string& message,
+                const Args&... args)
 {
-  return Log(_type, CRIT, id, message, args...);
+  return Log(type, CRIT, id, message, args...);
 }
 
 template <typename... Args>
-inline int Log(ModuleType    _type,
-        MessageStatus _status,
-        int           id,
-        string        message,
-        const Args&... args)
+inline int Log(ModuleType         type,
+               MessageStatus      status,
+               int                id,
+               const std::string& message,
+               const Args&... args)
 {
   if (id < 0 || id > 9999)
     return -1;  // invalid id
-  spdlog::log((spdlog::level::level_enum) _status, "[{}-{:04d}] " + message, modules_name_tbl[_type], id, args...);
+  spdlog::log((spdlog::level::level_enum) status,
+              "[{}-{:04d}] " + message,
+              modules_name_tbl[type],
+              id,
+              args...);
   return 0;
 }
 

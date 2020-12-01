@@ -1,7 +1,7 @@
 ///////////////////////////////////////////////////////////////////////////////
 // BSD 3-Clause License
 //
-// Copyright (c) 2019, Nefelus Inc
+// Copyright (c) 2020, OpenROAD
 // All rights reserved.
 //
 // Redistribution and use in source and binary forms, with or without
@@ -29,26 +29,28 @@
 // CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
 // ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 // POSSIBILITY OF SUCH DAMAGE.
+
+#include <mutex>
+
 #include "Logger.h"
 #include "spdlog/sinks/basic_file_sink.h"
 #include "spdlog/sinks/stdout_color_sinks.h"
 #include "spdlog/spdlog.h"
-#include <mutex>
-namespace ordlog {
+
+namespace ord {
 
 int removeSinkStdout()
 {
-  if(spdlog::default_logger().get()==nullptr)
+  if (spdlog::default_logger().get() == nullptr) {
     return -1;
+  }
   auto default_sinks = &spdlog::default_logger().get()->sinks();
-  bool found = false;
-  for(auto sink = default_sinks->begin();sink!=default_sinks->end();++sink)
-  {
-    auto stdout_sink = dynamic_cast<spdlog::sinks::stdout_color_sink_mt*>(sink->get());
-    if(stdout_sink==nullptr)
-      continue;
-    else
-    {
+  bool found         = false;
+  for (auto sink = default_sinks->begin(); sink != default_sinks->end();
+       ++sink) {
+    auto stdout_sink
+        = dynamic_cast<spdlog::sinks::stdout_color_sink_mt*>(sink->get());
+    if (stdout_sink) {
       default_sinks->erase(sink--);
       found = true;
     }
@@ -58,16 +60,16 @@ int removeSinkStdout()
 
 int addSinkStdout()
 {
-  if(spdlog::default_logger().get()==nullptr)
+  if (spdlog::default_logger().get() == nullptr)
     return -1;
   auto default_sinks = &spdlog::default_logger().get()->sinks();
-  for(auto sink = default_sinks->begin();sink!=default_sinks->end();++sink)
-  {
-    auto stdout_sink = dynamic_cast<spdlog::sinks::stdout_color_sink_mt*>(sink->get());
-    if(stdout_sink==nullptr)
-      continue;
-    else
+  for (auto sink = default_sinks->begin(); sink != default_sinks->end();
+       ++sink) {
+    auto stdout_sink
+        = dynamic_cast<spdlog::sinks::stdout_color_sink_mt*>(sink->get());
+    if (stdout_sink) {
       return -2;
+    }
   }
   auto new_sink = std::make_shared<spdlog::sinks::stdout_color_sink_mt>();
   new_sink.get()->set_pattern("[%^%l%$] %v");
@@ -77,18 +79,22 @@ int addSinkStdout()
 
 int addSinkFile(const char* file_name)
 {
-  if(spdlog::default_logger().get()==nullptr)
+  if (spdlog::default_logger().get() == nullptr)
     return -1;
   auto default_sinks = &spdlog::default_logger().get()->sinks();
-  for(auto sink = default_sinks->begin();sink!=default_sinks->end();++sink)
-  {
-    auto file_sink = dynamic_cast<spdlog::sinks::basic_file_sink<std::mutex>*>(sink->get());
-    if(file_sink==nullptr)
+  for (auto sink = default_sinks->begin(); sink != default_sinks->end();
+       ++sink) {
+    auto file_sink = dynamic_cast<spdlog::sinks::basic_file_sink<std::mutex>*>(
+        sink->get());
+    if (file_sink == nullptr) {
       continue;
-    if(strcmp(file_sink->filename().c_str(),file_name)==0)
-      return -2;//sink already exists
+    }
+    if (strcmp(file_sink->filename().c_str(), file_name) == 0) {
+      return -2;  // sink already exists
+    }
   }
-  auto new_sink = std::make_shared<spdlog::sinks::basic_file_sink<std::mutex>>(file_name);
+  auto new_sink
+      = std::make_shared<spdlog::sinks::basic_file_sink<std::mutex>>(file_name);
   new_sink.get()->set_pattern("[%^%l%$] %v");
   default_sinks->push_back(new_sink);
   return 0;
@@ -96,17 +102,18 @@ int addSinkFile(const char* file_name)
 
 int removeSinkFile(const char* file_name)
 {
-  if(spdlog::default_logger().get()==nullptr)
+  if (spdlog::default_logger().get() == nullptr)
     return -1;
   auto default_sinks = &spdlog::default_logger().get()->sinks();
-  bool found = false;
-  for(auto sink = default_sinks->begin();sink!=default_sinks->end();++sink)
-  {
-    auto file_sink = dynamic_cast<spdlog::sinks::basic_file_sink<std::mutex>*>(sink->get());
-    if(file_sink==nullptr)
+  bool found         = false;
+  for (auto sink = default_sinks->begin(); sink != default_sinks->end();
+       ++sink) {
+    auto file_sink = dynamic_cast<spdlog::sinks::basic_file_sink<std::mutex>*>(
+        sink->get());
+    if (file_sink == nullptr) {
       continue;
-    if(strcmp(file_sink->filename().c_str(),file_name)==0)
-    {
+    }
+    if (strcmp(file_sink->filename().c_str(), file_name) == 0) {
       default_sinks->erase(sink--);
       found = true;
     }
@@ -127,4 +134,3 @@ void init(const char* file_name)
   addSinkFile(file_name);
 }
 }  // namespace ordlog
-

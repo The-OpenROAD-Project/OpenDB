@@ -35,7 +35,8 @@
 *.app
 
 # python cache
-*.pyc
+__pycache__/
+*.py[cod]
 
 # build
 build

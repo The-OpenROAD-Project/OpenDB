@@ -26,10 +26,17 @@
 *.a
 *.lib
 
+# Logs
+*.log
+
 # Executables
 *.exe
 *.out
 *.app
+
+# python cache
+__pycache__/
+*.py[cod]
 
 # build
 build

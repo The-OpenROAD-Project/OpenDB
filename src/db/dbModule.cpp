@@ -68,6 +68,9 @@ bool _dbModule::operator==(const _dbModule& rhs) const
   if (_modinsts != rhs._modinsts)
     return false;
 
+  if (_modinst != rhs._modinst)
+    return false;
+
   // User Code Begin ==
   // User Code End ==
   return true;
@@ -92,6 +95,8 @@ void _dbModule::differences(dbDiff&          diff,
 
   DIFF_FIELD(_modinsts);
 
+  DIFF_FIELD(_modinst);
+
   // User Code Begin differences
   // User Code End differences
   DIFF_END
@@ -108,6 +113,8 @@ void _dbModule::out(dbDiff& diff, char side, const char* field) const
 
   DIFF_OUT_FIELD(_modinsts);
 
+  DIFF_OUT_FIELD(_modinst);
+
   // User Code Begin out
   // User Code End out
   DIFF_END
@@ -118,6 +125,7 @@ _dbModule::_dbModule(_dbDatabase* db)
   _name     = 0;
   _insts    = 0;
   _modinsts = 0;
+  _modinst  = 0;
   // User Code End constructor
 }
 _dbModule::_dbModule(_dbDatabase* db, const _dbModule& r)
@@ -126,6 +134,7 @@ _dbModule::_dbModule(_dbDatabase* db, const _dbModule& r)
   _next_entry = r._next_entry;
   _insts      = r._insts;
   _modinsts   = r._modinsts;
+  _modinst    = r._modinst;
   // User Code Begin CopyConstructor
   // User Code End CopyConstructor
 }
@@ -136,6 +145,7 @@ dbIStream& operator>>(dbIStream& stream, _dbModule& obj)
   stream >> obj._next_entry;
   stream >> obj._insts;
   stream >> obj._modinsts;
+  stream >> obj._modinst;
   // User Code Begin >>
   // User Code End >>
   return stream;
@@ -146,6 +156,7 @@ dbOStream& operator<<(dbOStream& stream, const _dbModule& obj)
   stream << obj._next_entry;
   stream << obj._insts;
   stream << obj._modinsts;
+  stream << obj._modinst;
   // User Code Begin <<
   // User Code End <<
   return stream;
@@ -173,6 +184,15 @@ char* dbModule::getName() const
 {
   _dbModule* obj = (_dbModule*) this;
   return obj->_name;
+}
+
+dbModInst* dbModule::getModinst() const
+{
+  _dbModule* obj = (_dbModule*) this;
+  if (obj->_modinst == 0)
+    return NULL;
+  _dbBlock* par = (_dbBlock*) obj->getOwner();
+  return (dbModInst*) par->_modinst_tbl->getPtr(obj->_modinst);
 }
 
 // User Code Begin dbModulePublicMethods
@@ -256,6 +276,8 @@ void dbModule::destroy(dbModule* module)
   for (itr = modinsts.begin(); itr != modinsts.end();) {
     itr = dbModInst::destroy(itr);
   }
+  if(_module->_modinst!=0)
+    dbModInst::destroy(module->getModinst());
 
   for (auto inst : module->getInsts()) {
     _dbInst* _inst      = (_dbInst*) inst;

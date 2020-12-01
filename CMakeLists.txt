@@ -42,15 +42,7 @@ find_package(SWIG 3.0 REQUIRED)
 
 include(${SWIG_USE_FILE})
 
-find_package(PythonInterp 3)
-find_package(PythonLibs 3)
-
-if (PythonLibs_FOUND)
-    message(STATUS "Found python, enabling Python SWIG Module")
-    option(BUILD_PYTHON "Build Python SWIG module" ON)
-endif()
-
-#To enable python binding of openDB for Python GUI
+option(BUILD_PYTHON "Build Python SWIG module" ON)
 if(BUILD_PYTHON)
     add_subdirectory(src/swig/python)
 endif()

@@ -98,7 +98,7 @@
 #include "dbWire.h"
 #include "defout.h"
 #include "lefout.h"
-#include "logger.h"
+#include "dbLogger.h"
 #include "parse.h"
 
 namespace odb {

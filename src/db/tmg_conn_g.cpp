@@ -30,10 +30,10 @@
 // ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 // POSSIBILITY OF SUCH DAMAGE.
 
-#include <logger.h>
 #include <stdio.h>
 #include <stdlib.h>
 
+#include "dbLogger.h"
 #include "db.h"
 #include "dbShape.h"
 #include "dbWireCodec.h"

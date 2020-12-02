@@ -37,7 +37,7 @@
 #endif
 #include <stdio.h>
 
-#include "logger.h"
+#include "dbLogger.h"
 #include "misc_global.h"
 #include "parse.h"
 int Ath__double2int(double v);

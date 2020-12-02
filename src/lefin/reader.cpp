@@ -49,7 +49,7 @@
 #include "lefiUtil.hpp"
 #include "lefin.h"
 #include "lefrReader.hpp"
-#include "logger.h"
+#include "dbLogger.h"
 
 namespace odb {
 

@@ -52,7 +52,7 @@
 #include "dbShape.h"
 #include "dbTable.h"
 #include "dbTable.hpp"
-#include "logger.h"
+#include "dbLogger.h"
 
 #ifdef _WIN32
 #define MINFLOAT -1.0e+20

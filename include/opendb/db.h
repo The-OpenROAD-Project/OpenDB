@@ -44,7 +44,7 @@
 #include "dbTypes.h"
 #include "dbViaParams.h"
 #include "geom.h"
-#include "logger.h"
+#include "dbLogger.h"
 #include "odb.h"
 
 #define ADS_MAX_CORNER 10

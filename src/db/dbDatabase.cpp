@@ -58,7 +58,7 @@
 #include "dbTable.hpp"
 #include "dbTech.h"
 #include "dbWire.h"
-#include "logger.h"
+#include "dbLogger.h"
 
 namespace odb {
 

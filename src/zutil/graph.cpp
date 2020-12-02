@@ -37,7 +37,7 @@
 #include <stdlib.h>
 #include "assert.h"
 #include "graph.h"
-#include "logger.h"
+#include "dbLogger.h"
 
 #define MAXIT 1000
 #define LARGE 2000000000

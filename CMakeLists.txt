@@ -43,7 +43,7 @@ find_package(SWIG 3.0 REQUIRED)
 include(${SWIG_USE_FILE})
 
 option(BUILD_PYTHON "Build Python SWIG module" ON)
-if(NOT OPENROAD_BUILD AND BUILD_PYTHON)
+if(BUILD_PYTHON)
     add_subdirectory(src/swig/python)
 endif()
 

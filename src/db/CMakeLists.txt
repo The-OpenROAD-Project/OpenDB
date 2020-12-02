@@ -88,7 +88,7 @@ add_library(opendb
     dbUtil.cpp
     gs.cpp
     grids.cpp
-    logger.cpp 
+    dbLogger.cpp 
     tmg_conn.cpp
     tmg_conn_g.cpp
     tmg_conn_s.cpp

@@ -1,6 +1,0 @@
-[submodule "lef"]
-	path = src/lef
-	url =../lef.git
-[submodule "src/def"]
-	path = src/def
-	url = ../def.git

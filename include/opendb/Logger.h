@@ -46,32 +46,46 @@ enum MessageStatus
   CRIT  = spdlog::level::critical
 };
 
+#define FOREACH_MODULE(X) \
+    X(ANT) \
+    X(CTS) \
+    X(DPL) \
+    X(DRT) \
+    X(FIN) \
+    X(GPL) \
+    X(GRT) \
+    X(GUI) \
+    X(ICE) \
+    X(IFP) \
+    X(MPL) \
+    X(ODB) \
+    X(ORD) \
+    X(PAR) \
+    X(PDN) \
+    X(PPL) \
+    X(PSM) \
+    X(PSN) \
+    X(RCX) \
+    X(RSZ) \
+    X(STA) \
+    X(STT) \
+    X(TAP) \
+
+#define GENERATE_ENUM(ENUM) ENUM,
+#define GENERATE_STRING(STRING) #STRING,
+
 enum ModuleType
 {
-  OPENDB,
-  OPENROAD,
-  OPENSTA,
-  OPENRCX,
-  IOPLACER,
-  TRITONROUTE,
-  REPLACE,
-  RESIZER,
-  GUI,
-  FASTROUTE
+ FOREACH_MODULE(GENERATE_ENUM)
 };
 
 static const char* modules_name_tbl[] = {
-    "OPDB",
-    "OPRD",
-    "OSTA",
-    "ORCX",
-    "IOPL",
-    "TRRT",
-    "RPLC",
-    "RSZR",
-    "GGUI",
-    "FTRT",
+ FOREACH_MODULE(GENERATE_STRING)
 };
+
+#undef FOREACH_MODULE
+#undef GENERATE_ENUM
+#undef GENERATE_STRING
 
 int addSinkStdout();
 int removeSinkStdout();

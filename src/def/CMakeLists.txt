@@ -3,8 +3,6 @@ project(DEF_PARSER
   LANGUAGES CXX 
 )
 
-cmake_minimum_required(VERSION 3.1)
-
 set(DEFLIB_HOME ${CMAKE_CURRENT_SOURCE_DIR})
 
 # BISON and ZLIB is required to compile DEF/LEF Parsers.

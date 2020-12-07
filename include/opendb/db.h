@@ -71,9 +71,8 @@ class dbStringProperty;
 class dbIntProperty;
 class dbDoubleProperty;
 
-//Generator Code Begin 1
-//Generator Code End 1
-
+// Generator Code Begin 1
+// Generator Code End 1
 
 // Design objects
 class dbChip;
@@ -100,9 +99,10 @@ class dbTechAntennaPinModel;
 class dbBlockCallBackObj;
 class dbRegion;
 class dbBPin;
-//Generator Code Begin 2
-//Generator Code End 2
-
+// Generator Code Begin 2
+class dbModule;
+class dbModInst;
+// Generator Code End 2
 
 // Lib objects
 class dbLib;
@@ -111,8 +111,8 @@ class dbMaster;
 class dbMTerm;
 class dbMPin;
 class dbTarget;
-//Generator Code Begin 3
-//Generator Code End 3
+// Generator Code Begin 3
+// Generator Code End 3
 
 // Tech objects
 class dbTech;
@@ -129,8 +129,8 @@ class dbTechMinCutRule;
 class dbTechMinEncRule;
 class dbTechV55InfluenceEntry;
 class dbTechSameNetRule;
-//Generator Code Begin 4
-//Generator Code End 4
+// Generator Code Begin 4
+// Generator Code End 4
 
 class dbViaParams;
 
@@ -518,12 +518,10 @@ class dbBox : public dbObject
   uint getWidth(uint dir = 1);
   uint getLength(uint dir = 1);
 
-
   ///
   /// Get GeomShape Interface
   ///
   GeomShape* getGeomShape();
-
 
   ///
   /// Set temporary flag visited
@@ -684,7 +682,7 @@ class dbSBox : public dbBox
   /// Get Oct Wire Shape
   ///
   Oct getOct();
-  
+
   ///
   /// Add a rect to a dbSWire.
   ///
@@ -709,7 +707,7 @@ class dbSBox : public dbBox
                         int             x2,
                         int             y2,
                         dbWireShapeType type,
-                        Direction       dir = UNDEFINED,
+                        Direction       dir   = UNDEFINED,
                         int             width = 0);
 
   ///
@@ -850,10 +848,26 @@ class dbBlock : public dbObject
   dbSet<dbInst> getInsts();
 
   ///
+  /// Get the modules of this block.
+  ///
+  dbSet<dbModule> getModules();
+
+  ///
+  /// Get the modinsts of this block.
+  ///
+  dbSet<dbModInst> getModInsts();
+
+  ///
   /// Find a specific instance of this block.
   /// Returns NULL if the object was not found.
   ///
   dbInst* findInst(const char* name);
+
+  ///
+  /// Find a specific module in this block.
+  /// Returns NULL if the object was not found.
+  ///
+  dbModule* findModule(const char* name);
 
   ///
   /// Find a set of insts. Each name can be real name, or Ixxx, or xxx,
@@ -2923,6 +2937,12 @@ class dbInst : public dbObject
   dbRegion* getRegion();
 
   ///
+  /// Get the module this instance belongs to. Returns NULL if instance has no
+  /// assigned module.
+  ///
+  dbModule* getModule();
+
+  ///
   /// Find the iterm of the given terminal name.
   /// Returns NULL if no terminal was found.
   ///
@@ -3627,7 +3647,6 @@ class dbWire : public dbObject
   ///
   void detach();
 
-
   ///
   /// Copy the src wire to the desintation wire.
   ///
@@ -3741,7 +3760,6 @@ class dbSWire : public dbObject
   /// Translate a database-id back to a pointer.
   ///
   static dbSWire* getSWire(dbBlock* block, uint oid);
-
 };
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -3876,7 +3894,7 @@ class dbTrackGrid : public dbObject
   /// Translate a database-id back to a pointer.
   ///
   static dbTrackGrid* getTrackGrid(dbBlock* block, uint oid);
-  
+
   ///
   /// destroy a grid
   ///
@@ -7120,7 +7138,55 @@ class dbViaParams : private _dbViaParams
   void setBottomLayer(dbTechLayer* layer);
 };
 
-//Generator Code Begin 5
-//Generator Code End 5
+// Generator Code Begin 5
+
+class dbModule : public dbObject
+{
+ public:
+  char* getName() const;
+
+  dbModInst* getModInst() const;
+
+  // User Code Begin dbModule
+  void addInst(dbInst* inst);
+
+  void removeInst(dbInst* inst);
+
+  dbSet<dbInst> getInsts();
+
+  dbSet<dbModInst> getChildren();
+
+  dbModInst* findModInst(const char* name);
+
+  static dbModule* create(dbBlock* block, const char* name);
+
+  static void destroy(dbModule* module);
+
+  dbModule* getModule(dbBlock* block_, uint dbid_);
+
+  // User Code End dbModule
+};
+
+class dbModInst : public dbObject
+{
+ public:
+  dbModule* getParent() const;
+
+  dbModule* getMaster() const;
+
+  // User Code Begin dbModInst
+  static dbModInst* create(dbModule*   parentModule,
+                           dbModule*   masterModule,
+                           const char* name);
+
+  static void destroy(dbModInst* modinst);
+
+  static dbSet<dbModInst>::iterator destroy(dbSet<dbModInst>::iterator& itr);
+
+  char* getName() const;
+  // User Code End dbModInst
+};
+
+// Generator Code End 5
 
 }  // namespace odb

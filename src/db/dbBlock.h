@@ -88,6 +88,8 @@ class _dbHier;
 class _dbBPin;
 class _dbTechLayerRule;
 class _dbTechNonDefaultRule;
+class _dbModule;
+class _dbModInst;
 class dbJournal;
 
 class dbNetBTermItr;
@@ -95,6 +97,8 @@ class dbBPinItr;
 class dbNetITermItr;
 class dbInstITermItr;
 class dbRegionInstItr;
+class dbModuleInstItr;
+class dbModuleModInstItr;
 class dbRegionItr;
 class dbSWireItr;
 class dbNameServer;
@@ -162,6 +166,8 @@ class _dbBlock : public _dbObject
   dbId<_dbInst>               _parent_inst;   // Up hierarchy: TWG
   dbHashTable<_dbNet>         _net_hash;
   dbHashTable<_dbInst>        _inst_hash;
+  dbHashTable<_dbModule>      _module_hash;
+  dbHashTable<_dbModInst>     _modinst_hash;
   dbIntHashTable<_dbInstHdr>  _inst_hdr_hash;
   dbHashTable<_dbBTerm>       _bterm_hash;
   uint                        _maxCapNodeId;
@@ -195,6 +201,8 @@ class _dbBlock : public _dbObject
   dbTable<_dbTechNonDefaultRule>* _non_default_rule_tbl;
   dbTable<_dbTechLayerRule>*      _layer_rule_tbl;
   dbTable<_dbProperty>*           _prop_tbl;
+  dbTable<_dbModule>*             _module_tbl;
+  dbTable<_dbModInst>*            _modinst_tbl;
   _dbNameCache*                   _name_cache;
 
   dbPagedVector<float, 4096, 12>* _r_val_tbl;
@@ -217,6 +225,8 @@ class _dbBlock : public _dbObject
   dbRSegItr*       _r_seg_itr;
   dbCCSegItr*      _cc_seg_itr;
   dbRegionInstItr* _region_inst_itr;
+  dbModuleInstItr* _module_inst_itr;
+  dbModuleModInstItr* _module_modinst_itr;
   dbBPinItr*       _bpin_itr;
   dbRegionItr*     _region_itr;
   dbPropertyItr*   _prop_itr;

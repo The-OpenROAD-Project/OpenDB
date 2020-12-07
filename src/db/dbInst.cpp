@@ -59,6 +59,7 @@
 #include "dbTable.h"
 #include "dbTable.hpp"
 #include "dbTransform.h"
+#include "dbModule.h"
 
 namespace odb {
 
@@ -135,7 +136,9 @@ _dbInst::_dbInst(_dbDatabase*, const _dbInst& i)
       _inst_hdr(i._inst_hdr),
       _bbox(i._bbox),
       _region(i._region),
+      _module(i._module),
       _region_next(i._region_next),
+      _module_next(i._module_next),
       _region_prev(i._region_prev),
       _hierarchy(i._hierarchy),
       _iterms(i._iterms),
@@ -165,7 +168,9 @@ dbOStream& operator<<(dbOStream& stream, const _dbInst& inst)
   stream << inst._inst_hdr;
   stream << inst._bbox;
   stream << inst._region;
+  stream << inst._module;
   stream << inst._region_next;
+  stream << inst._module_next;
   stream << inst._region_prev;
   stream << inst._hierarchy;
   stream << inst._iterms;
@@ -185,7 +190,9 @@ dbIStream& operator>>(dbIStream& stream, _dbInst& inst)
   stream >> inst._inst_hdr;
   stream >> inst._bbox;
   stream >> inst._region;
+  stream >> inst._module;
   stream >> inst._region_next;
+  stream >> inst._module_next;
   stream >> inst._region_prev;
   stream >> inst._hierarchy;
   stream >> inst._iterms;
@@ -255,7 +262,13 @@ bool _dbInst::operator==(const _dbInst& rhs) const
   if (_region != rhs._region)
     return false;
 
+  if (_module != rhs._module)
+    return false;
+
   if (_region_next != rhs._region_next)
+    return false;
+  
+  if (_module_next != rhs._module_next)
     return false;
 
   if (_region_prev != rhs._region_prev)
@@ -298,7 +311,9 @@ void _dbInst::differences(dbDiff&        diff,
   DIFF_FIELD_NO_DEEP(_inst_hdr);
   DIFF_OBJECT(_bbox, lhs_blk->_box_tbl, rhs_blk->_box_tbl);
   DIFF_FIELD(_region);
+  DIFF_FIELD(_module);
   DIFF_FIELD(_region_next);
+  DIFF_FIELD(_module_next);
   DIFF_FIELD(_region_prev);
   DIFF_FIELD(_hierarchy);
   DIFF_OBJECT(_halo, lhs_blk->_box_tbl, rhs_blk->_box_tbl);
@@ -349,7 +364,9 @@ void _dbInst::out(dbDiff& diff, char side, const char* field) const
   DIFF_OUT_FIELD_NO_DEEP(_inst_hdr);
   DIFF_OUT_OBJECT(_bbox, blk->_box_tbl);
   DIFF_OUT_FIELD(_region);
+  DIFF_OUT_FIELD(_module);
   DIFF_OUT_FIELD(_region_next);
+  DIFF_OUT_FIELD(_module_next);
   DIFF_OUT_FIELD(_region_prev);
   DIFF_OUT_FIELD(_hierarchy);
 
@@ -875,6 +892,18 @@ dbRegion* dbInst::getRegion()
   return (dbRegion*) r;
 }
 
+dbModule* dbInst::getModule()
+{
+  _dbInst* inst = (_dbInst*) this;
+
+  if (inst->_module == 0)
+    return NULL;
+
+  _dbBlock*  block = (_dbBlock*) inst->getOwner();
+  _dbModule* module     = block->_module_tbl->getPtr(inst->_module);
+  return (dbModule*) module;
+}
+
 dbBox* dbInst::getHalo()
 {
   _dbInst* inst = (_dbInst*) this;
@@ -1316,6 +1345,10 @@ void dbInst::destroy(dbInst* inst_)
 
   if (region)
     region->removeInst(inst_);
+  
+  dbModule* module = inst_->getModule();
+  if (module)
+    module->removeInst(inst_);
 
   uint i;
   uint n = inst->_iterms.size();

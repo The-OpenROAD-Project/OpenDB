@@ -81,7 +81,7 @@ if "relations" in schema:
         inParentField['table'] = True
         inParentField['dbSetGetter'] = True
         inParentField['components'] = [inParentField['name']]
-        inParentField['flags'] = ["cmp","serial", "diff", "set", "get"]
+        inParentField['flags'] = ["cmp","serial", "diff", "no-set", "get"]
         
         schema['classes'][parent]['fields'].append(inParentField)
         schema['classes'][parent]['cpp_includes'].extend([
@@ -118,9 +118,10 @@ for klass in schema['classes']:
         field['isHashTable'] = isHashTable(field['type'])
         field['hashTableType'] = getHashTableType(field['type'])
 
-
         # Check if a class is being used inside a template definition to add to the list of forward declared classes
-        
+        ####
+        #### This needs documentation
+        ####
         templateClassName = None
         tmp = getTemplateType(field['type'])
         while tmp is not None:
@@ -131,9 +132,9 @@ for klass in schema['classes']:
         if templateClassName is not None:
             if templateClassName not in klass['classes'] and klass['name'] != templateClassName[1:]:
                 klass['classes'].append(templateClassName)
-
-
-
+        ####
+        ####
+        ####
         if field.get('table', False):
             if field['type'].startswith('db'):
                 field['functional_name'] = '{}s'.format(field['type'][2:])

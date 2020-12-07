@@ -15,13 +15,13 @@ class {{klass.name}} : public dbObject
   
   {%endif%}
   {%if 'no-get' not in field.flags%}
-  {{field.getterReturnType}} {{field.getterFunctionName}}() const;
-  
-  {%endif%}
   {%if field.dbSetGetter%}
   dbSet<{{field.type}}> get{{field.functional_name}}() const;
-
+  {%else%}
+  {{field.getterReturnType}} {{field.getterFunctionName}}() const;
   {%endif%}
+  {%endif%}
+  
   {%endfor%}
 
 

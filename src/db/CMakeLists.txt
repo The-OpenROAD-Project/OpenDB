@@ -96,6 +96,10 @@ add_library(opendb
     wOrder.cpp
     Logger.cpp
     # Generator Code Begin cpp
+    dbModule.cpp
+    dbModInst.cpp
+    dbModuleInstItr.cpp
+    dbModuleModInstItr.cpp
     # Generator Code End cpp
 )
 

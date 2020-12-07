@@ -7162,7 +7162,7 @@ class dbModule : public dbObject
 
   static void destroy(dbModule* module);
 
-  dbModule* getModule(dbBlock* block_, uint dbid_);
+  static dbModule* getModule(dbBlock* block_, uint dbid_);
 
   // User Code End dbModule
 };
@@ -7182,6 +7182,8 @@ class dbModInst : public dbObject
   static void destroy(dbModInst* modinst);
 
   static dbSet<dbModInst>::iterator destroy(dbSet<dbModInst>::iterator& itr);
+
+  static dbModInst* getModInst(dbBlock* block_, uint dbid_);
 
   char* getName() const;
   // User Code End dbModInst

@@ -254,6 +254,13 @@ dbSet<dbModInst>::iterator dbModInst::destroy(dbSet<dbModInst>::iterator& itr)
   destroy(modinst);
   return next;
 }
+
+dbModInst* dbModInst::getModInst(dbBlock* block_, uint dbid_)
+{
+  _dbBlock* block = (_dbBlock*) block_;
+  return (dbModInst*) block->_modinst_tbl->getPtr(dbid_);
+}
+
 char* dbModInst::getName() const
 {
   _dbModInst* obj    = (_dbModInst*) this;

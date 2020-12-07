@@ -73,6 +73,8 @@ bool _dbModInst::operator==(const _dbModInst& rhs) const
 bool _dbModInst::operator<(const _dbModInst& rhs) const
 {
   // User Code Begin <
+  if(strcmp(_name, rhs._name) >= 0)
+    return false;
   // User Code End <
   return true;
 }
@@ -203,8 +205,8 @@ dbModInst* dbModInst::create(dbModule*   parentModule,
   std::string h_name = std::string(parent->_name) + '/' + std::string(name);
   if (block->_modinst_hash.hasMember(h_name.c_str()))
     return nullptr;
-  _dbModule*  master  = (_dbModule*) masterModule;
-  if(master->_modinst!=0)
+  _dbModule* master = (_dbModule*) masterModule;
+  if (master->_modinst != 0)
     return nullptr;
   _dbModInst* modinst = block->_modinst_tbl->create();
   modinst->_name      = strdup(h_name.c_str());

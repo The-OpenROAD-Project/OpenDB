@@ -44,8 +44,8 @@ BOOST_FIXTURE_TEST_CASE(test_default,F_DEFAULT)
   BOOST_ASSERT(dbModInst::create(parent_mod,master_mod,"i2")==nullptr);
   //dbModule::findModInst()1
   dbModInst* modInst = parent_mod->findModInst("i1");
-  //dbModule getModinst()
-  BOOST_ASSERT(master_mod->getModinst()==modInst);
+  //dbModule getModInst()
+  BOOST_ASSERT(master_mod->getModInst()==modInst);
   //dbModInst::getName()
   BOOST_ASSERT(string(modInst->getName())=="i1");
   //dbModule::getChildren()

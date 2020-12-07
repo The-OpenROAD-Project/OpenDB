@@ -78,6 +78,8 @@ bool _dbModule::operator==(const _dbModule& rhs) const
 bool _dbModule::operator<(const _dbModule& rhs) const
 {
   // User Code Begin <
+  if(strcmp(_name, rhs._name) >= 0)
+    return false;
   // User Code End <
   return true;
 }
@@ -186,15 +188,6 @@ char* dbModule::getName() const
   return obj->_name;
 }
 
-dbModInst* dbModule::getModinst() const
-{
-  _dbModule* obj = (_dbModule*) this;
-  if (obj->_modinst == 0)
-    return NULL;
-  _dbBlock* par = (_dbBlock*) obj->getOwner();
-  return (dbModInst*) par->_modinst_tbl->getPtr(obj->_modinst);
-}
-
 // User Code Begin dbModulePublicMethods
 
 void dbModule::addInst(dbInst* inst)
@@ -275,8 +268,8 @@ void dbModule::destroy(dbModule* module)
   for (itr = modinsts.begin(); itr != modinsts.end();) {
     itr = dbModInst::destroy(itr);
   }
-  if(_module->_modinst!=0)
-    dbModInst::destroy(module->getModinst());
+  if (_module->_modinst != 0)
+    dbModInst::destroy(module->getModInst());
 
   for (auto inst : module->getInsts()) {
     _dbInst* _inst      = (_dbInst*) inst;
@@ -302,6 +295,15 @@ dbModInst* dbModule::findModInst(const char* name)
   std::string h_name = std::string(obj->_name) + "/" + std::string(name);
   return (dbModInst*) par->_modinst_hash.find(h_name.c_str());
 }
+dbModInst* dbModule::getModInst() const
+{
+  _dbModule* obj = (_dbModule*) this;
+  if (obj->_modinst == 0)
+    return NULL;
+  _dbBlock* par = (_dbBlock*) obj->getOwner();
+  return (dbModInst*) par->_modinst_tbl->getPtr(obj->_modinst);
+}
+
 // User Code End dbModulePublicMethods
 }  // namespace odb
    // Generator Code End 1

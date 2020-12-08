@@ -80,6 +80,8 @@ bool _dbModInst::operator==(const _dbModInst& rhs) const
 bool _dbModInst::operator<(const _dbModInst& rhs) const
 {
   // User Code Begin <
+  if (strcmp(_name, rhs._name) >= 0)
+    return false;
   // User Code End <
   return true;
 }
@@ -236,7 +238,7 @@ dbModInst* dbModInst::create(dbModule*   parentModule,
   if (block->_modinst_hash.hasMember(h_name.c_str()))
     return nullptr;
   _dbModule* master = (_dbModule*) masterModule;
-  if (master->_modinst != 0)
+  if (master->_mod_inst != 0)
     return nullptr;
   _dbModInst* modinst = block->_modinst_tbl->create();
   modinst->_name      = strdup(h_name.c_str());
@@ -245,7 +247,7 @@ dbModInst* dbModInst::create(dbModule*   parentModule,
   modinst->_parent      = parent->getOID();
   modinst->_module_next = parent->_modinsts;
   parent->_modinsts     = modinst->getOID();
-  master->_modinst      = modinst->getOID();
+  master->_mod_inst     = modinst->getOID();
   block->_modinst_hash.insert(modinst);
   return (dbModInst*) modinst;
 }
@@ -286,6 +288,13 @@ dbSet<dbModInst>::iterator dbModInst::destroy(dbSet<dbModInst>::iterator& itr)
   destroy(modinst);
   return next;
 }
+
+dbModInst* dbModInst::getModInst(dbBlock* block_, uint dbid_)
+{
+  _dbBlock* block = (_dbBlock*) block_;
+  return (dbModInst*) block->_modinst_tbl->getPtr(dbid_);
+}
+
 char* dbModInst::getName() const
 {
   _dbModInst* obj    = (_dbModInst*) this;

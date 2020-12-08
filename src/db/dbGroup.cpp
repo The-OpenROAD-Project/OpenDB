@@ -585,6 +585,12 @@ void dbGroup::destroy(dbGroup* group)
   block->_group_tbl->destroy(_group);
 }
 
+dbGroup* dbGroup::getGroup(dbBlock* block_, uint dbid_)
+{
+  _dbBlock* block = (_dbBlock*) block_;
+  return (dbGroup*) block->_group_tbl->getPtr(dbid_);
+}
+
 // User Code End dbGroupPublicMethods
 }  // namespace odb
    // Generator Code End 1

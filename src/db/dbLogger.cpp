@@ -38,7 +38,7 @@
 #include <signal.h>
 #include <time.h>
 
-#include "logger.h"
+#include "dbLogger.h"
 
 namespace odb {
 static char _ath_logbuffer[1024 * 8];

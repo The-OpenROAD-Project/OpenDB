@@ -68,7 +68,7 @@ bool _dbModule::operator==(const _dbModule& rhs) const
   if (_modinsts != rhs._modinsts)
     return false;
 
-  if (_modinst != rhs._modinst)
+  if (_mod_inst != rhs._mod_inst)
     return false;
 
   // User Code Begin ==
@@ -78,6 +78,8 @@ bool _dbModule::operator==(const _dbModule& rhs) const
 bool _dbModule::operator<(const _dbModule& rhs) const
 {
   // User Code Begin <
+  if (strcmp(_name, rhs._name) >= 0)
+    return false;
   // User Code End <
   return true;
 }
@@ -95,7 +97,7 @@ void _dbModule::differences(dbDiff&          diff,
 
   DIFF_FIELD(_modinsts);
 
-  DIFF_FIELD(_modinst);
+  DIFF_FIELD(_mod_inst);
 
   // User Code Begin differences
   // User Code End differences
@@ -113,7 +115,7 @@ void _dbModule::out(dbDiff& diff, char side, const char* field) const
 
   DIFF_OUT_FIELD(_modinsts);
 
-  DIFF_OUT_FIELD(_modinst);
+  DIFF_OUT_FIELD(_mod_inst);
 
   // User Code Begin out
   // User Code End out
@@ -125,7 +127,7 @@ _dbModule::_dbModule(_dbDatabase* db)
   _name     = 0;
   _insts    = 0;
   _modinsts = 0;
-  _modinst  = 0;
+  _mod_inst = 0;
   // User Code End constructor
 }
 _dbModule::_dbModule(_dbDatabase* db, const _dbModule& r)
@@ -134,7 +136,7 @@ _dbModule::_dbModule(_dbDatabase* db, const _dbModule& r)
   _next_entry = r._next_entry;
   _insts      = r._insts;
   _modinsts   = r._modinsts;
-  _modinst    = r._modinst;
+  _mod_inst   = r._mod_inst;
   // User Code Begin CopyConstructor
   // User Code End CopyConstructor
 }
@@ -145,7 +147,7 @@ dbIStream& operator>>(dbIStream& stream, _dbModule& obj)
   stream >> obj._next_entry;
   stream >> obj._insts;
   stream >> obj._modinsts;
-  stream >> obj._modinst;
+  stream >> obj._mod_inst;
   // User Code Begin >>
   // User Code End >>
   return stream;
@@ -156,7 +158,7 @@ dbOStream& operator<<(dbOStream& stream, const _dbModule& obj)
   stream << obj._next_entry;
   stream << obj._insts;
   stream << obj._modinsts;
-  stream << obj._modinst;
+  stream << obj._mod_inst;
   // User Code Begin <<
   // User Code End <<
   return stream;
@@ -186,13 +188,13 @@ char* dbModule::getName() const
   return obj->_name;
 }
 
-dbModInst* dbModule::getModinst() const
+dbModInst* dbModule::getModInst() const
 {
   _dbModule* obj = (_dbModule*) this;
-  if (obj->_modinst == 0)
+  if (obj->_mod_inst == 0)
     return NULL;
   _dbBlock* par = (_dbBlock*) obj->getOwner();
-  return (dbModInst*) par->_modinst_tbl->getPtr(obj->_modinst);
+  return (dbModInst*) par->_modinst_tbl->getPtr(obj->_mod_inst);
 }
 
 // User Code Begin dbModulePublicMethods
@@ -276,8 +278,8 @@ void dbModule::destroy(dbModule* module)
   for (itr = modinsts.begin(); itr != modinsts.end();) {
     itr = dbModInst::destroy(itr);
   }
-  if (_module->_modinst != 0)
-    dbModInst::destroy(module->getModinst());
+  if (_module->_mod_inst != 0)
+    dbModInst::destroy(module->getModInst());
 
   for (auto inst : module->getInsts()) {
     _dbInst* _inst      = (_dbInst*) inst;
@@ -303,6 +305,7 @@ dbModInst* dbModule::findModInst(const char* name)
   std::string h_name = std::string(obj->_name) + "/" + std::string(name);
   return (dbModInst*) par->_modinst_hash.find(h_name.c_str());
 }
+
 // User Code End dbModulePublicMethods
 }  // namespace odb
    // Generator Code End 1

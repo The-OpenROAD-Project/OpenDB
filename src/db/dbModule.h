@@ -67,7 +67,7 @@ class _dbModule : public _dbObject
 
   dbId<_dbModInst> _modinsts;
 
-  dbId<_dbModInst> _modinst;
+  dbId<_dbModInst> _mod_inst;
 
   // User Code Begin fields
   // User Code End fields

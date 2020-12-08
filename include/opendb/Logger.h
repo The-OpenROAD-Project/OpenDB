@@ -1,7 +1,7 @@
 ///////////////////////////////////////////////////////////////////////////////
 // BSD 3-Clause License
 //
-// Copyright (c) 2019, Nefelus Inc
+// Copyright (c) 2020, OpenROAD
 // All rights reserved.
 //
 // Redistribution and use in source and binary forms, with or without
@@ -31,174 +31,121 @@
 // POSSIBILITY OF SUCH DAMAGE.
 
 #pragma once
-#include "spdlog/sinks/basic_file_sink.h"
-#include "spdlog/sinks/stdout_color_sinks.h"
+
+#include <string>
+
 #include "spdlog/spdlog.h"
-#include "string"
-#include <mutex>
-namespace ordlog {
-using std::string;
+
+namespace ord {
+
 enum MessageStatus
 {
-  INFO = 2,
-  WARN = 3,
-  ERROR = 4,
-  CRIT = 5
+  INFO  = spdlog::level::info,
+  WARN  = spdlog::level::warn,
+  ERROR = spdlog::level::err,
+  CRIT  = spdlog::level::critical
 };
+
+#define FOREACH_MODULE(X) \
+    X(ANT) \
+    X(CTS) \
+    X(DPL) \
+    X(DRT) \
+    X(FIN) \
+    X(GPL) \
+    X(GRT) \
+    X(GUI) \
+    X(ICE) \
+    X(IFP) \
+    X(MPL) \
+    X(ODB) \
+    X(ORD) \
+    X(PAR) \
+    X(PDN) \
+    X(PPL) \
+    X(PSM) \
+    X(PSN) \
+    X(RCX) \
+    X(RSZ) \
+    X(STA) \
+    X(STT) \
+    X(TAP) \
+
+#define GENERATE_ENUM(ENUM) ENUM,
+#define GENERATE_STRING(STRING) #STRING,
+
 enum ModuleType
 {
-  OPENDB,
-  OPENROAD,
-  OPENSTA,
-  OPENRCX,
-  IOPLACER,
-  TRITONROUTE,
-  REPLACE,
-  RESIZER,
-  GUI,
-  FASTROUTE
+ FOREACH_MODULE(GENERATE_ENUM)
 };
 
 static const char* modules_name_tbl[] = {
-    "OPDB",
-    "OPRD",
-    "OSTA",
-    "ORCX",
-    "IOPL",
-    "TRRT",
-    "RPLC",
-    "RSZR",
-    "GGUI",
-    "FTRT",
+ FOREACH_MODULE(GENERATE_STRING)
 };
 
-int removeSinkStdout()
-{
-  if(spdlog::default_logger().get()==nullptr)
-    return -1;
-  auto default_sinks = &spdlog::default_logger().get()->sinks();
-  bool found = false;
-  for(auto sink = default_sinks->begin();sink!=default_sinks->end();++sink)
-  {
-    auto stdout_sink = dynamic_cast<spdlog::sinks::stdout_color_sink_mt*>(sink->get());
-    if(stdout_sink==nullptr)
-      continue;
-    else
-    {
-      default_sinks->erase(sink--);
-      found = true;
-    }
-  }
-  return found ? 0 : -2;
-}
+#undef FOREACH_MODULE
+#undef GENERATE_ENUM
+#undef GENERATE_STRING
 
-int addSinkStdout()
-{
-  if(spdlog::default_logger().get()==nullptr)
-    return -1;
-  auto default_sinks = &spdlog::default_logger().get()->sinks();
-  for(auto sink = default_sinks->begin();sink!=default_sinks->end();++sink)
-  {
-    auto stdout_sink = dynamic_cast<spdlog::sinks::stdout_color_sink_mt*>(sink->get());
-    if(stdout_sink==nullptr)
-      continue;
-    else
-      return -2;
-  }
-  auto new_sink = std::make_shared<spdlog::sinks::stdout_color_sink_mt>();
-  new_sink.get()->set_pattern("[%^%l%$] %v");
-  default_sinks->push_back(new_sink);
-  return 0;
-}
+int addSinkStdout();
+int removeSinkStdout();
 
-int addSinkFile(const char* file_name)
-{
-  if(spdlog::default_logger().get()==nullptr)
-    return -1;
-  auto default_sinks = &spdlog::default_logger().get()->sinks();
-  for(auto sink = default_sinks->begin();sink!=default_sinks->end();++sink)
-  {
-    auto file_sink = dynamic_cast<spdlog::sinks::basic_file_sink<std::mutex>*>(sink->get());
-    if(file_sink==nullptr)
-      continue;
-    if(strcmp(file_sink->filename().c_str(),file_name)==0)
-      return -2;//sink already exists
-  }
-  auto new_sink = std::make_shared<spdlog::sinks::basic_file_sink<std::mutex>>(file_name);
-  new_sink.get()->set_pattern("[%^%l%$] %v");
-  default_sinks->push_back(new_sink);
-  return 0;
-}
+int addSinkFile(const char* file_name);
+int removeSinkFile(const char* file_name);
 
-int removeSinkFile(const char* file_name)
-{
-  if(spdlog::default_logger().get()==nullptr)
-    return -1;
-  auto default_sinks = &spdlog::default_logger().get()->sinks();
-  bool found = false;
-  for(auto sink = default_sinks->begin();sink!=default_sinks->end();++sink)
-  {
-    auto file_sink = dynamic_cast<spdlog::sinks::basic_file_sink<std::mutex>*>(sink->get());
-    if(file_sink==nullptr)
-      continue;
-    if(strcmp(file_sink->filename().c_str(),file_name)==0)
-    {
-      default_sinks->erase(sink--);
-      found = true;
-    }
-  }
-  return found ? 0 : -2;
-}
+void init();
+void init(const char* file_name);
 
-void init()
+template <typename... Args>
+inline int info(ModuleType         type,
+                int                id,
+                const std::string& message,
+                const Args&... args)
 {
-  spdlog::set_pattern("[%^%l%$] %v");
-  addSinkStdout();
-}
-
-void init(const char* file_name)
-{
-  spdlog::set_pattern("[%^%l%$] %v");
-  removeSinkStdout();
-  addSinkFile(file_name);
+  return Log(type, INFO, id, message, args...);
 }
 
 template <typename... Args>
-int info(ModuleType _type, int id, string message, const Args&... args)
+inline int warn(ModuleType         type,
+                int                id,
+                const std::string& message,
+                const Args&... args)
 {
-  return Log(_type, INFO, id, message, args...);
+  return Log(type, WARN, id, message, args...);
 }
 
 template <typename... Args>
-int warn(ModuleType _type, int id, string message, const Args&... args)
+inline int error(ModuleType         type,
+                 int                id,
+                 const std::string& message,
+                 const Args&... args)
 {
-  return Log(_type, WARN, id, message, args...);
+  return Log(type, ERROR, id, message, args...);
 }
 
 template <typename... Args>
-int error(ModuleType _type, int id, string message, const Args&... args)
+inline int crit(ModuleType         type,
+                int                id,
+                const std::string& message,
+                const Args&... args)
 {
-  return Log(_type, ERROR, id, message, args...);
+  return Log(type, CRIT, id, message, args...);
 }
 
 template <typename... Args>
-int crit(ModuleType _type, int id, string message, const Args&... args)
-{
-  return Log(_type, CRIT, id, message, args...);
-}
-
-template <typename... Args>
-int Log(ModuleType    _type,
-        MessageStatus _status,
-        int           id,
-        string        message,
-        const Args&... args)
+inline int Log(ModuleType         type,
+               MessageStatus      status,
+               int                id,
+               const std::string& message,
+               const Args&... args)
 {
   if (id < 0 || id > 9999)
     return -1;  // invalid id
-  message                = "[{}-{:04d}] " + message;
-  const char* type       = modules_name_tbl[_type];
-  spdlog::log((spdlog::level::level_enum) _status, message, type, id, args...);
+  spdlog::log((spdlog::level::level_enum) status,
+              "[{}-{:04d}] " + message,
+              modules_name_tbl[type],
+              id,
+              args...);
   return 0;
 }
 

@@ -37,7 +37,7 @@
 #include "dbMap.h"
 #include "dbShape.h"
 #include "dbWireCodec.h"
-#include "logger.h"
+#include "dbLogger.h"
 #include "tmg_conn.h"
 
 namespace odb {

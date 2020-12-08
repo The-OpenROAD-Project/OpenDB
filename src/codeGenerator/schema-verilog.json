@@ -27,7 +27,7 @@
           "parent":"dbBlock"
         },
         {
-          "name":"_modinst",
+          "name":"_mod_inst",
           "type":"dbId<_dbModInst>",
           "flags":["no-set"],
           "parent":"dbBlock"

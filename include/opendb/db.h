@@ -44,7 +44,7 @@
 #include "dbTypes.h"
 #include "dbViaParams.h"
 #include "geom.h"
-#include "logger.h"
+#include "dbLogger.h"
 #include "odb.h"
 
 #define ADS_MAX_CORNER 10
@@ -7162,7 +7162,7 @@ class dbModule : public dbObject
  public:
   char* getName() const;
 
-  dbModInst* getModinst() const;
+  dbModInst* getModInst() const;
 
   // User Code Begin dbModule
   void addInst(dbInst* inst);
@@ -7179,7 +7179,7 @@ class dbModule : public dbObject
 
   static void destroy(dbModule* module);
 
-  dbModule* getModule(dbBlock* block_, uint dbid_);
+  static dbModule* getModule(dbBlock* block_, uint dbid_);
 
   // User Code End dbModule
 };
@@ -7201,6 +7201,8 @@ class dbModInst : public dbObject
   static void destroy(dbModInst* modinst);
 
   static dbSet<dbModInst>::iterator destroy(dbSet<dbModInst>::iterator& itr);
+
+  static dbModInst* getModInst(dbBlock* block_, uint dbid_);
 
   char* getName() const;
   // User Code End dbModInst
@@ -7264,6 +7266,9 @@ class dbGroup : public dbObject
   static dbGroup* create(dbGroup* parent, const char* name);
 
   static void destroy(dbGroup* group);
+
+  static dbGroup* getGroup(dbBlock* block_, uint dbid_);
+  
   // User Code End dbGroup
 };
 

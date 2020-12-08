@@ -1,5 +1,12 @@
 # Include python
 find_package(Python3 COMPONENTS Development REQUIRED)
+
+if (NOT (PythonLibs_FOUND OR Python3_INCLUDE_DIRS))
+    message(STATUS "Could not find python, disabling Python SWIG Module")
+    return()
+endif()
+message(STATUS "Enabling OpenDB Python SWIG Module")
+
 include_directories(${Python3_INCLUDE_DIRS})
 
 set(OPENDB_PYTHON_SWIG_FILES

@@ -7211,13 +7211,13 @@ class dbGroup : public dbObject
  public:
   char* getName() const;
 
+  void setBox(Rect _box);
+
+  Rect getBox() const;
+
   void setParentGroup(dbGroup* _parent_group);
 
   dbGroup* getParentGroup() const;
-
-  void setBox(dbBox* _box);
-
-  dbBox* getBox() const;
 
   void setType(uint _type);
 
@@ -7242,9 +7242,26 @@ class dbGroup : public dbObject
 
   dbSet<dbGroup> getGroups();
 
-  static dbGroup* create(dbBlock* block, const char* name, uint _type = 1);
+  void addPowerNet(dbNet* net);
 
-  static dbGroup* create(dbGroup* parent, const char* name, uint _type = 1);
+  void addGroundNet(dbNet* net);
+
+  void removeNet(dbNet* net);
+
+  dbSet<dbNet> getPowerNets();
+
+  dbSet<dbNet> getGroundNets();
+
+  static dbGroup* create(dbBlock* block, const char* name);
+
+  static dbGroup* create(dbBlock*    block,
+                         const char* name,
+                         int         x1,
+                         int         y1,
+                         int         x2,
+                         int         y2);
+
+  static dbGroup* create(dbGroup* parent, const char* name);
 
   static void destroy(dbGroup* group);
   // User Code End dbGroup

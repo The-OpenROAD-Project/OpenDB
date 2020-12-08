@@ -1,7 +1,7 @@
 ///////////////////////////////////////////////////////////////////////////////
 // BSD 3-Clause License
 //
-// Copyright (c) 2020, OpenRoad Project
+// Copyright (c) 2019, Nefelus Inc
 // All rights reserved.
 //
 // Redistribution and use in source and binary forms, with or without
@@ -30,81 +30,68 @@
 // ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 // POSSIBILITY OF SUCH DAMAGE.
 
-// Generator Code Begin 1
-#pragma once
+#include "dbGroupPowerNetItr.h"
 
-#include "dbCore.h"
-#include "odb.h"
+#include <algorithm>
 
-// User Code Begin includes
-#include "dbVector.h"
-// User Code End includes
+#include "dbBlock.h"
+#include "dbTable.h"
+#include "dbGroup.h"
+#include "dbNet.h"
 
 namespace odb {
 
-class dbIStream;
-class dbOStream;
-class dbDiff;
-class _dbDatabase;
-class _dbInst;
-class _dbModInst;
-class _dbNet;
-// User Code Begin Classes
-// User Code End Classes
-
-struct dbGroupFlags
+bool dbGroupPowerNetItr::reversible()
 {
-  uint _type : 2;
-  uint _spare_bits : 30;
-};
-// User Code Begin structs
-// User Code End structs
+  return true;
+}
 
-class _dbGroup : public _dbObject
+bool dbGroupPowerNetItr::orderReversed()
 {
- public:
-  // User Code Begin enums
-  // User Code End enums
-  dbGroupFlags _flags;
+  return false;
+}
 
-  char* _name;
+void dbGroupPowerNetItr::reverse(dbObject* parent)
+{
+  _dbGroup* group = (_dbGroup*) parent;
+  std::reverse(group->_power_nets.begin(), group->_power_nets.end());
+}
 
-  Rect _box;
+uint dbGroupPowerNetItr::sequential()
+{
+  return 0;
+}
 
-  dbId<_dbGroup> _next_entry;
+uint dbGroupPowerNetItr::size(dbObject* parent)
+{
+  _dbGroup* group = (_dbGroup*) parent;
+  return group->_power_nets.size();
+}
 
-  dbId<_dbGroup> _group_next;
+uint dbGroupPowerNetItr::begin(dbObject*)
+{
+  return 0;
+}
 
-  dbId<_dbGroup> _parent_group;
+uint dbGroupPowerNetItr::end(dbObject* parent)
+{
+  _dbGroup* group = (_dbGroup*) parent;
+  return group->_power_nets.size();
+}
 
-  dbId<_dbInst> _insts;
+uint dbGroupPowerNetItr::next(uint id, ...)
+{
+  return ++id;
+}
 
-  dbId<_dbModInst> _modinsts;
+dbObject* dbGroupPowerNetItr::getObject(uint id, ...)
+{
+  va_list ap;
+  va_start(ap, id);
+  _dbGroup* parent = (_dbGroup*) va_arg(ap, dbObject*);
+  va_end(ap);
+  uint nid = parent->_power_nets[id];
+  return _net_tbl->getPtr(nid);
+}
 
-  dbId<_dbGroup> _groups;
-
-  dbVector<dbId<_dbNet>> _power_nets;
-
-  dbVector<dbId<_dbNet>> _ground_nets;
-
-  // User Code Begin fields
-  dbVector<dbId<_dbNet>> _nets;
-  // User Code End fields
-  _dbGroup(_dbDatabase*, const _dbGroup& r);
-  _dbGroup(_dbDatabase*);
-  ~_dbGroup();
-  bool operator==(const _dbGroup& rhs) const;
-  bool operator!=(const _dbGroup& rhs) const { return !operator==(rhs); }
-  bool operator<(const _dbGroup& rhs) const;
-  void differences(dbDiff& diff, const char* field, const _dbGroup& rhs) const;
-  void out(dbDiff& diff, char side, const char* field) const;
-  dbObjectTable* getObjectTable(dbObjectType type);
-  // User Code Begin methods
-  // User Code End methods
-};
-dbIStream& operator>>(dbIStream& stream, _dbGroup& obj);
-dbOStream& operator<<(dbOStream& stream, const _dbGroup& obj);
-// User Code Begin general
-// User Code End general
 }  // namespace odb
-   // Generator Code End 1

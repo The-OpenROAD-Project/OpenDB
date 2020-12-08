@@ -276,7 +276,7 @@ void dbModule::destroy(dbModule* module)
   for (itr = modinsts.begin(); itr != modinsts.end();) {
     itr = dbModInst::destroy(itr);
   }
-  if(_module->_modinst!=0)
+  if (_module->_modinst != 0)
     dbModInst::destroy(module->getModinst());
 
   for (auto inst : module->getInsts()) {

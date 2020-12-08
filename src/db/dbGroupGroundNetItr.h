@@ -1,7 +1,7 @@
 ///////////////////////////////////////////////////////////////////////////////
 // BSD 3-Clause License
 //
-// Copyright (c) 2020, OpenRoad Project
+// Copyright (c) 2019, Nefelus Inc
 // All rights reserved.
 //
 // Redistribution and use in source and binary forms, with or without
@@ -30,81 +30,34 @@
 // ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 // POSSIBILITY OF SUCH DAMAGE.
 
-// Generator Code Begin 1
 #pragma once
 
-#include "dbCore.h"
+#include "dbIterator.h"
 #include "odb.h"
-
-// User Code Begin includes
-#include "dbVector.h"
-// User Code End includes
 
 namespace odb {
 
-class dbIStream;
-class dbOStream;
-class dbDiff;
-class _dbDatabase;
-class _dbInst;
-class _dbModInst;
+class _dbGroup;
 class _dbNet;
-// User Code Begin Classes
-// User Code End Classes
+template <class T>
+class dbTable;
 
-struct dbGroupFlags
+class dbGroupGroundNetItr : public dbIterator
 {
-  uint _type : 2;
-  uint _spare_bits : 30;
-};
-// User Code Begin structs
-// User Code End structs
+  dbTable<_dbNet>* _net_tbl;
 
-class _dbGroup : public _dbObject
-{
  public:
-  // User Code Begin enums
-  // User Code End enums
-  dbGroupFlags _flags;
+  dbGroupGroundNetItr(dbTable<_dbNet>* net_tbl) { _net_tbl = net_tbl; }
 
-  char* _name;
-
-  Rect _box;
-
-  dbId<_dbGroup> _next_entry;
-
-  dbId<_dbGroup> _group_next;
-
-  dbId<_dbGroup> _parent_group;
-
-  dbId<_dbInst> _insts;
-
-  dbId<_dbModInst> _modinsts;
-
-  dbId<_dbGroup> _groups;
-
-  dbVector<dbId<_dbNet>> _power_nets;
-
-  dbVector<dbId<_dbNet>> _ground_nets;
-
-  // User Code Begin fields
-  dbVector<dbId<_dbNet>> _nets;
-  // User Code End fields
-  _dbGroup(_dbDatabase*, const _dbGroup& r);
-  _dbGroup(_dbDatabase*);
-  ~_dbGroup();
-  bool operator==(const _dbGroup& rhs) const;
-  bool operator!=(const _dbGroup& rhs) const { return !operator==(rhs); }
-  bool operator<(const _dbGroup& rhs) const;
-  void differences(dbDiff& diff, const char* field, const _dbGroup& rhs) const;
-  void out(dbDiff& diff, char side, const char* field) const;
-  dbObjectTable* getObjectTable(dbObjectType type);
-  // User Code Begin methods
-  // User Code End methods
+  bool      reversible();
+  bool      orderReversed();
+  void      reverse(dbObject* parent);
+  uint      sequential();
+  uint      size(dbObject* parent);
+  uint      begin(dbObject* parent);
+  uint      end(dbObject* parent);
+  uint      next(uint id, ...);
+  dbObject* getObject(uint id, ...);
 };
-dbIStream& operator>>(dbIStream& stream, _dbGroup& obj);
-dbOStream& operator<<(dbOStream& stream, const _dbGroup& obj);
-// User Code Begin general
-// User Code End general
+
 }  // namespace odb
-   // Generator Code End 1

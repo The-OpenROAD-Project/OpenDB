@@ -132,12 +132,12 @@ void _dbModInst::out(dbDiff& diff, char side, const char* field) const
 _dbModInst::_dbModInst(_dbDatabase* db)
 {
   // User Code Begin constructor
-  _name         = 0;
-  _parent       = 0;
-  _module_next  = 0;
-  _master       = 0;
-  _group = 0;
-  _group_next   = 0;
+  _name        = 0;
+  _parent      = 0;
+  _module_next = 0;
+  _master      = 0;
+  _group       = 0;
+  _group_next  = 0;
   // User Code End constructor
 }
 _dbModInst::_dbModInst(_dbDatabase* db, const _dbModInst& r)
@@ -235,8 +235,8 @@ dbModInst* dbModInst::create(dbModule*   parentModule,
   std::string h_name = std::string(parent->_name) + '/' + std::string(name);
   if (block->_modinst_hash.hasMember(h_name.c_str()))
     return nullptr;
-  _dbModule*  master  = (_dbModule*) masterModule;
-  if(master->_modinst!=0)
+  _dbModule* master = (_dbModule*) masterModule;
+  if (master->_modinst != 0)
     return nullptr;
   _dbModInst* modinst = block->_modinst_tbl->create();
   modinst->_name      = strdup(h_name.c_str());

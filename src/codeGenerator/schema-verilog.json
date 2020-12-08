@@ -100,6 +100,10 @@
           "flags":[]
         },
         {
+          "name":"_box",
+          "type":"Rect"
+        },
+        {
           "name":"_next_entry",
           "type":"dbId<_dbGroup>",
           "flags":["no-set","no-get"]
@@ -113,12 +117,6 @@
         {
           "name":"_parent_group",
           "type":"dbId<_dbGroup>",
-          "flags":[],
-          "parent":"dbBlock"
-        },
-        {
-          "name":"_box",
-          "type":"dbId<_dbBox>",
           "flags":[],
           "parent":"dbBlock"
         },
@@ -139,9 +137,19 @@
           "type":"dbId<_dbGroup>",
           "flags":["no-set","no-get"],
           "parent":"dbBlock"
+        },
+        {
+          "name":"_power_nets",
+          "type":"dbVector<dbId<_dbNet>>",
+          "flags":["no-set","no-get"]
+        },
+        {
+          "name":"_ground_nets",
+          "type":"dbVector<dbId<_dbNet>>",
+          "flags":["no-set","no-get"]
         }
       ],
-      "cpp_includes":["dbBlock.h","dbBox.h","dbInst.h","dbModInst.h","dbHashTable.hpp","dbGroupItr.h","dbGroupInstItr.h","dbGroupModInstItr.h"]
+      "cpp_includes":["dbBlock.h","dbBox.h","dbNet.h","dbInst.h","dbModInst.h","dbHashTable.hpp","dbGroupItr.h","dbGroupInstItr.h","dbGroupModInstItr.h"]
     }
   ],
   "iterators":[

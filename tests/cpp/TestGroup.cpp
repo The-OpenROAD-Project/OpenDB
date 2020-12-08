@@ -10,7 +10,7 @@ using namespace std;
 struct F_DETAILED {
   F_DETAILED()
   {
-    db        = createSimpleDB();
+    db        = create2LevetDbNoBTerms();
     block     = db->getChip()->getBlock();
     lib       = db->findLib("lib1");
     master_mod1 = dbModule::create(block,"master_mod1");
@@ -20,9 +20,33 @@ struct F_DETAILED {
     i1 = dbModInst::create(parent_mod,master_mod1,"i1");
     i2 = dbModInst::create(parent_mod,master_mod2,"i2");
     i3 = dbModInst::create(parent_mod,master_mod3,"i3");
-    inst1 = dbInst::create(block,lib->findMaster("and2"),"inst1");
-    inst2 = dbInst::create(block,lib->findMaster("and2"),"inst2");
-    inst3 = dbInst::create(block,lib->findMaster("and2"),"inst3");
+    inst1 = block->findInst("i1");
+    inst2 = block->findInst("i2");
+    inst3 = block->findInst("i3");
+    n1 = block->findNet("n1");
+    n2 = block->findNet("n2");
+    n3 = block->findNet("n3");
+    group  = dbGroup::create(block,"group");
+    domain = dbGroup::create(block,"domain",0,0,100,100);
+    child1 = dbGroup::create(block,"child1");
+    child2 = dbGroup::create(block,"child2");
+    child3 = dbGroup::create(block,"child3");
+    
+    group->addModInst(i1);
+    group->addModInst(i2);
+    group->addModInst(i3);
+    
+    group->addInst(inst1);
+    group->addInst(inst2);
+    group->addInst(inst3);
+    
+    group->addGroup(child1);
+    group->addGroup(child2);
+    group->addGroup(child3);
+    
+    domain->addPowerNet(n1);
+    domain->addPowerNet(n2);
+    domain->addPowerNet(n3);
   }
   ~F_DETAILED()
   {
@@ -41,26 +65,34 @@ struct F_DETAILED {
   dbInst*     inst1;
   dbInst*     inst2;
   dbInst*     inst3;
+  dbNet*      n1;
+  dbNet*      n2;
+  dbNet*      n3;
+  dbGroup*    group;
+  dbGroup*    domain;
+  dbGroup*    child1;
+  dbGroup*    child2;
+  dbGroup*    child3;
 };
 BOOST_FIXTURE_TEST_SUITE(test_suite,F_DETAILED)
 BOOST_AUTO_TEST_CASE(test_group_default)
 {
-  BOOST_ASSERT(dbGroup::create(block,"group")!=nullptr);
-  BOOST_ASSERT(dbGroup::create(block,"group")==nullptr);
-  BOOST_ASSERT(block->getGroups().size()==1);
-  dbGroup* group = block->findGroup("group");
   BOOST_ASSERT(group!=nullptr);
-  BOOST_ASSERT(std::string(group->getName())=="group");
-  dbGroup::destroy(group);
-  BOOST_ASSERT(block->getGroups().size()==0);
+  BOOST_ASSERT(dbGroup::create(block,"group")==nullptr);
+  BOOST_ASSERT(block->getGroups().size()==5);
+  dbGroup* new_group = block->findGroup("group");
+  BOOST_ASSERT(new_group!=nullptr);
+  BOOST_ASSERT(std::string(new_group->getName())=="group");
+  dbGroup::destroy(new_group);
+  BOOST_ASSERT(block->getGroups().size()==4);
   BOOST_ASSERT(block->findGroup("group")==nullptr);
+
+  BOOST_ASSERT(domain->getBox()==Rect(0,0,100,100));
+  domain->setBox(Rect(2,2,50,50));
+  BOOST_ASSERT(domain->getBox()==Rect(2,2,50,50));
 }
 BOOST_AUTO_TEST_CASE(test_group_modinst)
 {
-  auto group = dbGroup::create(block,"group");
-  group->addModInst(i1);
-  group->addModInst(i2);
-  group->addModInst(i3);
   auto insts = group->getModInsts();
   BOOST_ASSERT(insts.size()==3);
   BOOST_ASSERT(*insts.begin()==i3);
@@ -76,11 +108,7 @@ BOOST_AUTO_TEST_CASE(test_group_modinst)
   BOOST_ASSERT(i1->getGroup()==nullptr); 
 }
 BOOST_AUTO_TEST_CASE(test_group_inst)
-{
-  auto group = dbGroup::create(block,"group");
-  group->addInst(inst1);
-  group->addInst(inst2);
-  group->addInst(inst3);
+{  
   auto insts = group->getInsts();
   BOOST_ASSERT(insts.size()==3);
   BOOST_ASSERT(*insts.begin()==inst3);
@@ -95,29 +123,109 @@ BOOST_AUTO_TEST_CASE(test_group_inst)
   dbGroup::destroy(group);
   BOOST_ASSERT(inst1->getGroup()==nullptr); 
 }
-
+BOOST_AUTO_TEST_CASE(test_group_net)
+{
+  auto power_nets = domain->getPowerNets();
+  auto ground_nets = domain->getGroundNets();
+  BOOST_ASSERT(power_nets.size()==3);
+  BOOST_ASSERT(ground_nets.size()==0);
+  BOOST_ASSERT(*power_nets.begin()==n1);
+  domain->removeNet(n1);
+  BOOST_ASSERT(power_nets.size()==2);
+  BOOST_ASSERT(*power_nets.begin()==n2);
+  dbNet::destroy(n2);
+  BOOST_ASSERT(power_nets.size()==1);
+  BOOST_ASSERT(*power_nets.begin()==n3);
+  domain->addGroundNet(n3);
+  BOOST_ASSERT(power_nets.size()==0);
+  BOOST_ASSERT(ground_nets.size()==1);
+  BOOST_ASSERT(*ground_nets.begin()==n3);
+}
 BOOST_AUTO_TEST_CASE(test_group_group)
 {
-  auto group1 = dbGroup::create(block,"group1");
-  auto group2 = dbGroup::create(block,"group2");
-  auto group3 = dbGroup::create(block,"group3");
-  auto parent = dbGroup::create(block,"parent");
-  parent->addGroup(group1);
-  parent->addGroup(group2);
-  parent->addGroup(group3);
-  auto groups = parent->getGroups();
+  auto groups = group->getGroups();
   BOOST_ASSERT(groups.size()==3);
-  BOOST_ASSERT(*groups.begin()==group3);
-  BOOST_ASSERT(group3->getParentGroup()==parent);
-  parent->removeGroup(group3);
+  BOOST_ASSERT(*groups.begin()==child3);
+  BOOST_ASSERT(child3->getParentGroup()==group);
+  group->removeGroup(child3);
   BOOST_ASSERT(groups.size()==2);
-  BOOST_ASSERT(group3->getParentGroup()==nullptr);
-  BOOST_ASSERT(*groups.begin()==group2); 
-  dbGroup::destroy(group2);
+  BOOST_ASSERT(child3->getParentGroup()==nullptr);
+  BOOST_ASSERT(*groups.begin()==child2); 
+  dbGroup::destroy(child2);
   BOOST_ASSERT(groups.size()==1);
-  BOOST_ASSERT(*groups.begin()==group1); 
-  dbGroup::destroy(parent);
-  BOOST_ASSERT(group1->getParentGroup()==nullptr); 
+  BOOST_ASSERT(*groups.begin()==child1); 
+  dbGroup::destroy(group);
+  BOOST_ASSERT(child1->getParentGroup()==nullptr); 
 }
+BOOST_AUTO_TEST_CASE(test_group_modinst_iterator)
+{
+  dbSet<dbModInst> modinsts = group->getModInsts();
+  dbSet<dbModInst>::iterator modinst_itr;
+  int i;
+  BOOST_ASSERT(modinsts.reversible());
+  for(int j = 0; j<2 ; j++)
+  {
+    if(j==1)
+      modinsts.reverse();
+    for(modinst_itr = modinsts.begin() , i=j?1:3 ; modinst_itr != modinsts.end() ; ++modinst_itr, i=i+(j?1:-1))
+      BOOST_ASSERT(std::string(((dbModInst*)*modinst_itr)->getName())=="i"+to_string(i));
+  }
+  
+}
+BOOST_AUTO_TEST_CASE(test_group_inst_iterator)
+{
+  dbSet<dbInst> insts = group->getInsts();
+  dbSet<dbInst>::iterator inst_itr;
+  int i;
+  BOOST_ASSERT(insts.reversible());
+  for(int j = 0; j<2 ; j++)
+  {
+    if(j==1)
+      insts.reverse();
+    for(inst_itr = insts.begin() , i=j?1:3 ; inst_itr != insts.end() ; ++inst_itr, i=i+(j?1:-1))
+      BOOST_ASSERT(std::string(((dbInst*)*inst_itr)->getName())=="i"+to_string(i));
+  }
+}
+BOOST_AUTO_TEST_CASE(test_group_net_iterators)
+{
+  dbSet<dbNet> nets = group->getPowerNets();
+  dbSet<dbNet>::iterator net_itr;
+  int i;
+  BOOST_ASSERT(nets.reversible());
+  for(int j = 0; j<2 ; j++)
+  {
+    if(j==1)
+      nets.reverse();
+    for(net_itr = nets.begin() , i=j?3:1 ; net_itr != nets.end() ; ++net_itr, i=i+(j?-1:1))
+      BOOST_ASSERT(std::string(((dbNet*)*net_itr)->getName())=="n"+to_string(i));
+  }
+  group->addGroundNet(n1);
+  group->addGroundNet(n2);
+  group->addGroundNet(n3);
 
+  nets = group->getGroundNets();
+  net_itr;
+  BOOST_ASSERT(nets.reversible());
+  for(int j = 0; j<2 ; j++)
+  {
+    if(j==1)
+      nets.reverse();
+    for(net_itr = nets.begin() , i=j?3:1 ; net_itr != nets.end() ; ++net_itr, i=i+(j?-1:1))
+      BOOST_ASSERT(std::string(((dbNet*)*net_itr)->getName())=="n"+to_string(i));
+  }
+}
+BOOST_AUTO_TEST_CASE(test_group_group_iterator)
+{
+  dbSet<dbGroup> children = group->getGroups();
+  dbSet<dbGroup>::iterator group_itr;
+  int i;
+  BOOST_ASSERT(children.reversible());
+  for(int j = 0; j<2 ; j++)
+  {
+    if(j==1)
+      children.reverse();
+    for(group_itr = children.begin() , i=j?1:3 ; group_itr != children.end() ; ++group_itr, i=i+(j?1:-1))
+      BOOST_ASSERT(std::string(((dbGroup*)*group_itr)->getName())=="child"+to_string(i));
+  }
+}
 BOOST_AUTO_TEST_SUITE_END()

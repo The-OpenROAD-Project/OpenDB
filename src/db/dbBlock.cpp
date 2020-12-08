@@ -107,6 +107,8 @@
 #include "lefout.h"
 #include "logger.h"
 #include "parse.h"
+#include "dbGroupPowerNetItr.h"
+#include "dbGroupGroundNetItr.h"
 
 namespace odb {
 
@@ -365,6 +367,12 @@ _dbBlock::_dbBlock(_dbDatabase* db)
   _group_modinst_itr = new dbGroupModInstItr(_modinst_tbl);
   ZALLOCATED(_group_modinst_itr);
 
+  _group_power_net_itr = new dbGroupPowerNetItr(_net_tbl);
+  ZALLOCATED(_group_power_net_itr);
+
+  _group_ground_net_itr = new dbGroupGroundNetItr(_net_tbl);
+  ZALLOCATED(_group_ground_net_itr);
+
   _bpin_itr = new dbBPinItr(_bpin_tbl);
   ZALLOCATED(_bpin_itr);
 
@@ -580,6 +588,12 @@ _dbBlock::_dbBlock(_dbDatabase* db, const _dbBlock& block)
   _group_modinst_itr = new dbGroupModInstItr(_modinst_tbl);
   ZALLOCATED(_group_modinst_itr);
 
+  _group_power_net_itr = new dbGroupPowerNetItr(_net_tbl);
+  ZALLOCATED(_group_power_net_itr);
+
+  _group_ground_net_itr = new dbGroupGroundNetItr(_net_tbl);
+  ZALLOCATED(_group_ground_net_itr);
+
   _bpin_itr = new dbBPinItr(_bpin_tbl);
   ZALLOCATED(_bpin_itr);
 
@@ -654,6 +668,8 @@ _dbBlock::~_dbBlock()
   delete _group_itr;
   delete _group_inst_itr;
   delete _group_modinst_itr;
+  delete _group_power_net_itr;
+  delete _group_ground_net_itr;
   delete _bpin_itr;
   delete _region_itr;
   delete _prop_itr;

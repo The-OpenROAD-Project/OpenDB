@@ -97,7 +97,7 @@
           "name":"_type",
           "type":"uint",
           "bits":2,
-          "flags":[]
+          "flags":["no-set","no-get"]
         },
         {
           "name":"_box",
@@ -147,6 +147,16 @@
           "name":"_ground_nets",
           "type":"dbVector<dbId<_dbNet>>",
           "flags":["no-set","no-get"]
+        }
+      ],
+      "enums":[
+        {
+          "name":"dbGroupType",
+          "values":[
+            "PHYSICAL_CLUSTER",
+            "VOLTAGE_DOMAIN"
+          ],
+          "public":true
         }
       ],
       "cpp_includes":["dbBlock.h","dbBox.h","dbNet.h","dbInst.h","dbModInst.h","dbHashTable.hpp","dbGroupItr.h","dbGroupInstItr.h","dbGroupModInstItr.h"]

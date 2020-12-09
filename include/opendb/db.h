@@ -38,13 +38,13 @@
 #include <vector>
 
 #include "ISdb.h"
+#include "dbLogger.h"
 #include "dbObject.h"
 #include "dbPrintControl.h"
 #include "dbSet.h"
 #include "dbTypes.h"
 #include "dbViaParams.h"
 #include "geom.h"
-#include "dbLogger.h"
 #include "odb.h"
 
 #define ADS_MAX_CORNER 10
@@ -7211,6 +7211,12 @@ class dbModInst : public dbObject
 class dbGroup : public dbObject
 {
  public:
+  enum dbGroupType
+  {
+    PHYSICAL_CLUSTER = 0,
+    VOLTAGE_DOMAIN   = 1
+  };
+
   char* getName() const;
 
   void setBox(Rect _box);
@@ -7221,11 +7227,12 @@ class dbGroup : public dbObject
 
   dbGroup* getParentGroup() const;
 
-  void setType(uint _type);
-
-  uint getType() const;
-
   // User Code Begin dbGroup
+
+  void setType(dbGroupType _type);
+
+  dbGroupType getType() const;
+
   void addModInst(dbModInst* modinst);
 
   void removeModInst(dbModInst* modinst);
@@ -7268,7 +7275,7 @@ class dbGroup : public dbObject
   static void destroy(dbGroup* group);
 
   static dbGroup* getGroup(dbBlock* block_, uint dbid_);
-  
+
   // User Code End dbGroup
 };
 

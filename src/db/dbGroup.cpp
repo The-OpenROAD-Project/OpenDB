@@ -284,21 +284,21 @@ dbGroup* dbGroup::getParentGroup() const
   return (dbGroup*) par->_group_tbl->getPtr(obj->_parent_group);
 }
 
-void dbGroup::setType(uint _type)
-{
-  _dbGroup* obj = (_dbGroup*) this;
-
-  obj->_flags._type = _type;
-}
-
-uint dbGroup::getType() const
-{
-  _dbGroup* obj = (_dbGroup*) this;
-
-  return obj->_flags._type;
-}
-
 // User Code Begin dbGroupPublicMethods
+void dbGroup::setType(dbGroupType _type)
+{
+  _dbGroup* obj = (_dbGroup*) this;
+
+  obj->_flags._type = (uint) _type;
+}
+
+dbGroup::dbGroupType dbGroup::getType() const
+{
+  _dbGroup* obj = (_dbGroup*) this;
+
+  return (dbGroup::dbGroupType) obj->_flags._type;
+}
+
 void dbGroup::addModInst(dbModInst* modinst)
 {
   _dbGroup*   _group   = (_dbGroup*) this;
@@ -526,7 +526,7 @@ dbGroup* dbGroup::create(dbBlock* block, const char* name)
   _dbGroup* _group = _block->_group_tbl->create();
   _group->_name    = strdup(name);
   ZALLOCATED(_group->_name);
-  _group->_flags._type = 1;
+  _group->_flags._type = PHYSICAL_CLUSTER;
   _block->_group_hash.insert(_group);
   return (dbGroup*) _group;
 }
@@ -544,7 +544,7 @@ dbGroup* dbGroup::create(dbBlock*    block,
   _dbGroup* _group = _block->_group_tbl->create();
   _group->_name    = strdup(name);
   ZALLOCATED(_group->_name);
-  _group->_flags._type = 2;
+  _group->_flags._type = VOLTAGE_DOMAIN;
   _block->_group_hash.insert(_group);
   _group->_box.init(x1, y1, x2, y2);
   return (dbGroup*) _group;
@@ -559,7 +559,7 @@ dbGroup* dbGroup::create(dbGroup* parent, const char* name)
   _dbGroup* _group = _block->_group_tbl->create();
   _group->_name    = strdup(name);
   ZALLOCATED(_group->_name);
-  _group->_flags._type = 1;
+  _group->_flags._type = PHYSICAL_CLUSTER;
   _block->_group_hash.insert(_group);
   parent->addGroup((dbGroup*) _group);
   return (dbGroup*) _group;

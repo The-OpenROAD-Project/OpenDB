@@ -90,6 +90,12 @@ BOOST_AUTO_TEST_CASE(test_group_default)
   BOOST_ASSERT(domain->getBox()==Rect(0,0,100,100));
   domain->setBox(Rect(2,2,50,50));
   BOOST_ASSERT(domain->getBox()==Rect(2,2,50,50));
+  
+  BOOST_ASSERT(child1->getType()==dbGroup::PHYSICAL_CLUSTER);
+  BOOST_ASSERT(domain->getType()==dbGroup::VOLTAGE_DOMAIN);
+  domain->setType(dbGroup::PHYSICAL_CLUSTER);
+  BOOST_ASSERT(domain->getType()==dbGroup::PHYSICAL_CLUSTER);
+
 }
 BOOST_AUTO_TEST_CASE(test_group_modinst)
 {

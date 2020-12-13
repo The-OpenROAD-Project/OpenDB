@@ -33,64 +33,41 @@
 // Generator Code Begin 1
 #pragma once
 
-#include "dbCore.h"
+#include "dbIterator.h"
 #include "odb.h"
-
 // User Code Begin includes
 // User Code End includes
 
 namespace odb {
 
-class dbIStream;
-class dbOStream;
-class dbDiff;
-class _dbDatabase;
-class _dbModule;
-class _dbGroup;
-// User Code Begin Classes
-// User Code End Classes
-
-// User Code Begin structs
-// User Code End structs
-
-class _dbModInst : public _dbObject
+class _dbModInst;
+template <class T>
+class dbTable;
+// User Code Begin classes
+// User Code End classes
+class dbGroupModInstItr : public dbIterator
 {
- public:
-  // User Code Begin enums
-  // User Code End enums
-  char* _name;
-
-  dbId<_dbModInst> _next_entry;
-
-  dbId<_dbModule> _parent;
-
-  dbId<_dbModInst> _module_next;
-
-  dbId<_dbModule> _master;
-
-  dbId<_dbModInst> _group_next;
-
-  dbId<_dbGroup> _group;
-
+  dbTable<_dbModInst>* _modinst_tbl;
   // User Code Begin fields
   // User Code End fields
-  _dbModInst(_dbDatabase*, const _dbModInst& r);
-  _dbModInst(_dbDatabase*);
-  ~_dbModInst();
-  bool operator==(const _dbModInst& rhs) const;
-  bool operator!=(const _dbModInst& rhs) const { return !operator==(rhs); }
-  bool operator<(const _dbModInst& rhs) const;
-  void differences(dbDiff&           diff,
-                   const char*       field,
-                   const _dbModInst& rhs) const;
-  void out(dbDiff& diff, char side, const char* field) const;
-  dbObjectTable* getObjectTable(dbObjectType type);
+ public:
+  dbGroupModInstItr(dbTable<_dbModInst>* modinst_tbl)
+  {
+    _modinst_tbl = modinst_tbl;
+  }
+
+  bool      reversible();
+  bool      orderReversed();
+  void      reverse(dbObject* parent);
+  uint      sequential();
+  uint      size(dbObject* parent);
+  uint      begin(dbObject* parent);
+  uint      end(dbObject* parent);
+  uint      next(uint id, ...);
+  dbObject* getObject(uint id, ...);
   // User Code Begin methods
   // User Code End methods
 };
-dbIStream& operator>>(dbIStream& stream, _dbModInst& obj);
-dbOStream& operator<<(dbOStream& stream, const _dbModInst& obj);
-// User Code Begin general
-// User Code End general
+
 }  // namespace odb
-   // Generator Code End 1
+   // GeneratorCodeEnd 1

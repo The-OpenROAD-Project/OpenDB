@@ -9,6 +9,16 @@ class {{klass.name}};
 class {{klass.name}} : public dbObject
 {
  public:
+  {% for _enum in klass.enums %}
+  {% if _enum.public %}
+  enum {{ _enum.name }}
+  {
+    {% for value in _enum["values"]%}
+    {% if not loop.first %},{%endif%}{{value}} = {{loop.index0}}
+    {% endfor %}
+  };
+  {% endif %}
+  {% endfor %}
   {%for field in klass.fields%}
   {%if 'no-set' not in field.flags%}
   void {{field.setterFunctionName}} ({{field.setterArgumentType}} {{field.name}} );

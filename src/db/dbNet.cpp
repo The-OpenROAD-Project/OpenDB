@@ -63,6 +63,7 @@
 #include "dbTech.h"
 #include "dbTechNonDefaultRule.h"
 #include "dbWire.h"
+#include "dbGroup.h"
 
 namespace odb {
 
@@ -86,10 +87,12 @@ _dbNet::_dbNet(_dbDatabase*, const _dbNet& n)
       _cap_nodes(n._cap_nodes),
       _r_segs(n._r_segs),
       _non_default_rule(n._non_default_rule),
+      _groups(n._groups),
       _weight(n._weight),
       _xtalk(n._xtalk),
       _ccAdjustFactor(n._ccAdjustFactor),
       _ccAdjustOrder(n._ccAdjustOrder)
+      
 {
   if (n._name) {
     _name = strdup(n._name);
@@ -159,6 +162,7 @@ dbOStream& operator<<(dbOStream& stream, const _dbNet& net)
   stream << net._xtalk;
   stream << net._ccAdjustFactor;
   stream << net._ccAdjustOrder;
+  stream << net._groups;
   return stream;
 }
 
@@ -182,6 +186,7 @@ dbIStream& operator>>(dbIStream& stream, _dbNet& net)
   stream >> net._xtalk;
   stream >> net._ccAdjustFactor;
   stream >> net._ccAdjustOrder;
+  stream >> net._groups;
 
   return stream;
 }
@@ -312,6 +317,9 @@ bool _dbNet::operator==(const _dbNet& rhs) const
   if (_ccAdjustOrder != rhs._ccAdjustOrder)
     return false;
 
+  if (_groups != rhs._groups)
+    return false;
+
   return true;
 }
 
@@ -401,6 +409,7 @@ void _dbNet::differences(dbDiff&       diff,
   DIFF_FIELD(_xtalk);
   DIFF_FIELD(_ccAdjustFactor);
   DIFF_FIELD(_ccAdjustOrder);
+  DIFF_VECTOR(_groups);
   DIFF_END
 }
 
@@ -477,6 +486,7 @@ void _dbNet::out(dbDiff& diff, char side, const char* field) const
   DIFF_OUT_FIELD(_xtalk);
   DIFF_OUT_FIELD(_ccAdjustFactor);
   DIFF_OUT_FIELD(_ccAdjustOrder);
+  DIFF_OUT_VECTOR(_groups);
   DIFF_END
 }
 
@@ -2746,7 +2756,7 @@ void dbNet::destroy(dbNet* net_)
     iitr = dbITerm::disconnect(iitr);
 
   dbSet<dbBTerm> bterms = net_->getBTerms();
-  ;
+  
   dbSet<dbBTerm>::iterator bitr;
 
   for (bitr = bterms.begin(); bitr != bterms.end();)
@@ -2763,6 +2773,13 @@ void dbNet::destroy(dbNet* net_)
     dbWire* wire = (dbWire*) block->_wire_tbl->getPtr(net->_wire);
     dbWire::destroy(wire);
   }
+
+  for(dbId<_dbGroup> _group_id : net->_groups)
+  {
+    dbGroup* group = (dbGroup*) block->_group_tbl->getPtr(_group_id);
+    group->removeNet(net_);
+  }
+
 
   if (block->_journal) {
     debug("DB_ECO", "A", "ECO: destroy net, id: %d\n", net->getId());

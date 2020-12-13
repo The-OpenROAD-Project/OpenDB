@@ -38,13 +38,13 @@
 #include <vector>
 
 #include "ISdb.h"
+#include "dbLogger.h"
 #include "dbObject.h"
 #include "dbPrintControl.h"
 #include "dbSet.h"
 #include "dbTypes.h"
 #include "dbViaParams.h"
 #include "geom.h"
-#include "dbLogger.h"
 #include "odb.h"
 
 #define ADS_MAX_CORNER 10
@@ -102,6 +102,7 @@ class dbBPin;
 // Generator Code Begin 2
 class dbModule;
 class dbModInst;
+class dbGroup;
 // Generator Code End 2
 
 // Lib objects
@@ -858,6 +859,11 @@ class dbBlock : public dbObject
   dbSet<dbModInst> getModInsts();
 
   ///
+  /// Get the groups of this block.
+  ///
+  dbSet<dbGroup> getGroups();
+
+  ///
   /// Find a specific instance of this block.
   /// Returns NULL if the object was not found.
   ///
@@ -868,6 +874,12 @@ class dbBlock : public dbObject
   /// Returns NULL if the object was not found.
   ///
   dbModule* findModule(const char* name);
+
+  ///
+  /// Find a specific group in this block.
+  /// Returns NULL if the object was not found.
+  ///
+  dbGroup* findGroup(const char* name);
 
   ///
   /// Find a set of insts. Each name can be real name, or Ixxx, or xxx,
@@ -2919,6 +2931,11 @@ class dbInst : public dbObject
   /// Get the Master of this instance.
   ///
   dbMaster* getMaster() const;
+
+  ///
+  /// Get the group of this instance.
+  ///
+  dbGroup* getGroup();
 
   ///
   /// Get the instance-terminals of this instance.
@@ -7174,6 +7191,8 @@ class dbModInst : public dbObject
 
   dbModule* getMaster() const;
 
+  dbGroup* getGroup() const;
+
   // User Code Begin dbModInst
   static dbModInst* create(dbModule*   parentModule,
                            dbModule*   masterModule,
@@ -7187,6 +7206,79 @@ class dbModInst : public dbObject
 
   char* getName() const;
   // User Code End dbModInst
+};
+
+class dbGroup : public dbObject
+{
+ public:
+  enum dbGroupType
+  {
+    PHYSICAL_CLUSTER = 0,
+    VOLTAGE_DOMAIN   = 1
+  };
+
+  char* getName() const;
+
+  Rect getBox() const;
+
+  void setParentGroup(dbGroup* _parent_group);
+
+  dbGroup* getParentGroup() const;
+
+  // User Code Begin dbGroup
+
+  void setType(dbGroupType _type);
+
+  dbGroupType getType() const;
+
+  void setBox(Rect _box);
+
+  bool hasBox();
+
+  void addModInst(dbModInst* modinst);
+
+  void removeModInst(dbModInst* modinst);
+
+  dbSet<dbModInst> getModInsts();
+
+  void addInst(dbInst* inst);
+
+  void removeInst(dbInst* inst);
+
+  dbSet<dbInst> getInsts();
+
+  void addGroup(dbGroup* group);
+
+  void removeGroup(dbGroup* group);
+
+  dbSet<dbGroup> getGroups();
+
+  void addPowerNet(dbNet* net);
+
+  void addGroundNet(dbNet* net);
+
+  void removeNet(dbNet* net);
+
+  dbSet<dbNet> getPowerNets();
+
+  dbSet<dbNet> getGroundNets();
+
+  static dbGroup* create(dbBlock* block, const char* name);
+
+  static dbGroup* create(dbBlock*    block,
+                         const char* name,
+                         int         x1,
+                         int         y1,
+                         int         x2,
+                         int         y2);
+
+  static dbGroup* create(dbGroup* parent, const char* name);
+
+  static void destroy(dbGroup* group);
+
+  static dbGroup* getGroup(dbBlock* block_, uint dbid_);
+
+  // User Code End dbGroup
 };
 
 // Generator Code End 5

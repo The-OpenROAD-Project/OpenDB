@@ -30,67 +30,68 @@
 // ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 // POSSIBILITY OF SUCH DAMAGE.
 
-// Generator Code Begin 1
-#pragma once
+#include "dbGroupPowerNetItr.h"
 
-#include "dbCore.h"
-#include "odb.h"
+#include <algorithm>
 
-// User Code Begin includes
-// User Code End includes
+#include "dbBlock.h"
+#include "dbTable.h"
+#include "dbGroup.h"
+#include "dbNet.h"
 
 namespace odb {
 
-class dbIStream;
-class dbOStream;
-class dbDiff;
-class _dbDatabase;
-class _dbModule;
-class _dbGroup;
-// User Code Begin Classes
-// User Code End Classes
-
-// User Code Begin structs
-// User Code End structs
-
-class _dbModInst : public _dbObject
+bool dbGroupPowerNetItr::reversible()
 {
- public:
-  // User Code Begin enums
-  // User Code End enums
-  char* _name;
+  return true;
+}
 
-  dbId<_dbModInst> _next_entry;
+bool dbGroupPowerNetItr::orderReversed()
+{
+  return false;
+}
 
-  dbId<_dbModule> _parent;
+void dbGroupPowerNetItr::reverse(dbObject* parent)
+{
+  _dbGroup* group = (_dbGroup*) parent;
+  std::reverse(group->_power_nets.begin(), group->_power_nets.end());
+}
 
-  dbId<_dbModInst> _module_next;
+uint dbGroupPowerNetItr::sequential()
+{
+  return 0;
+}
 
-  dbId<_dbModule> _master;
+uint dbGroupPowerNetItr::size(dbObject* parent)
+{
+  _dbGroup* group = (_dbGroup*) parent;
+  return group->_power_nets.size();
+}
 
-  dbId<_dbModInst> _group_next;
+uint dbGroupPowerNetItr::begin(dbObject*)
+{
+  return 0;
+}
 
-  dbId<_dbGroup> _group;
+uint dbGroupPowerNetItr::end(dbObject* parent)
+{
+  _dbGroup* group = (_dbGroup*) parent;
+  return group->_power_nets.size();
+}
 
-  // User Code Begin fields
-  // User Code End fields
-  _dbModInst(_dbDatabase*, const _dbModInst& r);
-  _dbModInst(_dbDatabase*);
-  ~_dbModInst();
-  bool operator==(const _dbModInst& rhs) const;
-  bool operator!=(const _dbModInst& rhs) const { return !operator==(rhs); }
-  bool operator<(const _dbModInst& rhs) const;
-  void differences(dbDiff&           diff,
-                   const char*       field,
-                   const _dbModInst& rhs) const;
-  void out(dbDiff& diff, char side, const char* field) const;
-  dbObjectTable* getObjectTable(dbObjectType type);
-  // User Code Begin methods
-  // User Code End methods
-};
-dbIStream& operator>>(dbIStream& stream, _dbModInst& obj);
-dbOStream& operator<<(dbOStream& stream, const _dbModInst& obj);
-// User Code Begin general
-// User Code End general
+uint dbGroupPowerNetItr::next(uint id, ...)
+{
+  return ++id;
+}
+
+dbObject* dbGroupPowerNetItr::getObject(uint id, ...)
+{
+  va_list ap;
+  va_start(ap, id);
+  _dbGroup* parent = (_dbGroup*) va_arg(ap, dbObject*);
+  va_end(ap);
+  uint nid = parent->_power_nets[id];
+  return _net_tbl->getPtr(nid);
+}
+
 }  // namespace odb
-   // Generator Code End 1

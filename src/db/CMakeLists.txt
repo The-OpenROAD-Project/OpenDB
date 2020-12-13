@@ -94,12 +94,18 @@ add_library(opendb
     tmg_conn_s.cpp
     tmg_conn_w.cpp
     wOrder.cpp
+    dbGroupPowerNetItr.cpp
+    dbGroupGroundNetItr.cpp
     Logger.cpp
     # Generator Code Begin cpp
     dbModule.cpp
     dbModInst.cpp
+    dbGroup.cpp
     dbModuleInstItr.cpp
     dbModuleModInstItr.cpp
+    dbGroupModInstItr.cpp
+    dbGroupItr.cpp
+    dbGroupInstItr.cpp
     # Generator Code End cpp
 )
 

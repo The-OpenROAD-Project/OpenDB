@@ -158,5 +158,7 @@ WRAP_DB_CONTAINER(odb::dbTechLayerSpacingRule)
 WRAP_DB_CONTAINER(odb::dbTechV55InfluenceEntry)
 WRAP_DB_CONTAINER(odb::dbTechMinCutRule)
 WRAP_DB_CONTAINER(odb::dbTechMinEncRule)
-
+WRAP_DB_CONTAINER(odb::dbModule)
+WRAP_DB_CONTAINER(odb::dbModInst)
+WRAP_DB_CONTAINER(odb::dbGroup)
 

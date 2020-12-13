@@ -160,6 +160,11 @@ class dbSet<dbNet>
   /// Reverse the order of this set.
   ///
   void reverse() { _itr->reverse(_parent); }
+
+  ///
+  /// Returns true if set is empty
+  ///
+  bool empty() { return begin() == end(); }
 };
 
 }  // namespace odb

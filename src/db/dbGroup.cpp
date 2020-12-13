@@ -62,6 +62,9 @@ bool _dbGroup::operator==(const _dbGroup& rhs) const
   if (_flags._type != rhs._flags._type)
     return false;
 
+  if (_flags._box != rhs._flags._box)
+    return false;
+
   if (_name != rhs._name)
     return false;
 
@@ -115,6 +118,8 @@ void _dbGroup::differences(dbDiff&         diff,
 
   DIFF_FIELD(_flags._type);
 
+  DIFF_FIELD(_flags._box);
+
   DIFF_FIELD(_name);
 
   DIFF_FIELD(_box);
@@ -146,6 +151,8 @@ void _dbGroup::out(dbDiff& diff, char side, const char* field) const
 
   DIFF_OUT_FIELD(_flags._type);
 
+  DIFF_OUT_FIELD(_flags._box);
+
   DIFF_OUT_FIELD(_name);
 
   DIFF_OUT_FIELD(_box);
@@ -174,11 +181,14 @@ void _dbGroup::out(dbDiff& diff, char side, const char* field) const
 _dbGroup::_dbGroup(_dbDatabase* db)
 {
   // User Code Begin constructor
+  _flags._box  = 0;
+  _flags._type = 0;
   // User Code End constructor
 }
 _dbGroup::_dbGroup(_dbDatabase* db, const _dbGroup& r)
 {
   _flags._type       = r._flags._type;
+  _flags._box        = r._flags._box;
   _flags._spare_bits = r._flags._spare_bits;
   _name              = r._name;
   _box               = r._box;
@@ -255,13 +265,6 @@ char* dbGroup::getName() const
   return obj->_name;
 }
 
-void dbGroup::setBox(Rect _box)
-{
-  _dbGroup* obj = (_dbGroup*) this;
-
-  obj->_box = _box;
-}
-
 Rect dbGroup::getBox() const
 {
   _dbGroup* obj = (_dbGroup*) this;
@@ -297,6 +300,19 @@ dbGroup::dbGroupType dbGroup::getType() const
   _dbGroup* obj = (_dbGroup*) this;
 
   return (dbGroup::dbGroupType) obj->_flags._type;
+}
+
+void dbGroup::setBox(Rect _box)
+{
+  _dbGroup* obj       = (_dbGroup*) this;
+  obj->_flags._box = 1;
+  obj->_box           = _box;
+}
+
+bool dbGroup::hasBox()
+{
+  _dbGroup* obj = (_dbGroup*) this;
+  return obj->_flags._box;
 }
 
 void dbGroup::addModInst(dbModInst* modinst)
@@ -545,6 +561,7 @@ dbGroup* dbGroup::create(dbBlock*    block,
   _group->_name    = strdup(name);
   ZALLOCATED(_group->_name);
   _group->_flags._type = VOLTAGE_DOMAIN;
+  _group->_flags._box  = 1;
   _block->_group_hash.insert(_group);
   _group->_box.init(x1, y1, x2, y2);
   return (dbGroup*) _group;

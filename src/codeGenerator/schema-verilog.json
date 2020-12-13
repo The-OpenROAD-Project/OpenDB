@@ -101,7 +101,14 @@
         },
         {
           "name":"_box",
-          "type":"Rect"
+          "type":"uint",
+          "bits":1,
+          "flags":["no-set","no-get"]
+        },
+        {
+          "name":"_box",
+          "type":"Rect",
+          "flags":["no-set"]
         },
         {
           "name":"_next_entry",

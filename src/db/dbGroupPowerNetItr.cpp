@@ -1,7 +1,7 @@
 ///////////////////////////////////////////////////////////////////////////////
 // BSD 3-Clause License
 //
-// Copyright (c) 2019, Nefelus Inc
+// Copyright (c) 2020, OpenRoad Project
 // All rights reserved.
 //
 // Redistribution and use in source and binary forms, with or without

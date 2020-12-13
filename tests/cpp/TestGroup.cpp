@@ -88,6 +88,8 @@ BOOST_AUTO_TEST_CASE(test_group_default)
   BOOST_ASSERT(block->findGroup("group")==nullptr);
 
   BOOST_ASSERT(domain->getBox()==Rect(0,0,100,100));
+  BOOST_ASSERT(domain->hasBox());
+  BOOST_ASSERT(!child1->hasBox());
   domain->setBox(Rect(2,2,50,50));
   BOOST_ASSERT(domain->getBox()==Rect(2,2,50,50));
   

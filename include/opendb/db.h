@@ -7219,8 +7219,6 @@ class dbGroup : public dbObject
 
   char* getName() const;
 
-  void setBox(Rect _box);
-
   Rect getBox() const;
 
   void setParentGroup(dbGroup* _parent_group);
@@ -7232,6 +7230,10 @@ class dbGroup : public dbObject
   void setType(dbGroupType _type);
 
   dbGroupType getType() const;
+
+  void setBox(Rect _box);
+
+  bool hasBox();
 
   void addModInst(dbModInst* modinst);
 

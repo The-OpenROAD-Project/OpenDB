@@ -13,8 +13,8 @@ class {{klass.name}} : public dbObject
   {% if _enum.public %}
   enum {{ _enum.name }}
   {
-    {% for i in range(_enum["values"]|length)%}
-    {% if i!=0 %},{%endif%}{{_enum["values"][i]}} = {{i}}
+    {% for value in _enum["values"]%}
+    {% if not loop.first %},{%endif%}{{value}} = {{loop.index0}}
     {% endfor %}
   };
   {% endif %}

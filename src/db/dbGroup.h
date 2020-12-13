@@ -55,7 +55,8 @@ class _dbNet;
 struct dbGroupFlags
 {
   uint _type : 2;
-  uint _spare_bits : 30;
+  uint _box : 1;
+  uint _spare_bits : 29;
 };
 // User Code Begin structs
 // User Code End structs

@@ -96,7 +96,6 @@ add_library(opendb
     wOrder.cpp
     dbGroupPowerNetItr.cpp
     dbGroupGroundNetItr.cpp
-    Logger.cpp
     # Generator Code Begin cpp
     dbModule.cpp
     dbModInst.cpp

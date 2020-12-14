@@ -223,6 +223,7 @@ inline dbSetIterator<T> dbSetIterator<T>::operator++(int)
 
 // Specialization definitions
 #include "dbBlockSet.h"
+#include "dbNetSet.h"
 #include "dbCCSegSet.h"
 
 

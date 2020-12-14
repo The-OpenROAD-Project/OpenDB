@@ -14,16 +14,16 @@ BOOST_AUTO_TEST_CASE(test_default)
         if(string(cwd)=="/")
             sink_path = "/OpenDB/build/"+sink_path;//in Docker
     }
-    ordlog::init();
-    BOOST_ASSERT(ordlog::info(ordlog::OPENDB,1,"Fresh start")==0);
-    BOOST_ASSERT(ordlog::addSinkFile(sink_path.c_str())==0);
-    BOOST_ASSERT(ordlog::warn(ordlog::OPENDB,2,"Added Sink")==0);
-    BOOST_ASSERT(ordlog::addSinkFile(sink_path.c_str())==-2);
-    BOOST_ASSERT(ordlog::removeSinkFile(sink_path.c_str())==0);
-    BOOST_ASSERT(ordlog::crit(ordlog::OPENDB,3,"Removed Sink")==0);
-    BOOST_ASSERT(ordlog::error(ordlog::OPENDB,10000,"Invalid Id")==-1);
-    BOOST_ASSERT(ordlog::error(ordlog::OPENDB,9999,"valid error Id")==0);
-    BOOST_ASSERT(ordlog::removeSinkFile(sink_path.c_str())==-2);
+    ord::init();
+    BOOST_ASSERT(ord::info(ord::ODB,1,"Fresh start")==0);
+    BOOST_ASSERT(ord::addSinkFile(sink_path.c_str())==0);
+    BOOST_ASSERT(ord::warn(ord::ODB,2,"Added Sink")==0);
+    BOOST_ASSERT(ord::addSinkFile(sink_path.c_str())==-2);
+    BOOST_ASSERT(ord::removeSinkFile(sink_path.c_str())==0);
+    BOOST_ASSERT(ord::crit(ord::ODB,3,"Removed Sink")==0);
+    BOOST_ASSERT(ord::error(ord::ODB,10000,"Invalid Id")==-1);
+    BOOST_ASSERT(ord::error(ord::ODB,9999,"valid error Id")==0);
+    BOOST_ASSERT(ord::removeSinkFile(sink_path.c_str())==-2);
 }
 BOOST_AUTO_TEST_CASE(test_init_file)
 {
@@ -33,11 +33,11 @@ BOOST_AUTO_TEST_CASE(test_init_file)
         if(string(cwd)=="/")
             sink_path = "/OpenDB/build/"+sink_path;//in Docker
     }
-    ordlog::init(sink_path.c_str());
-    BOOST_ASSERT(ordlog::info(ordlog::OPENDB,1,"Fresh start in file")==0);
-    BOOST_ASSERT(ordlog::addSinkStdout()==0);
-    BOOST_ASSERT(ordlog::info(ordlog::OPENDB,2,"Added stdout")==0);
-    BOOST_ASSERT(ordlog::removeSinkStdout()==0);
-    BOOST_ASSERT(ordlog::info(ordlog::OPENDB,3,"Removed stdout")==0);
+    ord::init(sink_path.c_str());
+    BOOST_ASSERT(ord::info(ord::ODB,1,"Fresh start in file")==0);
+    BOOST_ASSERT(ord::addSinkStdout()==0);
+    BOOST_ASSERT(ord::info(ord::ODB,2,"Added stdout")==0);
+    BOOST_ASSERT(ord::removeSinkStdout()==0);
+    BOOST_ASSERT(ord::info(ord::ODB,3,"Removed stdout")==0);
 }
 BOOST_AUTO_TEST_SUITE_END()

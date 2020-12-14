@@ -36,6 +36,7 @@
 #include "dbId.h"
 #include "dbTypes.h"
 #include "odb.h"
+#include "dbVector.h"
 
 namespace odb {
 
@@ -48,6 +49,7 @@ class _dbRSeg;
 class _dbCCSeg;
 class _dbTechNonDefaultRule;
 class _dbDatabase;
+class _dbGroup;
 class dbIStream;
 class dbOStream;
 class dbDiff;
@@ -116,6 +118,7 @@ class _dbNet : public _dbObject
   dbId<_dbCapNode>            _cap_nodes;
   dbId<_dbRSeg>               _r_segs;
   dbId<_dbTechNonDefaultRule> _non_default_rule;
+  dbVector<dbId<_dbGroup>>    _groups;
   int                         _weight;
   int                         _xtalk;
   float                       _ccAdjustFactor;

@@ -68,6 +68,9 @@ bool _dbModule::operator==(const _dbModule& rhs) const
   if (_modinsts != rhs._modinsts)
     return false;
 
+  if (_mod_inst != rhs._mod_inst)
+    return false;
+
   // User Code Begin ==
   // User Code End ==
   return true;
@@ -75,6 +78,8 @@ bool _dbModule::operator==(const _dbModule& rhs) const
 bool _dbModule::operator<(const _dbModule& rhs) const
 {
   // User Code Begin <
+  if (strcmp(_name, rhs._name) >= 0)
+    return false;
   // User Code End <
   return true;
 }
@@ -88,6 +93,7 @@ void _dbModule::differences(dbDiff&          diff,
   DIFF_FIELD(_next_entry);
   DIFF_FIELD(_insts);
   DIFF_FIELD(_modinsts);
+  DIFF_FIELD(_mod_inst);
   // User Code Begin differences
   // User Code End differences
   DIFF_END
@@ -99,6 +105,7 @@ void _dbModule::out(dbDiff& diff, char side, const char* field) const
   DIFF_OUT_FIELD(_next_entry);
   DIFF_OUT_FIELD(_insts);
   DIFF_OUT_FIELD(_modinsts);
+  DIFF_OUT_FIELD(_mod_inst);
 
   // User Code Begin out
   // User Code End out
@@ -110,6 +117,7 @@ _dbModule::_dbModule(_dbDatabase* db)
   _name     = 0;
   _insts    = 0;
   _modinsts = 0;
+  _mod_inst = 0;
   // User Code End constructor
 }
 _dbModule::_dbModule(_dbDatabase* db, const _dbModule& r)
@@ -118,6 +126,7 @@ _dbModule::_dbModule(_dbDatabase* db, const _dbModule& r)
   _next_entry = r._next_entry;
   _insts      = r._insts;
   _modinsts   = r._modinsts;
+  _mod_inst   = r._mod_inst;
   // User Code Begin CopyConstructor
   // User Code End CopyConstructor
 }
@@ -128,6 +137,7 @@ dbIStream& operator>>(dbIStream& stream, _dbModule& obj)
   stream >> obj._next_entry;
   stream >> obj._insts;
   stream >> obj._modinsts;
+  stream >> obj._mod_inst;
   // User Code Begin >>
   // User Code End >>
   return stream;
@@ -138,6 +148,7 @@ dbOStream& operator<<(dbOStream& stream, const _dbModule& obj)
   stream << obj._next_entry;
   stream << obj._insts;
   stream << obj._modinsts;
+  stream << obj._mod_inst;
   // User Code Begin <<
   // User Code End <<
   return stream;
@@ -158,6 +169,15 @@ char* dbModule::getName() const
 {
   _dbModule* obj = (_dbModule*) this;
   return obj->_name;
+}
+
+dbModInst* dbModule::getModInst() const
+{
+  _dbModule* obj = (_dbModule*) this;
+  if (obj->_mod_inst == 0)
+    return NULL;
+  _dbBlock* par = (_dbBlock*) obj->getOwner();
+  return (dbModInst*) par->_modinst_tbl->getPtr(obj->_mod_inst);
 }
 
 // User Code Begin dbModulePublicMethods
@@ -182,10 +202,10 @@ void dbModule::removeInst(dbInst* inst)
 {
   _dbModule* module = (_dbModule*) this;
   _dbInst*   _inst  = (_dbInst*) inst;
-  _dbBlock*  block  = (_dbBlock*) module->getOwner();
   if (_inst->_module != module->getOID())
     return;
-  uint id = _inst->getOID();
+  _dbBlock* block = (_dbBlock*) module->getOwner();
+  uint      id    = _inst->getOID();
 
   _dbInst* prev = NULL;
   uint     cur  = module->_insts;
@@ -241,6 +261,8 @@ void dbModule::destroy(dbModule* module)
   for (itr = modinsts.begin(); itr != modinsts.end();) {
     itr = dbModInst::destroy(itr);
   }
+  if (_module->_mod_inst != 0)
+    dbModInst::destroy(module->getModInst());
 
   for (auto inst : module->getInsts()) {
     _dbInst* _inst      = (_dbInst*) inst;
@@ -262,10 +284,11 @@ dbModule* dbModule::getModule(dbBlock* block_, uint dbid_)
 dbModInst* dbModule::findModInst(const char* name)
 {
   _dbModule*  obj    = (_dbModule*) this;
-  _dbBlock*   par    = (_dbBlock*) obj->getOwner();
+  dbBlock*    block  = (dbBlock*) obj->getOwner();
   std::string h_name = std::string(obj->_name) + "/" + std::string(name);
-  return (dbModInst*) par->_modinst_hash.find(h_name.c_str());
+  return block->findModInst(h_name.c_str());
 }
+
 // User Code End dbModulePublicMethods
 }  // namespace odb
    // Generator Code End 1

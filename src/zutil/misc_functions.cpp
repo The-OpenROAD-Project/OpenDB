@@ -51,7 +51,7 @@
 #include <assert.h>
 #include <stdlib.h>
 
-#include "logger.h"
+#include "dbLogger.h"
 
 using namespace std;
 

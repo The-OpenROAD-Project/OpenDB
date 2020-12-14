@@ -310,6 +310,18 @@ void dbObject::getDbName(char name[max_name_length]) const
         *cptr++ = 'o';
         id      = impl->getOID();
         break;
+      case dbModuleObj:
+        *cptr++ = 'm';
+        id      = impl->getOID();
+        break;
+      case dbModInstObj:
+        *cptr++ = 'i';
+        id      = impl->getOID();
+        break;
+      case dbGroupObj:
+        *cptr++ = 'b';
+        id      = impl->getOID();
+        break;
 
       case dbNameObj:
         assert(0);
@@ -594,6 +606,21 @@ dbObject* dbObject::resolveDbName(dbDatabase* db_, const char* name)
         obj = dbTechViaGenerateRule::getTechViaGenerateRule((dbTech*) obj, oid);
         break;
 
+      case 'm':  // Module
+        oid = getOid(name);
+        obj = dbModule::getModule((dbBlock*) obj, oid);
+        break;
+
+      case 'i':  // ModInst
+        oid = getOid(name);
+        obj = dbModInst::getModInst((dbBlock*) obj, oid);
+        break;
+
+      case 'b':  // Group
+        oid = getOid(name);
+        obj = dbGroup::getGroup((dbBlock*) obj, oid);
+        break;
+
       case '/':
         break;
     }
@@ -642,6 +669,7 @@ static const char* name_tbl[] = {"dbDatabase",
                                  "dbTechLayerSpacingEolRule",
                                  "dbModule",
                                  "dbModInst",
+                                 "dbGroup",
                                  // Generator Code End 1
 
                                  // Lib Objects

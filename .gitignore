@@ -26,10 +26,17 @@
 *.a
 *.lib
 
+# Logs
+*.log
+
 # Executables
 *.exe
 *.out
 *.app
+
+# python cache
+__pycache__/
+*.py[cod]
 
 # build
 build
@@ -53,3 +60,8 @@ core
 *.rej
 TAGS
 defRWarning.log
+
+src/def/def/def.tab.cpp
+src/def/def/def.tab.h
+src/lef/lef/lef.tab.cpp
+src/lef/lef/lef.tab.h

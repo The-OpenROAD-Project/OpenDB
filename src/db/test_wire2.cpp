@@ -38,7 +38,7 @@
 #include "dbRtTree.h"
 #include "dbShape.h"
 #include "dbWireCodec.h"
-#include "logger.h"
+#include "dbLogger.h"
 
 using namespace odb;
 

@@ -38,7 +38,7 @@
 #include "dbWire.h"
 #include "dbWireCodec.h"
 #include "dbWireOpcode.h"
-#include "logger.h"
+#include "dbLogger.h"
 
 namespace odb {
 

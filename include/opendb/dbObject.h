@@ -91,6 +91,7 @@ enum dbObjectType
   dbTechLayerSpacingEolRuleObj,
   dbModuleObj,
   dbModInstObj,
+  dbGroupObj,
   // Generator Code End 1
 
   // Lib Objects

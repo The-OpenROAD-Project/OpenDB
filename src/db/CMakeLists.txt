@@ -88,18 +88,24 @@ add_library(opendb
     dbUtil.cpp
     gs.cpp
     grids.cpp
-    logger.cpp 
+    dbLogger.cpp 
     tmg_conn.cpp
     tmg_conn_g.cpp
     tmg_conn_s.cpp
     tmg_conn_w.cpp
     wOrder.cpp
+    dbGroupPowerNetItr.cpp
+    dbGroupGroundNetItr.cpp
     # Generator Code Begin cpp
     dbTechLayerSpacingEolRule.cpp
     dbModule.cpp
     dbModInst.cpp
+    dbGroup.cpp
     dbModuleInstItr.cpp
     dbModuleModInstItr.cpp
+    dbGroupModInstItr.cpp
+    dbGroupItr.cpp
+    dbGroupInstItr.cpp
     # Generator Code End cpp
 )
 

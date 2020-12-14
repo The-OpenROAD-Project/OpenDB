@@ -47,7 +47,7 @@
 #include "ZNamespace.h"
 #include "ZSession.h"
 #include "db.h"
-#include "logger.h"
+#include "dbLogger.h"
 
 //#define TCL_EVAL
 

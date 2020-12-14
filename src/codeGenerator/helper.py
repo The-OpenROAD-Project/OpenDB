@@ -17,7 +17,8 @@ comparable = [
     'long double',
     'char *',
     'char*',
-    'char'
+    'char',
+    'Rect'
 ]
 
 removable = [

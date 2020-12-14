@@ -55,7 +55,7 @@
 #include "lefiUtil.hpp"
 #include "lefin.h"
 #include "lefrReader.hpp"
-#include "logger.h"
+#include "dbLogger.h"
 #include "poly_decomp.h"
 #include "lefTechLayerSpacingEolParser.h"
 

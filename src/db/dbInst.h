@@ -48,6 +48,7 @@ class _dbITerm;
 class _dbRegion;
 class _dbDatabase;
 class _dbModule;
+class _dbGroup;
 class dbInst;
 class dbIStream;
 class dbOStream;
@@ -92,8 +93,10 @@ class _dbInst : public _dbObject
   dbId<_dbBox>     _bbox;
   dbId<_dbRegion>  _region;
   dbId<_dbModule>  _module;
+  dbId<_dbGroup>   _group;
   dbId<_dbInst>    _region_next;
   dbId<_dbInst>    _module_next;
+  dbId<_dbInst>    _group_next;
   dbId<_dbInst>    _region_prev;
   dbId<_dbHier>    _hierarchy;
   dbVector<uint>   _iterms;

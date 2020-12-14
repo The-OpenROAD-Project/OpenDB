@@ -42,6 +42,7 @@
 #include "dbTable.h"
 #include "dbTable.hpp"
 // User Code Begin includes
+#include "dbGroup.h"
 // User Code End includes
 namespace odb {
 
@@ -64,6 +65,12 @@ bool _dbModInst::operator==(const _dbModInst& rhs) const
     return false;
 
   if (_master != rhs._master)
+    return false;
+
+  if (_group_next != rhs._group_next)
+    return false;
+
+  if (_group != rhs._group)
     return false;
 
   // User Code Begin ==
@@ -94,6 +101,10 @@ void _dbModInst::differences(dbDiff&           diff,
 
   DIFF_FIELD(_master);
 
+  DIFF_FIELD(_group_next);
+
+  DIFF_FIELD(_group);
+
   // User Code Begin differences
   // User Code End differences
   DIFF_END
@@ -112,6 +123,10 @@ void _dbModInst::out(dbDiff& diff, char side, const char* field) const
 
   DIFF_OUT_FIELD(_master);
 
+  DIFF_OUT_FIELD(_group_next);
+
+  DIFF_OUT_FIELD(_group);
+
   // User Code Begin out
   // User Code End out
   DIFF_END
@@ -123,6 +138,8 @@ _dbModInst::_dbModInst(_dbDatabase* db)
   _parent      = 0;
   _module_next = 0;
   _master      = 0;
+  _group       = 0;
+  _group_next  = 0;
   // User Code End constructor
 }
 _dbModInst::_dbModInst(_dbDatabase* db, const _dbModInst& r)
@@ -132,6 +149,8 @@ _dbModInst::_dbModInst(_dbDatabase* db, const _dbModInst& r)
   _parent      = r._parent;
   _module_next = r._module_next;
   _master      = r._master;
+  _group_next  = r._group_next;
+  _group       = r._group;
   // User Code Begin CopyConstructor
   // User Code End CopyConstructor
 }
@@ -143,6 +162,8 @@ dbIStream& operator>>(dbIStream& stream, _dbModInst& obj)
   stream >> obj._parent;
   stream >> obj._module_next;
   stream >> obj._master;
+  stream >> obj._group_next;
+  stream >> obj._group;
   // User Code Begin >>
   // User Code End >>
   return stream;
@@ -154,6 +175,8 @@ dbOStream& operator<<(dbOStream& stream, const _dbModInst& obj)
   stream << obj._parent;
   stream << obj._module_next;
   stream << obj._master;
+  stream << obj._group_next;
+  stream << obj._group;
   // User Code Begin <<
   // User Code End <<
   return stream;
@@ -193,6 +216,15 @@ dbModule* dbModInst::getMaster() const
     return NULL;
   _dbBlock* par = (_dbBlock*) obj->getOwner();
   return (dbModule*) par->_module_tbl->getPtr(obj->_master);
+}
+
+dbGroup* dbModInst::getGroup() const
+{
+  _dbModInst* obj = (_dbModInst*) this;
+  if (obj->_group == 0)
+    return NULL;
+  _dbBlock* par = (_dbBlock*) obj->getOwner();
+  return (dbGroup*) par->_group_tbl->getPtr(obj->_group);
 }
 
 // User Code Begin dbModInstPublicMethods
@@ -243,6 +275,8 @@ void dbModInst::destroy(dbModInst* modinst)
     cur  = c->_module_next;
   }
   // unlink from parent end
+  if (_modinst->_group)
+    modinst->getGroup()->removeModInst(modinst);
   dbProperty::destroyProperties(_modinst);
   block->_modinst_hash.remove(_modinst);
   block->_modinst_tbl->destroy(_modinst);

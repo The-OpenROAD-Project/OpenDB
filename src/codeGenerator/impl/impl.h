@@ -74,12 +74,14 @@ namespace odb {
   {
     public:
     {% for _enum in klass.enums %}
+    {% if not _enum.public %}
     enum {{ _enum.name }}
     {
-      {% for i in range(_enum["values"]|length)%}
-      {% if i!=0 %},{%endif%}{{_enum["values"][i]}}
+      {% for value in _enum["values"]%}
+      {% if not loop.first %},{%endif%}{{value}} = {{loop.index0}}
       {% endfor %}
     };
+    {% endif %}
     {% endfor %}
     //User Code Begin enums
     //User Code End enums

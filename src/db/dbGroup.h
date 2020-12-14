@@ -37,6 +37,7 @@
 #include "odb.h"
 
 // User Code Begin includes
+#include "dbVector.h"
 // User Code End includes
 
 namespace odb {
@@ -45,51 +46,65 @@ class dbIStream;
 class dbOStream;
 class dbDiff;
 class _dbDatabase;
-class _dbModule;
-class _dbGroup;
+class _dbInst;
+class _dbModInst;
+class _dbNet;
 // User Code Begin Classes
 // User Code End Classes
 
+struct dbGroupFlags
+{
+  uint _type : 2;
+  uint _box : 1;
+  uint _spare_bits : 29;
+};
 // User Code Begin structs
 // User Code End structs
 
-class _dbModInst : public _dbObject
+class _dbGroup : public _dbObject
 {
  public:
   // User Code Begin enums
   // User Code End enums
+  dbGroupFlags _flags;
+
   char* _name;
 
-  dbId<_dbModInst> _next_entry;
+  Rect _box;
 
-  dbId<_dbModule> _parent;
+  dbId<_dbGroup> _next_entry;
 
-  dbId<_dbModInst> _module_next;
+  dbId<_dbGroup> _group_next;
 
-  dbId<_dbModule> _master;
+  dbId<_dbGroup> _parent_group;
 
-  dbId<_dbModInst> _group_next;
+  dbId<_dbInst> _insts;
 
-  dbId<_dbGroup> _group;
+  dbId<_dbModInst> _modinsts;
+
+  dbId<_dbGroup> _groups;
+
+  dbVector<dbId<_dbNet>> _power_nets;
+
+  dbVector<dbId<_dbNet>> _ground_nets;
 
   // User Code Begin fields
+  dbVector<dbId<_dbNet>> _nets;
   // User Code End fields
-  _dbModInst(_dbDatabase*, const _dbModInst& r);
-  _dbModInst(_dbDatabase*);
-  ~_dbModInst();
-  bool operator==(const _dbModInst& rhs) const;
-  bool operator!=(const _dbModInst& rhs) const { return !operator==(rhs); }
-  bool operator<(const _dbModInst& rhs) const;
-  void differences(dbDiff&           diff,
-                   const char*       field,
-                   const _dbModInst& rhs) const;
+  _dbGroup(_dbDatabase*, const _dbGroup& r);
+  _dbGroup(_dbDatabase*);
+  ~_dbGroup();
+  bool operator==(const _dbGroup& rhs) const;
+  bool operator!=(const _dbGroup& rhs) const { return !operator==(rhs); }
+  bool operator<(const _dbGroup& rhs) const;
+  void differences(dbDiff& diff, const char* field, const _dbGroup& rhs) const;
   void out(dbDiff& diff, char side, const char* field) const;
   dbObjectTable* getObjectTable(dbObjectType type);
   // User Code Begin methods
   // User Code End methods
 };
-dbIStream& operator>>(dbIStream& stream, _dbModInst& obj);
-dbOStream& operator<<(dbOStream& stream, const _dbModInst& obj);
+dbIStream& operator>>(dbIStream& stream, _dbGroup& obj);
+dbOStream& operator<<(dbOStream& stream, const _dbGroup& obj);
 // User Code Begin general
 // User Code End general
 }  // namespace odb

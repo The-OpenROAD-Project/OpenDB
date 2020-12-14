@@ -17,7 +17,9 @@ set(TEST_LIBS
 add_executable( TestCallBacks ${PROJECT_SOURCE_DIR}/tests/cpp/TestCallBacks.cpp )
 add_executable( TestGeom ${PROJECT_SOURCE_DIR}/tests/cpp/TestGeom.cpp )
 add_executable( TestModule ${PROJECT_SOURCE_DIR}/tests/cpp/TestModule.cpp )
+add_executable( TestGroup ${PROJECT_SOURCE_DIR}/tests/cpp/TestGroup.cpp )
 
 target_link_libraries(TestCallBacks ${TEST_LIBS})
 target_link_libraries(TestGeom ${TEST_LIBS})
 target_link_libraries(TestModule ${TEST_LIBS})
+target_link_libraries(TestGroup ${TEST_LIBS})

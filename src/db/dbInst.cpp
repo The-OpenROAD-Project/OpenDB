@@ -60,6 +60,7 @@
 #include "dbTable.hpp"
 #include "dbTransform.h"
 #include "dbModule.h"
+#include "dbGroup.h"
 
 namespace odb {
 
@@ -137,8 +138,10 @@ _dbInst::_dbInst(_dbDatabase*, const _dbInst& i)
       _bbox(i._bbox),
       _region(i._region),
       _module(i._module),
+      _group(i._group),
       _region_next(i._region_next),
       _module_next(i._module_next),
+      _group_next(i._group_next),
       _region_prev(i._region_prev),
       _hierarchy(i._hierarchy),
       _iterms(i._iterms),
@@ -169,8 +172,10 @@ dbOStream& operator<<(dbOStream& stream, const _dbInst& inst)
   stream << inst._bbox;
   stream << inst._region;
   stream << inst._module;
+  stream << inst._group;
   stream << inst._region_next;
   stream << inst._module_next;
+  stream << inst._group_next;
   stream << inst._region_prev;
   stream << inst._hierarchy;
   stream << inst._iterms;
@@ -191,8 +196,10 @@ dbIStream& operator>>(dbIStream& stream, _dbInst& inst)
   stream >> inst._bbox;
   stream >> inst._region;
   stream >> inst._module;
+  stream >> inst._group;
   stream >> inst._region_next;
   stream >> inst._module_next;
+  stream >> inst._group_next;
   stream >> inst._region_prev;
   stream >> inst._hierarchy;
   stream >> inst._iterms;
@@ -265,10 +272,16 @@ bool _dbInst::operator==(const _dbInst& rhs) const
   if (_module != rhs._module)
     return false;
 
+  if (_group != rhs._group)
+    return false;
+
   if (_region_next != rhs._region_next)
     return false;
   
   if (_module_next != rhs._module_next)
+    return false;
+  
+  if (_group_next != rhs._group_next)
     return false;
 
   if (_region_prev != rhs._region_prev)
@@ -312,8 +325,10 @@ void _dbInst::differences(dbDiff&        diff,
   DIFF_OBJECT(_bbox, lhs_blk->_box_tbl, rhs_blk->_box_tbl);
   DIFF_FIELD(_region);
   DIFF_FIELD(_module);
+  DIFF_FIELD(_group);
   DIFF_FIELD(_region_next);
   DIFF_FIELD(_module_next);
+  DIFF_FIELD(_group_next);
   DIFF_FIELD(_region_prev);
   DIFF_FIELD(_hierarchy);
   DIFF_OBJECT(_halo, lhs_blk->_box_tbl, rhs_blk->_box_tbl);
@@ -365,8 +380,10 @@ void _dbInst::out(dbDiff& diff, char side, const char* field) const
   DIFF_OUT_OBJECT(_bbox, blk->_box_tbl);
   DIFF_OUT_FIELD(_region);
   DIFF_OUT_FIELD(_module);
+  DIFF_OUT_FIELD(_group);
   DIFF_OUT_FIELD(_region_next);
   DIFF_OUT_FIELD(_module_next);
+  DIFF_OUT_FIELD(_group_next);
   DIFF_OUT_FIELD(_region_prev);
   DIFF_OUT_FIELD(_hierarchy);
 
@@ -904,6 +921,18 @@ dbModule* dbInst::getModule()
   return (dbModule*) module;
 }
 
+dbGroup* dbInst::getGroup()
+{
+  _dbInst* inst = (_dbInst*) this;
+
+  if (inst->_group == 0)
+    return NULL;
+
+  _dbBlock*  block = (_dbBlock*) inst->getOwner();
+  _dbGroup* group = block->_group_tbl->getPtr(inst->_group);
+  return (dbGroup*) group;
+}
+
 dbBox* dbInst::getHalo()
 {
   _dbInst* inst = (_dbInst*) this;
@@ -1349,6 +1378,9 @@ void dbInst::destroy(dbInst* inst_)
   dbModule* module = inst_->getModule();
   if (module)
     module->removeInst(inst_);
+  
+  if(inst->_group)
+    inst_->getGroup()->removeInst(inst_);
 
   uint i;
   uint n = inst->_iterms.size();

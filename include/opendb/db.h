@@ -876,6 +876,13 @@ class dbBlock : public dbObject
   dbModule* findModule(const char* name);
 
   ///
+  /// Find a specific modinst in this block. path is master_module_name/modinst_name
+  /// Returns NULL if the object was not found.
+  ///
+  dbModInst* findModInst(const char* path);
+
+
+  ///
   /// Find a specific group in this block.
   /// Returns NULL if the object was not found.
   ///

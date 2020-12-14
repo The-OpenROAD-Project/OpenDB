@@ -301,9 +301,9 @@ dbModule* dbModule::getModule(dbBlock* block_, uint dbid_)
 dbModInst* dbModule::findModInst(const char* name)
 {
   _dbModule*  obj    = (_dbModule*) this;
-  _dbBlock*   par    = (_dbBlock*) obj->getOwner();
+  dbBlock*   block    = (dbBlock*) obj->getOwner();
   std::string h_name = std::string(obj->_name) + "/" + std::string(name);
-  return (dbModInst*) par->_modinst_hash.find(h_name.c_str());
+  return block->findModInst(h_name.c_str());
 }
 
 // User Code End dbModulePublicMethods

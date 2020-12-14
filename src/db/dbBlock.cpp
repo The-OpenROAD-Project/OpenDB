@@ -1637,6 +1637,12 @@ dbModule* dbBlock::findModule(const char* name)
   return (dbModule*) block->_module_hash.find(name);
 }
 
+dbModInst* dbBlock::findModInst(const char* path)
+{
+  _dbBlock*   block    = (_dbBlock*) this;
+  return (dbModInst*) block->_modinst_hash.find(path);
+}
+
 dbGroup* dbBlock::findGroup(const char* name)
 {
   _dbBlock* block = (_dbBlock*) this;

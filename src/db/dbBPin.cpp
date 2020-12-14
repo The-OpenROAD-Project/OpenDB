@@ -59,7 +59,7 @@ _dbBPin::_dbBPin(_dbDatabase*)
 _dbBPin::_dbBPin(_dbDatabase*, const _dbBPin& p)
     : _flags(p._flags),
       _bterm(p._bterm),
-      _bbox(p._bbox),
+      _boxes(p._boxes),
       _next_bpin(p._next_bpin),
       _min_spacing(p._min_spacing),
       _effective_width(p._effective_width)
@@ -84,7 +84,7 @@ bool _dbBPin::operator==(const _dbBPin& rhs) const
   if (_bterm != rhs._bterm)
     return false;
 
-  if (_bbox != rhs._bbox)
+  if (_boxes != rhs._boxes)
     return false;
 
   if (_next_bpin != rhs._next_bpin)
@@ -108,7 +108,7 @@ void _dbBPin::differences(dbDiff&        diff,
   DIFF_FIELD(_flags._has_min_spacing);
   DIFF_FIELD(_flags._has_effective_width);
   DIFF_FIELD(_bterm);
-  DIFF_FIELD(_bbox);
+  DIFF_FIELD(_boxes);
   DIFF_FIELD(_next_bpin);
   DIFF_FIELD(_min_spacing);
   DIFF_FIELD(_effective_width);
@@ -122,7 +122,7 @@ void _dbBPin::out(dbDiff& diff, char side, const char* field) const
   DIFF_OUT_FIELD(_flags._has_min_spacing);
   DIFF_OUT_FIELD(_flags._has_effective_width);
   DIFF_OUT_FIELD(_bterm);
-  DIFF_OUT_FIELD(_bbox);
+  DIFF_OUT_FIELD(_boxes);
   DIFF_OUT_FIELD(_next_bpin);
   DIFF_OUT_FIELD(_min_spacing);
   DIFF_OUT_FIELD(_effective_width);
@@ -134,7 +134,7 @@ dbOStream& operator<<(dbOStream& stream, const _dbBPin& bpin)
   uint* bit_field = (uint*) &bpin._flags;
   stream << *bit_field;
   stream << bpin._bterm;
-  stream << bpin._bbox;
+  stream << bpin._boxes;
   stream << bpin._next_bpin;
   stream << bpin._min_spacing;
   stream << bpin._effective_width;
@@ -146,7 +146,7 @@ dbIStream& operator>>(dbIStream& stream, _dbBPin& bpin)
   uint* bit_field = (uint*) &bpin._flags;
   stream >> *bit_field;
   stream >> bpin._bterm;
-  stream >> bpin._bbox;
+  stream >> bpin._boxes;
   stream >> bpin._next_bpin;
   stream >> bpin._min_spacing;
   stream >> bpin._effective_width;
@@ -167,16 +167,12 @@ dbBTerm* dbBPin::getBTerm()
   return (dbBTerm*) block->_bterm_tbl->getPtr(pin->_bterm);
 }
 
-dbBox* dbBPin::getBox()
+dbSet<dbBox> dbBPin::getBoxes()
 {
   _dbBPin* pin = (_dbBPin*) this;
 
-  if (pin->_bbox == 0)
-    return NULL;
-
   _dbBlock* block = (_dbBlock*) pin->getOwner();
-  _dbBox*   box   = block->_box_tbl->getPtr(pin->_bbox);
-  return (dbBox*) box;
+  return dbSet<dbBox>(pin, block->_box_itr);
 }
 
 dbPlacementStatus dbBPin::getPlacementStatus()
@@ -268,8 +264,8 @@ void dbBPin::destroy(dbBPin* bpin_)
     cur  = c->_next_bpin;
   }
 
-  if (bpin->_bbox) {
-    _dbBox* b = block->_box_tbl->getPtr(bpin->_bbox);
+  if (bpin->_boxes) {
+    _dbBox* b = block->_box_tbl->getPtr(bpin->_boxes);
     dbProperty::destroyProperties(b);
     block->remove_rect(b->_shape._rect);
     block->_box_tbl->destroy(b);

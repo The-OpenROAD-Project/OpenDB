@@ -669,16 +669,17 @@ dbBox* dbBox::create(dbBPin*      bpin_,
 {
   _dbBPin*  bpin  = (_dbBPin*) bpin_;
   _dbBlock* block = (_dbBlock*) bpin->getOwner();
-  if (bpin->_bbox != 0)
-    return NULL;
-
-  _dbBox* box             = block->_box_tbl->create();
+ 
+ _dbBox* box             = block->_box_tbl->create();
   box->_octilinear=false;
   box->_flags._layer_id   = layer_->getImpl()->getOID();
   box->_flags._owner_type = dbBoxOwner::BPIN;
   box->_owner             = bpin->getOID();
   box->_shape._rect.init(x1, y1, x2, y2);
-  bpin->_bbox = box->getOID();
+
+  box->_next_box = bpin->_boxes;
+  bpin->_boxes = box->getOID();
+  
   block->add_rect(box->_shape._rect);
   return (dbBox*) box;
 }

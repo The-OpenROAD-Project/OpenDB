@@ -479,19 +479,24 @@ uint dbBlockSearch::addBoxes(dbBTerm* bterm)
   // TWG: Added bpins
   for (itr = bpins.begin(); itr != bpins.end(); ++itr) {
     dbBPin* bpin = *itr;
-    dbBox*  box  = bpin->getBox();
 
-    if (box != NULL) {
+    dbSet<dbBox> boxes = bpin->getBoxes();
+    dbSet<dbBox>::iterator boxItr;
+  
+    for( boxItr = boxes.begin(); boxItr != boxes.end(); ++boxItr )
+    {
+      dbBox* box = *boxItr;
       cnt += _dcr->addBox(box->getId(),
-                          _block_pin_id,
-                          _blockMenuId,
-                          box->getTechLayer()->getRoutingLevel(),
-                          box->xMin(),
-                          box->yMin(),
-                          box->xMax(),
-                          box->yMax(),
-                          0);
+                            _block_pin_id,
+                            _blockMenuId,
+                            box->getTechLayer()->getRoutingLevel(),
+                            box->xMin(),
+                            box->yMin(),
+                            box->xMax(),
+                            box->yMax(),
+                            0);
     }
+
   }
 
   return cnt;

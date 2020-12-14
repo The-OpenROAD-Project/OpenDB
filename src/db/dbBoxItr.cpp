@@ -42,6 +42,7 @@
 #include "dbTable.h"
 #include "dbTechVia.h"
 #include "dbVia.h"
+#include "dbBPin.h"
 
 namespace odb {
 
@@ -194,6 +195,11 @@ uint dbBoxItr::begin(dbObject* parent)
     case dbTechViaObj: {
       _dbTechVia* via = (_dbTechVia*) parent;
       return via->_boxes;
+    }
+
+    case dbBPinObj: {
+      _dbBPin* pin = (_dbBPin*) parent;
+      return pin->_boxes;
     }
 
     default:

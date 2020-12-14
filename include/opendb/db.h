@@ -1766,7 +1766,7 @@ class dbBPin : public dbObject
   ///
   /// Get bbox of this pin
   ///
-  dbBox* getBox();
+  dbSet<dbBox> getBoxes();
 
   ///
   /// Returns true if this bpin has an effective-width rule.

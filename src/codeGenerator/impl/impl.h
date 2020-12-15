@@ -85,13 +85,15 @@ namespace odb {
     {% endfor %}
     //User Code Begin enums
     //User Code End enums
+    
     {%for field in klass.fields%}
-    {%if field.table%}
-    dbTable<_{{field.type}}>* {{field.name}};
+    {%if field.table%} 
+    dbTable<_{{field.type}}>* {{field.name}}; 
     {%else%}
     {{ field.type }} {{ field.name }}{%if "default" in field %}= {{ field.default }}{% endif %};
-    {%endif%}   
+    {%endif%}
     {%endfor%}
+
     //User Code Begin fields
     //User Code End fields
     _{{klass.name}}(_dbDatabase*, const _{{klass.name}}& r);
@@ -105,7 +107,7 @@ namespace odb {
     bool operator<(const _{{klass.name}}& rhs) const;
     void differences(dbDiff& diff, const char* field, const _{{klass.name}}& rhs) const;
     void out(dbDiff& diff, char side, const char* field) const;
-    dbObjectTable* getObjectTable(dbObjectType type);
+    {%if klass.hasTables%}dbObjectTable* getObjectTable(dbObjectType type);{%endif%}
     //User Code Begin methods
     //User Code End methods
   };

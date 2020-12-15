@@ -951,77 +951,49 @@ void defout_impl::writeBPin(dbBPin* bpin, int cnt)
 
   fprintf(_out, " + USE %s", defSigType(bterm->getSigType()));
 
-  dbBox* box = bpin->getBox();
 
-  if (box) {
-    int dw = defdist(int(box->getDX() / 2));
-    int dh = defdist(int(box->getDY() / 2));
-    int x  = defdist(box->xMin()) + dw;
-    int y  = defdist(box->yMin()) + dh;
+  for (dbBox* box : bpin->getBoxes())
+  {
+      
+      int dw = defdist(int(box->getDX() / 2));
+      int dh = defdist(int(box->getDY() / 2));
+      int x  = defdist(box->xMin()) + dw;
+      int y  = defdist(box->yMin()) + dh;
 
-    dbPlacementStatus status = bpin->getPlacementStatus();
+      dbPlacementStatus status = bpin->getPlacementStatus();
 
-    switch (status.getValue()) {
-      case dbPlacementStatus::NONE:
-      case dbPlacementStatus::UNPLACED:
-        break;
+      switch (status.getValue()) {
+        case dbPlacementStatus::NONE:
+        case dbPlacementStatus::UNPLACED:
+          break;
 
-      case dbPlacementStatus::SUGGESTED:
-      case dbPlacementStatus::PLACED: {
-        fprintf(_out, " + PLACED ( %d %d ) N", x, y);
-        break;
+        case dbPlacementStatus::SUGGESTED:
+        case dbPlacementStatus::PLACED: {
+          fprintf(_out, " + PLACED ( %d %d ) N", x, y);
+          break;
+        }
+
+        case dbPlacementStatus::LOCKED:
+        case dbPlacementStatus::FIRM: {
+          fprintf(_out, " + FIXED ( %d %d ) N", x, y);
+          break;
+        }
+
+        case dbPlacementStatus::COVER: {
+          fprintf(_out, " + COVER ( %d %d ) N", x, y);
+          break;
+        }
       }
 
-      case dbPlacementStatus::LOCKED:
-      case dbPlacementStatus::FIRM: {
-        fprintf(_out, " + FIXED ( %d %d ) N", x, y);
-        break;
-      }
+      dbTechLayer* layer = box->getTechLayer();
+      std::string  lname;
 
-      case dbPlacementStatus::COVER: {
-        fprintf(_out, " + COVER ( %d %d ) N", x, y);
-        break;
-      }
-    }
+      if (_use_alias && layer->hasAlias())
+        lname = layer->getAlias();
+      else
+        lname = layer->getName();
 
-    dbTechLayer* layer = box->getTechLayer();
-    std::string  lname;
-
-    if (_use_alias && layer->hasAlias())
-      lname = layer->getAlias();
-    else
-      lname = layer->getName();
-
-    if (_version == defout::DEF_5_5)
-      fprintf(_out,
-              " + LAYER %s ( %d %d ) ( %d %d )",
-              lname.c_str(),
-              -dw,
-              -dh,
-              dw,
-              dh);
-    else {
-      if (bpin->hasEffectiveWidth()) {
-        int w = defdist(bpin->getEffectiveWidth());
-        fprintf(_out,
-                " + LAYER %s DESIGNRULEWIDTH %d ( %d %d ) ( %d %d )",
-                lname.c_str(),
-                w,
-                -dw,
-                -dh,
-                dw,
-                dh);
-      } else if (bpin->hasMinSpacing()) {
-        int s = defdist(bpin->getMinSpacing());
-        fprintf(_out,
-                " + LAYER %s SPACING %d ( %d %d ) ( %d %d )",
-                lname.c_str(),
-                s,
-                -dw,
-                -dh,
-                dw,
-                dh);
-      } else {
+      if (_version == defout::DEF_5_5)
         fprintf(_out,
                 " + LAYER %s ( %d %d ) ( %d %d )",
                 lname.c_str(),
@@ -1029,11 +1001,43 @@ void defout_impl::writeBPin(dbBPin* bpin, int cnt)
                 -dh,
                 dw,
                 dh);
-      }
+      else {
+        if (bpin->hasEffectiveWidth()) {
+          int w = defdist(bpin->getEffectiveWidth());
+          fprintf(_out,
+                  " + LAYER %s DESIGNRULEWIDTH %d ( %d %d ) ( %d %d )",
+                  lname.c_str(),
+                  w,
+                  -dw,
+                  -dh,
+                  dw,
+                  dh);
+        } else if (bpin->hasMinSpacing()) {
+          int s = defdist(bpin->getMinSpacing());
+          fprintf(_out,
+                  " + LAYER %s SPACING %d ( %d %d ) ( %d %d )",
+                  lname.c_str(),
+                  s,
+                  -dw,
+                  -dh,
+                  dw,
+                  dh);
+        } else {
+          fprintf(_out,
+                  " + LAYER %s ( %d %d ) ( %d %d )",
+                  lname.c_str(),
+                  -dw,
+                  -dh,
+                  dw,
+                  dh);
+        } 
     }
+    
+    fprintf(_out, " ;\n");
   }
+  
 
-  fprintf(_out, " ;\n");
+  
 }
 
 void defout_impl::writeBlockages(dbBlock* block)

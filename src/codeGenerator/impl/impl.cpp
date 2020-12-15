@@ -131,7 +131,6 @@ namespace odb {
     DIFF_BEGIN
     
     {%for field in klass.fields%}
-    
     {%if field.bitFields%}
     {%for innerField in klass.structs[0].fields%}
     {%for component in innerField.components%}
@@ -141,16 +140,10 @@ namespace odb {
     {%else%}
     DIFF_FIELD({{field.name}}.{{component}});
     {%endif%}
-      
-
     {%endif%}
     {%endfor%}
     {%endfor%}
-
-
-
     {%else%}
-
     {%for component in field.components%}
     {%if 'no-diff' not in field.flags%}
     {%if field.table%}
@@ -162,7 +155,6 @@ namespace odb {
     {%endfor%}
     {%endif%}
     {%endfor%}
-  
     //User Code Begin differences
     //User Code End differences
     DIFF_END
@@ -171,7 +163,6 @@ namespace odb {
   {
     DIFF_OUT_BEGIN
     {%for field in klass.fields%}
-    
     {%if field.bitFields%}
     {%for innerField in klass.structs[0].fields%}
     {%for component in innerField.components%}
@@ -181,16 +172,10 @@ namespace odb {
     {%else%}
     DIFF_OUT_FIELD({{field.name}}.{{component}});
     {%endif%}
-      
-
     {%endif%}
     {%endfor%}
     {%endfor%}
-
-
-
     {%else%}
-
     {%for component in field.components%}
     {%if 'no-diff' not in field.flags%}
     {%if field.table%}
@@ -278,6 +263,8 @@ namespace odb {
     //User Code End <<
     return stream;
   }
+
+  {%if klass.hasTables%}
   dbObjectTable* _{{klass.name}}::getObjectTable(dbObjectType type)
   {
     switch (type) {
@@ -294,13 +281,19 @@ namespace odb {
     }
     return getTable()->getObjectTable(type);
   }
+  {%endif%}
   _{{klass.name}}::~_{{klass.name}}()
   {
     {%for field in klass.fields%}
+    {%if field.name == '_name'%}
+      if(_name)
+        free((void*) _name);
+    {%endif%}
     {%if field.table%}
     delete {{field.name}};
     {%endif%}
     {%endfor%}
+    
   }
   ////////////////////////////////////////////////////////////////////
   //

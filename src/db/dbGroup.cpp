@@ -117,25 +117,15 @@ void _dbGroup::differences(dbDiff&         diff,
   DIFF_BEGIN
 
   DIFF_FIELD(_flags._type);
-
   DIFF_FIELD(_flags._box);
-
   DIFF_FIELD(_name);
-
   DIFF_FIELD(_box);
-
   DIFF_FIELD(_next_entry);
-
   DIFF_FIELD(_group_next);
-
   DIFF_FIELD(_parent_group);
-
   DIFF_FIELD(_insts);
-
   DIFF_FIELD(_modinsts);
-
   DIFF_FIELD(_groups);
-
   // User Code Begin differences
 
   DIFF_VECTOR(_power_nets);
@@ -148,25 +138,15 @@ void _dbGroup::differences(dbDiff&         diff,
 void _dbGroup::out(dbDiff& diff, char side, const char* field) const
 {
   DIFF_OUT_BEGIN
-
   DIFF_OUT_FIELD(_flags._type);
-
   DIFF_OUT_FIELD(_flags._box);
-
   DIFF_OUT_FIELD(_name);
-
   DIFF_OUT_FIELD(_box);
-
   DIFF_OUT_FIELD(_next_entry);
-
   DIFF_OUT_FIELD(_group_next);
-
   DIFF_OUT_FIELD(_parent_group);
-
   DIFF_OUT_FIELD(_insts);
-
   DIFF_OUT_FIELD(_modinsts);
-
   DIFF_OUT_FIELD(_groups);
 
   // User Code Begin out
@@ -240,18 +220,11 @@ dbOStream& operator<<(dbOStream& stream, const _dbGroup& obj)
   // User Code End <<
   return stream;
 }
-dbObjectTable* _dbGroup::getObjectTable(dbObjectType type)
-{
-  switch (type) {
-      // User Code Begin getObjectTable
-    // User Code End getObjectTable
-    default:
-      break;
-  }
-  return getTable()->getObjectTable(type);
-}
+
 _dbGroup::~_dbGroup()
 {
+  if (_name)
+    free((void*) _name);
 }
 ////////////////////////////////////////////////////////////////////
 //
@@ -304,9 +277,9 @@ dbGroup::dbGroupType dbGroup::getType() const
 
 void dbGroup::setBox(Rect _box)
 {
-  _dbGroup* obj       = (_dbGroup*) this;
+  _dbGroup* obj    = (_dbGroup*) this;
   obj->_flags._box = 1;
-  obj->_box           = _box;
+  obj->_box        = _box;
 }
 
 bool dbGroup::hasBox()

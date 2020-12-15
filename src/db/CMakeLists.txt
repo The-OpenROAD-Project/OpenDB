@@ -97,6 +97,7 @@ add_library(opendb
     dbGroupPowerNetItr.cpp
     dbGroupGroundNetItr.cpp
     # Generator Code Begin cpp
+    dbTechLayerSpacingEolRule.cpp
     dbModule.cpp
     dbModInst.cpp
     dbGroup.cpp

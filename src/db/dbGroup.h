@@ -66,26 +66,17 @@ class _dbGroup : public _dbObject
  public:
   // User Code Begin enums
   // User Code End enums
-  dbGroupFlags _flags;
 
-  char* _name;
-
-  Rect _box;
-
-  dbId<_dbGroup> _next_entry;
-
-  dbId<_dbGroup> _group_next;
-
-  dbId<_dbGroup> _parent_group;
-
-  dbId<_dbInst> _insts;
-
-  dbId<_dbModInst> _modinsts;
-
-  dbId<_dbGroup> _groups;
-
+  dbGroupFlags           _flags;
+  char*                  _name;
+  Rect                   _box;
+  dbId<_dbGroup>         _next_entry;
+  dbId<_dbGroup>         _group_next;
+  dbId<_dbGroup>         _parent_group;
+  dbId<_dbInst>          _insts;
+  dbId<_dbModInst>       _modinsts;
+  dbId<_dbGroup>         _groups;
   dbVector<dbId<_dbNet>> _power_nets;
-
   dbVector<dbId<_dbNet>> _ground_nets;
 
   // User Code Begin fields
@@ -99,7 +90,6 @@ class _dbGroup : public _dbObject
   bool operator<(const _dbGroup& rhs) const;
   void differences(dbDiff& diff, const char* field, const _dbGroup& rhs) const;
   void out(dbDiff& diff, char side, const char* field) const;
-  dbObjectTable* getObjectTable(dbObjectType type);
   // User Code Begin methods
   // User Code End methods
 };

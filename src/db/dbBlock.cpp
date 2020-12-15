@@ -1482,10 +1482,13 @@ void dbBlock::ComputeBBox()
     for (pitr = bpins.begin(); pitr != bpins.end(); ++pitr) {
       dbBPin* bp = *pitr;
       if (bp->getPlacementStatus().isPlaced()) {
-        dbBox* box = bp->getBox();
-        Rect   r;
-        box->getBox(r);
-        bbox->_shape._rect.merge(r);
+        for (dbBox* box : bp->getBoxes())
+        {
+          Rect   r;
+          box->getBox(r);
+          bbox->_shape._rect.merge(r);
+        }
+        
       }
     }
   }

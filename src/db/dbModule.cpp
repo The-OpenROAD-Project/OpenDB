@@ -90,15 +90,10 @@ void _dbModule::differences(dbDiff&          diff,
   DIFF_BEGIN
 
   DIFF_FIELD(_name);
-
   DIFF_FIELD(_next_entry);
-
   DIFF_FIELD(_insts);
-
   DIFF_FIELD(_modinsts);
-
   DIFF_FIELD(_mod_inst);
-
   // User Code Begin differences
   // User Code End differences
   DIFF_END
@@ -106,15 +101,10 @@ void _dbModule::differences(dbDiff&          diff,
 void _dbModule::out(dbDiff& diff, char side, const char* field) const
 {
   DIFF_OUT_BEGIN
-
   DIFF_OUT_FIELD(_name);
-
   DIFF_OUT_FIELD(_next_entry);
-
   DIFF_OUT_FIELD(_insts);
-
   DIFF_OUT_FIELD(_modinsts);
-
   DIFF_OUT_FIELD(_mod_inst);
 
   // User Code Begin out
@@ -163,18 +153,11 @@ dbOStream& operator<<(dbOStream& stream, const _dbModule& obj)
   // User Code End <<
   return stream;
 }
-dbObjectTable* _dbModule::getObjectTable(dbObjectType type)
-{
-  switch (type) {
-      // User Code Begin getObjectTable
-    // User Code End getObjectTable
-    default:
-      break;
-  }
-  return getTable()->getObjectTable(type);
-}
+
 _dbModule::~_dbModule()
 {
+  if (_name)
+    free((void*) _name);
 }
 ////////////////////////////////////////////////////////////////////
 //
@@ -301,7 +284,7 @@ dbModule* dbModule::getModule(dbBlock* block_, uint dbid_)
 dbModInst* dbModule::findModInst(const char* name)
 {
   _dbModule*  obj    = (_dbModule*) this;
-  dbBlock*   block    = (dbBlock*) obj->getOwner();
+  dbBlock*    block  = (dbBlock*) obj->getOwner();
   std::string h_name = std::string(obj->_name) + "/" + std::string(name);
   return block->findModInst(h_name.c_str());
 }

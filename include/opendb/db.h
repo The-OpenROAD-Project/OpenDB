@@ -100,6 +100,7 @@ class dbBlockCallBackObj;
 class dbRegion;
 class dbBPin;
 // Generator Code Begin 2
+class dbTechLayerSpacingEolRule;
 class dbModule;
 class dbModInst;
 class dbGroup;
@@ -876,11 +877,10 @@ class dbBlock : public dbObject
   dbModule* findModule(const char* name);
 
   ///
-  /// Find a specific modinst in this block. path is master_module_name/modinst_name
-  /// Returns NULL if the object was not found.
+  /// Find a specific modinst in this block. path is
+  /// master_module_name/modinst_name Returns NULL if the object was not found.
   ///
   dbModInst* findModInst(const char* path);
-
 
   ///
   /// Find a specific group in this block.
@@ -1784,7 +1784,7 @@ class dbBPin : public dbObject
   ///
   /// Get bbox of this pin
   ///
-  dbBox* getBox();
+  dbSet<dbBox> getBoxes();
 
   ///
   /// Returns true if this bpin has an effective-width rule.
@@ -5971,6 +5971,9 @@ class dbTechLayer : public dbObject
   ///
   bool getV54SpacingRules(dbSet<dbTechLayerSpacingRule>& sp_rules) const;
 
+  // Get the collection of Eol Spacing Rules for the object
+  dbSet<dbTechLayerSpacingEolRule> getEolSpacingRules() const;
+
   ///
   /// API for version 5.5 spacing rules, expressed as a 2D matrix with
   /// index tables  LEF 5.4 and 5.5 rules should not co-exist -- although
@@ -7163,6 +7166,313 @@ class dbViaParams : private _dbViaParams
 };
 
 // Generator Code Begin 5
+
+class dbTechLayerSpacingEolRule : public dbObject
+{
+ public:
+  void setEolSpace(int _eol_space);
+
+  int getEolSpace() const;
+
+  void setEolWidth(int _eol_width);
+
+  int getEolWidth() const;
+
+  void setWrongDirSpace(int _wrong_dir_space);
+
+  int getWrongDirSpace() const;
+
+  void setOppositeWidth(int _opposite_width);
+
+  int getOppositeWidth() const;
+
+  void setEolWithin(int _eol_within);
+
+  int getEolWithin() const;
+
+  void setWrongDirWithin(int _wrong_dir_within);
+
+  int getWrongDirWithin() const;
+
+  void setExactWidth(int _exact_width);
+
+  int getExactWidth() const;
+
+  void setOtherWidth(int _other_width);
+
+  int getOtherWidth() const;
+
+  void setFillTriangle(int _fill_triangle);
+
+  int getFillTriangle() const;
+
+  void setCutClass(int _cut_class);
+
+  int getCutClass() const;
+
+  void setWithCutSpace(int _with_cut_space);
+
+  int getWithCutSpace() const;
+
+  void setEnclosureEndWidth(int _enclosure_end_width);
+
+  int getEnclosureEndWidth() const;
+
+  void setEnclosureEndWithin(int _enclosure_end_within);
+
+  int getEnclosureEndWithin() const;
+
+  void setEndPrlSpace(int _end_prl_space);
+
+  int getEndPrlSpace() const;
+
+  void setEndPrl(int _end_prl);
+
+  int getEndPrl() const;
+
+  void setEndToEndSpace(int _end_to_end_space);
+
+  int getEndToEndSpace() const;
+
+  void setOneCutSpace(int _one_cut_space);
+
+  int getOneCutSpace() const;
+
+  void setTwoCutSpace(int _two_cut_space);
+
+  int getTwoCutSpace() const;
+
+  void setExtension(int _extension);
+
+  int getExtension() const;
+
+  void setWrongDirExtension(int _wrong_dir_extension);
+
+  int getWrongDirExtension() const;
+
+  void setOtherEndWidth(int _other_end_width);
+
+  int getOtherEndWidth() const;
+
+  void setMaxLength(int _max_length);
+
+  int getMaxLength() const;
+
+  void setMinLength(int _min_length);
+
+  int getMinLength() const;
+
+  void setParSpace(int _par_space);
+
+  int getParSpace() const;
+
+  void setParWithin(int _par_within);
+
+  int getParWithin() const;
+
+  void setParPrl(int _par_prl);
+
+  int getParPrl() const;
+
+  void setParMinLength(int _par_min_length);
+
+  int getParMinLength() const;
+
+  void setEncloseDist(int _enclose_dist);
+
+  int getEncloseDist() const;
+
+  void setCutToMetalSpace(int _cut_to_metal_space);
+
+  int getCutToMetalSpace() const;
+
+  void setMinAdjLength(int _min_adj_length);
+
+  int getMinAdjLength() const;
+
+  void setMinAdjLength1(int _min_adj_length1);
+
+  int getMinAdjLength1() const;
+
+  void setMinAdjLength2(int _min_adj_length2);
+
+  int getMinAdjLength2() const;
+
+  void setNotchLength(int _notch_length);
+
+  int getNotchLength() const;
+
+  void setExactWidthValid(bool _exact_width_valid);
+
+  bool isExactWidthValid() const;
+
+  void setWrongDirSpacingValid(bool _wrong_dir_spacing_valid);
+
+  bool isWrongDirSpacingValid() const;
+
+  void setOppositeWidthValid(bool _opposite_width_valid);
+
+  bool isOppositeWidthValid() const;
+
+  void setWithinValid(bool _within_valid);
+
+  bool isWithinValid() const;
+
+  void setWrongDirWithinValid(bool _wrong_dir_within_valid);
+
+  bool isWrongDirWithinValid() const;
+
+  void setSameMaskValid(bool _same_mask_valid);
+
+  bool isSameMaskValid() const;
+
+  void setExceptExactWidthValid(bool _except_exact_width_valid);
+
+  bool isExceptExactWidthValid() const;
+
+  void setFillConcaveCornerValid(bool _fill_concave_corner_valid);
+
+  bool isFillConcaveCornerValid() const;
+
+  void setWithcutValid(bool _withcut_valid);
+
+  bool isWithcutValid() const;
+
+  void setCutClassValid(bool _cut_class_valid);
+
+  bool isCutClassValid() const;
+
+  void setWithCutAboveValid(bool _with_cut_above_valid);
+
+  bool isWithCutAboveValid() const;
+
+  void setEnclosureEndValid(bool _enclosure_end_valid);
+
+  bool isEnclosureEndValid() const;
+
+  void setEnclosureEndWithinValid(bool _enclosure_end_within_valid);
+
+  bool isEnclosureEndWithinValid() const;
+
+  void setEndPrlSpacingValid(bool _end_prl_spacing_valid);
+
+  bool isEndPrlSpacingValid() const;
+
+  void setPrlValid(bool _prl_valid);
+
+  bool isPrlValid() const;
+
+  void setEndToEndValid(bool _end_to_end_valid);
+
+  bool isEndToEndValid() const;
+
+  void setCutSpacesValid(bool _cut_spaces_valid);
+
+  bool isCutSpacesValid() const;
+
+  void setExtensionValid(bool _extension_valid);
+
+  bool isExtensionValid() const;
+
+  void setWrongDirExtensionValid(bool _wrong_dir_extension_valid);
+
+  bool isWrongDirExtensionValid() const;
+
+  void setOtherEndWidthValid(bool _other_end_width_valid);
+
+  bool isOtherEndWidthValid() const;
+
+  void setMaxLengthValid(bool _max_length_valid);
+
+  bool isMaxLengthValid() const;
+
+  void setMinLengthValid(bool _min_length_valid);
+
+  bool isMinLengthValid() const;
+
+  void setTwoSidesValid(bool _two_sides_valid);
+
+  bool isTwoSidesValid() const;
+
+  void setEqualRectWidthValid(bool _equal_rect_width_valid);
+
+  bool isEqualRectWidthValid() const;
+
+  void setParallelEdgeValid(bool _parallel_edge_valid);
+
+  bool isParallelEdgeValid() const;
+
+  void setSubtractEolWidthValid(bool _subtract_eol_width_valid);
+
+  bool isSubtractEolWidthValid() const;
+
+  void setParPrlValid(bool _par_prl_valid);
+
+  bool isParPrlValid() const;
+
+  void setParMinLengthValid(bool _par_min_length_valid);
+
+  bool isParMinLengthValid() const;
+
+  void setTwoEdgesValid(bool _two_edges_valid);
+
+  bool isTwoEdgesValid() const;
+
+  void setSameMetalValid(bool _same_metal_valid);
+
+  bool isSameMetalValid() const;
+
+  void setNonEolCornerOnlyValid(bool _non_eol_corner_only_valid);
+
+  bool isNonEolCornerOnlyValid() const;
+
+  void setParallelSameMaskValid(bool _parallel_same_mask_valid);
+
+  bool isParallelSameMaskValid() const;
+
+  void setEncloseCutValid(bool _enclose_cut_valid);
+
+  bool isEncloseCutValid() const;
+
+  void setBelowValid(bool _below_valid);
+
+  bool isBelowValid() const;
+
+  void setAboveValid(bool _above_valid);
+
+  bool isAboveValid() const;
+
+  void setCutSpacingValid(bool _cut_spacing_valid);
+
+  bool isCutSpacingValid() const;
+
+  void setAllCutsValid(bool _all_cuts_valid);
+
+  bool isAllCutsValid() const;
+
+  void setToConcaveCornerValid(bool _to_concave_corner_valid);
+
+  bool isToConcaveCornerValid() const;
+
+  void setMinAdjacentLengthValid(bool _min_adjacent_length_valid);
+
+  bool isMinAdjacentLengthValid() const;
+
+  void setTwoMinAdjLengthValid(bool _two_min_adj_length_valid);
+
+  bool isTwoMinAdjLengthValid() const;
+
+  void setToNotchLengthValid(bool _to_notch_length_valid);
+
+  bool isToNotchLengthValid() const;
+
+  // User Code Begin dbTechLayerSpacingEolRule
+  static dbTechLayerSpacingEolRule* create(dbTechLayer* layer);
+  static dbTechLayerSpacingEolRule* getTechLayerSpacingEolRule(
+      dbTechLayer* inly,
+      uint         dbid);
+  // User Code End dbTechLayerSpacingEolRule
+};
 
 class dbModule : public dbObject
 {

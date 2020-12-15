@@ -421,19 +421,20 @@ bool dbBTerm::getFirstPin(dbShape& shape)
   dbSet<dbBPin>::iterator bpin_itr;
   for (bpin_itr = bpins.begin(); bpin_itr != bpins.end(); ++bpin_itr) {
     dbBPin* bpin = *bpin_itr;
-    dbBox*  box  = bpin->getBox();
+    
+    for(dbBox* box : bpin->getBoxes()){
+      if (bpin->getPlacementStatus() == dbPlacementStatus::UNPLACED
+          || bpin->getPlacementStatus() == dbPlacementStatus::NONE || box == NULL)
+        continue;
 
-    if (bpin->getPlacementStatus() == dbPlacementStatus::UNPLACED
-        || bpin->getPlacementStatus() == dbPlacementStatus::NONE || box == NULL)
-      continue;
+      if (box->isVia())  // This is not possible...
+        continue;
 
-    if (box->isVia())  // This is not possible...
-      continue;
-
-    Rect r;
-    box->getBox(r);
-    shape.setSegment(box->getTechLayer(), r);
-    return true;
+      Rect r;
+      box->getBox(r);
+      shape.setSegment(box->getTechLayer(), r);
+      return true;
+    }
   }
 
   return false;
@@ -457,20 +458,26 @@ bool dbBTerm::getFirstPinLocation(int& x, int& y)
   dbSet<dbBPin>::iterator bpin_itr;
   for (bpin_itr = bpins.begin(); bpin_itr != bpins.end(); ++bpin_itr) {
     dbBPin* bpin = *bpin_itr;
-    dbBox*  box  = bpin->getBox();
 
-    if (bpin->getPlacementStatus() == dbPlacementStatus::UNPLACED
-        || bpin->getPlacementStatus() == dbPlacementStatus::NONE || box == NULL)
-      continue;
+    dbSet<dbBox> boxes = bpin->getBoxes();
+    dbSet<dbBox>::iterator boxItr;
+  
+    for( boxItr = boxes.begin(); boxItr != boxes.end(); ++boxItr )
+    {
+      dbBox* box = *boxItr;
+      if (bpin->getPlacementStatus() == dbPlacementStatus::UNPLACED
+          || bpin->getPlacementStatus() == dbPlacementStatus::NONE || box == NULL)
+        continue;
 
-    if (box->isVia())  // This is not possible...
-      continue;
+      if (box->isVia())  // This is not possible...
+        continue;
 
-    Rect r;
-    box->getBox(r);
-    x = r.xMin() + (int) (r.dx() >> 1U);
-    y = r.yMin() + (int) (r.dy() >> 1U);
-    return true;
+      Rect r;
+      box->getBox(r);
+      x = r.xMin() + (int) (r.dx() >> 1U);
+      y = r.yMin() + (int) (r.dy() >> 1U);
+      return true;
+    }
   }
 
   x = 0;

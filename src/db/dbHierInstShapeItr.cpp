@@ -182,17 +182,20 @@ bool dbHierInstShapeItr::iterate_inst(dbInst* inst, unsigned filter, int level)
 
       for (pitr = bpins.begin(); pitr != bpins.end(); ++pitr) {
         dbBPin* pin = *pitr;
-        dbBox*  box = pin->getBox();
-        getShape(box, shape);
-
         _callback->beginBPin(pin);
 
-        if (!_callback->nextBoxShape(box, shape)) {
-          _transforms.pop_back();
-          _callback->endBPin();
-          _callback->endInst();
-          return false;
+        
+        for (dbBox* box : pin->getBoxes())
+        {
+          getShape(box, shape);
+          if (!_callback->nextBoxShape(box, shape)) {
+            _transforms.pop_back();
+            _callback->endBPin();
+            _callback->endInst();
+            return false;
+          }
         }
+        
 
         _callback->endBPin();
       }

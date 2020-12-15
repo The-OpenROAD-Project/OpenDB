@@ -103,14 +103,7 @@ class lefin
   void init();
   void setDBUPerMicron(int dbu);
 
-  // convert distance value to db-units (1nm = 1db unit)
-  int dbdist(double value)
-  {
-    if (value < 0.0)
-      return (int) (value * _dist_factor - 0.5);
-    else
-      return (int) (value * _dist_factor + 0.5);
-  }
+  
 
   // convert area value to db-units (1nm = 1db unit)
   int dbarea(double value)
@@ -140,6 +133,17 @@ class lefin
                      double           offset_y = 0.0);
 
  public:
+
+  // convert distance value to db-units (1nm = 1db unit)
+  int dbdist(double value)
+  {
+    if (value < 0.0)
+      return (int) (value * _dist_factor - 0.5);
+    else
+      return (int) (value * _dist_factor + 0.5);
+  }
+  
+
   enum AntennaType
   {
     ANTENNA_INPUT_GATE_AREA,

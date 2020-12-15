@@ -60,7 +60,7 @@ class _dbBPin : public _dbObject
   // PERSISTANT-MEMBERS
   _dbBPinFlags   _flags;
   dbId<_dbBTerm> _bterm;
-  dbId<_dbBox>   _bbox;
+  dbId<_dbBox>   _boxes;
   dbId<_dbBPin>  _next_bpin;
   uint           _min_spacing;      // 5.6 DEF
   uint           _effective_width;  // 5.6 DEF

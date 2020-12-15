@@ -104,7 +104,7 @@ for klass in schema['classes']:
     
     #Adding functional name to fields and extracting field components
     struct = {"name":"{}Flags".format(klass['name']),"fields":[]}
-
+    klass['hasTables'] = False
     flag_num_bits = 0
     for field in klass['fields']:
         if 'bits' in field:
@@ -117,6 +117,10 @@ for klass in schema['classes']:
         field['refType'] = getRefType(field['type'])
         field['isHashTable'] = isHashTable(field['type'])
         field['hashTableType'] = getHashTableType(field['type'])
+
+        if 'private' in field['flags']:
+            field['flags'].append('no-set')
+            field['flags'].append('no-get')
 
         # Check if a class is being used inside a template definition to add to the list of forward declared classes
         ####
@@ -136,6 +140,7 @@ for klass in schema['classes']:
         ####
         ####
         if field.get('table', False):
+            klass['hasTables'] = True
             if field['type'].startswith('db'):
                 field['functional_name'] = '{}s'.format(field['type'][2:])
             else:

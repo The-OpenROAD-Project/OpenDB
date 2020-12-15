@@ -41,7 +41,7 @@
 #include "dbTable.h"
 #include "dbTable.hpp"
 #include "dbBlockCallBackObj.h"
-
+#include <iostream>
 namespace odb {
 
 template class dbTable<_dbBPin>;
@@ -264,15 +264,17 @@ void dbBPin::destroy(dbBPin* bpin_)
     cur  = c->_next_bpin;
   }
 
-  for(dbBox* box : ((dbBPin*)bpin)->getBoxes()){
-    _dbBox* b = (_dbBox*) box;
+
+  dbId<_dbBox> nextBox = bpin->_boxes;
+  while(nextBox){
+    _dbBox* b = block->_box_tbl->getPtr(nextBox);
+    nextBox = b->_next_box;
     dbProperty::destroyProperties(b);
     block->remove_rect(b->_shape._rect);
     block->_box_tbl->destroy(b);
   }
 
   dbProperty::destroyProperties(bpin);
-
   block->_bpin_tbl->destroy(bpin);
 }
 

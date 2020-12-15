@@ -5,414 +5,414 @@
       "type": "dbObject",
       "fields": [
         {
-          "type": "double",
-          "name": "eolSpace",
+          "type": "int",
+          "name": "_eol_space",
           "flags": []
         },
         {
-          "type": "double",
-          "name": "eolwidth",
-          "flags": []
-        },
-        {
-          "type": "bool",
-          "name": "EXACTWIDTH",
-          "flags": [],
-          "bits": "1"
-        },
-        {
-          "type": "bool",
-          "name": "WRONGDIRSPACING",
-          "flags": [],
-          "bits": "1"
-        },
-        {
-          "type": "double",
-          "name": "wrongDirSpace",
+          "type": "int",
+          "name": "_eol_width",
           "flags": []
         },
         {
           "type": "bool",
-          "name": "OPPOSITEWIDTH",
+          "name": "_exact_width_valid",
           "flags": [],
           "bits": "1"
         },
         {
-          "type": "double",
-          "name": "oppositeWidth",
+          "type": "bool",
+          "name": "_wrong_dir_spacing_valid",
+          "flags": [],
+          "bits": "1"
+        },
+        {
+          "type": "int",
+          "name": "_wrong_dir_space",
           "flags": []
         },
         {
           "type": "bool",
-          "name": "WITHIN",
+          "name": "_opposite_width_valid",
           "flags": [],
           "bits": "1"
         },
         {
-          "type": "double",
-          "name": "eolWithin",
+          "type": "int",
+          "name": "_opposite_width",
           "flags": []
         },
         {
           "type": "bool",
-          "name": "WRONGDIRWITHIN",
+          "name": "_within_valid",
           "flags": [],
           "bits": "1"
         },
         {
-          "type": "double",
-          "name": "wrongDirWithin",
+          "type": "int",
+          "name": "_eol_within",
           "flags": []
         },
         {
           "type": "bool",
-          "name": "SAMEMASK",
+          "name": "_wrong_dir_within_valid",
           "flags": [],
           "bits": "1"
         },
         {
-          "type": "bool",
-          "name": "EXCEPTEXACTWIDTH",
-          "flags": [],
-          "bits": "1"
-        },
-        {
-          "type": "double",
-          "name": "exactWidth",
-          "flags": []
-        },
-        {
-          "type": "double",
-          "name": "otherWidth",
+          "type": "int",
+          "name": "_wrong_dir_within",
           "flags": []
         },
         {
           "type": "bool",
-          "name": "FILLCONCAVECORNER",
+          "name": "_same_mask_valid",
           "flags": [],
           "bits": "1"
         },
         {
-          "type": "double",
-          "name": "fillTriangle",
+          "type": "bool",
+          "name": "_except_exact_width_valid",
+          "flags": [],
+          "bits": "1"
+        },
+        {
+          "type": "int",
+          "name": "_exact_width",
+          "flags": []
+        },
+        {
+          "type": "int",
+          "name": "_other_width",
           "flags": []
         },
         {
           "type": "bool",
-          "name": "WITHCUT",
+          "name": "_fill_concave_corner_valid",
           "flags": [],
           "bits": "1"
         },
         {
-          "type": "bool",
-          "name": "CUTCLASS",
-          "flags": [],
-          "bits": "1"
-        },
-        {
-          "type": "double",
-          "name": "cutClass",
+          "type": "int",
+          "name": "_fill_triangle",
           "flags": []
         },
         {
           "type": "bool",
-          "name": "withCutABOVE",
+          "name": "_withcut_valid",
           "flags": [],
           "bits": "1"
         },
         {
-          "type": "double",
-          "name": "withCutSpace",
+          "type": "bool",
+          "name": "_cut_class_valid",
+          "flags": [],
+          "bits": "1"
+        },
+        {
+          "type": "int",
+          "name": "_cut_class",
           "flags": []
         },
         {
           "type": "bool",
-          "name": "ENCLOSUREEND",
+          "name": "_with_cut_above_valid",
           "flags": [],
           "bits": "1"
         },
         {
-          "type": "double",
-          "name": "enclosureEndWidth",
+          "type": "int",
+          "name": "_with_cut_space",
           "flags": []
         },
         {
           "type": "bool",
-          "name": "ENCLOSUREENDWITHIN",
+          "name": "_enclosure_end_valid",
           "flags": [],
           "bits": "1"
         },
         {
-          "type": "double",
-          "name": "enclosureEndWithin",
+          "type": "int",
+          "name": "_enclosure_end_width",
           "flags": []
         },
         {
           "type": "bool",
-          "name": "ENDPRLSPACING",
+          "name": "_enclosure_end_within_valid",
           "flags": [],
           "bits": "1"
         },
         {
-          "type": "double",
-          "name": "endPrlSpace",
+          "type": "int",
+          "name": "_enclosure_end_within",
           "flags": []
         },
         {
           "type": "bool",
-          "name": "PRL",
+          "name": "_end_prl_spacing_valid",
           "flags": [],
           "bits": "1"
         },
         {
-          "type": "double",
-          "name": "endPrl",
+          "type": "int",
+          "name": "_end_prl_space",
           "flags": []
         },
         {
           "type": "bool",
-          "name": "ENDTOEND",
+          "name": "_prl_valid",
           "flags": [],
           "bits": "1"
         },
         {
-          "type": "double",
-          "name": "endToEndSpace",
+          "type": "int",
+          "name": "_end_prl",
           "flags": []
         },
         {
           "type": "bool",
-          "name": "hasCutSpaces",
+          "name": "_end_to_end_valid",
           "flags": [],
           "bits": "1"
         },
         {
-          "type": "double",
-          "name": "oneCutSpace",
-          "flags": []
-        },
-        {
-          "type": "double",
-          "name": "twoCutSpace",
+          "type": "int",
+          "name": "_end_to_end_space",
           "flags": []
         },
         {
           "type": "bool",
-          "name": "EXTENSION",
+          "name": "_cut_spaces_valid",
           "flags": [],
           "bits": "1"
         },
         {
-          "type": "double",
-          "name": "extension",
+          "type": "int",
+          "name": "_one_cut_space",
+          "flags": []
+        },
+        {
+          "type": "int",
+          "name": "_two_cut_space",
           "flags": []
         },
         {
           "type": "bool",
-          "name": "hasWrongDirExtension",
+          "name": "_extension_valid",
           "flags": [],
           "bits": "1"
         },
         {
-          "type": "double",
-          "name": "wrongDirExtension",
+          "type": "int",
+          "name": "_extension",
           "flags": []
         },
         {
           "type": "bool",
-          "name": "OTHERENDWIDTH",
+          "name": "_wrong_dir_extension_valid",
           "flags": [],
           "bits": "1"
         },
         {
-          "type": "double",
-          "name": "otherEndWidth",
+          "type": "int",
+          "name": "_wrong_dir_extension",
           "flags": []
         },
         {
           "type": "bool",
-          "name": "MAXLENGTH",
+          "name": "_other_end_width_valid",
           "flags": [],
           "bits": "1"
         },
         {
-          "type": "double",
-          "name": "maxLength",
+          "type": "int",
+          "name": "_other_end_width",
           "flags": []
         },
         {
           "type": "bool",
-          "name": "MINLENGTH",
+          "name": "_max_length_valid",
           "flags": [],
           "bits": "1"
         },
         {
-          "type": "double",
-          "name": "minLength",
+          "type": "int",
+          "name": "_max_length",
           "flags": []
         },
         {
           "type": "bool",
-          "name": "TWOSIDES",
+          "name": "_min_length_valid",
           "flags": [],
           "bits": "1"
         },
         {
-          "type": "bool",
-          "name": "EQUALRECTWIDTH",
-          "flags": [],
-          "bits": "1"
-        },
-        {
-          "type": "bool",
-          "name": "PARALLELEDGE",
-          "flags": [],
-          "bits": "1"
-        },
-        {
-          "type": "bool",
-          "name": "SUBTRACTEOLWIDTH",
-          "flags": [],
-          "bits": "1"
-        },
-        {
-          "type": "double",
-          "name": "parSpace",
-          "flags": []
-        },
-        {
-          "type": "double",
-          "name": "parWithin",
+          "type": "int",
+          "name": "_min_length",
           "flags": []
         },
         {
           "type": "bool",
-          "name": "PARPRL",
+          "name": "_two_sides_valid",
           "flags": [],
           "bits": "1"
         },
         {
-          "type": "double",
-          "name": "parPrl",
+          "type": "bool",
+          "name": "_equal_rect_width_valid",
+          "flags": [],
+          "bits": "1"
+        },
+        {
+          "type": "bool",
+          "name": "_parallel_edge_valid",
+          "flags": [],
+          "bits": "1"
+        },
+        {
+          "type": "bool",
+          "name": "_subtract_eol_width_valid",
+          "flags": [],
+          "bits": "1"
+        },
+        {
+          "type": "int",
+          "name": "_par_space",
+          "flags": []
+        },
+        {
+          "type": "int",
+          "name": "_par_within",
           "flags": []
         },
         {
           "type": "bool",
-          "name": "PARMINLENGTH",
+          "name": "_par_prl_valid",
           "flags": [],
           "bits": "1"
         },
         {
-          "type": "double",
-          "name": "parMinLength",
+          "type": "int",
+          "name": "_par_prl",
           "flags": []
         },
         {
           "type": "bool",
-          "name": "TWOEDGES",
+          "name": "_par_min_length_valid",
           "flags": [],
           "bits": "1"
         },
         {
-          "type": "bool",
-          "name": "SAMEMETAL",
-          "flags": [],
-          "bits": "1"
-        },
-        {
-          "type": "bool",
-          "name": "NONEOLCORNERONLY",
-          "flags": [],
-          "bits": "1"
-        },
-        {
-          "type": "bool",
-          "name": "PARALLELSAMEMASK",
-          "flags": [],
-          "bits": "1"
-        },
-        {
-          "type": "bool",
-          "name": "ENCLOSECUT",
-          "flags": [],
-          "bits": "1"
-        },
-        {
-          "type": "bool",
-          "name": "BELOW",
-          "flags": [],
-          "bits": "1"
-        },
-        {
-          "type": "bool",
-          "name": "ABOVE",
-          "flags": [],
-          "bits": "1"
-        },
-        {
-          "type": "double",
-          "name": "encloseDist",
+          "type": "int",
+          "name": "_par_min_length",
           "flags": []
         },
         {
           "type": "bool",
-          "name": "CUTSPACING",
+          "name": "_two_edges_valid",
           "flags": [],
           "bits": "1"
         },
         {
-          "type": "double",
-          "name": "cutToMetalSpace",
+          "type": "bool",
+          "name": "_same_metal_valid",
+          "flags": [],
+          "bits": "1"
+        },
+        {
+          "type": "bool",
+          "name": "_non_eol_corner_only_valid",
+          "flags": [],
+          "bits": "1"
+        },
+        {
+          "type": "bool",
+          "name": "_parallel_same_mask_valid",
+          "flags": [],
+          "bits": "1"
+        },
+        {
+          "type": "bool",
+          "name": "_enclose_cut_valid",
+          "flags": [],
+          "bits": "1"
+        },
+        {
+          "type": "bool",
+          "name": "_below_valid",
+          "flags": [],
+          "bits": "1"
+        },
+        {
+          "type": "bool",
+          "name": "_above_valid",
+          "flags": [],
+          "bits": "1"
+        },
+        {
+          "type": "int",
+          "name": "_enclose_dist",
           "flags": []
         },
         {
           "type": "bool",
-          "name": "ALLCUTS",
+          "name": "_cut_spacing_valid",
           "flags": [],
           "bits": "1"
         },
         {
-          "type": "bool",
-          "name": "TOCONCAVECORNER",
-          "flags": [],
-          "bits": "1"
-        },
-        {
-          "type": "bool",
-          "name": "MINADJACENTLENGTH",
-          "flags": [],
-          "bits": "1"
-        },
-        {
-          "type": "bool",
-          "name": "hasTwoMinAdjLength",
-          "flags": [],
-          "bits": "1"
-        },
-        {
-          "type": "double",
-          "name": "minAdjLength",
-          "flags": []
-        },
-        {
-          "type": "double",
-          "name": "minAdjLength1",
-          "flags": []
-        },
-        {
-          "type": "double",
-          "name": "minAdjLength2",
+          "type": "int",
+          "name": "_cut_to_metal_space",
           "flags": []
         },
         {
           "type": "bool",
-          "name": "TONOTCHLENGTH",
+          "name": "_all_cuts_valid",
           "flags": [],
           "bits": "1"
         },
         {
-          "type": "double",
-          "name": "notchLength",
+          "type": "bool",
+          "name": "_to_concave_corner_valid",
+          "flags": [],
+          "bits": "1"
+        },
+        {
+          "type": "bool",
+          "name": "_min_adjacent_length_valid",
+          "flags": [],
+          "bits": "1"
+        },
+        {
+          "type": "bool",
+          "name": "_two_min_adj_length_valid",
+          "flags": [],
+          "bits": "1"
+        },
+        {
+          "type": "int",
+          "name": "_min_adj_length",
+          "flags": []
+        },
+        {
+          "type": "int",
+          "name": "_min_adj_length1",
+          "flags": []
+        },
+        {
+          "type": "int",
+          "name": "_min_adj_length2",
+          "flags": []
+        },
+        {
+          "type": "bool",
+          "name": "_to_notch_length_valid",
+          "flags": [],
+          "bits": "1"
+        },
+        {
+          "type": "int",
+          "name": "_notch_length",
           "flags": []
         }
       ],

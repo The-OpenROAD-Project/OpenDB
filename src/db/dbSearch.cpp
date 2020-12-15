@@ -480,12 +480,8 @@ uint dbBlockSearch::addBoxes(dbBTerm* bterm)
   for (itr = bpins.begin(); itr != bpins.end(); ++itr) {
     dbBPin* bpin = *itr;
 
-    dbSet<dbBox> boxes = bpin->getBoxes();
-    dbSet<dbBox>::iterator boxItr;
-  
-    for( boxItr = boxes.begin(); boxItr != boxes.end(); ++boxItr )
+    for (dbBox* box : bpin->getBoxes())
     {
-      dbBox* box = *boxItr;
       cnt += _dcr->addBox(box->getId(),
                             _block_pin_id,
                             _blockMenuId,

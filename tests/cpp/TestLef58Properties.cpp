@@ -25,6 +25,7 @@ BOOST_AUTO_TEST_CASE( test_default )
     auto dbTech = db->getTech();
     auto layers = dbTech->getLayers();
 
+    double distFactor = 2000;
     for (auto &&layer : layers)
     {
         if(layer->getName() == "metal1"){
@@ -32,23 +33,23 @@ BOOST_AUTO_TEST_CASE( test_default )
             BOOST_ASSERT(rules.size() == 1);
             for (auto &&rule : rules)
             {
-                BOOST_ASSERT(rule->geteolSpace() == 1.3);
-                BOOST_ASSERT(rule->getEolwidth() == 1.5);
-                BOOST_ASSERT(rule->isWITHIN() == 1);
-                BOOST_ASSERT(rule->geteolWithin() == 1.9);
-                BOOST_ASSERT(rule->isSAMEMASK() == 1);
-                BOOST_ASSERT(rule->isEXCEPTEXACTWIDTH() == 1);
-                BOOST_ASSERT(rule->getexactWidth() == 0.5);
-                BOOST_ASSERT(rule->getotherWidth() == 0.3);
-                BOOST_ASSERT(rule->isPARALLELEDGE() == 1);
-                BOOST_ASSERT(rule->getparSpace() == 0.2);
-                BOOST_ASSERT(rule->getparWithin() == 9.1);
-                BOOST_ASSERT(rule->isPARPRL() == 1);
-                BOOST_ASSERT(rule->getparPrl() == 81);
-                BOOST_ASSERT(rule->isPARMINLENGTH() == 1);
-                BOOST_ASSERT(rule->getparMinLength() == -0.1);
-                BOOST_ASSERT(rule->isTWOEDGES() == 1);
-                BOOST_ASSERT(rule->isTOCONCAVECORNER() == 0);
+                BOOST_ASSERT(rule->getEolSpace() == 1.3 * distFactor);
+                BOOST_ASSERT(rule->getEolWidth() == 1.5 * distFactor);
+                BOOST_ASSERT(rule->isWithinValid() == 1);
+                BOOST_ASSERT(rule->getEolWithin() == 1.9 * distFactor);
+                BOOST_ASSERT(rule->isSameMaskValid() == 1);
+                BOOST_ASSERT(rule->isExceptExactWidthValid() == 1);
+                BOOST_ASSERT(rule->getExactWidth() == 0.5 * distFactor);
+                BOOST_ASSERT(rule->getOtherWidth() == 0.3 * distFactor);
+                BOOST_ASSERT(rule->isParallelEdgeValid() == 1 );
+                BOOST_ASSERT(rule->getParSpace() == 0.2 * distFactor);
+                BOOST_ASSERT(rule->getParWithin() == 9.1 * distFactor);
+                BOOST_ASSERT(rule->isParPrlValid() == 1 );
+                BOOST_ASSERT(rule->getParPrl() == 81 * distFactor);
+                BOOST_ASSERT(rule->isParMinLengthValid() == 1);
+                BOOST_ASSERT(rule->getParMinLength() == -0.1 * distFactor);
+                BOOST_ASSERT(rule->isTwoEdgesValid() == 1);
+                BOOST_ASSERT(rule->isToConcaveCornerValid() == 0);
            }
             
         }

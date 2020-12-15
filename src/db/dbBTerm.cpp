@@ -421,13 +421,8 @@ bool dbBTerm::getFirstPin(dbShape& shape)
   dbSet<dbBPin>::iterator bpin_itr;
   for (bpin_itr = bpins.begin(); bpin_itr != bpins.end(); ++bpin_itr) {
     dbBPin* bpin = *bpin_itr;
-
-    dbSet<dbBox> boxes = bpin->getBoxes();
-    dbSet<dbBox>::iterator boxItr;
-  
-    for( boxItr = boxes.begin(); boxItr != boxes.end(); ++boxItr )
-    {
-      dbBox* box = *boxItr;
+    
+    for(dbBox* box : bpin->getBoxes()){
       if (bpin->getPlacementStatus() == dbPlacementStatus::UNPLACED
           || bpin->getPlacementStatus() == dbPlacementStatus::NONE || box == NULL)
         continue;

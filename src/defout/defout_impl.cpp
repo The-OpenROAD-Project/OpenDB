@@ -952,13 +952,8 @@ void defout_impl::writeBPin(dbBPin* bpin, int cnt)
   fprintf(_out, " + USE %s", defSigType(bterm->getSigType()));
 
 
-  dbSet<dbBox> boxes = bpin->getBoxes();
-
-  dbSet<dbBox>::iterator itr;
-  
-  for( itr = boxes.begin(); itr != boxes.end(); ++itr )
+  for (dbBox* box : bpin->getBoxes())
   {
-      dbBox * box = *itr;
       
       int dw = defdist(int(box->getDX() / 2));
       int dh = defdist(int(box->getDY() / 2));

@@ -2,6 +2,7 @@
 
 #include <string>
 #include "db.h"
+#include "lefin.h"
 
 
 namespace odb{
@@ -10,7 +11,7 @@ namespace odb{
     {
         
     public:
-        static dbTechLayerSpacingEolRule* parse(std::string, dbTechLayer*);
+        static dbTechLayerSpacingEolRule* parse(std::string, dbTechLayer*, lefin*);
     };
 
 

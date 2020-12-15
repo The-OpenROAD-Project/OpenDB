@@ -264,12 +264,13 @@ void dbBPin::destroy(dbBPin* bpin_)
     cur  = c->_next_bpin;
   }
 
-  if (bpin->_boxes) {
-    _dbBox* b = block->_box_tbl->getPtr(bpin->_boxes);
+  for(dbBox* box : ((dbBPin*)bpin)->getBoxes()){
+    _dbBox* b = (_dbBox*) box;
     dbProperty::destroyProperties(b);
     block->remove_rect(b->_shape._rect);
     block->_box_tbl->destroy(b);
   }
+
   dbProperty::destroyProperties(bpin);
 
   block->_bpin_tbl->destroy(bpin);

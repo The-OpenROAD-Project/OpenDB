@@ -1,3 +1,5 @@
+find_package(Boost)
+
 add_library(lefin
     lefin.cpp
     reader.cpp
@@ -10,6 +12,7 @@ target_include_directories(lefin
         $<BUILD_INTERFACE:${PROJECT_SOURCE_DIR}/include/opendb>
     PRIVATE
         ${PROJECT_SOURCE_DIR}/src/lefin
+        ${Boost_INCLUDE_DIRS}
 )
 
 target_compile_features(lefin PRIVATE cxx_auto_type)

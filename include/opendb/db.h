@@ -1782,10 +1782,15 @@ class dbBPin : public dbObject
   dbBTerm* getBTerm();
 
   ///
-  /// Get bbox of this pin
+  /// Get boxes of this pin
   ///
   dbSet<dbBox> getBoxes();
 
+  ///
+  /// Get bbox of this pin (ie the bbox of getBoxes())
+  ///
+  Rect getBBox();
+  
   ///
   /// Returns true if this bpin has an effective-width rule.
   ///

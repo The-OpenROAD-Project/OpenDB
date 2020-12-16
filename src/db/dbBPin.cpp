@@ -175,6 +175,18 @@ dbSet<dbBox> dbBPin::getBoxes()
   return dbSet<dbBox>(pin, block->_box_itr);
 }
 
+Rect dbBPin::getBBox()
+{
+  Rect bbox;
+  bbox.mergeInit();
+  for(dbBox* box : getBoxes()) {
+    Rect rect;
+    box->getBox(rect);
+    bbox.merge(rect);
+  }
+  return bbox;
+}
+
 dbPlacementStatus dbBPin::getPlacementStatus()
 {
   _dbBPin* bpin = (_dbBPin*) this;
